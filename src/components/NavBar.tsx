@@ -15,26 +15,26 @@ export const NavBar = () => {
                     </button>
                 </header>
                 <nav className="navBarMenuItems">
-                <img src="https://cdn-icons-png.flaticon.com/512/286/286320.png" alt="blaestLogo" className="navLogo" />
+                <span>{isOpen ? <img src="https://cdn-icons-png.flaticon.com/512/286/286320.png" alt="blaestLogo" className="navLogo" /> :""}</span>
 
-                    <a href="/">
+                    
                     <button type="button" className="navBarButton">
                         <span className="material-symbols-outlined">calendar_month</span>
                             <p>Schema</p>
                     </button>
-                    </a>
-                   <a href="/projects">
+                   
+                  
                    <button type="button" className="navBarButton">
                         <span className="material-symbols-outlined">data_table</span>
                             <p>Projects</p>
                     </button>
-                   </a>
-                    <a href="/resources">
+                   
+    
                         <button type="button" className="navBarButton">
                         <span className="material-symbols-outlined">manufacturing</span>
                             <p>Resources</p>
                     </button>
-                    </a>
+        
                     
                 </nav>
             </div>
