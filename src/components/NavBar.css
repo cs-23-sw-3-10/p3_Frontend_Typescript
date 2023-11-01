@@ -1,16 +1,117 @@
-.navBox{
-    height: 100vh;
-    width: 300px;
-    margin: 0px;
-    padding: 0px;
-    background-color: #92DCE5;
+*{
+    box-sizing: border-box;
+}
+
+body{
+    margin:0;
+    background: white;
+}
+
+button{
+    background-color: transparent;
+    border: 0;
+    padding: 0;
+    cursor: pointer;
+}
+
+.navBar{
+    position: absolute;
+    overflow: hidden;
+    top: 0;
+    left: 0;
+    width: 60px;
+    height:100%;
+    background: #92DCE5;
+    transition: width 0.2s;
+}
+
+.navBar.open{
+    width: 240px;
+}
+
+.navBarInner{
+    position: absolute;
+    top:0;
+    left:0;
+    width: 240px;
+}
+
+.navbarHeader{
+    display: flex;
+    align-items: center;
+    height: 72px;
+    background: rgb(0,0,0 /15%);
+}
+
+
+.navBarHeaderBurger{
+    width: 60px;
+    height: 20px;
+    display: grid;
+    place-items: center;
+    color: black;
 }
 
 .navLogo{
     height: 200px;
     width: 200px;
     text-align: center;
+    border-radius: 50%;
 }
+
+.navBarMenuItems{
+    display: grid;
+    padding: 10px;
+}
+
+a{
+    text-decoration: none;
+    color: black;
+
+}
+.navBarButton{
+    display: flex;
+    gap: 16px;
+    align-items: center;
+    height: 56px;
+    width: 100%;
+    font-family: "Poppins";
+    font-size: 17px;
+    text-transform: capitalize;
+    line-height: 1;
+    padding: 0 10px;
+    border-radius: 8px;
+    color:black;
+    opacity: 0.8;
+}
+
+.navBarButton:hover > span{
+    opacity: 1;
+}
+
+.navBar.open :is(.navBarButton p, .navLogo){
+    opacity: 1;
+}
+
+.navBarButton > img {
+    width: 24px;
+    height: 24px;
+}
+
+.navBarButton > span{
+    opacity: 0.5s;
+}
+
+/*
+.navBox{
+    height: 100%;
+    width: 300px;
+    margin: 0px;
+    padding: 0px;
+    background-color: #92DCE5;
+}
+
+
 
 .navLinks{
     height: 100%;
@@ -34,3 +135,4 @@
     margin: 0;
     text-align: center;
 }
+*/
