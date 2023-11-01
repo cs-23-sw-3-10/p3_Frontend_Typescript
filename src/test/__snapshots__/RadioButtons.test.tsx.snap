@@ -1,0 +1,29 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`RadioButtons Component renders correctly 1`] = `
+<div
+  className="radiobuttons"
+  onChange={[Function]}
+>
+  <label>
+     
+    <input
+      defaultChecked={false}
+      name="editOrView"
+      type="radio"
+      value="Edit"
+    />
+    Edit
+  </label>
+  <label>
+     
+    <input
+      defaultChecked={true}
+      name="editOrView"
+      type="radio"
+      value="View"
+    />
+    View
+  </label>
+</div>
+`;
