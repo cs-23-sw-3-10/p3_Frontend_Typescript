@@ -3,10 +3,9 @@ import React from 'react';
 import NavBar from "./components/NavBar/NavBar";
 import BPOverviewPage from "./components/Projects/BPOverviewPage";
 import EquipmentPage from './components/Resources/EquipmentPage';
-import Schedule from './components/Schedule/Schedule';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import './App.css';
-import ScheduleComponent from "./ScheduleComponent";
+import ScheduleComponent from "./components/Schedule/ScheduleComponent";
 
 
 
