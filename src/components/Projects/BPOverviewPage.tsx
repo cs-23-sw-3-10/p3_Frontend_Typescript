@@ -1,4 +1,5 @@
-import CollapsibleBP from "./CollapsibleBP";
+import React from 'react';
+import CollapsibleBP from "../Projects/CollapsibleBP";
 
 /**
  * 
