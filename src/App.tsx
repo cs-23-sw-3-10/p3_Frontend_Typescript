@@ -1,14 +1,28 @@
 import React from 'react';
-import NavBar from "./components/NavBar";
-import './App.css';
+//Ville nok være en god ide bare at importere alt fra components
+import NavBar from "./components/NavBar/NavBar";
+import BPOverviewPage from "./components/Projects/BPOverviewPage";
+import EquipmentPage from './components/Resources/EquipmentPage';
+import Schedule from './components/Schedule/Schedule';
+
+import { Routes, Route, Navigate } from 'react-router-dom';
+
 
 
 function App() {
+  
   return (
-    <div className="App">
-      <NavBar />
-    </div>
-  );
+  <>
+  <NavBar />
+  <Routes>
+    <Route path='/' element={<Schedule/>}/>
+    <Route path='/projects' element={<BPOverviewPage/>}/>
+    <Route path='/resources' element={<EquipmentPage/>}/>
+    <Route path="*" element={<Navigate to="/" />} />
+  </Routes>
+  </>
+  )
+  
 }
 
 export default App;

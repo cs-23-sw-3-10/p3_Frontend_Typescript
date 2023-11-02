@@ -1,5 +1,6 @@
 import React, {useState} from 'react';
 import './NavBar.css';
+import { Link } from 'react-router-dom';
 
 //Items in the navigation bar. It is not used directly, anymore.
 //const navBarItems = ["calendar_month", "data_table", "manufacturing"];
@@ -16,26 +17,26 @@ export const NavBar = () => {
                 </header>
                 <nav className="navBarMenuItems">
                 <span>{isOpen ? <img src="https://cdn-icons-png.flaticon.com/512/286/286320.png" alt="blaestLogo" className="navLogo" /> :""}</span>
-
-                    
-                    <button type="button" className="navBarButton">
-                        <span className="material-symbols-outlined">calendar_month</span>
-                            <p>Schema</p>
-                    </button>
+                    <Link to='/'>
+                        <button type="button" className="navBarButton">
+                            <span className="material-symbols-outlined">calendar_month</span>
+                            <p>Schedule</p>
+                        </button>
+                    </Link>
                    
-                  
+                   <Link to='/projects'>
                    <button type="button" className="navBarButton">
                         <span className="material-symbols-outlined">data_table</span>
                             <p>Projects</p>
                     </button>
-                   
-    
+                   </Link>
+
+                   <Link to='/resources'>
                         <button type="button" className="navBarButton">
                         <span className="material-symbols-outlined">manufacturing</span>
                             <p>Resources</p>
                     </button>
-        
-                    
+                   </Link>
                 </nav>
             </div>
         </nav>
