@@ -6,7 +6,7 @@ import { Link } from 'react-router-dom';
 //const navBarItems = ["calendar_month", "data_table", "manufacturing"];
 
 export const NavBar = () => {
-    const [isOpen, setIsOpen] = useState(true);
+    const [isOpen, setIsOpen] = useState(false);
     return (
         <nav className={`navBar ${isOpen ? "open" : ""}`}>
             <div className="navBarInner">
