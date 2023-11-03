@@ -2,6 +2,7 @@ import Timeline from "react-calendar-timeline";
 import moment from "moment";
 import "react-calendar-timeline/lib/Timeline.css";
 
+
 interface RigInfo {
     id: string;
     title: string;
@@ -88,11 +89,8 @@ function ScheduleComponent() {
                 items={bladeTasksPrøve}
                 minZoom={60 * 60 * 24 * 14 * 1000} // 14 days is the smallest zoom
                 defaultTimeStart={moment()} // the timeline will start today
-                defaultTimeEnd={moment().add(30, "days")} // and will end 30 days from today
-                sidebarWidth={75}
-                canChangeGroup={true}
-                canMove={true}
-                canResize={true}
+                defaultTimeEnd={moment().add(50, "days")} // and will end 30 days from today
+                
                 timeSteps={{
                     // zooming will be at these intervals
                     second: 0,
