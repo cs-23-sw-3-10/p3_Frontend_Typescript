@@ -89,6 +89,10 @@ function ScheduleComponent() {
                 minZoom={60 * 60 * 24 * 14 * 1000} // 14 days is the smallest zoom
                 defaultTimeStart={moment()} // the timeline will start today
                 defaultTimeEnd={moment().add(30, "days")} // and will end 30 days from today
+                sidebarWidth={75}
+                canChangeGroup={true}
+                canMove={true}
+                canResize={true}
                 timeSteps={{
                     // zooming will be at these intervals
                     second: 0,
