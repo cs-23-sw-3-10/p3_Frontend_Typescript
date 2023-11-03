@@ -15,25 +15,30 @@ button{
 }
 
 .navBar{
-    position: absolute;
+    position: static;
     overflow: hidden;
     top: 0;
     left: 0;
     width: 60px;
+    min-width: 60px;
     height:100%;
     background: #92DCE5;
     transition: width 0.2s;
+    grid-column: 1 ;
+    grid-row: 1 / 4;
 }
 
 .navBar.open{
     width: 240px;
+    min-width: 240px;
 }
 
 .navBarInner{
-    position: absolute;
+    position: static;
     top:0;
     left:0;
     width: 240px;
+    min-width: 240px;
 }
 
 .navbarHeader{
@@ -78,6 +83,7 @@ a{
     color: black;
 
 }
+
 .navBarButton{
     display: flex;
     gap: 16px;
