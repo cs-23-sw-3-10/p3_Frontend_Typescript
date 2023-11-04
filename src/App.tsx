@@ -3,6 +3,7 @@ import React from 'react';
 import NavBar from "./components/NavBar/NavBar";
 import BPOverviewPage from "./components/Projects/BPOverviewPage";
 import EquipmentPage from './components/Resources/EquipmentPage';
+import DisplayLocations from './components/TestComponent/testComp';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import './App.css';
 import ScheduleComponent from "./components/Schedule/ScheduleComponent";
@@ -13,6 +14,7 @@ function App() {
   return (
   <>
   <NavBar />
+  <DisplayLocations/>
   <Routes>
     <Route path='/' element={<ScheduleComponent/>}/>
     <Route path='/projects' element={<BPOverviewPage/>}/>
