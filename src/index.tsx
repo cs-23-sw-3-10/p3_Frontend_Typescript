@@ -5,13 +5,25 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import 'material-symbols';
 import { render } from 'react-dom';
-import { ApolloClient, InMemoryCache, ApolloProvider} from '@apollo/client';
+import { ApolloClient, InMemoryCache, ApolloProvider, gql} from '@apollo/client';
 import { BrowserRouter } from 'react-router-dom';
 
 const client = new ApolloClient({
-  uri: 'https://flyby-router-demo.herokuapp.com/',
+  uri: 'http://localhost:8080/graphql',
   cache: new InMemoryCache(),
 });
+
+client
+  .query({
+    query:gql`
+    query GetOneBT{
+      BladeTaskById(id:1){
+        taskName
+    }
+  }
+  `,
+  })
+  .then((result) => console.log(result));
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement

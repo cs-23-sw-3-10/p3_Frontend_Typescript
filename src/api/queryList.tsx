@@ -1,12 +1,21 @@
 import {gql} from '@apollo/client';
 
-export const GET_LOCATIONS = gql`
-  query GetLocations {
-    locations {
+export const GET_ALL_BT = gql`
+  query GetAllBT{
+    AllBladeTasks{
       id
-      name
-      description
-      photo
+      testRig
+      taskName
+      testType
+      startDate
+      endDate
+      duration
+      attachPeriod
+      detachPeriod
+      project{
+        id
+      }
     }
   }
 `;
+
