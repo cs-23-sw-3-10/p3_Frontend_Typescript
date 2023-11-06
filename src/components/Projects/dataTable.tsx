@@ -26,6 +26,11 @@ interface DataTableProps<TData, TValue> {
     data: TData[];
 }
 
+type PaginationState = {
+    pageIndex: number;
+    pageSize: number;
+};
+
 export function ProjectDataTable<TData, TValue>({
     columns,
     data,
