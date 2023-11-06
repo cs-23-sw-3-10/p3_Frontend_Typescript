@@ -13,18 +13,6 @@ const client = new ApolloClient({
   cache: new InMemoryCache(),
 });
 
-client
-  .query({
-    query:gql`
-    query GetOneBT{
-      BladeTaskById(id:1){
-        taskName
-    }
-  }
-  `,
-  })
-  .then((result) => console.log(result));
-
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 );
