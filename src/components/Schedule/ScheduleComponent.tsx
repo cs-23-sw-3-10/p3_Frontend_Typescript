@@ -1,7 +1,7 @@
 import Timeline from "react-calendar-timeline";
 import moment from "moment";
 import "react-calendar-timeline/lib/Timeline.css";
-import GetBTDateInfo from './scheduleQueries';
+import GetBladeTaskDateInfo from './scheduleQueries';
 
 
 interface RigInfo {
@@ -26,6 +26,8 @@ interface BladeTaskInfo {
 }
 
 function ScheduleComponent() {
+    let a = GetBladeTaskDateInfo();
+    console.log(a);
     //getting the rigs from the database
     let testRigs: RigInfo[] = []; // et kald til databasen for at hente alle rigs
     // testRigs.forEach((element: { id: string; title: string; }) => {
