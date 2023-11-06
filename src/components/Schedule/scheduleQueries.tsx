@@ -15,5 +15,5 @@ export default function GetBTDateInfo(){
 
     if (loading) return "Loading";
     if (error) throw new Error(error.message);
-    if (data) return data.AllBladeTasks;
+    if (data) return data?.AllBladeTasks; //We use Optional Chaining operator (?.) for safe access to object properties
 }
