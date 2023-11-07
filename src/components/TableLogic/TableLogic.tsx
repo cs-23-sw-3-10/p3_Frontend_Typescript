@@ -49,6 +49,8 @@ export function TableLogic<TData, TValue>({
     const [columnVisibility, setColumnVisibility] = React.useState({});
     const [columnFilters, setColumnFilters] =
         React.useState<ColumnFiltersState>([]);
+    const [filtering, setFiltering] = React.useState("");
+
     const table = useReactTable({
         data,
         columns,
@@ -64,9 +66,11 @@ export function TableLogic<TData, TValue>({
         onSortingChange: setSorting,
         state: {
             sorting,
+            globalFilter: filtering,
             columnFilters,
             columnVisibility,
         },
+        onGlobalFilterChange: setFiltering,
     });
 
     const [inputValue, setInputValue] = React.useState("");
@@ -89,15 +93,9 @@ export function TableLogic<TData, TValue>({
             <div className="flex items-center py-4">
                 <Input
                     placeholder="Filter by column"
-                    value={
-                        (table
-                            .getColumn("customer")
-                            ?.getFilterValue() as string) || ""
-                    }
+                    value={filtering}
                     onChange={(e) => {
-                        table
-                            .getColumn("customer")
-                            ?.setFilterValue(e.target.value);
+                        setFiltering(e.target.value);
                     }}
                     className="max-w-sm"
                 />
