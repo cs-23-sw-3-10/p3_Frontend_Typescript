@@ -5,7 +5,13 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import 'material-symbols';
 import { render } from 'react-dom';
+import { ApolloClient, InMemoryCache, ApolloProvider, gql} from '@apollo/client';
 import { BrowserRouter } from 'react-router-dom';
+
+const client = new ApolloClient({
+  uri: 'http://localhost:8080/graphql',
+  cache: new InMemoryCache(),
+});
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
@@ -13,9 +19,11 @@ const root = ReactDOM.createRoot(
 
 root.render( 
   <React.StrictMode>
-    <BrowserRouter>
-      <App />
-    </BrowserRouter>
+    <ApolloProvider client={client}>
+      <BrowserRouter>
+        <App />
+      </BrowserRouter>
+    </ApolloProvider>
   </React.StrictMode>
 );
 
