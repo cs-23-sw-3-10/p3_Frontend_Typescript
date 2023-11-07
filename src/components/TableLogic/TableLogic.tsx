@@ -2,16 +2,18 @@
 import React from "react";
 import StyledButton from "../ui/styledButton";
 import { useCollapse } from "react-collapsed";
-import TextField from "@mui/material/TextField";
+import { Input } from "../ui/input";
 
 import {
     ColumnDef,
+    ColumnFiltersState,
     Pagination,
     SortingState,
     flexRender,
     getCoreRowModel,
     getPaginationRowModel,
     getSortedRowModel,
+    getFilteredRowModel,
     useReactTable,
 } from "@tanstack/react-table";
 
@@ -45,19 +47,24 @@ export function TableLogic<TData, TValue>({
 }: DataTableProps<TData, TValue>) {
     const [sorting, setSorting] = React.useState<SortingState>([]);
     const [columnVisibility, setColumnVisibility] = React.useState({});
+    const [columnFilters, setColumnFilters] =
+        React.useState<ColumnFiltersState>([]);
     const table = useReactTable({
         data,
         columns,
         getCoreRowModel: getCoreRowModel(),
         getSortedRowModel: getSortedRowModel(),
+        getFilteredRowModel: getFilteredRowModel(),
         getPaginationRowModel: getPaginationRowModel(),
         initialState: {
             pagination: defaultPagination,
         },
         onColumnVisibilityChange: setColumnVisibility,
+        onColumnFiltersChange: setColumnFilters,
         onSortingChange: setSorting,
         state: {
             sorting,
+            columnFilters,
             columnVisibility,
         },
     });
@@ -78,48 +85,68 @@ export function TableLogic<TData, TValue>({
 
     return (
         <div>
-            <div className="collapsible inline-block border border-black shadow">
-                <div
-                    className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 cursor-pointer w-40 "
-                    {...getToggleProps()}
-                >
-                    {isExpanded ? "Close" : "Change Filters"}
-                </div>
-                <div {...getCollapseProps()}>
-                    <div className="content ">
-                        <div>
-                            <label>
-                                <input
-                                    {...{
-                                        type: "checkbox",
-                                        checked: table.getIsAllColumnsVisible(),
-                                        onChange:
-                                            table.getToggleAllColumnsVisibilityHandler(),
-                                    }}
-                                />{" "}
-                                Toggle All
-                            </label>
+            {/* Input field that makes it possible to search*/}
+            <div className="flex items-center py-4">
+                <Input
+                    placeholder="Filter by column"
+                    value={
+                        (table
+                            .getColumn("customer")
+                            ?.getFilterValue() as string) || ""
+                    }
+                    onChange={(e) => {
+                        table
+                            .getColumn("customer")
+                            ?.setFilterValue(e.target.value);
+                    }}
+                    className="max-w-sm"
+                />
+                <div className="collapsible inline-block border border-black shadow flex flex-row">
+                    <div
+                        className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-3 cursor-pointer w-40 "
+                        {...getToggleProps()}
+                    >
+                        {isExpanded ? "Close" : "Change Filters"}
+                    </div>
+                    <div {...getCollapseProps()}>
+                        <div className="content flex flex-row ">
+                            <div>
+                                <label>
+                                    <input
+                                        {...{
+                                            type: "checkbox",
+                                            checked:
+                                                table.getIsAllColumnsVisible(),
+                                            onChange:
+                                                table.getToggleAllColumnsVisibilityHandler(),
+                                        }}
+                                    />{" "}
+                                    Toggle All
+                                </label>
+                            </div>
+                            {table.getAllLeafColumns().map((column) => {
+                                return (
+                                    <div key={column.id}>
+                                        <label>
+                                            <input
+                                                {...{
+                                                    type: "checkbox",
+                                                    checked:
+                                                        column.getIsVisible(),
+                                                    onChange:
+                                                        column.getToggleVisibilityHandler(),
+                                                }}
+                                            />{" "}
+                                            {column.id}
+                                        </label>
+                                    </div>
+                                );
+                            })}
                         </div>
-                        {table.getAllLeafColumns().map((column) => {
-                            return (
-                                <div key={column.id}>
-                                    <label>
-                                        <input
-                                            {...{
-                                                type: "checkbox",
-                                                checked: column.getIsVisible(),
-                                                onChange:
-                                                    column.getToggleVisibilityHandler(),
-                                            }}
-                                        />{" "}
-                                        {column.id}
-                                    </label>
-                                </div>
-                            );
-                        })}
                     </div>
                 </div>
             </div>
+
             <div className="rounded-md border">
                 <Table>
                     <TableHeader>

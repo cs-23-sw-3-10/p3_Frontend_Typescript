@@ -3,30 +3,91 @@ import { ColumnDef } from "@tanstack/react-table";
 import { BladeProject } from "./tempData";
 import { useContext } from "react";
 import { BladeProjectDataQuery } from "./BPData";
+import { ArrowUpDown, MoreHorizontal } from "lucide-react";
 
 export const columns: ColumnDef<BladeProjectDataQuery>[] = [
     {
-        header: "ID",
+        header: ({ column }) => {
+            return (
+                <button
+                    onClick={() =>
+                        column.toggleSorting(column.getIsSorted() === "asc")
+                    }
+                >
+                    ID
+                </button>
+            );
+        },
         accessorKey: "id",
     },
     {
-        header: "Project Name",
+        header: ({ column }) => {
+            return (
+                <button
+                    onClick={() =>
+                        column.toggleSorting(column.getIsSorted() === "asc")
+                    }
+                >
+                    Project Name
+                </button>
+            );
+        },
         accessorKey: "projectName",
     },
     {
-        header: "Customer",
+        header: ({ column }) => {
+            return (
+                <button
+                    onClick={() =>
+                        column.toggleSorting(column.getIsSorted() === "asc")
+                    }
+                >
+                    Customer
+                </button>
+            );
+        },
         accessorKey: "customer",
     },
     {
-        header: "Project Leader",
+        header: ({ column }) => {
+            return (
+                <button
+                    onClick={() =>
+                        column.toggleSorting(column.getIsSorted() === "asc")
+                    }
+                >
+                    Project Leader
+                </button>
+            );
+        },
         accessorKey: "projectLeader",
     },
     {
-        header: "Start Date",
+        header: ({ column }) => {
+            return (
+                <button
+                    onClick={() =>
+                        column.toggleSorting(column.getIsSorted() === "asc")
+                    }
+                >
+                    Start Date
+                </button>
+            );
+        },
         accessorKey: "startDate",
     },
     {
-        header: "End Date",
+        header: ({ column }) => {
+            return (
+                <button
+                    onClick={() =>
+                        column.toggleSorting(column.getIsSorted() === "asc")
+                    }
+                >
+                    End Date
+                </button>
+            );
+        },
         accessorKey: "endDate",
     },
     //Evt tilføj Status check?
