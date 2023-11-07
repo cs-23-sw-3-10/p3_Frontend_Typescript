@@ -37,13 +37,13 @@ const BladeTaskMenu = () => {
 
             <div className='item equipment_wrapper'>
                 <h2 className='title equipment'>Equipment</h2>
-                <div className='equipment_item_box'>
-                    <div className='equipment_type'>
-                        <h2 className='title'>Equipment Type</h2>
-                    </div>
-                    <div className='equipment_amount'>
-                        <h2 className='title'>Equipment Type</h2>
-                    </div>
+
+                <h2 className='title equipment_type'>Equipment Type</h2>
+                <div className='type_box'>
+                </div>
+
+                <h2 className='title equipment_amount'>Equipment Amount</h2>
+                <div className='amount_box'>
                 </div>
             </div>
 
