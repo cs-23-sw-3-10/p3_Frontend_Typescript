@@ -1,8 +1,5 @@
 import React from "react";
 import { TableLogic } from "../TableLogic/TableLogic";
-import { columns } from "./BPProjectsColumns";
-import { BladeProjectData } from "./tempData";
-import { BladeProjectDataQuery } from "./BPData";
 import { DocumentNode } from "graphql";
 import { useQuery } from "@apollo/client";
 

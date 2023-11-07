@@ -7,8 +7,11 @@ import "./App.css";
 import ScheduleComponent from "./components/Schedule/ScheduleComponent";
 import ProjectTable from "./components/Projects/ProjectTable";
 
-import { columns } from "./components/Projects/BPProjectsColumns";
+import { columnBP } from "./components/Projects/BPProjectsColumns";
 import { GET_ALL_BP } from "./api/queryList";
+
+import { columnEQ } from "./components/Resources/EquipmentColumns";
+import { GET_EQUIPMENT } from "./api/queryList";
 function App() {
     return (
         <>
@@ -23,11 +26,20 @@ function App() {
                                 <ProjectTable
                                     query={GET_ALL_BP}
                                     dataKey="AllBladeProjects"
-                                    columns={columns}
+                                    columns={columnBP}
                                 />
                             }
                         />
-                        <Route path="/resources" element={<EquipmentPage />} />
+                        <Route
+                            path="/resources"
+                            element={
+                                <EquipmentPage
+                                    query={GET_EQUIPMENT}
+                                    dataKey="AllEquipment"
+                                    columns={columnEQ}
+                                />
+                            }
+                        />
                         <Route path="*" element={<Navigate to="/" />} />
                     </Routes>
                 </div>

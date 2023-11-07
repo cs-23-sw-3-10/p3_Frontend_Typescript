@@ -3,13 +3,23 @@
 import { ColumnDef } from "@tanstack/react-table";
 import { EquipmentData } from "./tempDataEquipment";
 
-export const columns: ColumnDef<EquipmentData>[] = [
+export const columnEQ: ColumnDef<EquipmentData>[] = [
     {
-        header: "Equipment ID",
-        accessorKey: "id",
+        header: "Equipment Name",
+        accessorKey: "name",
     },
     {
-        header: "Equipment Type",
         accessorKey: "type",
+        header: ({ column }) => {
+            return (
+                <button
+                    onClick={() => {
+                        column.toggleSorting(column.getIsSorted() === "asc");
+                    }}
+                >
+                    Equipment Type
+                </button>
+            );
+        },
     },
 ];

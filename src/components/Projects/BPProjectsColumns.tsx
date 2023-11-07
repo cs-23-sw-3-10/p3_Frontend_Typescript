@@ -5,7 +5,7 @@ import { useContext } from "react";
 import { BladeProjectDataQuery } from "./BPData";
 import { ArrowUpDown, MoreHorizontal } from "lucide-react";
 
-export const columns: ColumnDef<BladeProjectDataQuery>[] = [
+export const columnBP: ColumnDef<BladeProjectDataQuery>[] = [
     {
         header: ({ column }) => {
             return (
