@@ -1,6 +1,7 @@
 import Timeline from "react-calendar-timeline";
 import moment from "moment";
 import "react-calendar-timeline/lib/Timeline.css";
+import GetBladeTaskDateInfo from './scheduleQueries';
 
 
 interface RigInfo {
