@@ -7,6 +7,8 @@ import "./App.css";
 import ScheduleComponent from "./components/Schedule/ScheduleComponent";
 import ProjectTable from "./components/Projects/ProjectTable";
 
+import { columns } from "./components/Projects/BPProjectsColumns";
+import { GET_ALL_BP } from "./api/queryList";
 function App() {
     return (
         <>
@@ -15,7 +17,16 @@ function App() {
                 <div className="content-container">
                     <Routes>
                         <Route path="/" element={<ScheduleComponent />} />
-                        <Route path="/projects" element={<ProjectTable />} />
+                        <Route
+                            path="/projects"
+                            element={
+                                <ProjectTable
+                                    query={GET_ALL_BP}
+                                    dataKey="AllBladeProjects"
+                                    columns={columns}
+                                />
+                            }
+                        />
                         <Route path="/resources" element={<EquipmentPage />} />
                         <Route path="*" element={<Navigate to="/" />} />
                     </Routes>

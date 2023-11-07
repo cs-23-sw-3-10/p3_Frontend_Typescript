@@ -1,15 +1,17 @@
 "use client";
 import { ColumnDef } from "@tanstack/react-table";
 import { BladeProject } from "./tempData";
+import { useContext } from "react";
+import { BladeProjectDataQuery } from "./BPData";
 
-export const columns: ColumnDef<BladeProject>[] = [
+export const columns: ColumnDef<BladeProjectDataQuery>[] = [
     {
         header: "ID",
         accessorKey: "id",
     },
     {
         header: "Project Name",
-        accessorKey: "project_name",
+        accessorKey: "projectName",
     },
     {
         header: "Customer",
@@ -17,15 +19,15 @@ export const columns: ColumnDef<BladeProject>[] = [
     },
     {
         header: "Project Leader",
-        accessorKey: "project_leader",
+        accessorKey: "projectLeader",
     },
     {
         header: "Start Date",
-        accessorKey: "start_date",
+        accessorKey: "startDate",
     },
     {
         header: "End Date",
-        accessorKey: "end_date",
+        accessorKey: "endDate",
     },
     //Evt tilføj Status check?
 ];

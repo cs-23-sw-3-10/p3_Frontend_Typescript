@@ -1,6 +1,9 @@
 "use client";
 import React from "react";
 import StyledButton from "../ui/styledButton";
+import { useCollapse } from "react-collapsed";
+import TextField from "@mui/material/TextField";
+
 import {
     ColumnDef,
     Pagination,
@@ -71,41 +74,53 @@ export function TableLogic<TData, TValue>({
         }
     };
 
+    const { getCollapseProps, getToggleProps, isExpanded } = useCollapse();
+
     return (
         <div>
-            <div className="rounded-md border">
-                <div className="inline-block border border-black shadow rounded">
-                    <div className="px-1 border-b border-black">
-                        <label>
-                            <input
-                                {...{
-                                    type: "checkbox",
-                                    checked: table.getIsAllColumnsVisible(),
-                                    onChange:
-                                        table.getToggleAllColumnsVisibilityHandler(),
-                                }}
-                            />{" "}
-                            Toggle All
-                        </label>
-                    </div>
-                    {table.getAllLeafColumns().map((column) => {
-                        return (
-                            <div key={column.id} className="px-1">
-                                <label>
-                                    <input
-                                        {...{
-                                            type: "checkbox",
-                                            checked: column.getIsVisible(),
-                                            onChange:
-                                                column.getToggleVisibilityHandler(),
-                                        }}
-                                    />{" "}
-                                    {column.id}
-                                </label>
-                            </div>
-                        );
-                    })}
+            <div className="collapsible inline-block border border-black shadow">
+                <div
+                    className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 cursor-pointer w-40 "
+                    {...getToggleProps()}
+                >
+                    {isExpanded ? "Close" : "Change Filters"}
                 </div>
+                <div {...getCollapseProps()}>
+                    <div className="content ">
+                        <div>
+                            <label>
+                                <input
+                                    {...{
+                                        type: "checkbox",
+                                        checked: table.getIsAllColumnsVisible(),
+                                        onChange:
+                                            table.getToggleAllColumnsVisibilityHandler(),
+                                    }}
+                                />{" "}
+                                Toggle All
+                            </label>
+                        </div>
+                        {table.getAllLeafColumns().map((column) => {
+                            return (
+                                <div key={column.id}>
+                                    <label>
+                                        <input
+                                            {...{
+                                                type: "checkbox",
+                                                checked: column.getIsVisible(),
+                                                onChange:
+                                                    column.getToggleVisibilityHandler(),
+                                            }}
+                                        />{" "}
+                                        {column.id}
+                                    </label>
+                                </div>
+                            );
+                        })}
+                    </div>
+                </div>
+            </div>
+            <div className="rounded-md border">
                 <Table>
                     <TableHeader>
                         {table.getHeaderGroups().map((headerGroup) => (
