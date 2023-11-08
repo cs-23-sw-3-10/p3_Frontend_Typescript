@@ -24,15 +24,15 @@ function TestTypeSelector(){
         console.log(error.message);
         return (<div>Error</div>);
     }
-
+    
+    //Used to give keys to elements in the list
+    let key = 1;
     //Returns a dropdown of all the test types present in DB
     return(
         <div className="item testtype_wrapper">
             <h2 className="title">Type</h2>
             <select className="testtype_select" id="testtype" name="testtype">
-                {data.DictionaryAllByCategory.map(({label, id}:{label:string, id:number}) => (
-                    <option value={label.toString()} key={id}>{label}</option>
-                    ))}
+                {data.DictionaryAllByCategory.map(({label}:{label:string}) => ( <option value={label.toString()} key={key++}>{label}</option> ))}
             </select>
         </div>
     );
