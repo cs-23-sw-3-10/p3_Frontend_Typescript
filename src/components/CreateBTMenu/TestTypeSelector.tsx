@@ -1,8 +1,5 @@
-import React, {Component} from 'react';
 import {GET_TEST_TYPES} from '../../api/queryList';
 import { useQuery} from '@apollo/client';
-import { Http2ServerRequest } from 'http2';
-import { Diversity1 } from '@mui/icons-material';
 
 
 //Queries test types and insert them into the BT-Menu

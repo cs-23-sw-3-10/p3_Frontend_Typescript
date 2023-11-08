@@ -27,5 +27,13 @@ query GetTestTypes{
 }
 `;
 
+export const GET_TEST_RIGS = gql`
+query GetTestRigs{
+  DictionaryAllByCategory(category:"testRigs"){
+    label
+  }
+}
+`;
+
 
 
