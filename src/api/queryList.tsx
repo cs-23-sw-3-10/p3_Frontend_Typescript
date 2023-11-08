@@ -19,3 +19,13 @@ export const GET_ALL_BT = gql`
   }
 `;
 
+export const GET_TEST_TYPES = gql`
+query GetTestTypes{
+  DictionaryAllByCategory(category:"testType"){
+    label
+  }
+}
+`;
+
+
+
