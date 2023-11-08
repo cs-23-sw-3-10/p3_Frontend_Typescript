@@ -1,6 +1,6 @@
 import './BladeTaskMenu.css';
-import TestTypeSelector from './TestTypeSelector';
-import TestRigSelector from './TestRigSelector';
+import TestTypeOptions from './TestTypeSelector';
+import TestRigOptions from './TestRigSelector';
 import React, {Component} from 'react';
 
 function BladeTaskMenu(){
@@ -8,7 +8,12 @@ function BladeTaskMenu(){
             <div className='btmenu-container'>
                 <input className='item id_select' type="text" placeholder='Select Task Name'/>
                 
-                <TestTypeSelector/>
+                <div className="item testtype_wrapper">
+                    <h2 className="title">Type</h2>
+                    <select className="testtype_select" id="testtype" name="testtype">
+                        <TestTypeOptions/>
+                    </select>
+                </div>
     
                 <div className='item date_selection_wrapper'>
                     <h2 className='title'>Start Date</h2>
@@ -18,7 +23,10 @@ function BladeTaskMenu(){
                     <input type="number" className="item duration_select" />
                 
                     <h2 className="title">Test Rig</h2>
-                    <TestRigSelector/>
+                    <select id="testrig" name="testrig">
+                        <TestRigOptions/>
+                    </select>
+
                 </div>
     
                 <div className='item equipment_wrapper'>
