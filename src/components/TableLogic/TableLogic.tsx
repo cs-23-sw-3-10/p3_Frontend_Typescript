@@ -15,6 +15,8 @@ import {
     getSortedRowModel,
     getFilteredRowModel,
     useReactTable,
+    getExpandedRowModel,
+    ExpandedState
 } from "@tanstack/react-table";
 
 import {

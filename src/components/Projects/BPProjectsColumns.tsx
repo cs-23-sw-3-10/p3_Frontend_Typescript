@@ -3,7 +3,6 @@ import { ColumnDef } from "@tanstack/react-table";
 import { BladeProject } from "./tempData";
 import { useContext } from "react";
 import { BladeProjectDataQuery } from "./BPData";
-import { ArrowUpDown, MoreHorizontal } from "lucide-react";
 
 export const columnBP: ColumnDef<BladeProjectDataQuery>[] = [
     {
