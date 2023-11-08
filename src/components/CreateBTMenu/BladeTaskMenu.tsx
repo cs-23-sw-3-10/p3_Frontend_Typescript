@@ -1,12 +1,38 @@
 import './BladeTaskMenu.css';
 import TestTypeOptions from './TestTypeSelector';
 import TestRigOptions from './TestRigSelector';
-import React, {Component} from 'react';
+import React, {useState} from 'react';
+
+function handleClick(e:React.FormEvent<HTMLInputElement>, setDate:Function){
+    setDate(e.currentTarget.value);
+    console.log(e.currentTarget.value);
+    let currentDate:Date = new Date()
+    let currentDateString:string = currentDate.toISOString().split('T')[0];
+    currentDate.setHours(0,0,0,0);
+    let inputDate:Date = new Date(e.currentTarget.value);
+    inputDate.setHours(0,0,0,0);
+    
+    if(inputDate >= currentDate){
+        setDate(e.currentTarget.value);
+    }else{
+        setDate(currentDateString);
+    }
+}
 
 function BladeTaskMenu(){
+        const currentDate = new Date().toISOString().split('T')[0];
+        console.log(currentDate);
+        const [date, setDate] = useState(currentDate);
+        const [type, setType] = useState('');
+
         return (
             <div className='btmenu-container'>
-                <input className='item id_select' type="text" placeholder='Select Task Name'/>
+               
+                <input 
+                    className='item id_select' 
+                    type="text" 
+                    placeholder='Select Task Name'
+                />
                 
                 <div className="item testtype_wrapper">
                     <h2 className="title">Type</h2>
@@ -17,12 +43,20 @@ function BladeTaskMenu(){
     
                 <div className='item date_selection_wrapper'>
                     <h2 className='title'>Start Date</h2>
-                    <input type="date" className="startdate_select" />
+                    
+                    <input 
+                        type="date" 
+                        className="startdate_select" 
+                        value={date}
+                        onChange={(e) => handleClick(e,setDate)}
+                    />
                 
                     <h2 className="title">Duration</h2>
+                    
                     <input type="number" className="item duration_select" />
                 
                     <h2 className="title">Test Rig</h2>
+                    
                     <select id="testrig" name="testrig">
                         <TestRigOptions/>
                     </select>
