@@ -9,17 +9,17 @@ interface ProjectTableProps {
     columns: any;
 }
 
-function BTTable({ query, dataKey, columns }: ProjectTableProps) {
+function ProjectTable({ query, dataKey, columns }: ProjectTableProps) {
     const { loading, error, data } = useQuery(query);
 
     if (loading) return <p>Loading...</p>;
     if (error) return <p> Error {error.message}</p>;
 
-    const bladeProjectData = data[dataKey];
+    const bladeTasks = data[dataKey];
 
-    if (!bladeProjectData) return <p> No data for {dataKey} </p>;
+    if (!bladeTasks) return <p> No data for {dataKey} </p>;
 
-    return <TableLogic columns={columns} data={bladeProjectData} />;
+    return <TableLogic columns={columns} data={bladeTasks} />;
 }
 
-export default BTTable;
+export default ProjectTable;

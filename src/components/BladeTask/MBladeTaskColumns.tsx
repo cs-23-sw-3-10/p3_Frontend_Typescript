@@ -1,10 +1,8 @@
 "use client";
 import { ColumnDef } from "@tanstack/react-table";
-import { BladeProject } from "./tempData";
-import { useContext } from "react";
-import { BladeProjectDataQuery } from "./BPData";
+import { BladeProjectDataQuery } from "../Projects/BPData";
 
-export const columnBP: ColumnDef<BladeProjectDataQuery>[] = [
+export const columnBTs: ColumnDef<BladeProjectDataQuery>[] = [
     {
         header: ({ column }) => {
             return (
@@ -13,53 +11,12 @@ export const columnBP: ColumnDef<BladeProjectDataQuery>[] = [
                         column.toggleSorting(column.getIsSorted() === "asc")
                     }
                 >
-                    ID
+                    BladeTasks ID
                 </button>
             );
         },
-        accessorKey: "id",
-    },
-    {
-        header: ({ column }) => {
-            return (
-                <button
-                    onClick={() =>
-                        column.toggleSorting(column.getIsSorted() === "asc")
-                    }
-                >
-                    Project Name
-                </button>
-            );
-        },
-        accessorKey: "projectName",
-    },
-    {
-        header: ({ column }) => {
-            return (
-                <button
-                    onClick={() =>
-                        column.toggleSorting(column.getIsSorted() === "asc")
-                    }
-                >
-                    Customer
-                </button>
-            );
-        },
-        accessorKey: "customer",
-    },
-    {
-        header: ({ column }) => {
-            return (
-                <button
-                    onClick={() =>
-                        column.toggleSorting(column.getIsSorted() === "asc")
-                    }
-                >
-                    Project Leader
-                </button>
-            );
-        },
-        accessorKey: "projectLeader",
+        id: "bladeTask.id",
+        accessorFn: (row) => row.bladeTasks?.map((bladeTasks) => bladeTasks.id),
     },
     {
         header: ({ column }) => {
@@ -73,7 +30,9 @@ export const columnBP: ColumnDef<BladeProjectDataQuery>[] = [
                 </button>
             );
         },
-        accessorKey: "startDate",
+        id: "bladeTask.startDate",
+        accessorFn: (row) =>
+            row.bladeTasks?.map((bladeTasks) => bladeTasks.startDate),
     },
     {
         header: ({ column }) => {
@@ -87,40 +46,104 @@ export const columnBP: ColumnDef<BladeProjectDataQuery>[] = [
                 </button>
             );
         },
-        accessorKey: "endDate",
-    },
-    {
-        header: ({ column }) => {
-            return (
-                <button
-                    onClick={() =>
-                        column.toggleSorting(column.getIsSorted() === "asc")
-                    }
-                >
-                    Blade Tasks Id
-                </button>
-            );
-        },
-        id: "bladeTasks.id",
-        accessorFn: (row) => row.bladeTasks?.map((bladeTasks) => bladeTasks.id),
-    },
-    {
-        header: ({ column }) => {
-            return (
-                <button
-                    onClick={() =>
-                        column.toggleSorting(column.getIsSorted() === "asc")
-                    }
-                >
-                    Bookings
-                </button>
-            );
-        },
-        id: "bladeTasks.bookings.id",
+        id: "bladeTask.endDate",
         accessorFn: (row) =>
-            row.bladeTasks.map((bladeTask) =>
-                bladeTask.bookings.map((booking) => booking.id)
-            ),
+            row.bladeTasks?.map((bladeTasks) => bladeTasks.endDate),
     },
-    //Evt tilføj Status check?
+    {
+        header: ({ column }) => {
+            return (
+                <button
+                    onClick={() =>
+                        column.toggleSorting(column.getIsSorted() === "asc")
+                    }
+                >
+                    Duration
+                </button>
+            );
+        },
+        id: "bladeTask.duration",
+        accessorFn: (row) =>
+            row.bladeTasks?.map((bladeTasks) => bladeTasks.duration),
+    },
+    {
+        header: ({ column }) => {
+            return (
+                <button
+                    onClick={() =>
+                        column.toggleSorting(column.getIsSorted() === "asc")
+                    }
+                >
+                    Test Type
+                </button>
+            );
+        },
+        id: "bladeTask.testType",
+        accessorFn: (row) =>
+            row.bladeTasks?.map((bladeTasks) => bladeTasks.testType),
+    },
+    {
+        header: ({ column }) => {
+            return (
+                <button
+                    onClick={() =>
+                        column.toggleSorting(column.getIsSorted() === "asc")
+                    }
+                >
+                    Attach Period
+                </button>
+            );
+        },
+        id: "bladeTask.attachPeriod",
+        accessorFn: (row) =>
+            row.bladeTasks?.map((bladeTasks) => bladeTasks.attachPeriod),
+    },
+    {
+        header: ({ column }) => {
+            return (
+                <button
+                    onClick={() =>
+                        column.toggleSorting(column.getIsSorted() === "asc")
+                    }
+                >
+                    Detach Period
+                </button>
+            );
+        },
+        id: "bladeTask.detachPeriod",
+        accessorFn: (row) =>
+            row.bladeTasks?.map((bladeTasks) => bladeTasks.detachPeriod),
+    },
+    {
+        header: ({ column }) => {
+            return (
+                <button
+                    onClick={() =>
+                        column.toggleSorting(column.getIsSorted() === "asc")
+                    }
+                >
+                    Task Name
+                </button>
+            );
+        },
+        id: "bladeTask.taskName",
+        accessorFn: (row) =>
+            row.bladeTasks?.map((bladeTasks) => bladeTasks.taskName),
+    },
+    {
+        header: ({ column }) => {
+            return (
+                <button
+                    onClick={() =>
+                        column.toggleSorting(column.getIsSorted() === "asc")
+                    }
+                >
+                    Test Rig
+                </button>
+            );
+        },
+        id: "bladeTask.testRig",
+        accessorFn: (row) =>
+            row.bladeTasks?.map((bladeTasks) => bladeTasks.testRig),
+    },
 ];

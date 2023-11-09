@@ -1,10 +1,8 @@
 "use client";
 import { ColumnDef } from "@tanstack/react-table";
-import { BladeProject } from "./tempData";
-import { useContext } from "react";
-import { BladeProjectDataQuery } from "./BPData";
+import { BladeTaskQuery } from "./BTData";
 
-export const columnBP: ColumnDef<BladeProjectDataQuery>[] = [
+export const columnBT: ColumnDef<BladeTaskQuery>[] = [
     {
         header: ({ column }) => {
             return (
@@ -13,11 +11,11 @@ export const columnBP: ColumnDef<BladeProjectDataQuery>[] = [
                         column.toggleSorting(column.getIsSorted() === "asc")
                     }
                 >
-                    ID
+                    Blade Project ID
                 </button>
             );
         },
-        accessorKey: "id",
+        accessorKey: "bladeProject.id",
     },
     {
         header: ({ column }) => {
@@ -27,11 +25,11 @@ export const columnBP: ColumnDef<BladeProjectDataQuery>[] = [
                         column.toggleSorting(column.getIsSorted() === "asc")
                     }
                 >
-                    Project Name
+                    BladeTask Name
                 </button>
             );
         },
-        accessorKey: "projectName",
+        accessorKey: "taskName",
     },
     {
         header: ({ column }) => {
@@ -41,25 +39,11 @@ export const columnBP: ColumnDef<BladeProjectDataQuery>[] = [
                         column.toggleSorting(column.getIsSorted() === "asc")
                     }
                 >
-                    Customer
+                    Test Type
                 </button>
             );
         },
-        accessorKey: "customer",
-    },
-    {
-        header: ({ column }) => {
-            return (
-                <button
-                    onClick={() =>
-                        column.toggleSorting(column.getIsSorted() === "asc")
-                    }
-                >
-                    Project Leader
-                </button>
-            );
-        },
-        accessorKey: "projectLeader",
+        accessorKey: "testType",
     },
     {
         header: ({ column }) => {
@@ -97,12 +81,11 @@ export const columnBP: ColumnDef<BladeProjectDataQuery>[] = [
                         column.toggleSorting(column.getIsSorted() === "asc")
                     }
                 >
-                    Blade Tasks Id
+                    Duration
                 </button>
             );
         },
-        id: "bladeTasks.id",
-        accessorFn: (row) => row.bladeTasks?.map((bladeTasks) => bladeTasks.id),
+        accessorKey: "duration",
     },
     {
         header: ({ column }) => {
@@ -112,15 +95,38 @@ export const columnBP: ColumnDef<BladeProjectDataQuery>[] = [
                         column.toggleSorting(column.getIsSorted() === "asc")
                     }
                 >
-                    Bookings
+                    Attach Period
                 </button>
             );
         },
-        id: "bladeTasks.bookings.id",
-        accessorFn: (row) =>
-            row.bladeTasks.map((bladeTask) =>
-                bladeTask.bookings.map((booking) => booking.id)
-            ),
+        accessorKey: "attachPeriod",
     },
-    //Evt tilføj Status check?
+    {
+        header: ({ column }) => {
+            return (
+                <button
+                    onClick={() =>
+                        column.toggleSorting(column.getIsSorted() === "asc")
+                    }
+                >
+                    Detach Period
+                </button>
+            );
+        },
+        accessorKey: "detachPeriod",
+    },
+    {
+        header: ({ column }) => {
+            return (
+                <button
+                    onClick={() =>
+                        column.toggleSorting(column.getIsSorted() === "asc")
+                    }
+                >
+                    Test Rig
+                </button>
+            );
+        },
+        accessorKey: "testRig",
+    },
 ];

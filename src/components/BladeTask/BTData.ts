@@ -8,9 +8,9 @@ export type BladeTaskQuery = {
     detachPeriod: string;
     taskName: string;
     testRig: string;
-    bladeProject: BladeProjectId[];
-}
-
-export type BladeProjectId = {
-    BladeProjectId: number;
-}
+    bladeProject: [
+        {
+            id: number;
+        }
+    ];
+};

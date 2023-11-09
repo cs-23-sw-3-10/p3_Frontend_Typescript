@@ -12,7 +12,7 @@ export const GET_ALL_BT = gql`
             duration
             attachPeriod
             detachPeriod
-            project {
+            bladeProject {
                 id
             }
         }
@@ -20,36 +20,35 @@ export const GET_ALL_BT = gql`
 `;
 
 export const GET_ALL_BP = gql`
-query AllBladeProjects {
-    AllBladeProjects {
-        id
-        start_date
-        end_date
-        customer
-        projectLeader
-        projectName
-        bladeTasks {
+    query AllBladeProjects {
+        AllBladeProjects {
             id
             startDate
             endDate
-            duration
-            testType
-            attachPeriod
-            detachPeriod
-            taskName
-            testRig
-            bookings {
+            customer
+            projectLeader
+            projectName
+            bladeTasks {
                 id
-                start_date
-                end_date
+                startDate
+                endDate
                 duration
-                resourceType
-                workHours
+                testType
+                attachPeriod
+                detachPeriod
+                taskName
+                testRig
+                bookings {
+                    id
+                    startDate
+                    endDate
+                    duration
+                    resourceType
+                    workHours
+                }
             }
         }
     }
-}
-
 `;
 
 export const GET_EQUIPMENT = gql`
@@ -59,8 +58,8 @@ export const GET_EQUIPMENT = gql`
             calibrationExpirationDate
             name
             bookings {
-                start_date
-                end_date
+                startDate
+                endDate
                 duration
             }
         }

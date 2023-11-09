@@ -1,6 +1,7 @@
 import React from "react";
 
 import { TableLogic } from "../TableLogic/TableLogic";
+import { SebTableLogic } from "../TableLogic/SebTable";
 import { EquipmentData } from "./tempDataEquipment";
 import { DocumentNode } from "@apollo/client";
 import { useQuery } from "@apollo/client";

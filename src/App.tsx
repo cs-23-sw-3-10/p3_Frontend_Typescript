@@ -6,12 +6,17 @@ import { Routes, Route, Navigate } from "react-router-dom";
 import "./App.css";
 import ScheduleComponent from "./components/Schedule/ScheduleComponent";
 import ProjectTable from "./components/Projects/ProjectTable";
+import BTTable from "./components/BladeTask/BladeTaskTable";
 
 import { columnBP } from "./components/Projects/BPProjectsColumns";
 import { GET_ALL_BP } from "./api/queryList";
 
 import { columnEQ } from "./components/Resources/EquipmentColumns";
 import { GET_EQUIPMENT } from "./api/queryList";
+
+import { columnBT } from "./components/BladeTask/BTC";
+import { GET_ALL_BT } from "./api/queryList";
+
 function App() {
     return (
         <>
@@ -27,6 +32,16 @@ function App() {
                                     query={GET_ALL_BP}
                                     dataKey="AllBladeProjects"
                                     columns={columnBP}
+                                />
+                            }
+                        />
+                        <Route
+                            path="/bladetask"
+                            element={
+                                <BTTable
+                                    query={GET_ALL_BT}
+                                    dataKey="AllBladeTasks"
+                                    columns={columnBT}
                                 />
                             }
                         />

@@ -3,6 +3,7 @@ import React from "react";
 import StyledButton from "../ui/styledButton";
 import { useCollapse } from "react-collapsed";
 import { Input } from "../ui/input";
+import ScheduleComponent from "../Schedule/ScheduleComponent";
 
 import {
     ColumnDef,
@@ -43,7 +44,7 @@ const defaultPagination: PaginationState = {
     pageSize: 10,
 };
 
-export function TableLogic<TData, TValue>({
+export function SebTableLogic<TData, TValue>({
     columns,
     data,
 }: DataTableProps<TData, TValue>) {
@@ -52,7 +53,6 @@ export function TableLogic<TData, TValue>({
     const [columnFilters, setColumnFilters] =
         React.useState<ColumnFiltersState>([]);
     const [filtering, setFiltering] = React.useState("");
-    const [expanded, setExpanded] = React.useState<ExpandedState>({});
 
     const table = useReactTable({
         data,
@@ -61,20 +61,17 @@ export function TableLogic<TData, TValue>({
         getSortedRowModel: getSortedRowModel(),
         getFilteredRowModel: getFilteredRowModel(),
         getPaginationRowModel: getPaginationRowModel(),
-        getExpandedRowModel: getExpandedRowModel(),
         initialState: {
             pagination: defaultPagination,
         },
         onColumnVisibilityChange: setColumnVisibility,
         onColumnFiltersChange: setColumnFilters,
         onSortingChange: setSorting,
-        onExpandedChange: setExpanded,
         state: {
             sorting,
             globalFilter: filtering,
             columnFilters,
             columnVisibility,
-            expanded,
         },
         onGlobalFilterChange: setFiltering,
     });
@@ -174,29 +171,117 @@ export function TableLogic<TData, TValue>({
                     </TableHeader>
                     <TableBody>
                         {table.getRowModel().rows?.length ? (
-                            table.getRowModel().rows.map((row) => (
-                                <TableRow
-                                    key={row.id}
-                                    data-state={
-                                        row.getIsSelected() && "selected"
-                                    }
-                                >
-                                    {row.getVisibleCells().map((cell) => (
-                                        <TableCell key={cell.id}>
-                                            {flexRender(
-                                                cell.column.columnDef.cell,
-                                                cell.getContext()
-                                            )}
-                                        </TableCell>
-                                    ))}
-                                </TableRow>
-                            ))
+                            table.getRowModel().rows.map((row: any) => {
+                                // Create an array to collect the JSX for the current row and potentially an extra row
+                                const rowElements = [];
+
+                                // JSX for the current row
+                                rowElements.push(
+                                    <TableRow
+                                        key={row.id}
+                                        data-state={
+                                            row.getIsSelected()
+                                                ? "selected"
+                                                : undefined
+                                        }
+                                    >
+                                        {row
+                                            .getVisibleCells()
+                                            .map((cell: any) => (
+                                                <TableCell key={cell.id}>
+                                                    {flexRender(
+                                                        cell.column.columnDef
+                                                            .cell,
+                                                        cell.getContext()
+                                                    )}
+                                                </TableCell>
+                                            ))}
+                                    </TableRow>
+                                );
+
+                                // Check your specific criteria to see if the additional row should be added
+                                if (row.getIsExpanded()) {
+                                    const bookingDataArray =
+                                        row.original.bookings.map(
+                                            (booking: any) => ({
+                                                duration: Number(
+                                                    booking.duration
+                                                ),
+                                                startDate: String(
+                                                    booking.startDate
+                                                ),
+                                                endDate: String(
+                                                    booking.endDate
+                                                ),
+                                            })
+                                        );
+
+                                    console.log(bookingDataArray);
+
+                                    // JSX for the additional row
+                                    rowElements.push(
+                                        <TableRow key={`extra-${row.id}`}>
+                                            <TableCell colSpan={3}>
+                                                <div className="justify-center">
+                                                    <TableHead>
+                                                        <div className="flex flex-rows">
+                                                            <div className="w-1/3">
+                                                                Start Date
+                                                            </div>
+                                                            <div className="w-1/3">
+                                                                End Date
+                                                            </div>
+                                                            <div className="w-1/3">
+                                                                Duration
+                                                            </div>
+                                                        </div>
+                                                    </TableHead>
+                                                    <TableRow>
+                                                        {bookingDataArray.map(
+                                                            (
+                                                                booking: any,
+                                                                index: any
+                                                            ) => (
+                                                                <div
+                                                                    key={index}
+                                                                    className="flex flex rows"
+                                                                >
+                                                                    <div className="w-1/3">
+                                                                        {
+                                                                            booking.startDate
+                                                                        }
+                                                                    </div>
+                                                                    <div className="w-1/3">
+                                                                        {
+                                                                            booking.endDate
+                                                                        }
+                                                                    </div>
+                                                                    <div className="w-1/3">
+                                                                        {
+                                                                            booking.duration
+                                                                        }
+                                                                    </div>
+                                                                </div>
+                                                            )
+                                                        )}
+                                                    </TableRow>
+                                                </div>
+                                            </TableCell>
+                                        </TableRow>
+                                    );
+                                }
+
+                                // Return the combined JSX for both the standard and potentially the additional row
+                                return rowElements;
+                            })
                         ) : (
                             <TableRow>
                                 <TableCell
-                                    colSpan={columns.length}
+                                    colSpan={2}
                                     className="h-24 text-center"
                                 >
+                                    {" "}
+                                    {/* Adjust colSpan as needed */}
                                     No results.
                                 </TableCell>
                             </TableRow>
