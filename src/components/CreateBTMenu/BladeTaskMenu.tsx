@@ -3,25 +3,16 @@ import TestTypeOptions from './TestTypeSelector';
 import TestRigOptions from './TestRigSelector';
 import React, {useState} from 'react';
 
-function handleClick(e:React.FormEvent<HTMLInputElement>, setDate:Function){
+function handleDateChange(e:React.FormEvent<HTMLInputElement>, setDate:Function){ 
     setDate(e.currentTarget.value);
-    console.log(e.currentTarget.value);
-    let currentDate:Date = new Date()
-    let currentDateString:string = currentDate.toISOString().split('T')[0];
-    currentDate.setHours(0,0,0,0);
-    let inputDate:Date = new Date(e.currentTarget.value);
-    inputDate.setHours(0,0,0,0);
-    
-    if(inputDate >= currentDate){
-        setDate(e.currentTarget.value);
-    }else{
-        setDate(currentDateString);
-    }
+}
+
+function handleDateValidation(e:React.FormEvent<HTMLInputElement>, setDate:Function){
+    console.log(e.currentTarget.matches(":focus"));
 }
 
 function BladeTaskMenu(){
         const currentDate = new Date().toISOString().split('T')[0];
-        console.log(currentDate);
         const [date, setDate] = useState(currentDate);
         const [type, setType] = useState('');
 
@@ -48,7 +39,8 @@ function BladeTaskMenu(){
                         type="date" 
                         className="startdate_select" 
                         value={date}
-                        onChange={(e) => handleClick(e,setDate)}
+                        onChange={(e) => handleDateChange(e,setDate)}
+                        onSelectCapture={(e) => handleDateValidation(e,setDate)}
                     />
                 
                     <h2 className="title">Duration</h2>
@@ -102,5 +94,17 @@ function BladeTaskMenu(){
             </div>
         );
 }
+
+/*
+let currentDate:Date = new Date()
+    let currentDateString:string = currentDate.toISOString().split('T')[0];
+    let inputDate:Date = new Date(e.currentTarget.value);
+
+    if(inputDate >= currentDate){
+        setDate(e.currentTarget.value);
+    }else{
+        setDate(currentDateString);
+}
+*/
  
 export default BladeTaskMenu;
