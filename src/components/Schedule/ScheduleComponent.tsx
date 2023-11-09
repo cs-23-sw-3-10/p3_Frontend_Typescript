@@ -2,6 +2,7 @@ import Timeline from "react-calendar-timeline";
 import moment from "moment";
 import "react-calendar-timeline/lib/Timeline.css";
 import GetBladeTaskDateInfo from './scheduleQueries';
+import DisplayComponent from "./Display";
 
 
 interface RigInfo {
@@ -84,7 +85,7 @@ function ScheduleComponent() {
 
     return (
         <div>
-            <h1>Scrollable Horizontal Schedule</h1>
+            {/* <h1>Scrollable Horizontal Schedule</h1>
             <Timeline
                 groups={testRigsPrøve}
                 items={bladeTasksPrøve}
@@ -101,7 +102,9 @@ function ScheduleComponent() {
                     month: 1,
                     year: 1,
                 }}
-            />
+            /> */}
+            <h1>Our Homemade Schedule</h1>
+            <DisplayComponent />
         </div>
     );
 }

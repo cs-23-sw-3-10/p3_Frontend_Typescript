@@ -1,0 +1,70 @@
+.Display {
+    display: flex;
+    flex-direction: row;
+    align-items: left;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+}
+
+.TestRigContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 150px;
+    border: 2px solid black;
+    grid-column: 1;
+    grid-row: 1 ;
+    border: 1px solid black;
+}
+
+.ScheduleContentContainer {
+    display: grid;
+    grid-template-columns: auto auto; 
+    grid-template-rows: auto auto;
+    grid-gap: 10px;
+    width: 100%;
+    height: 100%;
+}
+
+.BladeTaskField {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 1000px;
+    grid-column: 2;
+    grid-row: 1 ;
+    border: 1px solid black;
+}
+
+.AdditionalContent {
+    position: static;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    width: 100vw;
+    grid-column: 1 / 3;
+    grid-row: 2 ;
+    border: 1px solid black;
+}
+
+.dateSpace {
+    position: static;
+    height: 30px;
+    width: 100%;
+    border: 1px solid black;
+}
+
+.datesContainer {
+    position: static;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 30px;
+    border: 1px solid black;
+}
