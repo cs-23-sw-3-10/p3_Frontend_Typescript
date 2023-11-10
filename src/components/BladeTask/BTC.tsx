@@ -11,25 +11,42 @@ export const columnBTID: ColumnDef<BladeTaskQuery>[] = [
                         column.toggleSorting(column.getIsSorted() === "asc")
                     }
                 >
-                    Blade Project ID
-                </button>
-            );
-        },
-        accessorKey: "bladeProject.id",
-    },
-    {
-        header: ({ column }) => {
-            return (
-                <button
-                    onClick={() =>
-                        column.toggleSorting(column.getIsSorted() === "asc")
-                    }
-                >
                     BladeTask Name
                 </button>
             );
         },
         accessorKey: "taskName",
+        enableHiding: true,
+        cell: ({ row, getValue }) => {
+            return (
+                <>
+                    {row.getCanExpand() ? (
+                        <button
+                            {...{
+                                onClick: () => {
+                                    console.log("headingdf.name");
+                                },
+                                style: { cursor: "pointer" },
+                            }}
+                        >
+                            {row.getIsExpanded() ? "▲" : "▼"}
+                        </button>
+                    ) : (
+                        <button
+                            {...{
+                                onClick: () => {
+                                    row.toggleExpanded();
+                                },
+                                style: { cursor: "pointer" },
+                            }}
+                        >
+                            {row.getIsExpanded() ? "▲" : "▼"}
+                        </button>
+                    )}
+                    {getValue()}
+                </>
+            );
+        },
     },
     {
         header: ({ column }) => {
@@ -129,6 +146,20 @@ export const columnBTID: ColumnDef<BladeTaskQuery>[] = [
         },
         accessorKey: "testRig",
     },
+    {
+        header: ({ column }) => {
+            return (
+                <button
+                    onClick={() =>
+                        column.toggleSorting(column.getIsSorted() === "asc")
+                    }
+                >
+                    Blade Project ID
+                </button>
+            );
+        },
+        accessorKey: "bladeProject.id",
+    },
 ];
 
 export const columnBT: ColumnDef<BladeTaskQuery>[] = [
@@ -145,6 +176,37 @@ export const columnBT: ColumnDef<BladeTaskQuery>[] = [
             );
         },
         accessorKey: "taskName",
+        enableHiding: true,
+        cell: ({ row, getValue }) => {
+            return (
+                <>
+                    {row.getCanExpand() ? (
+                        <button
+                            {...{
+                                onClick: () => {
+                                    console.log("headingdf.name");
+                                },
+                                style: { cursor: "pointer" },
+                            }}
+                        >
+                            {row.getIsExpanded() ? "▲" : "▼"}
+                        </button>
+                    ) : (
+                        <button
+                            {...{
+                                onClick: () => {
+                                    row.toggleExpanded();
+                                },
+                                style: { cursor: "pointer" },
+                            }}
+                        >
+                            {row.getIsExpanded() ? "▲" : "▼"}
+                        </button>
+                    )}
+                    {getValue()}
+                </>
+            );
+        },
     },
     {
         header: ({ column }) => {

@@ -31,6 +31,7 @@ import {
 interface DataTableProps<TData, TValue> {
     columns: ColumnDef<TData, TValue>[];
     data: TData[];
+    renderExpandedComponent?: (props?: any) => JSX.Element;
 }
 
 type PaginationState = {
@@ -46,6 +47,7 @@ const defaultPagination: PaginationState = {
 export function TableLogic<TData, TValue>({
     columns,
     data,
+    renderExpandedComponent,
 }: DataTableProps<TData, TValue>) {
     const [sorting, setSorting] = React.useState<SortingState>([]);
     const [columnVisibility, setColumnVisibility] = React.useState({});
@@ -174,30 +176,51 @@ export function TableLogic<TData, TValue>({
                     </TableHeader>
                     <TableBody>
                         {table.getRowModel().rows?.length ? (
-                            table.getRowModel().rows.map((row) => (
-                                <TableRow
-                                    key={row.id}
-                                    data-state={
-                                        row.getIsSelected() && "selected"
-                                    }
-                                >
-                                    {row.getVisibleCells().map((cell) => (
-                                        <TableCell key={cell.id}>
-                                            {flexRender(
-                                                cell.column.columnDef.cell,
-                                                cell.getContext()
-                                            )}
-                                        </TableCell>
-                                    ))}
-                                </TableRow>
-                            ))
+                            table.getRowModel().rows.map((row: any) => {
+                                const rowElements = [];
+
+                                rowElements.push(
+                                    <TableRow
+                                        key={row.id}
+                                        data-state={
+                                            row.getIsSelected()
+                                                ? "selected"
+                                                : undefined
+                                        }
+                                    >
+                                        {row
+                                            .getVisibleCells()
+                                            .map((cell: any) => (
+                                                <TableCell key={cell.id}>
+                                                    {flexRender(
+                                                        cell.column.columnDef
+                                                            .cell,
+                                                        cell.getContext()
+                                                    )}
+                                                </TableCell>
+                                            ))}
+                                    </TableRow>
+                                );
+                                if (row.getIsExpanded()) {
+                                    rowElements.push(
+                                        <TableRow key={`extra ${row.id}`}>
+                                            <TableCell colSpan={columns.length}>
+                                                {renderExpandedComponent
+                                                    ? renderExpandedComponent(
+                                                          row.original
+                                                      )
+                                                    : null}
+                                            </TableCell>
+                                        </TableRow>
+                                    );
+                                    console.log(row.original);
+                                }
+                                return rowElements;
+                            })
                         ) : (
                             <TableRow>
-                                <TableCell
-                                    colSpan={columns.length}
-                                    className="h-24 text-center"
-                                >
-                                    No results.
+                                <TableCell colSpan={columns.length}>
+                                    No data available
                                 </TableCell>
                             </TableRow>
                         )}

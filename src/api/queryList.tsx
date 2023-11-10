@@ -1,19 +1,27 @@
 import { gql } from "@apollo/client";
 
 export const GET_ALL_BT = gql`
-    query GetAllBT {
+    query AllBladeTasks {
         AllBladeTasks {
             id
-            testRig
-            taskName
-            testType
             startDate
             endDate
             duration
+            testType
             attachPeriod
             detachPeriod
+            taskName
+            testRig
             bladeProject {
                 id
+            }
+            bookings {
+                id
+                startDate
+                endDate
+                duration
+                resourceType
+                workHours
             }
         }
     }
@@ -39,12 +47,49 @@ export const GET_ALL_BP = gql`
                 taskName
                 testRig
                 bookings {
-                    id
-                    startDate
-                    endDate
-                    duration
-                    resourceType
-                    workHours
+                    equipment {
+                        id
+                        type
+                        calibrationExpirationDate
+                        name
+                        bookings {
+                            id
+                            startDate
+                            endDate
+                            duration
+                            resourceType
+                            workHours
+                        }
+                    }
+                    engineer {
+                        id
+                        name
+                        workHours
+                        maxWorkHours
+                        bookings {
+                            id
+                            startDate
+                            endDate
+                            duration
+                            resourceType
+                            workHours
+                        }
+                    }
+                    technician {
+                        id
+                        type
+                        workHours
+                        maxWorkHours
+                        count
+                        bookings {
+                            id
+                            startDate
+                            endDate
+                            duration
+                            resourceType
+                            workHours
+                        }
+                    }
                 }
             }
         }
@@ -62,6 +107,19 @@ export const GET_EQUIPMENT = gql`
                 endDate
                 duration
             }
+        }
+    }
+`;
+
+export const GET_BOOKINGS = gql`
+    query AllBookings {
+        AllBookings {
+            id
+            startDate
+            endDate
+            duration
+            resourceType
+            workHours
         }
     }
 `;

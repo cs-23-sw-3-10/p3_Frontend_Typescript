@@ -1,29 +1,29 @@
 import React from "react";
 
-import { TableLogic } from "../TableLogic/TableLogic";
-import { SebTableLogic } from "../TableLogic/SebTable";
-import { EquipmentData } from "./tempDataEquipment";
-import { DocumentNode } from "@apollo/client";
+import { columnEQ } from "./EquipmentColumns";
 import { useQuery } from "@apollo/client";
+import { GET_EQUIPMENT } from "../../api/queryList";
+import ScheduleComponent from "../Schedule/ScheduleComponent";
+import { TableLogic } from "../TableLogic/TableLogic";
 
-interface EquipmenPageProps {
-    query: DocumentNode;
-    dataKey: string;
-    columns: any;
-}
-
-function EquipmentPage({ query, dataKey, columns }: EquipmenPageProps) {
-    const { loading, error, data } = useQuery(query);
+function EquipmentPage() {
+    const { loading, error, data } = useQuery(GET_EQUIPMENT);
 
     if (loading) return <p>Loading...</p>;
     if (error) return <p> Error {error.message}</p>;
 
-    const equipmentData = data[dataKey];
+    const equipmentData = data["AllEquipment"];
     if (!equipmentData) {
-        return <p> No data for {dataKey} </p>;
+        return <p> No data for {"ALLEquipment"} </p>;
     }
 
-    return <SebTableLogic columns={columns} data={equipmentData} />;
+    return (
+        <TableLogic
+            columns={columnEQ}
+            data={equipmentData}
+            renderExpandedComponent={() => <ScheduleComponent />}
+        />
+    );
 }
 
 export default EquipmentPage;

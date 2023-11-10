@@ -5,18 +5,10 @@ import EquipmentPage from "./components/Resources/EquipmentPage";
 import { Routes, Route, Navigate } from "react-router-dom";
 import "./App.css";
 import ScheduleComponent from "./components/Schedule/ScheduleComponent";
-import ProjectTable from "./components/Projects/ProjectTable";
-import BTTable from "./components/BladeTask/BladeTaskTable";
 
-import { columnBP } from "./components/Projects/BPProjectsColumns";
-import { GET_ALL_BP } from "./api/queryList";
+import BladeProjectPage from "./components/Projects/BPPage";
+import BTPage from "./components/BladeTask/BladeTaskPage";
 
-import { columnEQ } from "./components/Resources/EquipmentColumns";
-import { GET_EQUIPMENT } from "./api/queryList";
-
-import { columnBT } from "./components/BladeTask/BTC";
-import { columnBTID } from "./components/BladeTask/BTC";
-import { GET_ALL_BT } from "./api/queryList";
 
 function App() {
     return (
@@ -28,34 +20,10 @@ function App() {
                         <Route path="/" element={<ScheduleComponent />} />
                         <Route
                             path="/projects"
-                            element={
-                                <ProjectTable
-                                    query={GET_ALL_BP}
-                                    dataKey="AllBladeProjects"
-                                    columns={columnBP}
-                                />
-                            }
+                            element={<BladeProjectPage />}
                         />
-                        <Route
-                            path="/bladetask"
-                            element={
-                                <BTTable
-                                    query={GET_ALL_BT}
-                                    dataKey="AllBladeTasks"
-                                    columns={columnBTID}
-                                />
-                            }
-                        />
-                        <Route
-                            path="/resources"
-                            element={
-                                <EquipmentPage
-                                    query={GET_EQUIPMENT}
-                                    dataKey="AllEquipment"
-                                    columns={columnEQ}
-                                />
-                            }
-                        />
+                        <Route path="/bladetask" element={<BTPage />} />
+                        <Route path="/resources" element={<EquipmentPage />} />
                         <Route path="*" element={<Navigate to="/" />} />
                     </Routes>
                 </div>
