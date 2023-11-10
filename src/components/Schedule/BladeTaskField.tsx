@@ -22,44 +22,48 @@ function createBladeTaskField(rigs: string[], months: Date[]) {
     months.forEach((month) => {
         fieldWidth += getTotalWidth(
             month.toLocaleString("default", { month: "long" }),
-            getYear(month)
+            month.getFullYear()
         );
     });
 
     let allDates: Date[] = [];
     months.forEach((month) => {
-        let monthName = capitalizeFirstLetter(month.toLocaleString("default", { month: "long" }));
-        for (let i = 1; i <= MonthLengths[monthName as keyof typeof MonthLengths]; i++) {
-            let date = new Date(getYear(month), getMonth(month), i);
+        let monthName = capitalizeFirstLetter(
+            month.toLocaleString("default", { month: "long" })
+        );
+        for (
+            let i = 1;
+            i <= MonthLengths[monthName as keyof typeof MonthLengths];
+            i++
+        ) {
+            let date = new Date(month.getFullYear(), month.getMonth(), i);
             allDates.push(date);
         }
     });
-    
 
     const BTStyle = {
         width: `${fieldWidth}px`,
         gridTemplateColumns: createGridColumns(months),
         gridTemplateRows: "30px 30px auto",
-    }
+    };
 
     return (
         <div className="BladeTaskFieldContainer">
             <div className="BladeTaskField" style={BTStyle}>
                 {/* {createDates2(months, fieldWidth)} */}
-                {months.map((month) => 
-                    createMonth(month), 
-                    allDates.map((date) => createDate(date)
-                    )
-                )}
-                <div className="BTRigSpace" style={{gridColumn: "1/-1" , gridRow: "3"}}>
-                {rigs.map((rig) => (
-                    <div
-                        className="Rig-BTField"
-                        style={{ width: `${fieldWidth}px`}}
-                    >
-                        <h4>{rig}</h4>
-                    </div>
-                ))}
+                {months.map((month) => createMonthDateContainer(month))}
+                <div
+                    className="BTRigContainer"
+                    style={{ gridColumn: "1/-1", gridRow: "3" }}
+                >
+                    {rigs.map((rig) => (
+                        <div
+                            className="Rig-BTField"
+                            style={{ width: `${fieldWidth}px` }}
+                        >
+                            <h4>{rig}</h4>
+                        </div>
+                    ))}
                 </div>
             </div>
         </div>
@@ -67,96 +71,114 @@ function createBladeTaskField(rigs: string[], months: Date[]) {
 }
 export default createBladeTaskField;
 
-function createDates2(months: Date[], containerWidth: number) {
-    return (
-        <div className="ScheduleDateContainer" style={{ width: `${containerWidth}px`, gridColumn: "1/-1" , gridRow: "1"}}>
-            {months.map((month) => createMonthDateContainer(month))}
-        </div>
-    );
-}
-
-function createMonthDateContainer(currentmonth: Date) {
-    let year = getYear(currentmonth);
+function createMonthDateContainer(currentMonth: Date) {
+    let year = currentMonth.getFullYear();
+    let monthNumber = currentMonth.getMonth();
     let month = capitalizeFirstLetter(
-        currentmonth.toLocaleString("default", { month: "long" })
+        currentMonth.toLocaleString("default", { month: "long" })
     );
-    let firstDay = new Date(
-        currentmonth.getFullYear(),
-        currentmonth.getMonth(),
-        1
-    );
+    let classNameSTR = `${year}-${month}Container`;
 
-    // Get the last day of the month
-    let lastDay = new Date(
-        currentmonth.getFullYear(),
-        currentmonth.getMonth() + 1,
-        0
-    );
+    let monthDates: Date[] = [];
 
-    let displayDates = [];
-
-    for (let i = firstDay.getDate(); i <= lastDay.getDate(); i++) {
-        displayDates.push(i.toString().padStart(2, "0"));
+    for (
+        let i = 1;
+        i <= MonthLengths[month as keyof typeof MonthLengths];
+        i++
+    ) {
+        let date = new Date(
+            currentMonth.getFullYear(),
+            currentMonth.getMonth(),
+            i
+        );
+        monthDates.push(date);
     }
+    const columnTemplate = monthDates.map((date) => `[${date.getFullYear()}-${date.getMonth()}-${date.getDate()}] ${dateDivLength}px`).join(' ');
+
+    let firstDay = `${year}-${monthNumber}-1`;
+    // Get the last day of the month
+    let lastDay = `${year}-${monthNumber}-${
+        MonthLengths[month as keyof typeof MonthLengths]
+    }`;
+
+    const MDStyle = {
+        width: `${getTotalWidth(month, year)}px`,
+        gridTemplateColumns: columnTemplate,
+        gridTemplateRow: "30px 30px",
+        gridColumn: `${firstDay}/${lastDay}`,
+        gridRow: "1/2",
+    };
+    console.log("MDStyle: " +columnTemplate);
 
     return (
-        <div
-            className="MonthDateContainer"
-            style={{ width: `${getTotalWidth(month, year)}px`, gridColumn: "1/-1" , gridRow: "1"}}
-        >
-            <div
-                className="month"
-                style={{ width: `${getTotalWidth(month, year)}px` }}
-            >
-                <p>{month}</p>
-            </div>
-
-            <div
-                className="datesContainer"
-                style={{ width: `${getTotalWidth(month, year)}px` }}
-            >
-                {displayDates.map((date) => (
-                    <div className="date">
-                        <p>{date}</p>
-                    </div>
-                ))}
-            </div>
+        <div className="MonthDateContainer" id={classNameSTR} style={MDStyle}>
+            {createMonth(currentMonth)}
+            {createDates(currentMonth, monthDates, columnTemplate)}
         </div>
     );
 }
 
-function createMonth(currentmonth: Date) {
-    let year = getYear(currentmonth);
-    let monthNumber = getMonth(currentmonth);
+function createMonth(currentMonth: Date) {
+    let year = currentMonth.getFullYear();
+    let monthNumber = currentMonth.getMonth();
     let month = capitalizeFirstLetter(
-        currentmonth.toLocaleString("default", { month: "long" })
+        currentMonth.toLocaleString("default", { month: "long" })
     );
-    let firstDay = 1;
-    // Get the last day of the month
-    let lastDay = MonthLengths[month as keyof typeof MonthLengths];
-    let classNameSTR = `${year}-${monthNumber}`
+    let idSTR = `${year}-${monthNumber}`;
 
     return (
         <div
-                className= {classNameSTR}
-                style={{ width: `${getTotalWidth(month, year)}px`, gridColumn: "1", gridRow: `${firstDay}/${lastDay}`}}
-            >
-                <p>{month}</p>
-            </div>
+            className="MonthHeader"
+            id={idSTR}
+            style={{
+                width: `${getTotalWidth(month, year)}px`,
+                gridColumn: `1/-1`,
+                gridRow: "1",
+            }}
+        >
+            <p>{month}</p>
+        </div>
+    );
+}
+
+function createDates(
+    currentMonth: Date,
+    monthDates: Date[],
+    columnTemplate: string
+) {
+    let year = currentMonth.getFullYear();
+    let monthNumber = currentMonth.getMonth();
+    let containerID = `${year}-${monthNumber}Container`;
+    console.log("createDate " +columnTemplate);
+
+    return (
+        <div
+            className="DateContainer"
+            id={containerID}
+            style={{
+                gridTemplateColumns: columnTemplate,
+                gridTemplateRows: "30px",
+            }}
+        >
+            {monthDates.map((date) => createDate(date))}
+        </div>
     );
 }
 
 function createDate(currentDate: Date) {
-    let year = getYear(currentDate);
-    let monthNumber = getMonth(currentDate);
-    let month = capitalizeFirstLetter(
-        currentDate.toLocaleString("default", { month: "long" })
-    );
+    let year = currentDate.getFullYear();
+    let monthNumber = currentDate.getMonth();
     let date = currentDate.getDate();
-    let classNameSTR = `${year}-${monthNumber}-${date}`
-
+    let idSTR = `${year}-${monthNumber}-${date}`;
     return (
-        <div className={classNameSTR} style={{width: "25px", gridColumn: `${classNameSTR}`, gridRow: "2/3"}}>
+        <div
+            className="DateElement"
+            id={idSTR}
+            style={{
+                width: "100%",
+                gridColumn: `${year}-${monthNumber}-${date}`,
+            }}
+        >
             <p>{date}</p>
         </div>
     );
@@ -184,24 +206,20 @@ function isLeapYear(year: number): boolean {
     return (year % 4 === 0 && year % 100 !== 0) || year % 400 === 0;
 }
 
-function getYear(date: Date) {
-    let year = date.getFullYear();
-    return year;
-}
-
-function getMonth(date: Date) {
-    let month = date.getMonth();
-    return month;
-}
-
 function createGridColumns(months: Date[]) {
     let gridSTR = "";
     months.forEach((month) => {
-        let newmonth = capitalizeFirstLetter(month.toLocaleString("default", { month: "long" }));
-        let yearLabel = getYear(month);
-        let monthLabel = getMonth(month);
-        for (let i = 0; i < MonthLengths[newmonth as keyof typeof MonthLengths]; i++) {
-            gridSTR += `[${yearLabel}-${monthLabel}-${i}]${dateDivLength}px `
+        let newmonth = capitalizeFirstLetter(
+            month.toLocaleString("default", { month: "long" })
+        );
+        let yearLabel = month.getFullYear();
+        let monthLabel = month.getMonth();
+        for (
+            let i = 0;
+            i < MonthLengths[newmonth as keyof typeof MonthLengths];
+            i++
+        ) {
+            gridSTR += `[${yearLabel}-${monthLabel}-${i}]${dateDivLength}px `;
         }
     });
     return gridSTR;
