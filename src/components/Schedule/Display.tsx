@@ -3,6 +3,7 @@ import { DndContext } from "@dnd-kit/core";
 import "./Display.css";
 import createTestRigDivs from "./TestRigDivs";
 import createBladeTaskField from "./BladeTaskField";
+import { nextWednesday } from "date-fns";
 
 let rigs = [
     "Rig 1",
@@ -13,12 +14,15 @@ let rigs = [
     "Rig 6",
 ]
 
+
+let dato = [new Date(Date.now())];
+
 function DisplayComponent() {
     return (
         <div className="ScheduleContentContainer">
             <div className="Display">
                 {createTestRigDivs(rigs)}
-                <DndContext>{createBladeTaskField(rigs)}</DndContext>
+                <DndContext>{createBladeTaskField(rigs, dato)}</DndContext>
             </div>
             <div className="AdditionalContent">
                 <h3>AdditionalContent</h3>

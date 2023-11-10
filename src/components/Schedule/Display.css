@@ -7,6 +7,15 @@
     height: 100%;
 }
 
+.ScheduleContentContainer {
+    display: grid;
+    grid-template-columns: auto auto;
+    grid-template-rows: auto auto;
+    grid-gap: 10px;
+    width: 100%;
+    height: 100%;
+}
+
 .TestRigContainer {
     position: static;
     display: flex;
@@ -29,17 +38,19 @@
     border: 1px solid black;
 }
 
-.ScheduleContentContainer {
-    display: grid;
-    grid-template-columns: auto auto;
-    grid-template-rows: auto auto;
-    grid-gap: 10px;
+.Rig-BTField {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
     width: 100%;
-    height: 100%;
+    height: 50px;
+    border: 1px solid black;
 }
 
-.BladeTaskField {
+.BladeTaskFieldContainer {
     display: flex;
+    overflow: scroll;
     flex-direction: column;
     align-items: center;
     justify-content: center;
@@ -49,14 +60,12 @@
     grid-row: 1;
     border: 1px solid black;
 }
-
-.Rig-BTField {
-    display: flex;
+.BladeTaskField {
+    display: grid;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    width: 100%;
-    height: 50px;
+    height: 100%;
     border: 1px solid black;
 }
 
@@ -70,9 +79,9 @@
 }
 
 .ScheduleDateContainer {
-    position: static;
+    position: relative;
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     align-items: center;
     justify-content: center;
     width: 100%;
@@ -84,7 +93,7 @@
 }
 
 .MonthDateContainer {
-    position: static;
+    position: relative;
     display: flex;
     flex-direction: column;
     align-items: center;
