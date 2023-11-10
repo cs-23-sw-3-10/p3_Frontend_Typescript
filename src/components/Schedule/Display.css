@@ -49,6 +49,7 @@
     grid-row: 1;
     border: 1px solid black;
 }
+
 .Rig-BTField {
     display: flex;
     flex-direction: column;
@@ -61,10 +62,49 @@
 
 .dateSpace {
     position: static;
-    height: 30px;
-    max-height: 30px;
+    height: 60px;
+    max-height: 60px;
+    min-height: 60px;
     width: 100%;
     border-bottom: 1px solid black;
+}
+
+.ScheduleDateContainer {
+    position: static;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 60px;
+    max-height: 60px;
+    min-height: 60px;
+    border-bottom: 1px solid black;
+    border: 1px solid black;
+}
+
+.MonthDateContainer {
+    position: static;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 60px;
+    max-height: 60px;
+    border: 1px solid black;
+}
+
+.month {
+    position: static;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 30px;
+    max-height: 30px;
+    border: 1px solid black;
+}
+.month p {
+    font-size: 15px; /* Adjust the font size as needed */
 }
 
 .datesContainer {
@@ -78,6 +118,22 @@
     max-height: 30px;
     border-bottom: 1px solid black;
     border: 1px solid black;
+}
+
+.date{
+    position: static;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    width: 25px;
+    max-width: 25px;
+    height: 30px;
+    max-height: 30px;
+    border: 1px solid black;
+}
+.date p {
+    font-size: 12px; /* Adjust the font size as needed */
 }
 
 .AdditionalContent {
