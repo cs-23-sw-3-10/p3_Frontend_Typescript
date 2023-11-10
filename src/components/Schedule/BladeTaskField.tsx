@@ -44,7 +44,7 @@ function createBladeTaskField(rigs: string[], months: Date[]) {
     const BTStyle = {
         width: `${fieldWidth}px`,
         gridTemplateColumns: createGridColumns(months),
-        gridTemplateRows: "30px 30px auto",
+        gridTemplateRows: "30px 30px 1fr",
     };
 
     return (
@@ -175,8 +175,8 @@ function createDate(currentDate: Date) {
             className="DateElement"
             id={idSTR}
             style={{
-                width: "100%",
                 gridColumn: `${year}-${monthNumber}-${date}`,
+                gridRow: "1",
             }}
         >
             <p>{date}</p>
