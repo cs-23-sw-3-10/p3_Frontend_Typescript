@@ -2,6 +2,7 @@ import React from "react";
 import { TableLogic } from "../TableLogic/TableLogic";
 import { DocumentNode } from "graphql";
 import { useQuery } from "@apollo/client";
+import { BPTableLogic } from "../TableLogic/BPTableLogic";
 
 interface ProjectTableProps {
     query: DocumentNode;
@@ -19,7 +20,7 @@ function BTTable({ query, dataKey, columns }: ProjectTableProps) {
 
     if (!bladeProjectData) return <p> No data for {dataKey} </p>;
 
-    return <TableLogic columns={columns} data={bladeProjectData} />;
+    return <BPTableLogic columns={columns} data={bladeProjectData} />;
 }
 
 export default BTTable;

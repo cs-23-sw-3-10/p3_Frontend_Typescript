@@ -18,6 +18,37 @@ export const columnBP: ColumnDef<BladeProjectDataQuery>[] = [
             );
         },
         accessorKey: "id",
+        enableHiding: true,
+        cell: ({ row, getValue }) => {
+            return (
+                <>
+                    {row.getCanExpand() ? (
+                        <button
+                            {...{
+                                onClick: () => {
+                                    console.log("headingdf.name");
+                                },
+                                style: { cursor: "pointer" },
+                            }}
+                        >
+                            {row.getIsExpanded() ? "▲" : "▼"}
+                        </button>
+                    ) : (
+                        <button
+                            {...{
+                                onClick: () => {
+                                    row.toggleExpanded();
+                                },
+                                style: { cursor: "pointer" },
+                            }}
+                        >
+                            {row.getIsExpanded() ? "▲" : "▼"}
+                        </button>
+                    )}
+                    {getValue()}
+                </>
+            );
+        },
     },
     {
         header: ({ column }) => {
@@ -89,6 +120,7 @@ export const columnBP: ColumnDef<BladeProjectDataQuery>[] = [
         },
         accessorKey: "endDate",
     },
+    /*
     {
         header: ({ column }) => {
             return (
@@ -122,5 +154,5 @@ export const columnBP: ColumnDef<BladeProjectDataQuery>[] = [
                 bladeTask.bookings.map((booking) => booking.id)
             ),
     },
-    //Evt tilføj Status check?
+   */
 ];

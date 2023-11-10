@@ -9,7 +9,7 @@ interface ProjectTableProps {
     columns: any;
 }
 
-function ProjectTable({ query, dataKey, columns }: ProjectTableProps) {
+function BTTable({ query, dataKey, columns }: ProjectTableProps) {
     const { loading, error, data } = useQuery(query);
 
     if (loading) return <p>Loading...</p>;
@@ -22,4 +22,4 @@ function ProjectTable({ query, dataKey, columns }: ProjectTableProps) {
     return <TableLogic columns={columns} data={bladeTasks} />;
 }
 
-export default ProjectTable;
+export default BTTable;

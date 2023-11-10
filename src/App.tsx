@@ -15,6 +15,7 @@ import { columnEQ } from "./components/Resources/EquipmentColumns";
 import { GET_EQUIPMENT } from "./api/queryList";
 
 import { columnBT } from "./components/BladeTask/BTC";
+import { columnBTID } from "./components/BladeTask/BTC";
 import { GET_ALL_BT } from "./api/queryList";
 
 function App() {
@@ -41,7 +42,7 @@ function App() {
                                 <BTTable
                                     query={GET_ALL_BT}
                                     dataKey="AllBladeTasks"
-                                    columns={columnBT}
+                                    columns={columnBTID}
                                 />
                             }
                         />

@@ -23,7 +23,7 @@ function EquipmentPage({ query, dataKey, columns }: EquipmenPageProps) {
         return <p> No data for {dataKey} </p>;
     }
 
-    return <TableLogic columns={columns} data={equipmentData} />;
+    return <SebTableLogic columns={columns} data={equipmentData} />;
 }
 
 export default EquipmentPage;
