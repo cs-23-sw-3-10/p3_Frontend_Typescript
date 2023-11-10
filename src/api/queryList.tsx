@@ -19,6 +19,14 @@ export const GET_ALL_BT = gql`
   }
 `;
 
+export const GET_ALL_BT_NAMES = gql`
+  query GetAllBTNames{
+    AllBladeTasks{
+      taskName
+   }
+  }
+`;
+
 export const GET_TEST_TYPES = gql`
 query GetTestTypes{
   DictionaryAllByCategory(category:"testType"){
@@ -34,6 +42,8 @@ query GetTestRigs{
   }
 }
 `;
+
+
 
 
 

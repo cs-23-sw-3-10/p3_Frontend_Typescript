@@ -1,30 +1,82 @@
 import './BladeTaskMenu.css';
+import TaskNameSelector from './TaskNameSelector';
 import TestTypeOptions from './TestTypeSelector';
 import TestRigOptions from './TestRigSelector';
-import React, {useState} from 'react';
+import React, {useState, useRef} from 'react';
+
+type inErrorChart = {
+    BTName: boolean;
+    Type: boolean;
+    StartDate: boolean;
+    Duration: boolean;
+    TestRig: boolean;
+    Equipment: boolean;
+    Employees: boolean;
+}
 
 function handleDateChange(e:React.FormEvent<HTMLInputElement>, setDate:Function){ 
     setDate(e.currentTarget.value);
 }
 
-function handleDateValidation(e:React.FormEvent<HTMLInputElement>, setDate:Function){
-    console.log(e.currentTarget.matches(":focus"));
+function handleDurationChange(e:React.FormEvent<HTMLInputElement>, setDuration:Function){
+    setDuration(e.currentTarget.value);
+}
+
+function handleDurationValidation(e:React.FormEvent<HTMLInputElement>, setDuration:Function, setErrorStyle:Function, inErrorChart:inErrorChart){}
+
+function handleDateValidation(e:React.FormEvent<HTMLInputElement>, setDate:Function, setErrorStyle:Function, inErrorChart:inErrorChart){
+    let inputFromForm:string = e.currentTarget.value;
+    let currentDate:Date = new Date()
+    let inputDate:Date = new Date(inputFromForm);
+
+    //Granularity of days -> Set hour to the same value for both dates
+    currentDate.setHours(1,0,0,0);
+    inputDate.setHours(1,0,0,0);
+    console.log(currentDate);
+    console.log(inputDate);
+
+    //Setting the date in input element requires date to be in string format
+    let currentDateString:string = currentDate.toISOString().split('T')[0];
+
+    //
+    if(inputDate >= currentDate){
+        inErrorChart.StartDate = false;
+        console.log(inErrorChart);
+        setErrorStyle(inErrorChart);
+        setDate(inputFromForm);
+    }else{
+        inErrorChart.StartDate = true;
+        setErrorStyle(inErrorChart);
+        setDate(currentDateString);
+    }
+}
+
+function InvalidInputElement(props:any){
+    return(
+        <span className='errorMessage'>{props.message}</span>
+    );
 }
 
 function BladeTaskMenu(){
         const currentDate = new Date().toISOString().split('T')[0];
+        const [inErrorChart, setErrorStyle] = useState({
+            BTName: false,
+            Type: false,
+            StartDate: false,
+            Duration: false,
+            TestRig: false,
+            Equipment: false,
+            Employees: false,
+        });
         const [date, setDate] = useState(currentDate);
-        const [type, setType] = useState('');
+        const [duration, setDuration] = useState({
+            
+        });
 
         return (
             <div className='btmenu-container'>
-               
-                <input 
-                    className='item id_select' 
-                    type="text" 
-                    placeholder='Select Task Name'
-                />
-                
+
+                <TaskNameSelector/>
                 <div className="item testtype_wrapper">
                     <h2 className="title">Type</h2>
                     <select className="testtype_select" id="testtype" name="testtype">
@@ -34,18 +86,25 @@ function BladeTaskMenu(){
     
                 <div className='item date_selection_wrapper'>
                     <h2 className='title'>Start Date</h2>
-                    
+                    {/*Element appears when user provides invalid input for date*/}
+                    {/*invalidInput ? <InvalidInputElement message="Start date cannot be before todays date"/> : <></> */}
                     <input 
                         type="date" 
-                        className="startdate_select" 
+                        className={inErrorChart.StartDate ? "error": "startdate_select"}
                         value={date}
                         onChange={(e) => handleDateChange(e,setDate)}
-                        onSelectCapture={(e) => handleDateValidation(e,setDate)}
+                        onBlur={(e) => handleDateValidation(e,setDate, setErrorStyle, inErrorChart)}
                     />
                 
-                    <h2 className="title">Duration</h2>
-                    
-                    <input type="number" className="item duration_select" />
+                    <h2 className="title">{"Duration(Days)"}</h2>
+                    <input 
+                        type="number"
+                        className="item duration_select" 
+                        name="duration_select" 
+                        placeholder='Days'
+                        min={0}
+                        onChange={(e) => handleDurationChange(e,setDuration)}
+                    />
                 
                     <h2 className="title">Test Rig</h2>
                     
@@ -94,17 +153,5 @@ function BladeTaskMenu(){
             </div>
         );
 }
-
-/*
-let currentDate:Date = new Date()
-    let currentDateString:string = currentDate.toISOString().split('T')[0];
-    let inputDate:Date = new Date(e.currentTarget.value);
-
-    if(inputDate >= currentDate){
-        setDate(e.currentTarget.value);
-    }else{
-        setDate(currentDateString);
-}
-*/
  
 export default BladeTaskMenu;

@@ -38,6 +38,8 @@
     border-top: 1px solid;
 }
 
+
+
 .equipment_wrapper{
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -138,14 +140,15 @@
     font-size: 40px;
 }
 
-.employee_list{
-    
-}
-
 .title{
     font-size: 15px;
     font-weight: bold;
     text-align: center;
+}
+
+.error{
+    border-style: solid;
+    border-color: red;
 }
 
 
