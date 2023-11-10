@@ -44,7 +44,7 @@ function createBladeTaskField(rigs: string[], months: Date[]) {
     const BTStyle = {
         width: `${fieldWidth}px`,
         gridTemplateColumns: createGridColumns(months),
-        gridTemplateRows: "30px 30px 1fr",
+        gridTemplateRows: "30px 30px auto",
     };
 
     return (
