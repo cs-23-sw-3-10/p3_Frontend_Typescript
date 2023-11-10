@@ -1,20 +1,46 @@
 import './BladeTaskMenu.css';
 import TestTypeOptions from './TestTypeSelector';
 import TestRigOptions from './TestRigSelector';
-import React, {useState} from 'react';
+import React, {useState, useRef} from 'react';
 
 function handleDateChange(e:React.FormEvent<HTMLInputElement>, setDate:Function){ 
     setDate(e.currentTarget.value);
 }
 
-function handleDateValidation(e:React.FormEvent<HTMLInputElement>, setDate:Function){
-    console.log(e.currentTarget.matches(":focus"));
+function handleDateValidation(e:React.FormEvent<HTMLInputElement>, setDate:Function, setErrorStyle:Function){
+    let inputFromForm:string = e.currentTarget.value;
+    let currentDate:Date = new Date()
+    let inputDate:Date = new Date(inputFromForm);
+
+    //Granularity of days -> Set hour to the same value for both dates
+    currentDate.setHours(1,0,0,0);
+    inputDate.setHours(1,0,0,0);
+
+    //Setting the date in input element requires date to be in string format
+    let currentDateString:string = currentDate.toISOString().split('T')[0];
+
+    //
+    if(inputDate >= currentDate){
+        setErrorStyle(false);
+        setDate(e.currentTarget.value);
+    }else{
+        setErrorStyle(true);
+        setDate(currentDateString);
+    }
+}
+
+function InvalidInputElement(message:string){
+    return(
+        <div className='invalidInput'>
+            <p>{message}</p>
+        </div>
+    );
 }
 
 function BladeTaskMenu(){
         const currentDate = new Date().toISOString().split('T')[0];
+        const [invalidInput, setErrorStyle] = useState(false);
         const [date, setDate] = useState(currentDate);
-        const [type, setType] = useState('');
 
         return (
             <div className='btmenu-container'>
@@ -37,10 +63,10 @@ function BladeTaskMenu(){
                     
                     <input 
                         type="date" 
-                        className="startdate_select" 
+                        className={invalidInput ? "error": "startdate_select"}
                         value={date}
                         onChange={(e) => handleDateChange(e,setDate)}
-                        onSelectCapture={(e) => handleDateValidation(e,setDate)}
+                        onBlur={(e) => handleDateValidation(e,setDate, setErrorStyle)}
                     />
                 
                     <h2 className="title">Duration</h2>
@@ -94,17 +120,5 @@ function BladeTaskMenu(){
             </div>
         );
 }
-
-/*
-let currentDate:Date = new Date()
-    let currentDateString:string = currentDate.toISOString().split('T')[0];
-    let inputDate:Date = new Date(e.currentTarget.value);
-
-    if(inputDate >= currentDate){
-        setDate(e.currentTarget.value);
-    }else{
-        setDate(currentDateString);
-}
-*/
  
 export default BladeTaskMenu;
