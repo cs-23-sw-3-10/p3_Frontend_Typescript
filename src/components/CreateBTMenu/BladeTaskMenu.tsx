@@ -55,6 +55,34 @@ function InvalidInputElement(props:any){
     return(
         <span className='errorMessage'>{props.message}</span>
     );
+function handleDateValidation(e:React.FormEvent<HTMLInputElement>, setDate:Function, setErrorStyle:Function){
+    let inputFromForm:string = e.currentTarget.value;
+    let currentDate:Date = new Date()
+    let inputDate:Date = new Date(inputFromForm);
+
+    //Granularity of days -> Set hour to the same value for both dates
+    currentDate.setHours(1,0,0,0);
+    inputDate.setHours(1,0,0,0);
+
+    //Setting the date in input element requires date to be in string format
+    let currentDateString:string = currentDate.toISOString().split('T')[0];
+
+    //
+    if(inputDate >= currentDate){
+        setErrorStyle(false);
+        setDate(e.currentTarget.value);
+    }else{
+        setErrorStyle(true);
+        setDate(currentDateString);
+    }
+}
+
+function InvalidInputElement(message:string){
+    return(
+        <div className='invalidInput'>
+            <p>{message}</p>
+        </div>
+    );
 }
 
 function BladeTaskMenu(){
