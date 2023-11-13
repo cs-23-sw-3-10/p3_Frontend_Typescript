@@ -3,7 +3,6 @@ import { DndContext } from "@dnd-kit/core";
 import "./Display.css";
 import createTestRigDivs from "./TestRigDivs";
 import createBladeTaskField from "./BladeTaskField";
-import { nextWednesday } from "date-fns";
 
 let rigs = [
     "Rig 1",
@@ -14,8 +13,7 @@ let rigs = [
     "Rig 6",
 ]
 
-
-let dato = [new Date(2023,9,10), new Date(Date.now()), new Date(2023,11,11)];
+let dato = [new Date(2023,8,10), new Date(2023,9,10), new Date(Date.now()), new Date(2023,11,11)];
 
 function DisplayComponent() {
     return (

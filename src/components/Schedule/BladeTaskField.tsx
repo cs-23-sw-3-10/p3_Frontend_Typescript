@@ -1,7 +1,3 @@
-import { Console } from "console";
-import { create } from "domain";
-import { get } from "http";
-
 enum MonthLengths {
     Januar = 31,
     Februar = 28, // Default non-leap year
@@ -22,11 +18,12 @@ function createBladeTaskField(rigs: string[], months: Date[]) {
     let fieldWidth: number = 0;
     months.forEach((month) => {
         fieldWidth += getTotalWidth(
-            capitalizeFirstLetter(month.toLocaleString("default", { month: "long" })),
+            capitalizeFirstLetter(
+                month.toLocaleString("default", { month: "long" })
+            ),
             month.getFullYear()
         );
     });
-  
 
     let allDates: Date[] = [];
     months.forEach((month) => {
@@ -52,9 +49,15 @@ function createBladeTaskField(rigs: string[], months: Date[]) {
         <div className="BladeTaskFieldContainer">
             <div className="BladeTaskField" style={BTStyle}>
                 {months.map((month) => createMonthDateContainer(month))}
-                <div className="BTRigContainer" style={{ gridColumn: "1/-1", gridRow: "3" }}>
+                <div
+                    className="BTRigContainer"
+                    style={{ gridColumn: "1/-1", gridRow: "3" }}
+                >
                     {rigs.map((rig) => (
-                        <div className="Rig-BTField" style={{ width: `${fieldWidth}px` }}>
+                        <div
+                            className="Rig-BTField"
+                            style={{ width: `${fieldWidth}px` }}
+                        >
                             <h4>{rig}</h4>
                         </div>
                     ))}
@@ -87,7 +90,12 @@ function createMonthDateContainer(currentMonth: Date) {
         );
         monthDates.push(date);
     }
-    const columnTemplate = monthDates.map((date) => `[date-${date.getFullYear()}-${date.getMonth()}-${date.getDate()}] ${dateDivLength}px`).join(' ');
+    const columnTemplate = monthDates
+        .map(
+            (date) =>
+                `[date-${date.getFullYear()}-${date.getMonth()}-${date.getDate()}] ${dateDivLength}px`
+        )
+        .join(" ");
 
     let firstDay = `date-${year}-${monthNumber}-1`;
     // Get the last day of the month
