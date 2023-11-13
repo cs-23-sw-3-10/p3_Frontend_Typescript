@@ -68,6 +68,16 @@ function DisplayComponent() {
                     <input type="button" onClick={goTo} value={"Go To"} />
                 </form>
             </div>
+            <div className="ScheduleFilterAndMode">
+                <label>Filter:</label>
+                <select name="customerFilter" id="customerFilter">
+                    <option value="None">None</option>
+                    <option value="Customer 1">Customer 1</option>
+                    <option value="Customer 2">Customer 2</option>
+                </select>
+                <label className="switch"> Edit Mode</label>
+                <input type="checkbox" />
+            </div>
             <div className="ScheduleDisplay">
                 {CreateTestRigDivs(rigs, dates, setDates)}
                 <DndContext>{CreateTimelineField(rigs, dates)}</DndContext>
@@ -90,10 +100,7 @@ function createDisplayMonths(startDate: Date, numberOfMonths: number) {
             );
         }
     } else {
-        months = createDisplayMonths(
-            firstStartDate,
-            numberOfMonths
-        );
+        months = createDisplayMonths(firstStartDate, numberOfMonths);
     }
     return months;
 }
