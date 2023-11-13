@@ -48,11 +48,12 @@ function createTimelineField(rigs: string[], months: Date[]) {
         gridTemplateRows: "30px 30px auto",
     };
 
-    const RigFieldContainerStyle = {
+    const rigFieldContainerStyle = {
         gridColumn: "1/-1", 
         gridRow: "3",
         height: rigs.length * 50 + "px", // The height of the container is the number of rigs times the height of each rig
         maxHeight: rigs.length * 50 + "px",
+        minHeight: rigs.length * 50 + "px",
     }
 
     return (
@@ -61,12 +62,12 @@ function createTimelineField(rigs: string[], months: Date[]) {
                 {months.map((month) => createMonthDateContainer(month))}
                 <div
                     className="RigFieldContainer"
-                    style={{ gridColumn: "1/-1", gridRow: "3" }}
+                    style={rigFieldContainerStyle}
                 >
                     {rigs.map((rig) =>
                         createRigFieldContainer(rig, allDates, fieldWidth, columnsOfSchedule)
                     )}
-                    <div className="RigFieldSpacer"></div>
+                    
                 </div>
             </div>
         </div>

@@ -41,20 +41,11 @@
 }
 .TestRigDateHeaderSpace {
     position: static;
-    height: 57px;
-    max-height: 57px;
-    min-height: 57px;
+    height: 59px;
+    max-height: 59px;
+    min-height: 59px;
     width: 100%;
     border-bottom: 1px solid black;
-}
-.TRSpacer{
-    position: static;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    width: 100%;
-    height: 1px;
 }
 
 .RigFieldContainer {
@@ -65,15 +56,6 @@
     justify-content: center;
     height: 100%;
     /* border: 1px solid black; */
-}
-.RigFieldSpacer {
-    position: static;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    height: 2px;
-    border-bottom: 1px solid black;
 }
 
 .RigField {

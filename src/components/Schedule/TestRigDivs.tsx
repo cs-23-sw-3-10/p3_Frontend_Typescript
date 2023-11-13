@@ -12,7 +12,7 @@ function createTestRigDivs(rigs: string[]) {
                 </div>
             ))
             }
-            
+           
         </div>
     );
 }
