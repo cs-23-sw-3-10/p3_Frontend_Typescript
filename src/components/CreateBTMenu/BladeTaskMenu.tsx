@@ -22,7 +22,9 @@ function handleDurationChange(e:React.FormEvent<HTMLInputElement>, setDuration:F
     setDuration(e.currentTarget.value);
 }
 
-function handleDurationValidation(e:React.FormEvent<HTMLInputElement>, setDuration:Function, setErrorStyle:Function, inErrorChart:inErrorChart){}
+function handleDurationValidation(e:React.FormEvent<HTMLInputElement>, setDuration:Function, setErrorStyle:Function, inErrorChart:inErrorChart){
+
+}
 
 function handleDateValidation(e:React.FormEvent<HTMLInputElement>, setDate:Function, setErrorStyle:Function, inErrorChart:inErrorChart){
     let inputFromForm:string = e.currentTarget.value;
@@ -71,9 +73,7 @@ function BladeTaskMenu(){
             Employees: false,
         });
         const [date, setDate] = useState(currentDate);
-        const [duration, setDuration] = useState({
-            
-        });
+        const [duration, setDuration] = useState(0);
 
         return (
             <div className='btmenu-container'>
@@ -136,7 +136,26 @@ function BladeTaskMenu(){
                                 <h2 className="title">2</h2>
                             </div>
                         </div>
+
+                        <div className='equipment_entry'>
+                            <div className='type'>
+                                <h2 className='title'>A</h2>
+                            </div>
+                            <div className="amount">
+                                <h2 className="title">2</h2>
+                            </div>
+                        </div>
+
+
                     </div>
+
+                    <div className="equipment_interaction">
+                        <button className='equipment_add'> 
+                            <span className="material-symbols-outlined">add_circle</span>
+                        </button>
+                    </div>
+
+
                 </div>
     
                 <div className="item employees_wrapper">
