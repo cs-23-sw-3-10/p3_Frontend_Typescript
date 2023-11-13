@@ -27,6 +27,7 @@ function BladeTaskCard(props: BladeTaskCardProps) {
     );
 }
 
+//dummy data
 let bladeTaskCards = [
     <BladeTaskCard
         duration={5}

@@ -63,13 +63,13 @@ function createTimelineField(rigs: string[], months: Date[], allBladeTaskCards: 
             <div className="TimelineField" style={BTFieldStyle}>
                 {months.map((month) => createMonthDateContainer(month))}
                 <div className="RigFieldContainer" style={rigFieldContainerStyle}>
-                    {rigs.map((rig, index) =>
+                    {rigs.map((rig) =>
                         createRigFieldContainer(
                             rig,
                             allDates,
                             fieldWidth,
                             columnsOfSchedule,
-                            allBladeTaskCards.filter((bladeTask: React.ReactNode) => {
+                            allBladeTaskCards.filter((bladeTask: React.ReactNode) => { //Finds the blade tasks placed on the rig
                                 if (bladeTask) {
                                     return (bladeTask as React.ReactElement<any>).props.rig === rig;
                                 }
@@ -211,7 +211,7 @@ function createRigFieldContainer(
     return (
         <div className="RigField" style={rigStyle}>
             {allDates.map((date) => createRigFieldDates(rig, date))}
-            {BladeTaskCards}
+            {BladeTaskCards} {/*automatically spreads out the entries of BladeTaskCards */}
         </div>
     );
 }
