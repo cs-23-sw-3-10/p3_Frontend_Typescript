@@ -1,87 +1,32 @@
-import React, { useState } from "react";
+import React from "react";
 import { DndContext } from "@dnd-kit/core";
 import "./Display.css";
-import CreateTestRigDivs from "./TestRigDivs";
-import CreateTimelineField from "./TimelineField";
+import createTestRigDivs from "./TestRigDivs";
+import createTimelineField from "./TimelineField";
 
-let date = new Date(Date.now());
-const firstStartDate = new Date(
-    date.getFullYear(),
-    date.getMonth(),
-    date.getDate()
-);
+let rigs = [ // should be imported from database
+    "Rig 1",
+    "Rig 2",
+    "Rig 3",
+    "Rig 4",
+    "Rig 5",
+    "Rig 6",
+]
+
+let dato = [
+    new Date(2023,8,10), 
+    new Date(2023,9,10), 
+    new Date(2023,10,11), 
+    new Date(2023,11,11),
+    new Date(2024,0,11)
+]; // should be imported from database
 
 function DisplayComponent() {
-    const [rigs, setRigs] = useState([
-        // should be imported from database
-        "Rig 1",
-        "Rig 2",
-        "Rig 3",
-        "Rig 4",
-        "Rig 5",
-        "Rig 6",
-    ]);
-
-    const [dates, setDates] = useState([
-        new Date(firstStartDate),
-        new Date(firstStartDate.getFullYear(), firstStartDate.getMonth() + 1),
-        new Date(firstStartDate.getFullYear(), firstStartDate.getMonth() + 2),
-    ]); // should be imported from database
-
-    const [selectedDate, setSelectedDate] = useState(""); // State to store the selected date
-    const [numberOfMonths, setNumberOfMonths] = useState(3); // State to store the number of months to display
-
-    const handleDateChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setSelectedDate(event.target.value);
-    };
-
-    const handleNumberChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setNumberOfMonths(parseInt(event.target.value));
-    };
-
-    const goTo = () => {
-        const newDate = new Date(selectedDate);
-        if (!isNaN(newDate.valueOf())) {
-            setDates(createDisplayMonths(newDate, numberOfMonths));
-        } else {
-            console.log("Invalid date");
-            setDates(createDisplayMonths(newDate, numberOfMonths));
-        }
-    };
-
     return (
         <div className="ScheduleContentContainer">
-            <div className="ScheduleViewControl">
-                <form>
-                    <label htmlFor="dateInput" style={{ fontSize: "10px" }}>
-                        Date:
-                    </label>
-                    <input
-                        type="date"
-                        value={selectedDate}
-                        onChange={handleDateChange}
-                    />
-                    <label htmlFor="numberInput" style={{ fontSize: "10px" }}>
-                        Months shown:
-                    </label>
-                    <input type="number" onChange={handleNumberChange} />
-                    <input type="button" onClick={goTo} value={"Go To"} />
-                </form>
-            </div>
-            <div className="ScheduleFilterAndMode">
-                <label>Filter:</label>
-                <select name="customerFilter" id="customerFilter">
-                    <option value="None">None</option>
-                    <option value="Customer 1">Customer 1</option>
-                    <option value="Customer 2">Customer 2</option>
-                </select>
-                <label className="switch"> Edit Mode</label>
-                <input type="checkbox" />
-            </div>
             <div className="ScheduleDisplay">
-                {CreateTestRigDivs(rigs, dates, setDates)}
-                <DndContext>{CreateTimelineField(rigs, dates)}</DndContext>
-                <div className="ScheduleDisplaySpacer"></div>
+                {createTestRigDivs(rigs)} 
+                <DndContext>{createTimelineField(rigs, dato)}</DndContext>
             </div>
             <div className="AdditionalContent">
                 <h3>AdditionalContent</h3>
@@ -90,17 +35,3 @@ function DisplayComponent() {
     );
 }
 export default DisplayComponent;
-
-function createDisplayMonths(startDate: Date, numberOfMonths: number) {
-    let months: Date[] = [];
-    if (!isNaN(startDate.valueOf())) {
-        for (let i = 0; i < numberOfMonths; i++) {
-            months.push(
-                new Date(startDate.getFullYear(), startDate.getMonth() + i)
-            );
-        }
-    } else {
-        months = createDisplayMonths(firstStartDate, numberOfMonths);
-    }
-    return months;
-}

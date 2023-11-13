@@ -1,22 +1,12 @@
-// import { viewChange } from "./Display";
-import { is } from "@babel/types";
-import React, { SetStateAction, Dispatch , useState} from "react";
 
-
-function CreateTestRigDivs(rigs: string[], dates: Date[], setDates: Dispatch<SetStateAction<Date[]>>) {
-
-    
-
+function createTestRigDivs(rigs: string[]) {
     // Create a div for each test rig
     return (
         <div className="TestRigOverviewContainer">
-            <div className="TestRigDateHeaderSpace">
-                
-            </div>
+            <div className="TestRigDateHeaderSpace"></div>
             
             {rigs.map((rig) => (
                 <div className="TestRigOverviewElement"
-                    key={rig}
                     id={rig}>
                     <h4>{rig}</h4>
                 </div>
@@ -26,4 +16,4 @@ function CreateTestRigDivs(rigs: string[], dates: Date[], setDates: Dispatch<Set
         </div>
     );
 }
-export default CreateTestRigDivs;
+export default createTestRigDivs;
