@@ -184,7 +184,7 @@ function BladeTaskMenu(){
                         </button>
                     </div>
 
-                    {equipmentActive ? <EquipmentSelectionMenu/> : <></>}
+                    {equipmentActive ? <EquipmentSelectionMenu setEquipmentActive={setEquipmentActive}/> : <></>}
 
                 </div>
     

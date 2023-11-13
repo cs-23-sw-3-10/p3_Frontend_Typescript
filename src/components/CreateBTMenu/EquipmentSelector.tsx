@@ -1,11 +1,13 @@
 import './EquipmentSelector.css'
 import { useQuery} from '@apollo/client';
 import {GET_ALL_EQUIPMENT_TYPES} from '../../api/queryList';
+import React, { SetStateAction } from 'react';
 
-function EquipmentSelectionMenu(){
+function EquipmentSelectionMenu({setEquipmentActive}:{setEquipmentActive:React.Dispatch<SetStateAction<boolean>>}) {
     return(
         <div className='equipment_menu'>
             <h2 className="equipment_menu_title">DB</h2>
+            <button className='equipment_menu_close' onClick={() => setEquipmentActive(false)}><span className="material-symbols-outlined">close</span></button>
             <input className="equipment_menu_search" type="text" />
             <div className="equipment_menu_items_wrapper">
                 <EquipmentListGenerator/>
