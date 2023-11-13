@@ -43,6 +43,15 @@ query GetTestRigs{
 }
 `;
 
+export const GET_ALL_EQUIPMENT_TYPES = gql`
+query AllEquipmentTypes{
+  AllEquipment{
+    id
+    name
+  }
+}
+`;
+
 
 
 
