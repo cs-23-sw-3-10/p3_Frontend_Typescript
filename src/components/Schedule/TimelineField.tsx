@@ -14,7 +14,7 @@ enum MonthLengths { // Non-leap year for easy acces of number of days in a month
 }
 const dateDivLength = 25; // px length of the dates in the schedule
 
-function createTimelineField(rigs: string[], months: Date[]) {
+function CreateTimelineField(rigs: string[], months: Date[]) {
     let fieldWidth: number = 0; // px width of the field dynamically calculated from the number of months displayed
     months.forEach((month) => {
         fieldWidth += getTotalWidth(
@@ -59,13 +59,13 @@ function createTimelineField(rigs: string[], months: Date[]) {
     return (
         <div className="TimelineFieldContainer">
             <div className="TimelineField" style={BTFieldStyle}>
-                {months.map((month) => createMonthDateContainer(month))}
+                {months.map((month) => CreateMonthDateContainer(month))}
                 <div
                     className="RigFieldContainer"
                     style={rigFieldContainerStyle}
                 >
                     {rigs.map((rig) =>
-                        createRigFieldContainer(rig, allDates, fieldWidth, columnsOfSchedule)
+                        CreateRigFieldContainer(rig, allDates, fieldWidth, columnsOfSchedule)
                     )}
                     
                 </div>
@@ -73,9 +73,9 @@ function createTimelineField(rigs: string[], months: Date[]) {
         </div>
     );
 }
-export default createTimelineField;
+export default CreateTimelineField;
 
-function createMonthDateContainer(currentMonth: Date) {
+function CreateMonthDateContainer(currentMonth: Date) {
     let year = currentMonth.getFullYear();
     let monthNumber = currentMonth.getMonth();
     let month = capitalizeFirstLetter(
@@ -117,14 +117,14 @@ function createMonthDateContainer(currentMonth: Date) {
     };
 
     return (
-        <div className="MonthDateContainer" id={idSTR} style={MonthDateContainerStyle}>
-            {createMonthHeader(currentMonth)}
-            {createDatesContainer(currentMonth, monthDates, columnTemplate)}
+        <div key={idSTR} className="MonthDateContainer" id={idSTR} style={MonthDateContainerStyle}>
+            {CreateMonthHeader(currentMonth)}
+            {CreateDatesContainer(currentMonth, monthDates, columnTemplate)}
         </div>
     );
 }
 
-function createMonthHeader(currentMonth: Date) {
+function CreateMonthHeader(currentMonth: Date) {
     let year = currentMonth.getFullYear();
     let monthNumber = currentMonth.getMonth();
     let month = capitalizeFirstLetter(
@@ -134,6 +134,7 @@ function createMonthHeader(currentMonth: Date) {
 
     return (
         <div
+            key={idSTR}
             className="MonthHeader"
             id={idSTR}
             style={{
@@ -146,36 +147,38 @@ function createMonthHeader(currentMonth: Date) {
     );
 }
 
-function createDatesContainer(
+function CreateDatesContainer(
     currentMonth: Date,
     monthDates: Date[],
     columnTemplate: string
 ) {
     let year = currentMonth.getFullYear();
     let monthNumber = currentMonth.getMonth();
-    let containerID = `${year}-${monthNumber}-DateContainer`; // id for the container div
+    let idSTR = `${year}-${monthNumber}-DateContainer`; // id for the container div
 
     return (
         <div
+            key={idSTR}
             className="DateContainer"
-            id={containerID}
+            id={idSTR}
             style={{
                 gridTemplateColumns: columnTemplate, // The container contains a column for each date
                 gridTemplateRows: "30px",
             }}
         >
-            {monthDates.map((date) => createDate(date)) /* Create a date for each day in the month */}
+            {monthDates.map((date) => CreateDate(date)) /* Create a date for each day in the month */}
         </div>
     );
 }
 
-function createDate(currentDate: Date) {
+function CreateDate(currentDate: Date) {
     let year = currentDate.getFullYear();
     let monthNumber = currentDate.getMonth();
     let date = currentDate.getDate();
     let idSTR = `${year}-${monthNumber}-${date}`; // id for the date div
     return (
         <div
+            key={idSTR}
             className="DateElement"
             id={idSTR}
             style={{
@@ -188,7 +191,7 @@ function createDate(currentDate: Date) {
     );
 }
 
-function createRigFieldContainer(
+function CreateRigFieldContainer(
     rig: string,
     allDates: Date[],
     fieldWidth: number,
@@ -200,13 +203,13 @@ function createRigFieldContainer(
         gridTemplateRows: "auto",
     };
     return (
-        <div className="RigField" style={rigStyle}>
-            {allDates.map((date) => createRigFieldDates(rig, date))}
+        <div key={rig} className="RigField" style={rigStyle}>
+            {allDates.map((date) => CreateRigFieldDates(rig, date))}
         </div>
     );
 }
 
-function createRigFieldDates(rig: string, date: Date) {
+function CreateRigFieldDates(rig: string, date: Date) {
     let year = date.getFullYear();
     let monthNumber = date.getMonth();
     let dateNumber = date.getDate();
@@ -224,6 +227,7 @@ function createRigFieldDates(rig: string, date: Date) {
 
     return (
         <div
+            key={idSTR}
             className="RigFieldDate"
             id={idSTR}
             style={RigFieldDatesStyle}
