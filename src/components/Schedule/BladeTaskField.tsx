@@ -53,20 +53,58 @@ function createBladeTaskField(rigs: string[], months: Date[]) {
                     className="BTRigContainer"
                     style={{ gridColumn: "1/-1", gridRow: "3" }}
                 >
-                    {rigs.map((rig) => (
-                        <div
-                            className="Rig-BTField"
-                            style={{ width: `${fieldWidth}px` }}
-                        >
-                            <h4>{rig}</h4>
-                        </div>
-                    ))}
+                    {rigs.map((rig) =>
+                        createRigBTField(rig, allDates, fieldWidth, BTStyle)
+                    )}
                 </div>
             </div>
         </div>
     );
 }
 export default createBladeTaskField;
+
+function createRigBTField(
+    rig: string,
+    allDates: Date[],
+    fieldWidth: number,
+    style: any
+) {
+    const rigStyle = {
+        width: `${fieldWidth}px`,
+        gridTemplateColumns: style["gridTemplateColumns"],
+        gridTemplateRows: "auto",
+    };
+    return (
+        <div className="Rig-BTField" style={rigStyle}>
+            {allDates.map((date) => createRigFieldDates(rig, date))}
+        </div>
+    );
+}
+
+function createRigFieldDates(rig: string, date: Date) {
+    let year = date.getFullYear();
+    let monthNumber = date.getMonth();
+    let dateNumber = date.getDate();
+    let weekDay = date.getDay();
+    let idSTR = `${rig}-${year}-${monthNumber}-${dateNumber}}`;
+
+    let RFDStyle = {
+        gridColumn: `date-${year}-${monthNumber}-${dateNumber}`,
+        gridRow: "1",
+        backgroundColor: "white",
+    };
+    if (weekDay === 0 || weekDay === 6) {
+        RFDStyle.backgroundColor = "lightgrey";
+    }
+
+    return (
+        <div
+            className="RigFieldDate"
+            id={idSTR}
+            style={RFDStyle}
+        ></div>
+    );
+}
 
 function createMonthDateContainer(currentMonth: Date) {
     let year = currentMonth.getFullYear();
@@ -116,7 +154,7 @@ function createMonthDateContainer(currentMonth: Date) {
     return (
         <div className="MonthDateContainer" id={classNameSTR} style={MDStyle}>
             {createMonth(currentMonth)}
-            {createDates(currentMonth, monthDates, columnTemplate)}
+            {createDatesContainer(currentMonth, monthDates, columnTemplate)}
         </div>
     );
 }
@@ -144,7 +182,7 @@ function createMonth(currentMonth: Date) {
     );
 }
 
-function createDates(
+function createDatesContainer(
     currentMonth: Date,
     monthDates: Date[],
     columnTemplate: string
@@ -177,7 +215,7 @@ function createDate(currentDate: Date) {
             className="DateElement"
             id={idSTR}
             style={{
-                gridColumn: `${year}-${monthNumber}-${date}`,
+                gridColumn: `date-${year}-${monthNumber}-${date}`,
                 gridRow: "1",
             }}
         >
