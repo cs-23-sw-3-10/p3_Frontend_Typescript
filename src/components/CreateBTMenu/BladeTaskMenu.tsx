@@ -4,16 +4,8 @@ import TestTypeOptions from './TestTypeSelector';
 import TestRigOptions from './TestRigSelector';
 import EquipmentSelectionMenu from './EquipmentSelector';
 import React, {useState, useRef} from 'react';
+import {BTOrder, InErrorChart} from './BTMenuTypes'
 
-type inErrorChart = {
-    BTName: boolean;
-    Type: boolean;
-    StartDate: boolean;
-    Duration: boolean;
-    TestRig: boolean;
-    Equipment: boolean;
-    Employees: boolean;
-}
 
 function handleDateChange(e:React.FormEvent<HTMLInputElement>, setDate:Function){ 
     setDate(e.currentTarget.value);
@@ -23,11 +15,9 @@ function handleDurationChange(e:React.FormEvent<HTMLInputElement>, setDuration:F
     setDuration(e.currentTarget.value);
 }
 
-function handleDurationValidation(e:React.FormEvent<HTMLInputElement>, setDuration:Function, setErrorStyle:Function, inErrorChart:inErrorChart){
 
-}
 
-function handleDateValidation(e:React.FormEvent<HTMLInputElement>, setDate:Function, setErrorStyle:Function, inErrorChart:inErrorChart){
+function handleDateValidation(e:React.FormEvent<HTMLInputElement>, setDate:Function, setErrorStyle:Function, inErrorChart:InErrorChart){
     let inputFromForm:string = e.currentTarget.value;
     let currentDate:Date = new Date()
     let inputDate:Date = new Date(inputFromForm);
@@ -54,14 +44,6 @@ function handleDateValidation(e:React.FormEvent<HTMLInputElement>, setDate:Funct
     }
 }
 
-function InvalidInputElement(message:string){
-    return(
-        <div className='invalidInput'>
-            <p>{message}</p>
-        </div>
-    );
-}
-
 function BladeTaskMenu(){
         const currentDate = new Date().toISOString().split('T')[0];
         const [inErrorChart, setErrorStyle] = useState({
@@ -76,6 +58,18 @@ function BladeTaskMenu(){
         const [date, setDate] = useState(currentDate);
         const [duration, setDuration] = useState(0);
         const [equipmentActive, setEquipmentActive] = useState(false);
+        const currentOrder:BTOrder = {
+            Project: '',
+            Type: '',
+            StartDate: '',
+            Duration: 0,
+            AttachPeriod: 0,
+            DetachPeriod: 0,
+            TestRig: 0,
+            ResourceOrder: []
+
+        }
+        const [order, setBTOrder] = useState<BTOrder>(currentOrder);
 
         return (
             <div className='btmenu-container'>
@@ -130,52 +124,16 @@ function BladeTaskMenu(){
                     </div>
     
                     <div className="equipment_list">
-                        <div className='equipment_entry'>
-                            <div className='type'>
-                                <h2 className='title'>A</h2>
+                        {order.ResourceOrder.map((order) => (
+                            <div className='equipment_entry'>
+                                <div className='type'>
+                                    <h2 className='title'>{order.ResourceType}</h2>
+                                </div>
+                                <div className="amount">
+                                    <h2 className="title">{order.EquipmentAmount}</h2>
+                                </div>
                             </div>
-                            <div className="amount">
-                                <h2 className="title">2</h2>
-                            </div>
-                        </div>
-
-                        <div className='equipment_entry'>
-                            <div className='type'>
-                                <h2 className='title'>A</h2>
-                            </div>
-                            <div className="amount">
-                                <h2 className="title">2</h2>
-                            </div>
-                        </div>
-
-                        <div className='equipment_entry'>
-                            <div className='type'>
-                                <h2 className='title'>A</h2>
-                            </div>
-                            <div className="amount">
-                                <h2 className="title">2</h2>
-                            </div>
-                        </div>
-
-                        <div className='equipment_entry'>
-                            <div className='type'>
-                                <h2 className='title'>A</h2>
-                            </div>
-                            <div className="amount">
-                                <h2 className="title">2</h2>
-                            </div>
-                        </div>
-
-                        <div className='equipment_entry'>
-                            <div className='type'>
-                                <h2 className='title'>A</h2>
-                            </div>
-                            <div className="amount">
-                                <h2 className="title">2</h2>
-                            </div>
-                        </div>
-
-
+                        ))}
                     </div>
 
                     <div className="equipment_interaction">
@@ -184,7 +142,7 @@ function BladeTaskMenu(){
                         </button>
                     </div>
 
-                    {equipmentActive ? <EquipmentSelectionMenu setEquipmentActive={setEquipmentActive}/> : <></>}
+                    {equipmentActive ? <EquipmentSelectionMenu currentOrder = {order} setEquipmentActive={setEquipmentActive} setBTOrder={setBTOrder}/> : <></>}
 
                 </div>
     
