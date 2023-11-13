@@ -35,6 +35,10 @@ function DisplayComponent() {
         setSelectedDate(event.target.value);
     };
 
+    const handleNumberChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setNumberOfMonths(parseInt(event.target.value));
+    };
+
     const goTo = () => {
         const newDate = new Date(selectedDate);
         if (!isNaN(newDate.valueOf())) {
@@ -43,11 +47,6 @@ function DisplayComponent() {
             console.log("Invalid date");
             setDates(createDisplayMonths(newDate, numberOfMonths));
         }
-    };
-
-    const handleNumberChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setNumberOfMonths(parseInt(event.target.value));
-        console.log(numberOfMonths);
     };
 
     return (
@@ -72,6 +71,7 @@ function DisplayComponent() {
             <div className="ScheduleDisplay">
                 {CreateTestRigDivs(rigs, dates, setDates)}
                 <DndContext>{CreateTimelineField(rigs, dates)}</DndContext>
+                <div className="ScheduleDisplaySpacer"></div>
             </div>
             <div className="AdditionalContent">
                 <h3>AdditionalContent</h3>
