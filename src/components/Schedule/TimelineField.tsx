@@ -30,8 +30,7 @@ function createTimelineField(rigs: string[], months: Date[], allBladeTaskCards: 
         let monthName = capitalizeFirstLetter(
             month.toLocaleString("default", { month: "long" }) // Get the month name
         );
-        for (
-            // Create a date for each day in the month
+        for ( // Create a date for each day in the month
             let i = 1;
             i <= MonthLengths[monthName as keyof typeof MonthLengths];
             i++
