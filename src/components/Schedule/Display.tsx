@@ -1,9 +1,7 @@
-import React from "react";
 import { DndContext } from "@dnd-kit/core";
 import "./Display.css";
 import createTestRigDivs from "./TestRigDivs";
 import createTimelineField from "./TimelineField";
-import {insertBladeTaskCards} from "./BladeTaskCard"
 import {bladeTaskCards} from "./BladeTaskCard";
 
 let rigs = [ // should be imported from database
@@ -30,8 +28,7 @@ function DisplayComponent() {
             <div className="ScheduleDisplay">
                 {createTestRigDivs(rigs)} 
                 <DndContext>
-                    {createTimelineField(rigs, dato)}
-                    {insertBladeTaskCards(bladeTaskCards)}
+                    {createTimelineField(rigs, dato,bladeTaskCards)}
                 </DndContext>
             </div>
             <div className="AdditionalContent">

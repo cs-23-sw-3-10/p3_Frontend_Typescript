@@ -14,7 +14,7 @@ enum MonthLengths { // Non-leap year for easy acces of number of days in a month
 }
 const dateDivLength = 25; // px length of the dates in the schedule
 
-function createTimelineField(rigs: string[], months: Date[]) {
+function createTimelineField(rigs: string[], months: Date[], allBladeTaskCards: React.ReactNode[]) {
     let fieldWidth: number = 0; // px width of the field dynamically calculated from the number of months displayed
     months.forEach((month) => {
         fieldWidth += getTotalWidth(
@@ -30,7 +30,8 @@ function createTimelineField(rigs: string[], months: Date[]) {
         let monthName = capitalizeFirstLetter(
             month.toLocaleString("default", { month: "long" }) // Get the month name
         );
-        for ( // Create a date for each day in the month
+        for (
+            // Create a date for each day in the month
             let i = 1;
             i <= MonthLengths[monthName as keyof typeof MonthLengths];
             i++
@@ -39,10 +40,11 @@ function createTimelineField(rigs: string[], months: Date[]) {
             allDates.push(date);
         }
     });
- 
-    const columnsOfSchedule = createGridColumns(allDates) // Create the grid columns for the schedule
 
-    const BTFieldStyle = { // Style for the BladeTaskField
+    const columnsOfSchedule = createGridColumns(allDates); // Create the grid columns for the schedule
+
+    const BTFieldStyle = {
+        // Style for the BladeTaskField
         width: `${fieldWidth}px`,
         gridTemplateColumns: columnsOfSchedule,
         gridTemplateRows: "30px 30px auto",
@@ -54,20 +56,26 @@ function createTimelineField(rigs: string[], months: Date[]) {
         height: rigs.length * 50 + "px", // The height of the container is the number of rigs times the height of each rig
         maxHeight: rigs.length * 50 + "px",
         minHeight: rigs.length * 50 + "px",
-    }
+    };
 
     return (
         <div className="TimelineFieldContainer">
             <div className="TimelineField" style={BTFieldStyle}>
                 {months.map((month) => createMonthDateContainer(month))}
-                <div
-                    className="RigFieldContainer"
-                    style={rigFieldContainerStyle}
-                >
-                    {rigs.map((rig) =>
-                        createRigFieldContainer(rig, allDates, fieldWidth, columnsOfSchedule)
+                <div className="RigFieldContainer" style={rigFieldContainerStyle}>
+                    {rigs.map((rig, index) =>
+                        createRigFieldContainer(
+                            rig,
+                            allDates,
+                            fieldWidth,
+                            columnsOfSchedule,
+                            allBladeTaskCards.filter((bladeTask: React.ReactNode) => {
+                                if (bladeTask) {
+                                    return (bladeTask as React.ReactElement<any>).props.rig === rig;
+                                }
+                            })
+                        )
                     )}
-                    
                 </div>
             </div>
         </div>
@@ -105,10 +113,10 @@ function createMonthDateContainer(currentMonth: Date) {
         .join(" "); // Join the columns into a string
 
     let firstDay = `date-${year}-${monthNumber}-1`; // Get the first day of the month
-   
-    let lastDay = `date-${year}-${monthNumber}-${ getMonthLength(month, year)}`; // Get the last day of the month
 
-    const MonthDateContainerStyle = { // Style for the MonthDateContainer
+    let lastDay = `date-${year}-${monthNumber}-${getMonthLength(month, year)}`; // Get the last day of the month
+
+    const MonthDateContainerStyle = {// Style for the MonthDateContainer
         width: `${getTotalWidth(month, year)}px`, // Width of the container is the total width of the month
         gridTemplateColumns: columnTemplate,
         gridTemplateRow: "30px 30px",
@@ -192,7 +200,8 @@ function createRigFieldContainer(
     rig: string,
     allDates: Date[],
     fieldWidth: number,
-    columns: string // The columns of the schedule
+    columns: string, // The columns of the schedule
+    BladeTaskCards: React.ReactNode[]
 ) {
     const rigStyle = {
         width: `${fieldWidth}px`,
@@ -200,8 +209,9 @@ function createRigFieldContainer(
         gridTemplateRows: "auto",
     };
     return (
-        <div className="RigField" id={`id-${rig}`} style={rigStyle}>
+        <div className="RigField" style={rigStyle}>
             {allDates.map((date) => createRigFieldDates(rig, date))}
+            {BladeTaskCards}
         </div>
     );
 }
@@ -232,8 +242,7 @@ function createRigFieldDates(rig: string, date: Date) {
 }
 
 function getTotalWidth(month: string, year: number) {
-    let totalWidth = // Get the total width of the month
-        dateDivLength * getMonthLength(month, year); // The total width is the number of days in the month times the width of each date
+    let totalWidth = dateDivLength * getMonthLength(month, year); // Get the total width of the month // The total width is the number of days in the month times the width of each date
     return totalWidth;
 }
 
@@ -243,7 +252,7 @@ function getMonthLength(month: string, year: number) {
         : MonthLengths[month as keyof typeof MonthLengths]; // Else, get the number of days in the month
 }
 
-function capitalizeFirstLetter(str: string) { 
+function capitalizeFirstLetter(str: string) {
     return str.charAt(0).toUpperCase() + str.slice(1); // Capitalize the first letter of a string
 }
 
@@ -258,8 +267,9 @@ function isLeapYear(year: number): boolean {
 
 function createGridColumns(allDates: Date[]) {
     let gridSTR = ""; // String to be used as grid-template-columns
-    allDates.forEach((date) => {// Create a labeled column for each date
-        gridSTR += `[date-${date.getFullYear()}-${date.getMonth()}-${date.getDate()}]${dateDivLength}px `; 
+    allDates.forEach((date) => {
+        // Create a labeled column for each date
+        gridSTR += `[date-${date.getFullYear()}-${date.getMonth()}-${date.getDate()}]${dateDivLength}px `;
     });
     return gridSTR;
 }
