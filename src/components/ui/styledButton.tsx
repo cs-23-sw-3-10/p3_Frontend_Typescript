@@ -7,7 +7,7 @@ type StyledButtonProps = {
 const StyledButton: React.FC<StyledButtonProps> = ({ children, ...props }) => {
     return (
         <button
-            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded capitalize"
             {...props}
         >
             {children}

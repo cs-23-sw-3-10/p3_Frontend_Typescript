@@ -52,27 +52,19 @@ function BladeProjectPage() {
                             id: Number(bladeTask.id),
                             startDate: String(bladeTask.startDate),
                             endDate: String(bladeTask.endDate),
-                            duration: String(bladeTask.duration),
+                            duration: Number(bladeTask.duration),
                             testType: String(bladeTask.testType),
-                            attachPeriod: String(bladeTask.attachPeriod),
-                            detachPeriod: String(bladeTask.detachPeriod),
+                            attachPeriod: Number(bladeTask.attachPeriod),
+                            detachPeriod: Number(bladeTask.detachPeriod),
                             taskName: String(bladeTask.taskName),
                             testRig: String(bladeTask.testRig),
-                        }
-                        )) || [];
+                        })) || [];
 
                 return (
                     <TableLogicWOHeaders
                         columns={columnBT}
                         data={bladeTasksDataForCurrentRow}
-                        renderExpandedComponent={(row) => {
-                            return (
-                                <TableLogicWOHeaders
-                                    columns={columnBookings}
-                                    data={BPData}
-                                />
-                            );
-                        }}
+                        
                     />
                 );
             }}

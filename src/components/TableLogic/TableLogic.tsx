@@ -3,6 +3,7 @@ import React from "react";
 import StyledButton from "../ui/styledButton";
 import { useCollapse } from "react-collapsed";
 import { Input } from "../ui/input";
+import { useNavigate } from "react-router-dom";
 
 import {
     ColumnDef,
@@ -19,6 +20,8 @@ import {
     ExpandedState,
 } from "@tanstack/react-table";
 
+import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
+
 import {
     Table,
     TableBody,
@@ -27,6 +30,7 @@ import {
     TableHeader,
     TableRow,
 } from "../ui/table";
+import path from "path";
 
 interface DataTableProps<TData, TValue> {
     columns: ColumnDef<TData, TValue>[];
@@ -93,6 +97,12 @@ export function TableLogic<TData, TValue>({
         }
     };
 
+    let createURL = useNavigate();
+    const changeURL = () => {
+        let path = `${window.location.pathname}/create`;
+        createURL(path);
+    };
+
     const { getCollapseProps, getToggleProps, isExpanded } = useCollapse();
 
     return (
@@ -107,49 +117,57 @@ export function TableLogic<TData, TValue>({
                     }}
                     className="max-w-sm"
                 />
-                <div className="collapsible inline-block border border-black shadow flex flex-row">
-                    <div
-                        className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-3 cursor-pointer w-40 "
-                        {...getToggleProps()}
-                    >
-                        {isExpanded ? "Close" : "Change Filters"}
-                    </div>
-                    <div {...getCollapseProps()}>
-                        <div className="content flex flex-row ">
-                            <div>
-                                <label>
-                                    <input
-                                        {...{
-                                            type: "checkbox",
-                                            checked:
-                                                table.getIsAllColumnsVisible(),
-                                            onChange:
-                                                table.getToggleAllColumnsVisibilityHandler(),
-                                        }}
-                                    />{" "}
-                                    Toggle All
-                                </label>
-                            </div>
-                            {table.getAllLeafColumns().map((column) => {
-                                return (
-                                    <div key={column.id}>
+                <div>
+                    <Popover>
+                        <PopoverTrigger asChild>
+                            <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 r-100 capitalize">
+                                Change Filters
+                            </button>
+                        </PopoverTrigger>
+                        <PopoverContent className="bg-white">
+                            <div {...getToggleProps()}>
+                                <div className="">
+                                    <div>
                                         <label>
                                             <input
                                                 {...{
                                                     type: "checkbox",
                                                     checked:
-                                                        column.getIsVisible(),
+                                                        table.getIsAllColumnsVisible(),
                                                     onChange:
-                                                        column.getToggleVisibilityHandler(),
+                                                        table.getToggleAllColumnsVisibilityHandler(),
                                                 }}
                                             />{" "}
-                                            {column.id}
+                                            Toggle All
                                         </label>
                                     </div>
-                                );
-                            })}
-                        </div>
-                    </div>
+                                    {table.getAllLeafColumns().map((column) => {
+                                        return (
+                                            <div key={column.id}>
+                                                <label>
+                                                    <input
+                                                        {...{
+                                                            type: "checkbox",
+                                                            checked:
+                                                                column.getIsVisible(),
+                                                            onChange:
+                                                                column.getToggleVisibilityHandler(),
+                                                        }}
+                                                    />{" "}
+                                                    {column.id}
+                                                </label>
+                                            </div>
+                                        );
+                                    })}
+                                </div>
+                            </div>
+                        </PopoverContent>
+                    </Popover>
+                </div>
+                <div className="ml-10">
+                    <StyledButton onClick={changeURL}>
+                        Create {window.location.pathname.split("/")[1]}
+                    </StyledButton>
                 </div>
             </div>
 

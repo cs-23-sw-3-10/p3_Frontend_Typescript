@@ -28,72 +28,36 @@ export const GET_ALL_BT = gql`
 `;
 
 export const GET_ALL_BP = gql`
-    query AllBladeProjects {
-        AllBladeProjects {
+query AllBladeProjects {
+    AllBladeProjects {
+        id
+        startDate
+        endDate
+        customer
+        projectLeader
+        projectName
+        bladeTasks {
             id
             startDate
             endDate
-            customer
-            projectLeader
-            projectName
-            bladeTasks {
+            duration
+            testType
+            attachPeriod
+            detachPeriod
+            taskName
+            testRig
+            bookings {
                 id
                 startDate
                 endDate
                 duration
-                testType
-                attachPeriod
-                detachPeriod
-                taskName
-                testRig
-                bookings {
-                    equipment {
-                        id
-                        type
-                        calibrationExpirationDate
-                        name
-                        bookings {
-                            id
-                            startDate
-                            endDate
-                            duration
-                            resourceType
-                            workHours
-                        }
-                    }
-                    engineer {
-                        id
-                        name
-                        workHours
-                        maxWorkHours
-                        bookings {
-                            id
-                            startDate
-                            endDate
-                            duration
-                            resourceType
-                            workHours
-                        }
-                    }
-                    technician {
-                        id
-                        type
-                        workHours
-                        maxWorkHours
-                        count
-                        bookings {
-                            id
-                            startDate
-                            endDate
-                            duration
-                            resourceType
-                            workHours
-                        }
-                    }
-                }
+                resourceType
+                workHours
             }
         }
     }
+}
+
 `;
 
 export const GET_EQUIPMENT = gql`

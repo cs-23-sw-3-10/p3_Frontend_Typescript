@@ -31,9 +31,9 @@ function BTPage() {
                             id: Number(booking.id),
                             startDate: String(booking.startDate),
                             endDate: String(booking.endDate),
-                            duration: String(booking.duration),
+                            duration: Number(booking.duration),
                             resourceType: String(booking.resourceType),
-                            workHours: String(booking.workHours),
+                            workHours: Number(booking.workHours),
                         })) || [];
                 return (
                     <TableLogicWOHeaders

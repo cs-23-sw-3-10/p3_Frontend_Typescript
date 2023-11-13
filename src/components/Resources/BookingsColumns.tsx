@@ -2,11 +2,9 @@
 import { ColumnDef } from "@tanstack/react-table";
 import { BookingDataQuery } from "./BookingData";
 
-export const createColumn = (
-    header: React.ReactNode,
-    accessorKey: string
-): ColumnDef<BookingDataQuery> => {
-    return {
+export const columnBookings: ColumnDef<BookingDataQuery>[] = [
+    {
+        accessorKey: "id",
         header: ({ column }) => {
             return (
                 <button
@@ -14,19 +12,110 @@ export const createColumn = (
                         column.toggleSorting(column.getIsSorted() === "asc")
                     }
                 >
-                    {header}
+                    Booking Id
                 </button>
             );
         },
-        accessorKey: accessorKey,
-    };
-};
-
-export const columnBookings: ColumnDef<BookingDataQuery>[] = [
-    createColumn("Booking Id", "id"),
-    createColumn("Start Date", "startDate"),
-    createColumn("End Date", "endDate"),
-    createColumn("Duration", "duration"),
-    createColumn("Resource Type", "resourceType"),
-    createColumn("Work Hours", "workHours"),
+        enableHiding: true,
+        cell: ({ row, getValue }) => {
+            return (
+                <>
+                    {row.getCanExpand() ? (
+                        <button
+                            {...{
+                                onClick: () => {
+                                    console.log("headingdf.name");
+                                },
+                                style: { cursor: "pointer" },
+                            }}
+                        >
+                            {row.getIsExpanded() ? "▲" : "▼"}
+                        </button>
+                    ) : (
+                        <button
+                            {...{
+                                onClick: () => {
+                                    row.toggleExpanded();
+                                },
+                                style: { cursor: "pointer" },
+                            }}
+                        >
+                            {row.getIsExpanded() ? "▲" : "▼"}
+                        </button>
+                    )}
+                    {getValue()}
+                </>
+            );
+        },
+    },
+    {
+        accessorKey: "startDate",
+        header: ({ column }) => {
+            return (
+                <button
+                    onClick={() =>
+                        column.toggleSorting(column.getIsSorted() === "asc")
+                    }
+                >
+                    Start Date
+                </button>
+            );
+        },
+    },
+    {
+        accessorKey: "endDate",
+        header: ({ column }) => {
+            return (
+                <button
+                    onClick={() =>
+                        column.toggleSorting(column.getIsSorted() === "asc")
+                    }
+                >
+                    End Date
+                </button>
+            );
+        },
+    },
+    {
+        accessorKey: "duration",
+        header: ({ column }) => {
+            return (
+                <button
+                    onClick={() =>
+                        column.toggleSorting(column.getIsSorted() === "asc")
+                    }
+                >
+                    Duration
+                </button>
+            );
+        },
+    },
+    {
+        accessorKey: "resourceType",
+        header: ({ column }) => {
+            return (
+                <button
+                    onClick={() =>
+                        column.toggleSorting(column.getIsSorted() === "asc")
+                    }
+                >
+                    Resource Type
+                </button>
+            );
+        },
+    },
+    {
+        accessorKey: "workHours",
+        header: ({ column }) => {
+            return (
+                <button
+                    onClick={() =>
+                        column.toggleSorting(column.getIsSorted() === "asc")
+                    }
+                >
+                    Work Hoursss
+                </button>
+            );
+        },
+    },
 ];

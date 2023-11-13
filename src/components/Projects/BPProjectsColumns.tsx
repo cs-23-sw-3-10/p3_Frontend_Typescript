@@ -136,6 +136,9 @@ export const columnBP: ColumnDef<BladeProjectDataQuery>[] = [
         id: "bladeTasks.id",
         accessorFn: (row) => row.bladeTasks?.map((bladeTasks) => bladeTasks.id),
     },
+    */
+   
+    /*
     {
         header: ({ column }) => {
             return (
@@ -154,5 +157,6 @@ export const columnBP: ColumnDef<BladeProjectDataQuery>[] = [
                 bladeTask.bookings.map((booking) => booking.id)
             ),
     },
-   */
+    */
+   
 ];
