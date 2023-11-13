@@ -1,0 +1,11 @@
+/* EQUIPMENT MENU */
+.equipment_menu{
+    position: absolute;
+    width: 300px;
+    background-color: white;
+    border: solid;
+    transform: translate(700px, -95px);
+    display: grid;
+    grid-template-rows: 70px 50px auto;
+    grid-template-columns: 1fr;
+}

@@ -1,5 +1,5 @@
 .btmenu-container{
-    grid-template-rows: 1fr 1fr 2fr 2fr 2fr;
+    grid-template-rows: 100px 75px 200px 2fr 2fr;
     grid-template-columns: repeat(5, 1fr);
     width: 700px;
     height: auto;
@@ -41,6 +41,7 @@
 
 /* EQUIPMENT SECTION OF BT-MENU */
 .equipment_wrapper{
+    position: relative;
     display: grid;
     grid-template-columns: 1fr 1fr;
     grid-template-rows: 30px auto auto 1fr;
@@ -175,5 +176,6 @@
     border-style: solid;
     border-color: red;
 }
+
 
 

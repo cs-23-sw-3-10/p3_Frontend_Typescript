@@ -2,6 +2,7 @@ import './BladeTaskMenu.css';
 import TaskNameSelector from './TaskNameSelector';
 import TestTypeOptions from './TestTypeSelector';
 import TestRigOptions from './TestRigSelector';
+import EquipmentSelectionMenu from './EquipmentSelector';
 import React, {useState, useRef} from 'react';
 
 type inErrorChart = {
@@ -74,6 +75,7 @@ function BladeTaskMenu(){
         });
         const [date, setDate] = useState(currentDate);
         const [duration, setDuration] = useState(0);
+        const [equipmentActive, setEquipmentActive] = useState(false);
 
         return (
             <div className='btmenu-container'>
@@ -146,15 +148,43 @@ function BladeTaskMenu(){
                             </div>
                         </div>
 
+                        <div className='equipment_entry'>
+                            <div className='type'>
+                                <h2 className='title'>A</h2>
+                            </div>
+                            <div className="amount">
+                                <h2 className="title">2</h2>
+                            </div>
+                        </div>
+
+                        <div className='equipment_entry'>
+                            <div className='type'>
+                                <h2 className='title'>A</h2>
+                            </div>
+                            <div className="amount">
+                                <h2 className="title">2</h2>
+                            </div>
+                        </div>
+
+                        <div className='equipment_entry'>
+                            <div className='type'>
+                                <h2 className='title'>A</h2>
+                            </div>
+                            <div className="amount">
+                                <h2 className="title">2</h2>
+                            </div>
+                        </div>
+
 
                     </div>
 
                     <div className="equipment_interaction">
-                        <button className='equipment_add'> 
+                        <button className='equipment_add' onClick={(e) => setEquipmentActive(true)}> 
                             <span className="material-symbols-outlined">add_circle</span>
                         </button>
                     </div>
 
+                    {equipmentActive ? <EquipmentSelectionMenu/> : <></>}
 
                 </div>
     
@@ -166,9 +196,7 @@ function BladeTaskMenu(){
                         <p className='expand'><span className="material-symbols-outlined expand">expand_circle_right</span></p>
                     </div>
                     <div className='employee_list'>
-                        <div className='employee_entry'>
-                            
-                        </div>
+                        <div className='employee_entry'></div>
                     </div>
                 </div>
             </div>
