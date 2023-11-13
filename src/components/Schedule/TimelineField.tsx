@@ -200,7 +200,7 @@ function createRigFieldContainer(
         gridTemplateRows: "auto",
     };
     return (
-        <div className="RigField" style={rigStyle}>
+        <div className="RigField" id={`id-${rig}`} style={rigStyle}>
             {allDates.map((date) => createRigFieldDates(rig, date))}
         </div>
     );

@@ -3,6 +3,8 @@ import { DndContext } from "@dnd-kit/core";
 import "./Display.css";
 import createTestRigDivs from "./TestRigDivs";
 import createTimelineField from "./TimelineField";
+import {insertBladeTaskCards} from "./BladeTaskCard"
+import {bladeTaskCards} from "./BladeTaskCard";
 
 let rigs = [ // should be imported from database
     "Rig 1",
@@ -21,12 +23,16 @@ let dato = [
     new Date(2024,0,11)
 ]; // should be imported from database
 
+
 function DisplayComponent() {
     return (
         <div className="ScheduleContentContainer">
             <div className="ScheduleDisplay">
                 {createTestRigDivs(rigs)} 
-                <DndContext>{createTimelineField(rigs, dato)}</DndContext>
+                <DndContext>
+                    {createTimelineField(rigs, dato)}
+                    {insertBladeTaskCards(bladeTaskCards)}
+                </DndContext>
             </div>
             <div className="AdditionalContent">
                 <h3>AdditionalContent</h3>
