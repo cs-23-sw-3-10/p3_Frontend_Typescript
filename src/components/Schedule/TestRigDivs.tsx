@@ -2,14 +2,17 @@
 function createTestRigDivs(rigs: string[]) {
     // Create a div for each test rig
     return (
-        <div className="TestRigContainer">
-            <div className="dateSpace"></div>
+        <div className="TestRigOverviewContainer">
+            <div className="TestRigDateHeaderSpace"></div>
+            
             {rigs.map((rig) => (
-                <div className="TestRig">
+                <div className="TestRigOverviewElement"
+                    id={rig}>
                     <h4>{rig}</h4>
                 </div>
             ))
             }
+            
         </div>
     );
 }
