@@ -15,7 +15,7 @@ let rigs = [
 ]
 
 
-let dato = [new Date(Date.now())];
+let dato = [new Date(2023,9,10), new Date(Date.now()), new Date(2023,11,11)];
 
 function DisplayComponent() {
     return (

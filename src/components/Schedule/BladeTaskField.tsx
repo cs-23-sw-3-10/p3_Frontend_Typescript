@@ -1,30 +1,32 @@
+import { Console } from "console";
 import { create } from "domain";
 import { get } from "http";
 
 enum MonthLengths {
-    January = 31,
-    February = 28, // Default non-leap year
-    March = 31,
+    Januar = 31,
+    Februar = 28, // Default non-leap year
+    Marts = 31,
     April = 30,
     May = 31,
-    June = 30,
-    July = 31,
+    Juni = 30,
+    Juli = 31,
     August = 31,
     September = 30,
-    October = 31,
+    Oktober = 31,
     November = 30,
     December = 31,
 }
 const dateDivLength = 25;
 
 function createBladeTaskField(rigs: string[], months: Date[]) {
-    let fieldWidth = 0;
+    let fieldWidth: number = 0;
     months.forEach((month) => {
         fieldWidth += getTotalWidth(
-            month.toLocaleString("default", { month: "long" }),
+            capitalizeFirstLetter(month.toLocaleString("default", { month: "long" })),
             month.getFullYear()
         );
     });
+  
 
     let allDates: Date[] = [];
     months.forEach((month) => {
@@ -40,27 +42,19 @@ function createBladeTaskField(rigs: string[], months: Date[]) {
             allDates.push(date);
         }
     });
-
     const BTStyle = {
         width: `${fieldWidth}px`,
-        gridTemplateColumns: createGridColumns(months),
+        gridTemplateColumns: createGridColumns(allDates),
         gridTemplateRows: "30px 30px auto",
     };
 
     return (
         <div className="BladeTaskFieldContainer">
             <div className="BladeTaskField" style={BTStyle}>
-                {/* {createDates2(months, fieldWidth)} */}
                 {months.map((month) => createMonthDateContainer(month))}
-                <div
-                    className="BTRigContainer"
-                    style={{ gridColumn: "1/-1", gridRow: "3" }}
-                >
+                <div className="BTRigContainer" style={{ gridColumn: "1/-1", gridRow: "3" }}>
                     {rigs.map((rig) => (
-                        <div
-                            className="Rig-BTField"
-                            style={{ width: `${fieldWidth}px` }}
-                        >
+                        <div className="Rig-BTField" style={{ width: `${fieldWidth}px` }}>
                             <h4>{rig}</h4>
                         </div>
                     ))}
@@ -93,12 +87,14 @@ function createMonthDateContainer(currentMonth: Date) {
         );
         monthDates.push(date);
     }
-    const columnTemplate = monthDates.map((date) => `[${date.getFullYear()}-${date.getMonth()}-${date.getDate()}] ${dateDivLength}px`).join(' ');
+    const columnTemplate = monthDates.map((date) => `[date-${date.getFullYear()}-${date.getMonth()}-${date.getDate()}] ${dateDivLength}px`).join(' ');
 
-    let firstDay = `${year}-${monthNumber}-1`;
+    let firstDay = `date-${year}-${monthNumber}-1`;
     // Get the last day of the month
-    let lastDay = `${year}-${monthNumber}-${
-        MonthLengths[month as keyof typeof MonthLengths]
+    let lastDay = `date-${year}-${monthNumber}-${
+        month === "February"
+            ? getDaysInFebruary(year)
+            : MonthLengths[month as keyof typeof MonthLengths]
     }`;
 
     const MDStyle = {
@@ -108,7 +104,6 @@ function createMonthDateContainer(currentMonth: Date) {
         gridColumn: `${firstDay}/${lastDay}`,
         gridRow: "1/2",
     };
-    console.log("MDStyle: " +columnTemplate);
 
     return (
         <div className="MonthDateContainer" id={classNameSTR} style={MDStyle}>
@@ -148,8 +143,7 @@ function createDates(
 ) {
     let year = currentMonth.getFullYear();
     let monthNumber = currentMonth.getMonth();
-    let containerID = `${year}-${monthNumber}Container`;
-    console.log("createDate " +columnTemplate);
+    let containerID = `${year}-${monthNumber}-DateContainer`;
 
     return (
         <div
@@ -206,21 +200,10 @@ function isLeapYear(year: number): boolean {
     return (year % 4 === 0 && year % 100 !== 0) || year % 400 === 0;
 }
 
-function createGridColumns(months: Date[]) {
+function createGridColumns(allDates: Date[]) {
     let gridSTR = "";
-    months.forEach((month) => {
-        let newmonth = capitalizeFirstLetter(
-            month.toLocaleString("default", { month: "long" })
-        );
-        let yearLabel = month.getFullYear();
-        let monthLabel = month.getMonth();
-        for (
-            let i = 0;
-            i < MonthLengths[newmonth as keyof typeof MonthLengths];
-            i++
-        ) {
-            gridSTR += `[${yearLabel}-${monthLabel}-${i}]${dateDivLength}px `;
-        }
+    allDates.forEach((date) => {
+        gridSTR += `[date-${date.getFullYear()}-${date.getMonth()}-${date.getDate()}]${dateDivLength}px `;
     });
     return gridSTR;
 }
