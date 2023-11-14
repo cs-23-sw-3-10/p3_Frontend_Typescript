@@ -2,8 +2,6 @@ import React, { SetStateAction, Dispatch } from "react";
 
 function CreateTestRigDivs(
     rigs: string[],
-    dates: Date[],
-    setDates: Dispatch<SetStateAction<Date[]>>
 ) {
     // Create a div for each test rig
     return (
@@ -18,4 +16,4 @@ function CreateTestRigDivs(
         </div>
     );
 }
-export default createTestRigDivs;
+export default CreateTestRigDivs;
