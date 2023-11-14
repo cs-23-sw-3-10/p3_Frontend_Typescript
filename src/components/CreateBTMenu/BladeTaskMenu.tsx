@@ -3,7 +3,8 @@ import TaskNameSelector from './TaskNameSelector';
 import TestTypeOptions from './TestTypeSelector';
 import TestRigOptions from './TestRigSelector';
 import EquipmentSelectionMenu from './EquipmentSelector';
-import React, {useState, useRef} from 'react';
+import { BTOrderContext } from './BladeTaskOrderContext';
+import React, {useState, useContext} from 'react';
 import {BTOrder, InErrorChart} from './BTMenuTypes'
 
 
@@ -14,8 +15,6 @@ function handleDateChange(e:React.FormEvent<HTMLInputElement>, setDate:Function)
 function handleDurationChange(e:React.FormEvent<HTMLInputElement>, setDuration:Function){
     setDuration(e.currentTarget.value);
 }
-
-
 
 function handleDateValidation(e:React.FormEvent<HTMLInputElement>, setDate:Function, setErrorStyle:Function, inErrorChart:InErrorChart){
     let inputFromForm:string = e.currentTarget.value;
@@ -58,7 +57,7 @@ function BladeTaskMenu(){
         const [date, setDate] = useState(currentDate);
         const [duration, setDuration] = useState(0);
         const [equipmentActive, setEquipmentActive] = useState(false);
-        const currentOrder:BTOrder = {
+        const [currentOrder] = useState<BTOrder>({ 
             Project: '',
             Type: '',
             StartDate: '',
@@ -66,10 +65,8 @@ function BladeTaskMenu(){
             AttachPeriod: 0,
             DetachPeriod: 0,
             TestRig: 0,
-            ResourceOrder: []
-
-        }
-        const [order, setBTOrder] = useState<BTOrder>(currentOrder);
+            ResourceOrder: []}
+        );
 
         return (
             <div className='btmenu-container'>
@@ -124,7 +121,7 @@ function BladeTaskMenu(){
                     </div>
     
                     <div className="equipment_list">
-                        {order.ResourceOrder.map((order) => (
+                        {currentOrder.ResourceOrder.map((order) => (
                             <div className='equipment_entry'>
                                 <div className='type'>
                                     <h2 className='title'>{order.ResourceType}</h2>
@@ -142,7 +139,9 @@ function BladeTaskMenu(){
                         </button>
                     </div>
 
-                    {equipmentActive ? <EquipmentSelectionMenu currentOrder = {order} setEquipmentActive={setEquipmentActive} setBTOrder={setBTOrder}/> : <></>}
+                    <BTOrderContext.Provider value={currentOrder}>
+                        <EquipmentSelectionMenu setEquipmentActive={setEquipmentActive}/>
+                    </BTOrderContext.Provider>
 
                 </div>
     
