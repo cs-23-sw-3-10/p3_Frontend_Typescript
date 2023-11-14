@@ -11,7 +11,7 @@ const firstStartDate = new Date(
     date.getDate()
 );
 
-function DisplayComponent() {
+function DisplayComponent(editMode: boolean ,setEditMode: React.Dispatch<React.SetStateAction<boolean>>) {
     const [rigs, setRigs] = useState([
         // should be imported from database
         "Rig 1",
@@ -37,6 +37,10 @@ function DisplayComponent() {
 
     const handleNumberChange = (event: React.ChangeEvent<HTMLInputElement>) => {  
         setNumberOfMonths(parseInt(event.target.value));
+    };
+
+    const handleModeChange = () => {
+        setEditMode(!editMode);
     };
 
     const goTo = () => {
@@ -76,7 +80,7 @@ function DisplayComponent() {
                     <option value="Customer 2">Customer 2</option>
                 </select>
                 <label className="switch"> Edit Mode</label>
-                <input type="checkbox" />
+                <input type="checkbox" onChange={handleModeChange}/>
             </div>
             <div className="ScheduleDisplay">
                 {CreateTestRigDivs(rigs, dates, setDates)}
