@@ -11,7 +11,6 @@ function createTestRigDivs(rigs: string[]) {
                 </div>
             ))
             }
-            <div className="TestRigOverviewElement" style={{height: "16px"}}></div> {/*Filling out empty area */}
         </div>
     );
 }
