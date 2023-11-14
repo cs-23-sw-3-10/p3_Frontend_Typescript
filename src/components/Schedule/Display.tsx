@@ -1,15 +1,26 @@
-import React, { useState } from "react";
 import { DndContext } from "@dnd-kit/core";
 import "./Display.css";
-import CreateTestRigDivs from "./TestRigDivs";
-import CreateTimelineField from "./TimelineField";
+import createTestRigDivs from "./TestRigDivs";
+import createTimelineField from "./TimelineField";
+import {bladeTaskCards} from "./BladeTaskCard";
 
-let date = new Date(Date.now());
-const firstStartDate = new Date(
-    date.getFullYear(),
-    date.getMonth(),
-    date.getDate()
-);
+let rigs = [ // should be imported from database
+    "Rig 1",
+    "Rig 2",
+    "Rig 3",
+    "Rig 4",
+    "Rig 5",
+    "Rig 6",
+]
+
+let dato = [
+    new Date(2023,8,10), 
+    new Date(2023,9,10), 
+    new Date(2023,10,11), 
+    new Date(2023,11,11),
+    new Date(2024,0,11)
+]; // should be imported from database
+
 
 function DisplayComponent(editMode: boolean ,setEditMode: React.Dispatch<React.SetStateAction<boolean>>) {
     const [rigs, setRigs] = useState([
@@ -85,14 +96,16 @@ function DisplayComponent(editMode: boolean ,setEditMode: React.Dispatch<React.S
                 <input type="checkbox" onChange={handleModeChange}/>
             </div>
             <div className="ScheduleDisplay">
-                {CreateTestRigDivs(rigs, dates, setDates)}
-                <DndContext>{CreateTimelineField(rigs, dates)}</DndContext>
-                <div className="ScheduleDisplaySpacer"></div>
+                {createTestRigDivs(rigs)} 
+                <DndContext>
+                    {createTimelineField(rigs, dato,bladeTaskCards)}
+                </DndContext>
             </div>
             {editMode ? additionalContent : null}
         </div>
     );
 }
+
 export default DisplayComponent;
 
 function createDisplayMonths(startDate: Date, numberOfMonths: number) {
