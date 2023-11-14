@@ -26,9 +26,7 @@ function EquipmentMenuItem({equipmentType, key}:{equipmentType:string, key:numbe
                     <button 
                         className="equipment_menu_item_button" 
                         onClick={() => {
-                        console.log(currentOrder.ResourceOrder);
                         currentOrder.ResourceOrder.push({ResourceType: equipmentType, EquipmentAmount: 1, WorkHours: 0, Period:[0,0,0]})
-                        console.log(currentOrder.ResourceOrder);
                         }}>
                             <span className="equipment_menu_item_icon material-symbols-outlined">add_circle</span>
                     </button>

@@ -4,8 +4,9 @@ import TestTypeOptions from './TestTypeSelector';
 import TestRigOptions from './TestRigSelector';
 import EquipmentSelectionMenu from './EquipmentSelector';
 import { BTOrderContext } from './BladeTaskOrderContext';
-import React, {useState, useContext} from 'react';
+import React, {useState, useEffect} from 'react';
 import {BTOrder, InErrorChart} from './BTMenuTypes'
+import { render } from 'react-dom';
 
 
 function handleDateChange(e:React.FormEvent<HTMLInputElement>, setDate:Function){ 
@@ -67,6 +68,9 @@ function BladeTaskMenu(){
             TestRig: 0,
             ResourceOrder: []}
         );
+
+        useEffect(() => {
+        },[currentOrder]) 
 
         return (
             <div className='btmenu-container'>
@@ -138,10 +142,16 @@ function BladeTaskMenu(){
                             <span className="material-symbols-outlined">add_circle</span>
                         </button>
                     </div>
-
+                    
+                    {equipmentActive 
+                    ? 
                     <BTOrderContext.Provider value={currentOrder}>
                         <EquipmentSelectionMenu setEquipmentActive={setEquipmentActive}/>
                     </BTOrderContext.Provider>
+                    :
+                    <></>
+                    }
+                    
 
                 </div>
     
