@@ -18,4 +18,4 @@ function CreateTestRigDivs(
         </div>
     );
 }
-export default CreateTestRigDivs;
+export default createTestRigDivs;
