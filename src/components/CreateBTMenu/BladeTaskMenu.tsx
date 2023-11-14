@@ -6,6 +6,7 @@ import EquipmentSelectionMenu from './EquipmentSelector';
 import { ResourceOrderContext } from './BladeTaskOrderContext';
 import React, {useState, useEffect} from 'react';
 import {BTOrder, InErrorChart, ResourceOrder} from './BTMenuTypes'
+import EquipmentList from './EquipmentList';
 
 
 function handleDateChange(e:React.FormEvent<HTMLInputElement>, setDate:Function){ 
@@ -127,20 +128,8 @@ function BladeTaskMenu(){
                     <div className='title equipment_amount'>
                         <h2 className='title'>Equipment Amount</h2>
                     </div>
-    
-                    <div className="equipment_list">
-                        {resourceOrders.map((order) => (
-                            <div className='equipment_entry'>
-                                <div className='type'>
-                                    <h2 className='title'>{order.ResourceType}</h2>
-                                </div>
-                                <div className="amount">
-                                    <h2 className="title">{order.EquipmentAmount}</h2>
-                                </div>
-                            </div>
-                        ))
-                        }
-                    </div>
+
+                    <EquipmentList resourceOrders={resourceOrders}/>
 
                     <div className="equipment_interaction">
                         <button className='equipment_add' onClick={(e) => setEquipmentActive(true)}> 
