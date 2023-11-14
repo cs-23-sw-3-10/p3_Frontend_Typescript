@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "@apollo/client": "^3.8.7",
+    "@dnd-kit/core": "^6.1.0",
     "@mui/icons-material": "^5.14.16",
     "@testing-library/jest-dom": "^5.17.0",
     "@testing-library/react": "^13.4.0",
@@ -12,6 +13,7 @@
     "@types/node": "^16.18.60",
     "@types/react": "^18.2.33",
     "@types/react-dom": "^18.2.14",
+    "date-fns": "^2.30.0",
     "graphql": "^16.8.1",
     "material-symbols": "^0.13.2",
     "react": "^18.2.0",
