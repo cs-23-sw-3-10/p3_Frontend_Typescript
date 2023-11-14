@@ -3,6 +3,7 @@ import { DndContext } from "@dnd-kit/core";
 import "./Display.css";
 import CreateTestRigDivs from "./TestRigDivs";
 import CreateTimelineField from "./TimelineField";
+import { previousDay } from "date-fns";
 
 let date = new Date(Date.now());
 const firstStartDate = new Date(
@@ -35,7 +36,7 @@ function DisplayComponent() {
         setSelectedDate(event.target.value);
     };
 
-    const handleNumberChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const handleNumberChange = (event: React.ChangeEvent<HTMLInputElement>) => {  
         setNumberOfMonths(parseInt(event.target.value));
     };
 
@@ -52,7 +53,7 @@ function DisplayComponent() {
     return (
         <div className="ScheduleContentContainer">
             <div className="ScheduleViewControl">
-                <form>
+                <form onSubmit={(e) => e.preventDefault()}>
                     <label htmlFor="dateInput" style={{ fontSize: "10px" }}>
                         Date:
                     </label>
