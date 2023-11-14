@@ -11,7 +11,7 @@ const firstStartDate = new Date(
     date.getDate()
 );
 
-function DisplayComponent(editMode: boolean ,setEditMode: React.Dispatch<React.SetStateAction<boolean>>) {
+function DisplayComponent(editMode: boolean ,setEditMode: React.Dispatch<React.SetStateAction<boolean>>, setShowPasswordPrompt: React.Dispatch<React.SetStateAction<boolean>>) {
     const [rigs, setRigs] = useState([
         // should be imported from database
         "Rig 1",
@@ -32,6 +32,7 @@ function DisplayComponent(editMode: boolean ,setEditMode: React.Dispatch<React.S
 
     const [selectedDate, setSelectedDate] = useState(""); // State to store the selected date
     const [numberOfMonths, setNumberOfMonths] = useState(3); // State to store the number of months to display
+    
 
     const handleDateChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setSelectedDate(event.target.value);
@@ -42,8 +43,16 @@ function DisplayComponent(editMode: boolean ,setEditMode: React.Dispatch<React.S
     };
 
     const handleModeChange = () => {
-        setEditMode(!editMode);
+        if (!editMode) {
+            // If switching to edit mode, show password prompt
+            setShowPasswordPrompt(true);
+          } else {
+            // If switching from edit mode, just toggle the edit mode
+            setEditMode(!editMode);
+          }
     };
+
+    
 
     const goTo = () => {
         const newDate = new Date(selectedDate);
@@ -90,6 +99,7 @@ function DisplayComponent(editMode: boolean ,setEditMode: React.Dispatch<React.S
                 <div className="ScheduleDisplaySpacer"></div>
             </div>
             {editMode ? additionalContent : null}
+            
         </div>
     );
 }
