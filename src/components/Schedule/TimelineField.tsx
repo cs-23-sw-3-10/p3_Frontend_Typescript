@@ -3,7 +3,7 @@ enum MonthLengths { // Non-leap year for easy acces of number of days in a month
     Februar = 28, // Default non-leap year
     Marts = 31,
     April = 30,
-    May = 31,
+    Maj = 31,
     Juni = 30,
     Juli = 31,
     August = 31,
@@ -14,7 +14,7 @@ enum MonthLengths { // Non-leap year for easy acces of number of days in a month
 }
 const dateDivLength = 25; // px length of the dates in the schedule
 
-function createTimelineField(rigs: string[], months: Date[], allBladeTaskCards: React.ReactNode[]) {
+function CreateTimelineField(rigs: string[], months: Date[], allBladeTaskCards: React.ReactNode[]) {
     let fieldWidth: number = 0; // px width of the field dynamically calculated from the number of months displayed
     months.forEach((month) => {
         fieldWidth += getTotalWidth(
@@ -60,10 +60,10 @@ function createTimelineField(rigs: string[], months: Date[], allBladeTaskCards: 
     return (
         <div className="TimelineFieldContainer">
             <div className="TimelineField" style={BTFieldStyle}>
-                {months.map((month) => createMonthDateContainer(month))}
+                {months.map((month) => CreateMonthDateContainer(month))}
                 <div className="RigFieldContainer" style={rigFieldContainerStyle}>
                     {rigs.map((rig) =>
-                        createRigFieldContainer(
+                        CreateRigFieldContainer(
                             rig,
                             allDates,
                             fieldWidth,
@@ -80,9 +80,9 @@ function createTimelineField(rigs: string[], months: Date[], allBladeTaskCards: 
         </div>
     );
 }
-export default createTimelineField;
+export default CreateTimelineField;
 
-function createMonthDateContainer(currentMonth: Date) {
+function CreateMonthDateContainer(currentMonth: Date) {
     let year = currentMonth.getFullYear();
     let monthNumber = currentMonth.getMonth();
     let month = capitalizeFirstLetter(
@@ -125,13 +125,13 @@ function createMonthDateContainer(currentMonth: Date) {
 
     return (
         <div className="MonthDateContainer" id={idSTR} style={MonthDateContainerStyle}>
-            {createMonthHeader(currentMonth)}
-            {createDatesContainer(currentMonth, monthDates, columnTemplate)}
+            {CreateMonthHeader(currentMonth)}
+            {CreateDatesContainer(currentMonth, monthDates, columnTemplate)}
         </div>
     );
 }
 
-function createMonthHeader(currentMonth: Date) {
+function CreateMonthHeader(currentMonth: Date) {
     let year = currentMonth.getFullYear();
     let monthNumber = currentMonth.getMonth();
     let month = capitalizeFirstLetter(
@@ -153,7 +153,7 @@ function createMonthHeader(currentMonth: Date) {
     );
 }
 
-function createDatesContainer(
+function CreateDatesContainer(
     currentMonth: Date,
     monthDates: Date[],
     columnTemplate: string
@@ -171,12 +171,12 @@ function createDatesContainer(
                 gridTemplateRows: "30px",
             }}
         >
-            {monthDates.map((date) => createDate(date)) /* Create a date for each day in the month */}
+            {monthDates.map((date) => CreateDate(date)) /* Create a date for each day in the month */}
         </div>
     );
 }
 
-function createDate(currentDate: Date) {
+function CreateDate(currentDate: Date) {
     let year = currentDate.getFullYear();
     let monthNumber = currentDate.getMonth();
     let date = currentDate.getDate();
@@ -195,7 +195,7 @@ function createDate(currentDate: Date) {
     );
 }
 
-function createRigFieldContainer(
+function CreateRigFieldContainer(
     rig: string,
     allDates: Date[],
     fieldWidth: number,
@@ -209,13 +209,13 @@ function createRigFieldContainer(
     };
     return (
         <div className="RigField" style={rigStyle}>
-            {allDates.map((date) => createRigFieldDates(rig, date))}
+            {allDates.map((date) => CreateRigFieldDates(rig, date))}
             {BladeTaskCards} {/*automatically spreads out the entries of BladeTaskCards */}
         </div>
     );
 }
 
-function createRigFieldDates(rig: string, date: Date) {
+function CreateRigFieldDates(rig: string, date: Date) {
     let year = date.getFullYear();
     let monthNumber = date.getMonth();
     let dateNumber = date.getDate();

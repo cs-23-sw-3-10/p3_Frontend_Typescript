@@ -1,28 +1,19 @@
 import { DndContext } from "@dnd-kit/core";
 import "./Display.css";
-import createTestRigDivs from "./TestRigDivs";
-import createTimelineField from "./TimelineField";
+import CreateTestRigDivs from "./TestRigDivs";
+import CreateTimelineField from "./TimelineField";
 import {bladeTaskCards} from "./BladeTaskCard";
-
-let rigs = [ // should be imported from database
-    "Rig 1",
-    "Rig 2",
-    "Rig 3",
-    "Rig 4",
-    "Rig 5",
-    "Rig 6",
-]
-
-let dato = [
-    new Date(2023,8,10), 
-    new Date(2023,9,10), 
-    new Date(2023,10,11), 
-    new Date(2023,11,11),
-    new Date(2024,0,11)
-]; // should be imported from database
+import React, { useState } from "react";
 
 
-function DisplayComponent(editMode: boolean ,setEditMode: React.Dispatch<React.SetStateAction<boolean>>) {
+let date = new Date(Date.now());
+const firstStartDate = new Date(
+    date.getFullYear(),
+    date.getMonth(),
+    date.getDate()
+);
+
+function DisplayComponent(editMode: boolean ,setEditMode: React.Dispatch<React.SetStateAction<boolean>>, setShowPasswordPrompt: React.Dispatch<React.SetStateAction<boolean>>) {
     const [rigs, setRigs] = useState([
         // should be imported from database
         "Rig 1",
@@ -43,6 +34,7 @@ function DisplayComponent(editMode: boolean ,setEditMode: React.Dispatch<React.S
 
     const [selectedDate, setSelectedDate] = useState(""); // State to store the selected date
     const [numberOfMonths, setNumberOfMonths] = useState(3); // State to store the number of months to display
+    
 
     const handleDateChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setSelectedDate(event.target.value);
@@ -53,16 +45,22 @@ function DisplayComponent(editMode: boolean ,setEditMode: React.Dispatch<React.S
     };
 
     const handleModeChange = () => {
-        setEditMode(!editMode);
+        if (!editMode) {
+            // If switching to edit mode, show password prompt
+            setShowPasswordPrompt(true);
+          } else {
+            // If switching from edit mode, just toggle the edit mode
+            setEditMode(!editMode);
+          }
     };
 
     const goTo = () => {
         const newDate = new Date(selectedDate);
         if (!isNaN(newDate.valueOf())) {
-            setDates(createDisplayMonths(newDate, numberOfMonths));
+            setDates(CreateDisplayMonths(newDate, numberOfMonths));
         } else {
             console.log("Invalid date");
-            setDates(createDisplayMonths(newDate, numberOfMonths));
+            setDates(CreateDisplayMonths(newDate, numberOfMonths));
         }
     };
 
@@ -96,9 +94,9 @@ function DisplayComponent(editMode: boolean ,setEditMode: React.Dispatch<React.S
                 <input type="checkbox" onChange={handleModeChange}/>
             </div>
             <div className="ScheduleDisplay">
-                {createTestRigDivs(rigs)} 
+                {CreateTestRigDivs(rigs)} 
                 <DndContext>
-                    {createTimelineField(rigs, dato,bladeTaskCards)}
+                    {CreateTimelineField(rigs, dates, bladeTaskCards)}
                 </DndContext>
             </div>
             {editMode ? additionalContent : null}
@@ -108,7 +106,7 @@ function DisplayComponent(editMode: boolean ,setEditMode: React.Dispatch<React.S
 
 export default DisplayComponent;
 
-function createDisplayMonths(startDate: Date, numberOfMonths: number) {
+function CreateDisplayMonths(startDate: Date, numberOfMonths: number) {
     let months: Date[] = [];
     if (!isNaN(startDate.valueOf())) {
         for (let i = 0; i < numberOfMonths; i++) {
@@ -117,7 +115,7 @@ function createDisplayMonths(startDate: Date, numberOfMonths: number) {
             );
         }
     } else {
-        months = createDisplayMonths(firstStartDate, numberOfMonths);
+        months = CreateDisplayMonths(firstStartDate, numberOfMonths);
     }
     return months;
 }
