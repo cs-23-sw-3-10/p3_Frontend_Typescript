@@ -1,4 +1,3 @@
-
 function createTestRigDivs(rigs: string[]) {
     // Create a div for each test rig
     return (
@@ -12,7 +11,6 @@ function createTestRigDivs(rigs: string[]) {
                 </div>
             ))
             }
-           
         </div>
     );
 }
