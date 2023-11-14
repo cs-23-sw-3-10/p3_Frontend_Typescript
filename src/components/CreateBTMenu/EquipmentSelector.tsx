@@ -2,8 +2,8 @@ import './EquipmentSelector.css'
 import { useQuery} from '@apollo/client';
 import {GET_ALL_EQUIPMENT_TYPES} from '../../api/queryList';
 import React, { SetStateAction, useContext } from 'react';
-import { BTOrder } from './BTMenuTypes';
-import { useBTOrderContext } from './BladeTaskOrderContext';
+import { ResourceOrder } from './BTMenuTypes';
+import { useResourceOrderContext } from './BladeTaskOrderContext';
 
 function EquipmentSelectionMenu({setEquipmentActive}:{setEquipmentActive:Function}) {
     return(
@@ -20,19 +20,14 @@ function EquipmentSelectionMenu({setEquipmentActive}:{setEquipmentActive:Functio
 }
 
 function EquipmentMenuItem({equipmentType, key}:{equipmentType:string, key:number}){
-    const currentOrderStateValues = useBTOrderContext();
-    const currentOrder = currentOrderStateValues.BTOrder;
-    const currentOrderSetter = currentOrderStateValues.setBTOrder;
+    const changeResourceOrder = useResourceOrderContext();
     return(
         <div className="equipment_menu_item" key={key}>
                     <button 
                         className="equipment_menu_item_button"
-                        onClick={function(e){
-                            console.log(currentOrder.ResourceOrder);
-                            currentOrder.ResourceOrder.push({ResourceType: equipmentType, EquipmentAmount: 1, WorkHours: 0, Period:[0,0,0]});
-                            currentOrderSetter(currentOrder);
-                        }
-                        }
+                        onClick={() => changeResourceOrder((prevResourceOrder:ResourceOrder) => 
+                            ([{...prevResourceOrder, ResourceType:equipmentType, EquipmentAmount:0, WorkHours:0, Period:[0,0,0]}])
+                        )}
                     >
                             <span className="equipment_menu_item_icon material-symbols-outlined">add_circle</span>
                     </button>

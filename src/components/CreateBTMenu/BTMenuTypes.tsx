@@ -16,16 +16,12 @@ export type BTOrder = {
     AttachPeriod: number;
     DetachPeriod: number;
     TestRig: number;
-    ResourceOrder: 
-        Array<{
-        ResourceType:string, 
-        EquipmentAmount:number, 
-        WorkHours: number, 
-        Period:Array<number>
-    }>;
+    ResourceOrders: Array<ResourceOrder>;
 }
 
-export type BTOrderStateValues = {
-    BTOrder: BTOrder;
-    setBTOrder: Function;
-};
+export type ResourceOrder = {
+    ResourceType: string;
+    EquipmentAmount: number;
+    WorkHours: number;
+    Period: Array<number>;
+}

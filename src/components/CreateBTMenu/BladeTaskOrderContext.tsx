@@ -1,12 +1,12 @@
 import { createContext, useContext } from 'react';
-import { BTOrderStateValues} from './BTMenuTypes';
+import { ResourceOrder } from './BTMenuTypes';
 
-export const BTOrderContext = createContext<BTOrderStateValues | undefined>(undefined);
+export const ResourceOrderContext = createContext<Function | undefined>(undefined);
 
-export function useBTOrderContext() {
-  const order = useContext(BTOrderContext);
-  if (order === undefined) {
-    throw new Error('useBTOrderContext must be used with a DashboardContext');
+export function useResourceOrderContext() {
+  const ChangeResourceOrder= useContext(ResourceOrderContext);
+  if (ChangeResourceOrder === undefined) {
+    throw new Error('useResourceOrderContext must be used with a ResourceContext');
   }
-  return order;
+  return ChangeResourceOrder;
 }
