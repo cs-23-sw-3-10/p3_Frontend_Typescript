@@ -25,9 +25,10 @@ function EquipmentMenuItem({equipmentType, key}:{equipmentType:string, key:numbe
         <div className="equipment_menu_item" key={key}>
                     <button 
                         className="equipment_menu_item_button"
-                        onClick={() => changeResourceOrder((prevResourceOrder:ResourceOrder) => 
-                            ([{...prevResourceOrder, ResourceType:equipmentType, EquipmentAmount:0, WorkHours:0, Period:[0,0,0]}])
+                        onClick={() => changeResourceOrder((prevResourceOrder:ResourceOrder[]) => 
+                            ([...prevResourceOrder, {ResourceType:equipmentType, EquipmentAmount:0, WorkHours:0, Period:[0,0,0]}])
                         )}
+                        //([{...prevResourceOrder, ResourceType:equipmentType, EquipmentAmount:0, WorkHours:0, Period:[0,0,0]}])
                     >
                             <span className="equipment_menu_item_icon material-symbols-outlined">add_circle</span>
                     </button>
