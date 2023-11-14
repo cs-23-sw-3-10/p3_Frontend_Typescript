@@ -52,6 +52,24 @@ query AllEquipmentTypes{
 }
 `;
 
+export const GET_BT_DATE_INFO = gql`
+  query GetBTDateInfo{
+    AllBladeTasks{
+      testRig
+      startDate
+      endDate
+      duration
+      attachPeriod
+      detachPeriod
+      bladeProject{
+        id
+      }
+  }
+}
+`;
+
+
+
 
 
 
