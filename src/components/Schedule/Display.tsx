@@ -3,7 +3,8 @@ import "./Display.css";
 import CreateTestRigDivs from "./TestRigDivs";
 import CreateTimelineField from "./TimelineField";
 import {bladeTaskCards} from "./BladeTaskCard";
-import {useState} from "react";
+import React, { useState } from "react";
+
 
 let date = new Date(Date.now());
 const firstStartDate = new Date(
@@ -53,8 +54,6 @@ function DisplayComponent(editMode: boolean ,setEditMode: React.Dispatch<React.S
           }
     };
 
-    
-
     const goTo = () => {
         const newDate = new Date(selectedDate);
         if (!isNaN(newDate.valueOf())) {
@@ -101,7 +100,6 @@ function DisplayComponent(editMode: boolean ,setEditMode: React.Dispatch<React.S
                 </DndContext>
             </div>
             {editMode ? additionalContent : null}
-            
         </div>
     );
 }

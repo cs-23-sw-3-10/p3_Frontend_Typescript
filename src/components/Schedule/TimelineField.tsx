@@ -3,7 +3,7 @@ enum MonthLengths { // Non-leap year for easy acces of number of days in a month
     Februar = 28, // Default non-leap year
     Marts = 31,
     April = 30,
-    May = 31,
+    Maj = 31,
     Juni = 30,
     Juli = 31,
     August = 31,
