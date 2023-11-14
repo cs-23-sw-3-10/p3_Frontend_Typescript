@@ -28,6 +28,8 @@ function DisplayComponent(editMode: boolean ,setEditMode: React.Dispatch<React.S
         new Date(firstStartDate.getFullYear(), firstStartDate.getMonth() + 2),
     ]); // should be imported from database
 
+    const additionalContent = CreateAdditionalContent();
+
     const [selectedDate, setSelectedDate] = useState(""); // State to store the selected date
     const [numberOfMonths, setNumberOfMonths] = useState(3); // State to store the number of months to display
 
@@ -87,9 +89,7 @@ function DisplayComponent(editMode: boolean ,setEditMode: React.Dispatch<React.S
                 <DndContext>{CreateTimelineField(rigs, dates)}</DndContext>
                 <div className="ScheduleDisplaySpacer"></div>
             </div>
-            <div className="AdditionalContent">
-                <h3>AdditionalContent</h3>
-            </div>
+            {editMode ? additionalContent : null}
         </div>
     );
 }
@@ -107,4 +107,12 @@ function createDisplayMonths(startDate: Date, numberOfMonths: number) {
         months = createDisplayMonths(firstStartDate, numberOfMonths);
     }
     return months;
+}
+
+function CreateAdditionalContent() {
+    return (
+        <div className="AdditionalContent">
+            <h3>AdditionalContent</h3>
+        </div>
+    );
 }

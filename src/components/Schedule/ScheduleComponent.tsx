@@ -8,7 +8,7 @@ function ScheduleComponent() {
     const [editMode, setEditMode] = useState(false);
 
     const viewSchedule = DisplayComponent(editMode, setEditMode);
-    let editSchedule = DisplayComponent(editMode, setEditMode);
+    const editSchedule = DisplayComponent(editMode, setEditMode);
 
     
     const scheduleHeader = [
