@@ -3,7 +3,6 @@ import { DndContext } from "@dnd-kit/core";
 import "./Display.css";
 import CreateTestRigDivs from "./TestRigDivs";
 import CreateTimelineField from "./TimelineField";
-import { previousDay } from "date-fns";
 
 let date = new Date(Date.now());
 const firstStartDate = new Date(
