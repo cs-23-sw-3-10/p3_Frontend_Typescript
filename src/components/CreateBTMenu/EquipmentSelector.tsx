@@ -20,21 +20,26 @@ function EquipmentSelectionMenu({setEquipmentActive}:{setEquipmentActive:Functio
 }
 
 function EquipmentMenuItem({equipmentType, key}:{equipmentType:string, key:number}){
-    const currentOrder = useBTOrderContext();
+    const currentOrderStateValues = useBTOrderContext();
+    const currentOrder = currentOrderStateValues.BTOrder;
+    const currentOrderSetter = currentOrderStateValues.setBTOrder;
     return(
         <div className="equipment_menu_item" key={key}>
                     <button 
-                        className="equipment_menu_item_button" 
-                        onClick={() => {
-                        currentOrder.ResourceOrder.push({ResourceType: equipmentType, EquipmentAmount: 1, WorkHours: 0, Period:[0,0,0]})
-                        }}>
+                        className="equipment_menu_item_button"
+                        onClick={function(e){
+                            console.log(currentOrder.ResourceOrder);
+                            currentOrder.ResourceOrder.push({ResourceType: equipmentType, EquipmentAmount: 1, WorkHours: 0, Period:[0,0,0]});
+                            currentOrderSetter(currentOrder);
+                        }
+                        }
+                    >
                             <span className="equipment_menu_item_icon material-symbols-outlined">add_circle</span>
                     </button>
                     <h2 className='equipment_menu_item_title'>{equipmentType}</h2>
         </div>
     );
 }
-
 function EquipmentListGenerator(){
     const { loading, error, data} = useQuery(GET_ALL_EQUIPMENT_TYPES);
     

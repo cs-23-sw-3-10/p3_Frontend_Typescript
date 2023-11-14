@@ -58,7 +58,7 @@ function BladeTaskMenu(){
         const [date, setDate] = useState(currentDate);
         const [duration, setDuration] = useState(0);
         const [equipmentActive, setEquipmentActive] = useState(false);
-        const [currentOrder] = useState<BTOrder>({ 
+        const [currentOrder, setCurrentOrder] = useState<BTOrder>({ 
             Project: '',
             Type: '',
             StartDate: '',
@@ -70,6 +70,7 @@ function BladeTaskMenu(){
         );
 
         useEffect(() => {
+            console.log(currentOrder.ResourceOrder);
         },[currentOrder]) 
 
         return (
@@ -134,7 +135,8 @@ function BladeTaskMenu(){
                                     <h2 className="title">{order.EquipmentAmount}</h2>
                                 </div>
                             </div>
-                        ))}
+                        ))
+                        }
                     </div>
 
                     <div className="equipment_interaction">
@@ -145,7 +147,7 @@ function BladeTaskMenu(){
                     
                     {equipmentActive 
                     ? 
-                    <BTOrderContext.Provider value={currentOrder}>
+                    <BTOrderContext.Provider value={{BTOrder: currentOrder, setBTOrder: setCurrentOrder}}>
                         <EquipmentSelectionMenu setEquipmentActive={setEquipmentActive}/>
                     </BTOrderContext.Provider>
                     :

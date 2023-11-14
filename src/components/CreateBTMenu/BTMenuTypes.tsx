@@ -24,3 +24,8 @@ export type BTOrder = {
         Period:Array<number>
     }>;
 }
+
+export type BTOrderStateValues = {
+    BTOrder: BTOrder;
+    setBTOrder: Function;
+};

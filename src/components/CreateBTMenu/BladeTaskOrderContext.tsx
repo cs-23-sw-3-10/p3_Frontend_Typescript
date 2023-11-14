@@ -1,7 +1,7 @@
 import { createContext, useContext } from 'react';
-import { BTOrder } from './BTMenuTypes';
+import { BTOrderStateValues} from './BTMenuTypes';
 
-export const BTOrderContext = createContext<BTOrder | undefined>(undefined);
+export const BTOrderContext = createContext<BTOrderStateValues | undefined>(undefined);
 
 export function useBTOrderContext() {
   const order = useContext(BTOrderContext);
