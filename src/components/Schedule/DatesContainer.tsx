@@ -7,9 +7,7 @@ type DatesContainerProps = {
     columnTemplate: string;
 };
 
-function CreateDatesContainer(
-    props: DatesContainerProps
-) {
+function CreateDatesContainer(props: DatesContainerProps) {
     let year = props.currentMonth.getFullYear();
     let monthNumber = props.currentMonth.getMonth();
     let containerID = `${year}-${monthNumber}-DateContainer`; // id for the container div
@@ -25,9 +23,12 @@ function CreateDatesContainer(
             }}
         >
             {
-                props.monthDates.map((date) =>
-                    <CreateOverviewDate key={getDateKey(date)} currentDate={date} />
-                ) /* Create a date for each day in the month */
+                props.monthDates.map((date) => (
+                    <CreateOverviewDate
+                        key={getDateKey(date)}
+                        currentDate={date}
+                    />
+                )) /* Create a date for each day in the month */
             }
         </div>
     );

@@ -2,10 +2,9 @@ import { DndContext } from "@dnd-kit/core";
 import "./Display.css";
 import CreateTestRigDivs from "./TestRigDivs";
 import CreateTimelineField from "./TimelineField";
-import {bladeTaskCards} from "./BladeTaskCard";
+import { bladeTaskCards } from "./BladeTaskCard";
 import React, { useState } from "react";
 import CreateAdditionalContent from "./AdditionalContent";
-
 
 let date = new Date(Date.now());
 const firstStartDate = new Date(
@@ -37,17 +36,16 @@ function DisplayComponent(props: DisplayProps) {
         new Date(firstStartDate.getFullYear(), firstStartDate.getMonth() + 2),
     ]); // should be imported from database
 
-    const additionalContent = <CreateAdditionalContent/>
+    const additionalContent = <CreateAdditionalContent />;
 
     const [selectedDate, setSelectedDate] = useState(""); // State to store the selected date
     const [numberOfMonths, setNumberOfMonths] = useState(3); // State to store the number of months to display
-    
 
     const handleDateChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setSelectedDate(event.target.value);
     };
 
-    const handleNumberChange = (event: React.ChangeEvent<HTMLInputElement>) => {  
+    const handleNumberChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setNumberOfMonths(parseInt(event.target.value));
     };
 
@@ -55,10 +53,10 @@ function DisplayComponent(props: DisplayProps) {
         if (!props.editMode) {
             // If switching to edit mode, show password prompt
             props.setShowPasswordPrompt(true);
-          } else {
+        } else {
             // If switching from edit mode, just toggle the edit mode
             props.setEditMode(!props.editMode);
-          }
+        }
     };
 
     const goTo = () => {
@@ -97,7 +95,7 @@ function DisplayComponent(props: DisplayProps) {
                     <option value="Customer 2">Customer 2</option>
                 </select>
                 <label className="switch"> Edit Mode</label>
-                <input type="checkbox" onChange={handleModeChange}/>
+                <input type="checkbox" onChange={handleModeChange} />
             </div>
             <div className="ScheduleDisplay">
                 <CreateTestRigDivs rigs={rigs} />
@@ -106,7 +104,8 @@ function DisplayComponent(props: DisplayProps) {
                     <CreateTimelineField
                         rigs={rigs}
                         months={dates}
-                        allBladeTaskCards={bladeTaskCards}/>
+                        allBladeTaskCards={bladeTaskCards}
+                    />
                 </DndContext>
             </div>
             {props.editMode ? additionalContent : null}
@@ -129,5 +128,3 @@ function CreateDisplayMonths(startDate: Date, numberOfMonths: number) {
     }
     return months;
 }
-
-

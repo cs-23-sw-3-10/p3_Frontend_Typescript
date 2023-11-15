@@ -1,7 +1,6 @@
 import { DndContext } from "@dnd-kit/core";
 import CreateRigFieldDate from "./RigFieldDate";
 
-
 type RigFieldContainerProps = {
     rig: string;
     allDates: Date[];
@@ -10,9 +9,7 @@ type RigFieldContainerProps = {
     BladeTaskCards: React.ReactNode[];
 };
 
-function CreateRigFieldContainer(
-    props: RigFieldContainerProps
-) {
+function CreateRigFieldContainer(props: RigFieldContainerProps) {
     const rigStyle = {
         width: `${props.fieldWidth}px`,
         gridTemplateColumns: props.columns, // The righas columns corresponding to the schedule
@@ -25,8 +22,14 @@ function CreateRigFieldContainer(
             onDragEnd={handleDragEnd}
         >
             <div key={props.rig} className="RigField" style={rigStyle}>
-                {props.allDates.map((date) => 
-                <CreateRigFieldDate  key={getRigDateKey(props.rig, date)} rig={props.rig} date={date} /> // Create a date for each day in the month
+                {props.allDates.map(
+                    (date) => (
+                        <CreateRigFieldDate
+                            key={getRigDateKey(props.rig, date)}
+                            rig={props.rig}
+                            date={date}
+                        />
+                    ) // Create a date for each day in the month
                 )}
                 {props.BladeTaskCards}{" "}
                 {/*automatically spreads out the entries of BladeTaskCards */}

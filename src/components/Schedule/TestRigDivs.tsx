@@ -1,13 +1,8 @@
-import { type } from "os";
-import React, { SetStateAction, Dispatch } from "react";
-
 type TestRigDivsProps = {
     rigs: string[];
 };
 
-function CreateTestRigDivs(
-    props: TestRigDivsProps,
-) {
+function CreateTestRigDivs(props: TestRigDivsProps) {
     // Create a div for each test rig
     return (
         <div className="TestRigOverviewContainer">

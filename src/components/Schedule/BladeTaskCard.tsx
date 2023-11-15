@@ -1,22 +1,22 @@
 import "./BladeTaskCard.css";
 import React from "react";
 import { useDraggable } from "@dnd-kit/core";
-import {CSS} from '@dnd-kit/utilities';
+import { CSS } from "@dnd-kit/utilities";
 
 //interface used to define the types of the props of BladeTaskCard
 interface BladeTaskCardProps {
     startDate: Date;
-    duration: number; 
+    duration: number;
     attachPeriod?: number;
-    detachPeriod?:number; 
-    rig?: string; 
+    detachPeriod?: number;
+    rig?: string;
     projectColor: string;
     taskName: string;
 }
-interface BladeTaskDroppableProps  {
-  style: any;
-  id: string;
-  taskName: string;
+interface BladeTaskDroppableProps {
+    style: any;
+    id: string;
+    taskName: string;
 }
 
 function BladeTaskCard(props: BladeTaskCardProps) {
@@ -29,40 +29,49 @@ function BladeTaskCard(props: BladeTaskCardProps) {
     };
 
     const droppableProps: BladeTaskDroppableProps = {
-      style: cardStyle,
-      id: props.taskName+"-"+props.rig+"-"+props.startDate+props.projectColor,
-      taskName: props.taskName
-  };
+        style: cardStyle,
+        id:
+            props.taskName +
+            "-" +
+            props.rig +
+            "-" +
+            props.startDate +
+            props.projectColor,
+        taskName: props.taskName,
+    };
 
-    return (
-        <Draggable {...droppableProps} />
-    );
+    return <Draggable {...droppableProps} />;
 }
 export default BladeTaskCard;
 
-
 function Draggable(props: BladeTaskDroppableProps) {
-  const {attributes, listeners, setNodeRef, transform} = useDraggable({
-    id: props.id,
-  });
-  const style = {
-    ...props.style,
-    transform: CSS.Translate.toString(transform),
-};
-  
-return (
-  <div className="bladeTaskCard" ref={setNodeRef} style={style} id={props.id} {...listeners} {...attributes}>
-      <div>{props.taskName}</div>
-  </div>
-);
-}
+    const { attributes, listeners, setNodeRef, transform } = useDraggable({
+        id: props.id,
+    });
+    const style = {
+        ...props.style,
+        transform: CSS.Translate.toString(transform),
+    };
 
+    return (
+        <div
+            className="bladeTaskCard"
+            ref={setNodeRef}
+            style={style}
+            id={props.id}
+            {...listeners}
+            {...attributes}
+        >
+            <div>{props.taskName}</div>
+        </div>
+    );
+}
 
 //dummy data
 let bladeTaskCards = [
     <BladeTaskCard
         key={"BT-1Rig1"} //BTCards skal have et unikt key for at fungere godt i react
-        duration={5}      //måske vi skal overveje at lave dem på en anden måde
+        duration={5} //måske vi skal overveje at lave dem på en anden måde
         projectColor="blue"
         taskName="BT-1"
         startDate={new Date(2023, 10, 1)}

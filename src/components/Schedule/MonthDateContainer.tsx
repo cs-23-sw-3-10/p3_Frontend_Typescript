@@ -64,7 +64,11 @@ function CreateMonthDateContainer(props: MonthDateContainerProps) {
             style={MonthDateContainerStyle}
         >
             <CreateMonthHeader currentMonth={props.currentMonth} />
-            <CreateDatesContainer currentMonth={props.currentMonth} monthDates={monthDates} columnTemplate={columnTemplate} />
+            <CreateDatesContainer
+                currentMonth={props.currentMonth}
+                monthDates={monthDates}
+                columnTemplate={columnTemplate}
+            />
         </div>
     );
 }

@@ -1,6 +1,5 @@
 import { DndContext, useDroppable } from "@dnd-kit/core";
 import { handleDragEnd, handleDragStart } from "./RigFieldContainer";
-import { type } from "os";
 
 interface RigFieldDateDroppableProps {
     className: "RigFieldDate";
@@ -20,7 +19,6 @@ type RigFieldDateProps = {
     rig: string;
     date: Date;
 };
-
 
 function CreateRigFieldDate(props: RigFieldDateProps) {
     let year = props.date.getFullYear();
@@ -54,15 +52,6 @@ function CreateRigFieldDate(props: RigFieldDateProps) {
     };
 
     return Droppable(dateProps);
-    // return(
-    // <div
-    //             // ref={setNodeRef}
-    //             key={idSTR}
-    //             className="RigFieldDate"
-    //             id={idSTR}
-    //             style={dateStyle}
-    //         ></div>
-    // );
 }
 export default CreateRigFieldDate;
 

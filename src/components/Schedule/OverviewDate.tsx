@@ -1,4 +1,3 @@
-
 type OverviewDateProps = {
     currentDate: Date;
 };

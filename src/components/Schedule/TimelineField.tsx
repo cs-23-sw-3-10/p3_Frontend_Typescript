@@ -61,9 +61,7 @@ function CreateTimelineField(props: TimelineFieldProps) {
             <div className="TimelineField" style={BTFieldStyle}>
                 {props.months.map((month) => (
                     <CreateMonthDateContainer
-                        key={
-                            getMonthContainerKey(month)
-                        }
+                        key={getMonthContainerKey(month)}
                         currentMonth={month}
                     />
                 ))}
@@ -71,49 +69,29 @@ function CreateTimelineField(props: TimelineFieldProps) {
                     className="RigFieldContainer"
                     style={rigFieldContainerStyle}
                 >
-                    {props.rigs.map(
-                        (rig) => (
-                            // CreateRigFieldContainer(
-                            //     rig,
-                            //     allDates,
-                            //     fieldWidth,
-                            //     columnsOfSchedule,
-                            //     props.allBladeTaskCards.filter(
-                            //         (bladeTask: React.ReactNode) => {
-                            //             //Finds the blade tasks placed on the rig
-                            //             if (bladeTask) {
-                            //                 return (
-                            //                     (
-                            //                         bladeTask as React.ReactElement<any>
-                            //                     ).props.rig === rig
-                            //                 );
-                            //             }
-                            //             return false;
-                            //         }
-                            //     )
-                            // )
-                            <CreateRigFieldContainer
-                                key={rig}
-                                rig={rig}
-                                allDates={allDates}
-                                fieldWidth={fieldWidth}
-                                columns={columnsOfSchedule}
-                                BladeTaskCards={props.allBladeTaskCards.filter(
-                                    (bladeTask: React.ReactNode) => {
-                                        //Finds the blade tasks placed on the rig
-                                        if (bladeTask) {
-                                            return (
-                                                (
-                                                    bladeTask as React.ReactElement<any>
-                                                ).props.rig === rig
-                                            );
-                                        }
-                                        return false;
+                    {props.rigs.map((rig) => (
+                        // Create a rig field for each rig
+                        <CreateRigFieldContainer
+                            key={rig}
+                            rig={rig}
+                            allDates={allDates}
+                            fieldWidth={fieldWidth}
+                            columns={columnsOfSchedule}
+                            BladeTaskCards={props.allBladeTaskCards.filter(
+                                (bladeTask: React.ReactNode) => {
+                                    //Finds the blade tasks placed on the rig
+                                    if (bladeTask) {
+                                        return (
+                                            (
+                                                bladeTask as React.ReactElement<any>
+                                            ).props.rig === rig
+                                        );
                                     }
-                                )}
-                            />
-                        ) // Create a rig field for each rig
-                    )}
+                                    return false;
+                                }
+                            )}
+                        />
+                    ))}
                 </div>
             </div>
         </div>
