@@ -16,26 +16,8 @@ function EquipmentSelectionMenu({setEquipmentActive}:{setEquipmentActive:Functio
             </div>
         </div>
     );
-
 }
 
-function EquipmentMenuItem({equipmentType, key}:{equipmentType:string, key:number}){
-    const changeResourceOrder = useResourceOrderContext();
-    return(
-        <div className="equipment_menu_item" key={key}>
-                    <button 
-                        className="equipment_menu_item_button"
-                        onClick={() => changeResourceOrder((prevResourceOrder:ResourceOrder[]) => 
-                            ([...prevResourceOrder, {ResourceType:equipmentType, EquipmentAmount:0, WorkHours:0, Period:[0,0,0]}])
-                        )}
-                        //([{...prevResourceOrder, ResourceType:equipmentType, EquipmentAmount:0, WorkHours:0, Period:[0,0,0]}])
-                    >
-                            <span className="equipment_menu_item_icon material-symbols-outlined">add_circle</span>
-                    </button>
-                    <h2 className='equipment_menu_item_title'>{equipmentType}</h2>
-        </div>
-    );
-}
 function EquipmentListGenerator(){
     const { loading, error, data} = useQuery(GET_ALL_EQUIPMENT_TYPES);
     
@@ -47,8 +29,31 @@ function EquipmentListGenerator(){
     }
 
     //Returns a dropdown of all the test types present in DB
-    return data.AllEquipment.map(({name, id}:{name:string, id:string}) => 
-    <EquipmentMenuItem equipmentType={name} key={Number(id)}/>) 
+    return data.DictionaryAllByCategory.map(({id, label}:{id:string, label:string}) => 
+    <EquipmentMenuItem equipmentType={label} key={Number(id)}/>) 
+}
+
+
+
+function EquipmentMenuItem({equipmentType, key}:{equipmentType:string, key:number}){
+    const changeResourceOrder = useResourceOrderContext();
+    return(
+        <div className="equipment_menu_item" key={key}>
+                    <button 
+                        className="equipment_menu_item_button"
+                        onClick={() => changeResourceOrder((prevResourceOrder:ResourceOrder[]) => 
+                            EquipmentMenuItemLogic(prevResourceOrder, equipmentType, key))}
+                        //([{...prevResourceOrder, ResourceType:equipmentType, EquipmentAmount:0, WorkHours:0, Period:[0,0,0]}])
+                    >
+                            <span className="equipment_menu_item_icon material-symbols-outlined">add_circle</span>
+                    </button>
+                    <h2 className='equipment_menu_item_title'>{equipmentType}</h2>
+        </div>
+    );
+}
+
+function EquipmentMenuItemLogic(prevResourceOrder:ResourceOrder[], equipmentType:string, key:number){
+    return [...prevResourceOrder, {ResourceType:equipmentType, EquipmentAmount:0, WorkHours:0, Period:[0,0,0]}];
 }
 
 export default EquipmentSelectionMenu;
