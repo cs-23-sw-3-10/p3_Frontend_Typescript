@@ -124,7 +124,7 @@ function BladeTaskMenu(){
                     </div>
     
                     <div className='title equipment_amount'>
-                        <h2 className='title'>Equipment Amount</h2>
+                        <h2 className='title'>Period</h2>
                     </div>
 
                     <EquipmentList resourceOrders={resourceOrders}/>
