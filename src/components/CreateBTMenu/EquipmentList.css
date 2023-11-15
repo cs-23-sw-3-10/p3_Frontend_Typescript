@@ -19,6 +19,7 @@
 }
 
 .period{
+    position: relative;
     grid-column: 2 / 3;
     border-left: 2px solid;
     border-right: 2px solid;
@@ -34,4 +35,24 @@
     display: inline;
     margin-left: 15px;
     margin-right: 15px;
+}
+
+.remove_equipment_button{
+    position: absolute;
+    transform: translate(425px, -32px);
+    background-color: red;
+    width: 30px;
+    border-radius: 10px;
+    display: inline;
+    box-shadow: 0 9px #999;
+}
+
+.remove_equipment_button:hover{
+    background-color: rgb(191, 0, 0);
+}
+
+.remove_equipment_button:active{
+    background-color: red;
+    box-shadow: 0 5px #666;
+    transform: translate(425px, -30px);
 }
