@@ -1,8 +1,7 @@
-import "react-calendar-timeline/lib/Timeline.css";
 import GetBladeTaskDateInfo from './scheduleQueries';
 import DisplayComponent from "./Display";
 import React, { useState } from "react";
-import { set } from "date-fns";
+import { DndContext } from "@dnd-kit/core";
 
 function ScheduleComponent() {
     const [editMode, setEditMode] = useState(false);
@@ -12,8 +11,6 @@ function ScheduleComponent() {
     const viewSchedule = DisplayComponent(editMode, setEditMode, setShowPasswordPrompt);
     const editSchedule = DisplayComponent(editMode, setEditMode, setShowPasswordPrompt);
    
-
-    
     const scheduleHeader = [
         <h1>Edit Mode</h1>,
         <h1>View Mode</h1>
@@ -30,6 +27,7 @@ function ScheduleComponent() {
       };
 
     return (
+        <DndContext key={"scheduleComponentDnD"}>
         <div>
             {editMode ? scheduleHeader[0] : scheduleHeader[1]}
             {showPasswordPrompt && (
@@ -46,6 +44,7 @@ function ScheduleComponent() {
       )}
             {editMode ? editSchedule : viewSchedule}
         </div>
+        </DndContext>
     );
 }
 export default ScheduleComponent;

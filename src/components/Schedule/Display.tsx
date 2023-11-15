@@ -59,7 +59,6 @@ function DisplayComponent(editMode: boolean ,setEditMode: React.Dispatch<React.S
         if (!isNaN(newDate.valueOf())) {
             setDates(CreateDisplayMonths(newDate, numberOfMonths));
         } else {
-            console.log("Invalid date");
             setDates(CreateDisplayMonths(newDate, numberOfMonths));
         }
     };

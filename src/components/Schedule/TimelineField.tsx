@@ -1,3 +1,5 @@
+import { DndContext, useDroppable } from "@dnd-kit/core";
+
 enum MonthLengths { // Non-leap year for easy acces of number of days in a month
     Januar = 31,
     Februar = 28, // Default non-leap year
@@ -12,9 +14,28 @@ enum MonthLengths { // Non-leap year for easy acces of number of days in a month
     November = 30,
     December = 31,
 }
+
+interface RigFieldDateProps {
+    className: "RigFieldDate";
+    id: string;
+    rig: string;
+    date: Date;
+    style: RigFieldDateStyle;
+}
+
+interface RigFieldDateStyle {
+    gridColumn: string;
+    gridRow: "1";
+    backgroundColor: string;
+}
+
 const dateDivLength = 25; // px length of the dates in the schedule
 
-function CreateTimelineField(rigs: string[], months: Date[], allBladeTaskCards: React.ReactNode[]) {
+function CreateTimelineField(
+    rigs: string[],
+    months: Date[],
+    allBladeTaskCards: React.ReactNode[]
+) {
     let fieldWidth: number = 0; // px width of the field dynamically calculated from the number of months displayed
     months.forEach((month) => {
         fieldWidth += getTotalWidth(
@@ -30,7 +51,8 @@ function CreateTimelineField(rigs: string[], months: Date[], allBladeTaskCards: 
         let monthName = capitalizeFirstLetter(
             month.toLocaleString("default", { month: "long" }) // Get the month name
         );
-        for ( // Create a date for each day in the month
+        for (
+            // Create a date for each day in the month
             let i = 1;
             i <= MonthLengths[monthName as keyof typeof MonthLengths];
             i++
@@ -50,7 +72,7 @@ function CreateTimelineField(rigs: string[], months: Date[], allBladeTaskCards: 
     };
 
     const rigFieldContainerStyle = {
-        gridColumn: "1/-1", 
+        gridColumn: "1/-1",
         gridRow: "3",
         height: rigs.length * 50 + "px", // The height of the container is the number of rigs times the height of each rig
         maxHeight: rigs.length * 50 + "px",
@@ -61,18 +83,29 @@ function CreateTimelineField(rigs: string[], months: Date[], allBladeTaskCards: 
         <div className="TimelineFieldContainer">
             <div className="TimelineField" style={BTFieldStyle}>
                 {months.map((month) => CreateMonthDateContainer(month))}
-                <div className="RigFieldContainer" style={rigFieldContainerStyle}>
+                <div
+                    className="RigFieldContainer"
+                    style={rigFieldContainerStyle}
+                >
                     {rigs.map((rig) =>
                         CreateRigFieldContainer(
                             rig,
                             allDates,
                             fieldWidth,
                             columnsOfSchedule,
-                            allBladeTaskCards.filter((bladeTask: React.ReactNode) => { //Finds the blade tasks placed on the rig
-                                if (bladeTask) {
-                                    return (bladeTask as React.ReactElement<any>).props.rig === rig;
+                            allBladeTaskCards.filter(
+                                (bladeTask: React.ReactNode) => {
+                                    //Finds the blade tasks placed on the rig
+                                    if (bladeTask) {
+                                        return (
+                                            (
+                                                bladeTask as React.ReactElement<any>
+                                            ).props.rig === rig
+                                        );
+                                    }
+                                    return false;
                                 }
-                            })
+                            )
                         )
                     )}
                 </div>
@@ -106,7 +139,9 @@ function CreateMonthDateContainer(currentMonth: Date) {
     }
     const columnTemplate = monthDates // Create the grid columns for the month
         .map(
-            (date) => // Create a labeled column for each date
+            (
+                date // Create a labeled column for each date
+            ) =>
                 `[date-${date.getFullYear()}-${date.getMonth()}-${date.getDate()}] ${dateDivLength}px`
         )
         .join(" "); // Join the columns into a string
@@ -115,7 +150,8 @@ function CreateMonthDateContainer(currentMonth: Date) {
 
     let lastDay = `date-${year}-${monthNumber}-${getMonthLength(month, year)}`; // Get the last day of the month
 
-    const MonthDateContainerStyle = {// Style for the MonthDateContainer
+    const MonthDateContainerStyle = {
+        // Style for the MonthDateContainer
         width: `${getTotalWidth(month, year)}px`, // Width of the container is the total width of the month
         gridTemplateColumns: columnTemplate,
         gridTemplateRow: "30px 30px",
@@ -124,7 +160,12 @@ function CreateMonthDateContainer(currentMonth: Date) {
     };
 
     return (
-        <div className="MonthDateContainer" id={idSTR} style={MonthDateContainerStyle}>
+        <div
+            key={idSTR}
+            className="MonthDateContainer"
+            id={idSTR}
+            style={MonthDateContainerStyle}
+        >
             {CreateMonthHeader(currentMonth)}
             {CreateDatesContainer(currentMonth, monthDates, columnTemplate)}
         </div>
@@ -141,6 +182,7 @@ function CreateMonthHeader(currentMonth: Date) {
 
     return (
         <div
+            key={idSTR}
             className="MonthHeader"
             id={idSTR}
             style={{
@@ -164,6 +206,7 @@ function CreateDatesContainer(
 
     return (
         <div
+            key={containerID}
             className="DateContainer"
             id={containerID}
             style={{
@@ -171,7 +214,11 @@ function CreateDatesContainer(
                 gridTemplateRows: "30px",
             }}
         >
-            {monthDates.map((date) => CreateDate(date)) /* Create a date for each day in the month */}
+            {
+                monthDates.map((date) =>
+                    CreateDate(date)
+                ) /* Create a date for each day in the month */
+            }
         </div>
     );
 }
@@ -183,6 +230,7 @@ function CreateDate(currentDate: Date) {
     let idSTR = `${year}-${monthNumber}-${date}`; // id for the date div
     return (
         <div
+            key={idSTR}
             className="DateElement"
             id={idSTR}
             style={{
@@ -208,12 +256,30 @@ function CreateRigFieldContainer(
         gridTemplateRows: "auto",
     };
     return (
-        <div className="RigField" style={rigStyle}>
-            {allDates.map((date) => CreateRigFieldDates(rig, date))}
-            {BladeTaskCards} {/*automatically spreads out the entries of BladeTaskCards */}
-        </div>
+        // <DndContext
+        //     key={rig}
+        //     onDragStart={handleDragStart}
+        //     onDragEnd={handleDragEnd}
+        // >
+            <div key={rig} className="RigField" style={rigStyle}>
+                {allDates.map((date) => CreateRigFieldDates(rig, date))}
+                {BladeTaskCards}{" "}
+                {/*automatically spreads out the entries of BladeTaskCards */}
+            </div>
+        // </DndContext>
     );
 }
+
+// function handleDragStart(event: any) {
+//     console.log("drag started");
+// }
+
+// function handleDragEnd(event: any) {
+//     console.log("drag ended");
+//     const { active, over } = event;
+//     console.log(active.id);
+//     console.log(over);
+// }
 
 function CreateRigFieldDates(rig: string, date: Date) {
     let year = date.getFullYear();
@@ -222,7 +288,8 @@ function CreateRigFieldDates(rig: string, date: Date) {
     let weekDay = date.getDay(); // 0 = Sunday, 6 = Saturday to gray out weekends
     let idSTR = `${rig}-${year}-${monthNumber}-${dateNumber}}`; // id for the date div
 
-    let RigFieldDatesStyle = { // Style for the RigFieldDate
+    let RigFieldDatesStyle = {
+        // Style for the RigFieldDate
         gridColumn: `date-${year}-${monthNumber}-${dateNumber}`,
         gridRow: "1",
         backgroundColor: "white", // Default color
@@ -231,14 +298,53 @@ function CreateRigFieldDates(rig: string, date: Date) {
         RigFieldDatesStyle.backgroundColor = "lightgrey"; // Gray out weekends
     }
 
-    return (
-        <div
-            className="RigFieldDate"
-            id={idSTR}
-            style={RigFieldDatesStyle}
-        ></div>
+    const dateStyle: RigFieldDateStyle = {
+        gridColumn: `date-${year}-${monthNumber}-${dateNumber}`,
+        gridRow: "1",
+        backgroundColor: weekDay === 0 || weekDay === 6 ? "lightgrey" : "white", // Default color
+    };
+
+    // const dateProps: RigFieldDateProps = {
+    //     className: "RigFieldDate",
+    //     id: idSTR,
+    //     rig: rig,
+    //     date: date,
+    //     style: dateStyle,
+    // };
+
+    // return Droppable(dateProps);
+    return(
+    <div
+                // ref={setNodeRef}
+                key={idSTR}
+                className="RigFieldDate"
+                id={idSTR}
+                style={dateStyle}
+            ></div>
     );
 }
+
+// function Droppable(props: RigFieldDateProps) {
+//     const { setNodeRef } = useDroppable({
+//         id: props.id,
+//     });
+
+//     return (
+//         <DndContext
+//             key={props.id}
+//             onDragStart={handleDragStart}
+//             onDragEnd={handleDragEnd}
+//         >
+//             <div
+//                 ref={setNodeRef}
+//                 key={props.id}
+//                 className="RigFieldDate"
+//                 id={props.id}
+//                 style={props.style}
+//             ></div>
+//         </DndContext>
+//     );
+// }
 
 function getTotalWidth(month: string, year: number) {
     let totalWidth = dateDivLength * getMonthLength(month, year); // Get the total width of the month // The total width is the number of days in the month times the width of each date
