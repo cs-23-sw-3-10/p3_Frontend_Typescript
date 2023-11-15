@@ -25,13 +25,13 @@ export const NavBar = () => {
                 <nav className="navBarMenuItems">
                     <span>
                         {isOpen ? (
-                            <img
-                                src="https://cdn-icons-png.flaticon.com/512/286/286320.png"
+                            <img 
+                                src="https://cdn.kualo.com/website/icon_windfarm.png"
                                 alt="blaestLogo"
                                 className="navLogo"
                             />
                         ) : (
-                            ""
+                            <h1>BLAEST</h1>
                         )}
                     </span>
                     <Link to="/">
