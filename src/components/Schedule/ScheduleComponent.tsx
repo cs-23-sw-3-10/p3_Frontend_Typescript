@@ -1,106 +1,50 @@
-import Timeline from "react-calendar-timeline";
-import moment from "moment";
 import "react-calendar-timeline/lib/Timeline.css";
-
-
-interface RigInfo {
-    id: string;
-    title: string;
-    stackItems: boolean;
-    height: number;
-}
-
-interface BladeTaskInfo {
-    id: string;
-    group: number;
-    title: string;
-    start_time: moment.Moment;
-    end_time: moment.Moment;
-    canMove: boolean;
-    canResize: boolean;
-    canChangeGroup: boolean;
-    dragSnap: any;
-    resizeSnap: any;
-    stackItems: boolean;
-}
+import GetBladeTaskDateInfo from './scheduleQueries';
+import DisplayComponent from "./Display";
+import React, { useState } from "react";
+import { set } from "date-fns";
 
 function ScheduleComponent() {
-    //getting the rigs from the database
-    let testRigs: RigInfo[] = []; // et kald til databasen for at hente alle rigs
-    // testRigs.forEach((element: { id: string; title: string; }) => {
-    //   testRigs.push({ id: element.id, title: element.title, stackItems: false, height: 30 });
-    // });
+    const [editMode, setEditMode] = useState(false);
+    const [showPasswordPrompt, setShowPasswordPrompt] = useState(false);
+    const [password, setPassword] = useState(""); // State to store the entered password
 
-    //getting the bladetasks from the database
-    let bladeTasksArray: BladeTaskInfo[] = []; // et kald til databasen for at hente alle bladetasks
-    // bladeTasksArray.forEach((element: { id: string; group: number; title: string; start_time: any; end_time: any;}) => {
-    //   bladeTasks.push({
-    //     id: element.id,
-    //     group: element.group,
-    //     title: element.title,
-    //     start_time: moment(element.start_time),
-    //     end_time: moment(element.end_time),
-    //     canMove: true,
-    //     canResize: true,
-    //     canChangeGroup: true,
-    //     dragSnap: null,
-    //     resizeSnap: null,
-    //     stackItems: false,
-    //   });
-    // });
+    const viewSchedule = DisplayComponent(editMode, setEditMode, setShowPasswordPrompt);
+    const editSchedule = DisplayComponent(editMode, setEditMode, setShowPasswordPrompt);
+   
 
-    let x: BladeTaskInfo = {
-        id: "1",
-        group: 1,
-        title: "den nye",
-        start_time: moment().year(2023).month(10).date(1),
-        end_time: moment().year(2023).month(10).date(6),
-        canMove: true,
-        canResize: true,
-        canChangeGroup: true,
-        dragSnap: null,
-        resizeSnap: null,
-        stackItems: false,
-    };
-
-    let y: RigInfo = {
-        id: "1",
-        title: "rig 1",
-        stackItems: false,
-        height: 30,
-    };
-
-    const testRigsPrøve = [
-        y,
-        { id: "2", title: "rig 2", stackItems: false, height: 30 },
-        { id: "3", title: "rig 3", stackItems: false, height: 30 },
-        { id: "4", title: "rig 4", stackItems: false, height: 30 },
-        { id: "5", title: "rig 5", stackItems: false, height: 30 },
-        { id: "6", title: "rig 6", stackItems: false, height: 30 },
+    
+    const scheduleHeader = [
+        <h1>Edit Mode</h1>,
+        <h1>View Mode</h1>
     ];
 
-    const bladeTasksPrøve = [x];
+    const handlePasswordSubmit = () => {
+        // Check the entered password (you can replace "your_password" with the actual password)
+        if (password === "123") {
+          setShowPasswordPrompt(false);
+          setEditMode(!editMode);
+        } else {
+          alert("Incorrect password. Please try again.");
+        }
+      };
 
     return (
         <div>
-            <h1>Scrollable Horizontal Schedule</h1>
-            <Timeline
-                groups={testRigsPrøve}
-                items={bladeTasksPrøve}
-                minZoom={60 * 60 * 24 * 14 * 1000} // 14 days is the smallest zoom
-                defaultTimeStart={moment()} // the timeline will start today
-                defaultTimeEnd={moment().add(50, "days")} // and will end 30 days from today
-                
-                timeSteps={{
-                    // zooming will be at these intervals
-                    second: 0,
-                    minute: 0,
-                    hour: 0,
-                    day: 1,
-                    month: 1,
-                    year: 1,
-                }}
-            />
+            {editMode ? scheduleHeader[0] : scheduleHeader[1]}
+            {showPasswordPrompt && (
+        <div className="PasswordPrompt">
+          <label htmlFor="passwordInput">Enter Password:</label>
+          <input
+            type="password"
+            id="passwordInput"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
+          <button onClick={handlePasswordSubmit}>Submit</button>
+        </div>
+      )}
+            {editMode ? editSchedule : viewSchedule}
         </div>
     );
 }

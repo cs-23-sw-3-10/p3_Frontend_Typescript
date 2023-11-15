@@ -9,4 +9,3 @@ import { testTableLogic } from './testTableLogic';
  * Write npm test in the terminal to run the tests
  */
 testTableLogic();
-
