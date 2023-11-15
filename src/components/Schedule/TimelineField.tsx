@@ -2,7 +2,6 @@ import { DndContext, useDroppable } from "@dnd-kit/core";
 import CreateMonthDateContainer from "./MonthDateContainer";
 import CreateRigFieldContainer from "./RigFieldContainer";
 import MonthLengths from "./MonthLengthsEnum";
-import { get } from "http";
 
 type TimelineFieldProps = {
     rigs: string[];

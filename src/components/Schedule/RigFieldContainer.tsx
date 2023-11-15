@@ -40,14 +40,21 @@ function CreateRigFieldContainer(props: RigFieldContainerProps) {
 export default CreateRigFieldContainer;
 
 export function handleDragStart(event: any) {
+    const { active } = event;
     console.log("drag started");
+    console.log(active.id);
 }
 
 export function handleDragEnd(event: any) {
     console.log("drag ended");
     const { active, over } = event;
     console.log(active.id);
-    console.log(over);
+    if (over !== null){
+        console.log("her er over ", over.id);
+    }
+    else{
+        console.log("over er null");
+    }
 }
 
 function getRigDateKey(rig: string, date: Date) {

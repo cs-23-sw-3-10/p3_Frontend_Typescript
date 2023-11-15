@@ -56,12 +56,12 @@ function Draggable(props: BladeTaskDroppableProps) {
     return (
         <div
             className="bladeTaskCard"
-            ref={setNodeRef}
+            
             style={style}
             id={props.id}
-            {...listeners}
-            {...attributes}
+            
         >
+            <div className="bladeTaskCardHandle" ref={setNodeRef} {...listeners} {...attributes}></div>
             <div>{props.taskName}</div>
         </div>
     );
