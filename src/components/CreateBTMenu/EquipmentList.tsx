@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import './EquipmentList.css';
 import { ResourceOrder } from './BTMenuTypes';
+import { useResourceOrderContext } from './BladeTaskOrderContext';
+
 
 function EquipmentList({ resourceOrders }: { resourceOrders: ResourceOrder[] }) {
     return (
@@ -25,7 +27,25 @@ function EquipmentList({ resourceOrders }: { resourceOrders: ResourceOrder[] }) 
 
 function CheckBox({name,resourceIndex, title}:{name:string,resourceIndex:number, title:string}) {
     const [checked, setChecked] = useState(false);
-    
+    const changeResourceOrder = useResourceOrderContext();
+
+    const handleCheckInput = () => {
+        setChecked(!checked);
+        changeResourceOrder((prevResourceOrder: ResourceOrder[]) => {
+            let newResourceOrder = [...prevResourceOrder];
+            if (title === "Attach") {
+                newResourceOrder[resourceIndex].Period[0] = !checked;
+            }
+            if (title === "Test") {
+                newResourceOrder[resourceIndex].Period[1] = !checked;
+            }
+            if (title === "Detach") {
+                newResourceOrder[resourceIndex].Period[2] = !checked;
+            }
+            return newResourceOrder;
+        });
+    };
+
     return (
         <div className='checkBox'>
             <input
@@ -33,15 +53,11 @@ function CheckBox({name,resourceIndex, title}:{name:string,resourceIndex:number,
                 id={name + resourceIndex}
                 name={name + resourceIndex}
                 checked={checked}
-                onChange={(e) => handleCheckInput(checked, setChecked)}
+                onChange={handleCheckInput}
             />
             <label htmlFor={name + resourceIndex}>{title}</label>
         </div>
     );
-}
-
-function handleCheckInput(checked: boolean, setChecked: Function) {
-    setChecked(!checked);
 }
 
 export default EquipmentList;

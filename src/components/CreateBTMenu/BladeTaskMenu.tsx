@@ -126,8 +126,9 @@ function BladeTaskMenu(){
                     <div className='title equipment_amount'>
                         <h2 className='title'>Period</h2>
                     </div>
-
-                    <EquipmentList resourceOrders={resourceOrders}/>
+                    <ResourceOrderContext.Provider value={setResourceOrder}>
+                        <EquipmentList resourceOrders={resourceOrders}/>
+                    </ResourceOrderContext.Provider>
 
                     <div className="equipment_interaction">
                         <button className='equipment_add' onClick={(e) => setEquipmentActive(true)}> 

@@ -23,5 +23,5 @@ export type ResourceOrder = {
     ResourceType: string;
     EquipmentAmount: number;
     WorkHours: number;
-    Period: Array<number>;
+    Period: Array<boolean>;
 }

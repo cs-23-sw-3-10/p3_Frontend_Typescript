@@ -50,7 +50,7 @@ function EquipmentMenuItem({equipmentType, key}:{equipmentType:string, key:numbe
 }
 
 function EquipmentMenuItemLogic(prevResourceOrder:ResourceOrder[], equipmentType:string, key:number){
-    return [...prevResourceOrder, {ResourceType:equipmentType, EquipmentAmount:1, WorkHours:0, Period:[0,0,0]}];
+    return [...prevResourceOrder, {ResourceType:equipmentType, EquipmentAmount:1, WorkHours:0, Period:[false,false,false]}];
 }
 
 export default EquipmentSelectionMenu;
