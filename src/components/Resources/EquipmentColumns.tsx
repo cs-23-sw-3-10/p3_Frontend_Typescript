@@ -1,9 +1,9 @@
 "use client";
 
 import { ColumnDef } from "@tanstack/react-table";
-import { EquipmentData } from "./tempDataEquipment";
+import { Equipment } from "./EquipmentData";
 
-export const columnEQ: ColumnDef<EquipmentData>[] = [
+export const columnEQ: ColumnDef<Equipment>[] = [
     {
         accessorKey: "name",
         header: ({ column }) => {
@@ -30,7 +30,7 @@ export const columnEQ: ColumnDef<EquipmentData>[] = [
                                 style: { cursor: "pointer" },
                             }}
                         >
-                            {row.getIsExpanded() ? "👇" : "👉"}
+                            {row.getIsExpanded() ? "▲" : "▼"}
                         </button>
                     ) : (
                         <button
@@ -41,7 +41,7 @@ export const columnEQ: ColumnDef<EquipmentData>[] = [
                                 style: { cursor: "pointer" },
                             }}
                         >
-                            {row.getIsExpanded() ? "👇" : "👉"}
+                            {row.getIsExpanded() ?  "▲" : "▼"}
                         </button>
                     )}
                     {getValue()}

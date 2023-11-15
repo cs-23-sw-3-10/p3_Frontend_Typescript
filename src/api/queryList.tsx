@@ -1,5 +1,8 @@
 import { gql } from "@apollo/client";
 
+/**
+ * This file contains all the queries used in the application
+ */
 export const GET_ALL_BT = gql`
     query AllBladeTasks {
         AllBladeTasks {

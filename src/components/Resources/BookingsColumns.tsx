@@ -113,7 +113,7 @@ export const columnBookings: ColumnDef<BookingDataQuery>[] = [
                         column.toggleSorting(column.getIsSorted() === "asc")
                     }
                 >
-                    Work Hoursss
+                    Work Hours
                 </button>
             );
         },

@@ -10,10 +10,10 @@ export type BladeProjectDataQuery = {
             id: number;
             startDate: string;
             endDate: string;
-            duration: string;
+            duration: number;
             testType: string;
-            attachPeriod: string;
-            detachPeriod: string;
+            attachPeriod: number;
+            detachPeriod: number;
             taskName: string;
             testRig: string;
             bookings: [
@@ -21,9 +21,9 @@ export type BladeProjectDataQuery = {
                     id: number;
                     startDate: string;
                     endDate: string;
-                    duration: string;
+                    duration: number;
                     resourceType: string;
-                    workHours: string;
+                    workHours: number;
                 }
             ];
         }

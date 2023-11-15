@@ -3,12 +3,10 @@ import React from "react";
 import StyledButton from "../ui/styledButton";
 import { useCollapse } from "react-collapsed";
 import { Input } from "../ui/input";
-import { useNavigate } from "react-router-dom";
 
 import {
     ColumnDef,
     ColumnFiltersState,
-    Pagination,
     SortingState,
     flexRender,
     getCoreRowModel,
@@ -30,36 +28,60 @@ import {
     TableHeader,
     TableRow,
 } from "../ui/table";
-import path from "path";
 
+/**
+ * Represents the props for the DataTable component.
+ * columns: 
+ * data:
+ * renderExpandedComponent:
+ */
 interface DataTableProps<TData, TValue> {
     columns: ColumnDef<TData, TValue>[];
     data: TData[];
     renderExpandedComponent?: (props?: any) => JSX.Element;
 }
 
+/**
+ * Represents the state of pagination for a table.
+ */
 type PaginationState = {
     pageIndex: number;
     pageSize: number;
 };
 
+/**
+ * Represents the default pagination state for a table.
+ * PageIndex: What page the table is on when rendered.
+ * PageSize: How many rows are displayed per page.
+ */
 const defaultPagination: PaginationState = {
     pageIndex: 0,
     pageSize: 10,
 };
+
 
 export function TableLogic<TData, TValue>({
     columns,
     data,
     renderExpandedComponent,
 }: DataTableProps<TData, TValue>) {
+
+    //List of useState hooks that are used to set the state of the table.
     const [sorting, setSorting] = React.useState<SortingState>([]);
     const [columnVisibility, setColumnVisibility] = React.useState({});
     const [columnFilters, setColumnFilters] =
         React.useState<ColumnFiltersState>([]);
     const [filtering, setFiltering] = React.useState("");
     const [expanded, setExpanded] = React.useState<ExpandedState>({});
+    const [inputValue, setInputValue] = React.useState("");
+    const { getToggleProps } = useCollapse();
 
+    /**  
+     * The useReactTable hook is used to create a table .
+     * First data and columns are passed in, then various RowModels are passed in to enable the functionalities.
+     * Set functions are passed in to handle the state of the table
+     * state: enables the table to be controlled by the React useState hooks. 
+     */
     const table = useReactTable({
         data,
         columns,
@@ -75,6 +97,7 @@ export function TableLogic<TData, TValue>({
         onColumnFiltersChange: setColumnFilters,
         onSortingChange: setSorting,
         onExpandedChange: setExpanded,
+        onGlobalFilterChange: setFiltering,
         state: {
             sorting,
             globalFilter: filtering,
@@ -82,33 +105,26 @@ export function TableLogic<TData, TValue>({
             columnVisibility,
             expanded,
         },
-        onGlobalFilterChange: setFiltering,
     });
 
-    const [inputValue, setInputValue] = React.useState("");
     const inputRef = React.useRef(null);
-
     const handlePageSizeChange = () => {
         const pageSize = Number(inputValue);
-        if (!isNaN(pageSize)) {
+        if (!isNaN(pageSize) && pageSize >0) {
             table.setPageSize(pageSize);
-        } else {
+        } else if(pageSize===0){
+            alert("Page size can not be zero")
+        }
+            else {
             alert("Please enter a valid number");
         }
     };
 
-    let createURL = useNavigate();
-    const changeURL = () => {
-        let path = `${window.location.pathname}/create`;
-        createURL(path);
-    };
-
-    const { getCollapseProps, getToggleProps, isExpanded } = useCollapse();
 
     return (
         <div>
-            {/* Input field that makes it possible to search*/}
-            <div className="flex items-center py-4">
+            {/* global filtering textfield*/}
+            <div className="flex items-center py-4" >
                 <Input
                     placeholder="Filter by column"
                     value={filtering}
@@ -118,6 +134,7 @@ export function TableLogic<TData, TValue>({
                     className="max-w-sm"
                 />
                 <div>
+                    {/* popover for changing column visibility*/}
                     <Popover>
                         <PopoverTrigger asChild>
                             <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 r-100 capitalize">
@@ -125,7 +142,10 @@ export function TableLogic<TData, TValue>({
                             </button>
                         </PopoverTrigger>
                         <PopoverContent className="bg-white">
+                            {/* renders a checkbox that changes the visibility of different columns in the table. 
+                                ...getToggleProps gets all the necessary props for the Popover */}
                             <div {...getToggleProps()}>
+                                {/* creates the Toogle All button that either mark every checkbox or unmark them  */}
                                 <div className="">
                                     <div>
                                         <label>
@@ -133,14 +153,15 @@ export function TableLogic<TData, TValue>({
                                                 {...{
                                                     type: "checkbox",
                                                     checked:
-                                                        table.getIsAllColumnsVisible(),
+                                                        table.getIsAllColumnsVisible(), //determine if all columns are currently visible.
                                                     onChange:
-                                                        table.getToggleAllColumnsVisibilityHandler(),
+                                                        table.getToggleAllColumnsVisibilityHandler(), //get the handler function to toggle the visibility of all columns.
                                                 }}
                                             />{" "}
                                             Toggle All
                                         </label>
                                     </div>
+                                    {/* get all leaf columns of the table. For each column, it renders a checkbox and the column id. */}
                                     {table.getAllLeafColumns().map((column) => {
                                         return (
                                             <div key={column.id}>
@@ -149,9 +170,9 @@ export function TableLogic<TData, TValue>({
                                                         {...{
                                                             type: "checkbox",
                                                             checked:
-                                                                column.getIsVisible(),
+                                                                column.getIsVisible(), //determine if the current column is visible.
                                                             onChange:
-                                                                column.getToggleVisibilityHandler(),
+                                                                column.getToggleVisibilityHandler(), //get the handler function to toggle the visibility of the current column.
                                                         }}
                                                     />{" "}
                                                     {column.id}
@@ -164,15 +185,19 @@ export function TableLogic<TData, TValue>({
                         </PopoverContent>
                     </Popover>
                 </div>
+
                 <div className="ml-10">
-                    <StyledButton onClick={changeURL}>
+                    <StyledButton>
                         Create {window.location.pathname.split("/")[1]}
                     </StyledButton>
                 </div>
             </div>
 
+            {/* the actual table that is rendered */}
             <div className="rounded-md border">
                 <Table>
+                    {/* table header that is generated by mapping through the headers definition
+                     from the respective table columns definition */}
                     <TableHeader>
                         {table.getHeaderGroups().map((headerGroup) => (
                             <TableRow key={headerGroup.id}>
@@ -181,7 +206,7 @@ export function TableLogic<TData, TValue>({
                                         <TableHead key={header.id}>
                                             {header.isPlaceholder
                                                 ? null
-                                                : flexRender(
+                                                : flexRender( //renders the header by using the columnDef.header function and the header context
                                                       header.column.columnDef
                                                           .header,
                                                       header.getContext()
@@ -193,10 +218,14 @@ export function TableLogic<TData, TValue>({
                         ))}
                     </TableHeader>
                     <TableBody>
+                        {/* table body that is generated by mapping through the rows definition, if there is a , if not the "No Data Available" TableCell is generated*/}
                         {table.getRowModel().rows?.length ? (
                             table.getRowModel().rows.map((row: any) => {
+                                
+                                //creates a row element for each row in the table
                                 const rowElements = [];
 
+                                //pushes the row element into the rowElements array
                                 rowElements.push(
                                     <TableRow
                                         key={row.id}
@@ -206,6 +235,7 @@ export function TableLogic<TData, TValue>({
                                                 : undefined
                                         }
                                     >
+                                        {/* maps over the visible cells in the current row. For each cell, it creates a TableCell element */}
                                         {row
                                             .getVisibleCells()
                                             .map((cell: any) => (
@@ -219,6 +249,8 @@ export function TableLogic<TData, TValue>({
                                             ))}
                                     </TableRow>
                                 );
+                                //if the row is expanded, it pushes the expanded component into the rowElements array
+                                //the expanded component is defined when the TableLogic component is called
                                 if (row.getIsExpanded()) {
                                     rowElements.push(
                                         <TableRow key={`extra ${row.id}`}>
@@ -235,7 +267,9 @@ export function TableLogic<TData, TValue>({
                                 }
                                 return rowElements;
                             })
-                        ) : (
+                        ) : 
+                        //if there is no row, it renders a table row with a table cell that says "No data available". Happens if no data is fetched from the database
+                        (
                             <TableRow>
                                 <TableCell colSpan={columns.length}>
                                     No data available
@@ -245,6 +279,8 @@ export function TableLogic<TData, TValue>({
                     </TableBody>
                 </Table>
             </div>
+
+            {/* Buttons to change the rendered page and change pagination size */}
             <div className="flex items-center justify-start space-x-2 py-4">
                 <StyledButton
                     onClick={() => table.previousPage()}
@@ -258,20 +294,24 @@ export function TableLogic<TData, TValue>({
                 >
                     Next
                 </StyledButton>
-                <StyledButton
-                    className="bg-blue-500 text-white font-semibold py-2 px-4 border border-blue-700 rounded shadow hover:bg-blue-400 focus:outline-none focus:shadow-outline"
+                <div>
+                 <button
+                 className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-3 r-100 capitalize"
                     onClick={handlePageSizeChange}
                     disabled={!table.getCanNextPage()}
                 >
                     Set Page Size
-                </StyledButton>
+                </button>
                 <input
-                    className="border border-gray-300 rounded-md w-20 px-3 py-2 text-sm leading-4 shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500"
+                    className="border border-gray-300 w-20 m-0 py-2 px-3 font-sm shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500"
                     type="text"
                     value={inputValue}
+                    onKeyDown={(e) => (e.key === "Enter" ? handlePageSizeChange() : null)}
                     onChange={(e) => setInputValue(e.target.value)}
                     ref={inputRef}
                 />
+                </div>
+               
             </div>
         </div>
     );

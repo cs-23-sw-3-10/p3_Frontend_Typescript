@@ -7,7 +7,6 @@ import { Input } from "../ui/input";
 import {
     ColumnDef,
     ColumnFiltersState,
-    Pagination,
     SortingState,
     flexRender,
     getCoreRowModel,
@@ -55,6 +54,8 @@ export function TableLogicWOHeaders<TData, TValue>({
         React.useState<ColumnFiltersState>([]);
     const [filtering, setFiltering] = React.useState("");
     const [expanded, setExpanded] = React.useState<ExpandedState>({});
+    const [inputValue, setInputValue] = React.useState("");
+
 
     const table = useReactTable({
         data,
@@ -81,24 +82,22 @@ export function TableLogicWOHeaders<TData, TValue>({
         onGlobalFilterChange: setFiltering,
     });
 
-    const [inputValue, setInputValue] = React.useState("");
     const inputRef = React.useRef(null);
 
     const handlePageSizeChange = () => {
         const pageSize = Number(inputValue);
-        if (!isNaN(pageSize)) {
+        if (!isNaN(pageSize) && pageSize >0) {
             table.setPageSize(pageSize);
-        } else {
+        } else if(pageSize===0){
+            alert("Page size can not be zero")
+        }
+            else {
             alert("Please enter a valid number");
         }
     };
 
-    const { getCollapseProps, getToggleProps, isExpanded } = useCollapse();
-
     return (
         <div>
-            {/* Input field that makes it possible to search*/}
-
             <div className="rounded-md border">
                 <Table>
                     <TableHeader>
@@ -184,20 +183,23 @@ export function TableLogicWOHeaders<TData, TValue>({
                 >
                     Next
                 </StyledButton>
-                <StyledButton
-                    className="bg-blue-500 text-white font-semibold py-2 px-4 border border-blue-700 rounded shadow hover:bg-blue-400 focus:outline-none focus:shadow-outline"
+                <div>
+                 <button
+                 className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-3 r-100 capitalize"
                     onClick={handlePageSizeChange}
                     disabled={!table.getCanNextPage()}
                 >
                     Set Page Size
-                </StyledButton>
+                </button>
                 <input
-                    className="border border-gray-300 rounded-md w-20 px-3 py-2 text-sm leading-4 shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500"
+                    className="border border-gray-300 w-20 m-0 py-2 px-3 font-sm shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500"
                     type="text"
                     value={inputValue}
+                    onKeyDown={(e) => (e.key === "Enter" ? handlePageSizeChange() : null)}
                     onChange={(e) => setInputValue(e.target.value)}
                     ref={inputRef}
                 />
+                </div>
             </div>
         </div>
     );

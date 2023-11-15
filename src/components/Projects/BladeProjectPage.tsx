@@ -1,18 +1,21 @@
 import React from "react";
 
-import { columnBP } from "./BPProjectsColumns";
-import { columnBT } from "../BladeTask/BTC";
-import { columnBTID } from "../BladeTask/BTC";
+import { columnBP } from "./BladeProjectColumns";
+import { columnBT } from "../BladeTask/BladeTaskColumns";
 import { useQuery } from "@apollo/client";
 import { GET_ALL_BP } from "../../api/queryList";
 import { GET_ALL_BT } from "../../api/queryList";
 import { TableLogicWOHeaders } from "../TableLogic/TableLogicWOHeader";
 import { TableLogic } from "../TableLogic/TableLogic";
-import ScheduleComponent from "../Schedule/ScheduleComponent";
-import BTPage from "../BladeTask/BladeTaskPage";
-import { columnBookings } from "../Resources/BookingsColumns";
+
+/**
+ * gets all bladeprojects from the database and renders them in a table
+ * if the bladeprojects contain bladeTasks, these are also rendered in a table when the bladeproject row is expanded
+ * @returns the BladeProjectPage component
+ */
 
 function BladeProjectPage() {
+    //get data from the database
     const {
         loading: loadingBP,
         error: errorBP,
@@ -24,6 +27,8 @@ function BladeProjectPage() {
         data: dataBT,
     } = useQuery(GET_ALL_BT);
 
+
+    //handle loading and error states for the used queries
     if (loadingBP) return <p>Loading...</p>;
     if (errorBP) return <p> Error {errorBP.message}</p>;
     const BPData = dataBP["AllBladeProjects"];
@@ -39,6 +44,10 @@ function BladeProjectPage() {
         return <p> No data for {"AllBladeTasks"} </p>;
     }
 
+    /* renders the table. The renderExpandedComponent prop is used to render the bladeTasks table
+     * based on the current row.id which is equal to the bladeproject ID. 
+     * The data for the TableLogicWOHeaders is therefore only containing the bladeTasks for the expanded bladeproject
+     */
     return (
         <TableLogic
             columns={columnBP}
@@ -72,22 +81,4 @@ function BladeProjectPage() {
     );
 }
 
-/*
- 
-*/
 export default BladeProjectPage;
-
-/*
-    const bladeTasksData = dataBP["AllBladeProjects"].flatMap((project: any) =>
-        project.bladeTasks.map((bladeTask: any) => ({
-            id: Number(bladeTask.id),
-            startDate: String(bladeTask.startDate),
-            endDate: String(bladeTask.endDate),
-            duration: String(bladeTask.duration),
-            testType: String(bladeTask.testType),
-            attachPeriod: String(bladeTask.attachPeriod),
-            detachPeriod: String(bladeTask.detachPeriod),
-            taskName: String(bladeTask.taskName),
-            testRig: String(bladeTask.testRig),
-        }))
-    );*/

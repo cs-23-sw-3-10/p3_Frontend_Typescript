@@ -5,8 +5,7 @@ import EquipmentPage from "./components/Resources/EquipmentPage";
 import { Routes, Route, Navigate } from "react-router-dom";
 import "./App.css";
 import ScheduleComponent from "./components/Schedule/ScheduleComponent";
-
-import BladeProjectPage from "./components/Projects/BPPage";
+import BladeProjectPage from "./components/Projects/BladeProjectPage";
 import BTPage from "./components/BladeTask/BladeTaskPage";
 
 function App() {
@@ -23,8 +22,6 @@ function App() {
                         />
                         <Route path="/bladetask" element={<BTPage />} />
                         <Route path="/resources" element={<EquipmentPage />} />
-                        <Route path="/projects/create" element={"createBP"} />
-                        <Route path="/bladetask/create" element={"createBT"} />
                         <Route path="*" element={<Navigate to="/" />} />
                     </Routes>
                 </div>

@@ -1,8 +1,6 @@
 "use client";
 import { ColumnDef } from "@tanstack/react-table";
-import { BladeProject } from "./tempData";
-import { useContext } from "react";
-import { BladeProjectDataQuery } from "./BPData";
+import { BladeProjectDataQuery } from "./BladeProjectData";
 
 export const columnBP: ColumnDef<BladeProjectDataQuery>[] = [
     {
@@ -119,44 +117,5 @@ export const columnBP: ColumnDef<BladeProjectDataQuery>[] = [
             );
         },
         accessorKey: "endDate",
-    },
-    /*
-    {
-        header: ({ column }) => {
-            return (
-                <button
-                    onClick={() =>
-                        column.toggleSorting(column.getIsSorted() === "asc")
-                    }
-                >
-                    Blade Tasks Id
-                </button>
-            );
-        },
-        id: "bladeTasks.id",
-        accessorFn: (row) => row.bladeTasks?.map((bladeTasks) => bladeTasks.id),
-    },
-    */
-   
-    /*
-    {
-        header: ({ column }) => {
-            return (
-                <button
-                    onClick={() =>
-                        column.toggleSorting(column.getIsSorted() === "asc")
-                    }
-                >
-                    Bookings
-                </button>
-            );
-        },
-        id: "bladeTasks.bookings.id",
-        accessorFn: (row) =>
-            row.bladeTasks.map((bladeTask) =>
-                bladeTask.bookings.map((booking) => booking.id)
-            ),
-    },
-    */
-   
+    },  
 ];
