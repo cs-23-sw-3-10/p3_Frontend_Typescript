@@ -25,8 +25,6 @@ function handleDateValidation(e:React.FormEvent<HTMLInputElement>, setDate:Funct
     //Granularity of days -> Set hour to the same value for both dates
     currentDate.setHours(1,0,0,0);
     inputDate.setHours(1,0,0,0);
-    console.log(currentDate);
-    console.log(inputDate);
 
     //Setting the date in input element requires date to be in string format
     let currentDateString:string = currentDate.toISOString().split('T')[0];
@@ -45,7 +43,7 @@ function handleDateValidation(e:React.FormEvent<HTMLInputElement>, setDate:Funct
 }
 
 function BladeTaskMenu(){
-        const currentOrder:BTOrder = 
+        let currentOrder:BTOrder = 
         { 
             Project: '',
             Type: '',
@@ -71,10 +69,10 @@ function BladeTaskMenu(){
         const [duration, setDuration] = useState(0);
         const [equipmentActive, setEquipmentActive] = useState(false);
         const [resourceOrders, setResourceOrder] = useState(currentOrder.ResourceOrders);
-        console.log(resourceOrders);
 
         useEffect(() => {
-            console.log(resourceOrders);
+            currentOrder.ResourceOrders = resourceOrders;
+            console.log(currentOrder);
         },[resourceOrders]) 
 
         return (

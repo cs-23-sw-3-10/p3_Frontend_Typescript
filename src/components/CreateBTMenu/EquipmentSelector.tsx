@@ -43,7 +43,6 @@ function EquipmentMenuItem({equipmentType, key}:{equipmentType:string, key:numbe
                         className="equipment_menu_item_button"
                         onClick={() => changeResourceOrder((prevResourceOrder:ResourceOrder[]) => 
                             EquipmentMenuItemLogic(prevResourceOrder, equipmentType, key))}
-                        //([{...prevResourceOrder, ResourceType:equipmentType, EquipmentAmount:0, WorkHours:0, Period:[0,0,0]}])
                     >
                             <span className="equipment_menu_item_icon material-symbols-outlined">add_circle</span>
                     </button>
@@ -53,7 +52,20 @@ function EquipmentMenuItem({equipmentType, key}:{equipmentType:string, key:numbe
 }
 
 function EquipmentMenuItemLogic(prevResourceOrder:ResourceOrder[], equipmentType:string, key:number){
-    return [...prevResourceOrder, {ResourceType:equipmentType, EquipmentAmount:0, WorkHours:0, Period:[0,0,0]}];
+    let ExistingEquipment = prevResourceOrder.filter((order) => order.ResourceType === equipmentType);
+    if(ExistingEquipment.length > 0)
+    {
+        console.log("ER INDE");
+        let newResourceOrder = [...prevResourceOrder];
+        let ExistingEquipmentIndex = newResourceOrder.indexOf(ExistingEquipment[0]);
+        console.log(newResourceOrder[0].EquipmentAmount);
+        newResourceOrder[ExistingEquipmentIndex].EquipmentAmount++;
+        newResourceOrder[ExistingEquipmentIndex].EquipmentAmount--;
+        console.log(newResourceOrder[0].EquipmentAmount);
+        return newResourceOrder;
+    }else{
+        return [...prevResourceOrder, {ResourceType:equipmentType, EquipmentAmount:1, WorkHours:0, Period:[0,0,0]}];
+    }
 }
 
 export default EquipmentSelectionMenu;
