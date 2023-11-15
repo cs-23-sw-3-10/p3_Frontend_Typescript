@@ -4,6 +4,7 @@ import CreateTestRigDivs from "./TestRigDivs";
 import CreateTimelineField from "./TimelineField";
 import {bladeTaskCards} from "./BladeTaskCard";
 import React, { useState } from "react";
+import CreateAdditionalContent from "./AdditionalContent";
 
 
 let date = new Date(Date.now());
@@ -13,7 +14,13 @@ const firstStartDate = new Date(
     date.getDate()
 );
 
-function DisplayComponent(editMode: boolean ,setEditMode: React.Dispatch<React.SetStateAction<boolean>>, setShowPasswordPrompt: React.Dispatch<React.SetStateAction<boolean>>) {
+type DisplayProps = {
+    editMode: boolean;
+    setEditMode: React.Dispatch<React.SetStateAction<boolean>>;
+    setShowPasswordPrompt: React.Dispatch<React.SetStateAction<boolean>>;
+};
+
+function DisplayComponent(props: DisplayProps) {
     const [rigs, setRigs] = useState([
         // should be imported from database
         "Rig 1",
@@ -30,7 +37,7 @@ function DisplayComponent(editMode: boolean ,setEditMode: React.Dispatch<React.S
         new Date(firstStartDate.getFullYear(), firstStartDate.getMonth() + 2),
     ]); // should be imported from database
 
-    const additionalContent = CreateAdditionalContent();
+    const additionalContent = <CreateAdditionalContent/>
 
     const [selectedDate, setSelectedDate] = useState(""); // State to store the selected date
     const [numberOfMonths, setNumberOfMonths] = useState(3); // State to store the number of months to display
@@ -45,12 +52,12 @@ function DisplayComponent(editMode: boolean ,setEditMode: React.Dispatch<React.S
     };
 
     const handleModeChange = () => {
-        if (!editMode) {
+        if (!props.editMode) {
             // If switching to edit mode, show password prompt
-            setShowPasswordPrompt(true);
+            props.setShowPasswordPrompt(true);
           } else {
             // If switching from edit mode, just toggle the edit mode
-            setEditMode(!editMode);
+            props.setEditMode(!props.editMode);
           }
     };
 
@@ -93,12 +100,16 @@ function DisplayComponent(editMode: boolean ,setEditMode: React.Dispatch<React.S
                 <input type="checkbox" onChange={handleModeChange}/>
             </div>
             <div className="ScheduleDisplay">
-                {CreateTestRigDivs(rigs)} 
+                <CreateTestRigDivs rigs={rigs} />
+                {/* {CreateTestRigDivs(rigs)}  */}
                 <DndContext>
-                    {CreateTimelineField(rigs, dates, bladeTaskCards)}
+                    <CreateTimelineField
+                        rigs={rigs}
+                        months={dates}
+                        allBladeTaskCards={bladeTaskCards}/>
                 </DndContext>
             </div>
-            {editMode ? additionalContent : null}
+            {props.editMode ? additionalContent : null}
         </div>
     );
 }
@@ -119,10 +130,4 @@ function CreateDisplayMonths(startDate: Date, numberOfMonths: number) {
     return months;
 }
 
-function CreateAdditionalContent() {
-    return (
-        <div className="AdditionalContent">
-            <h3>AdditionalContent</h3>
-        </div>
-    );
-}
+

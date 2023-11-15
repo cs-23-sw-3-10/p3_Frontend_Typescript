@@ -1,14 +1,19 @@
+import { type } from "os";
 import React, { SetStateAction, Dispatch } from "react";
 
+type TestRigDivsProps = {
+    rigs: string[];
+};
+
 function CreateTestRigDivs(
-    rigs: string[],
+    props: TestRigDivsProps,
 ) {
     // Create a div for each test rig
     return (
         <div className="TestRigOverviewContainer">
             <div className="TestRigDateHeaderSpace"></div>
 
-            {rigs.map((rig) => (
+            {props.rigs.map((rig) => (
                 <div className="TestRigOverviewElement" key={rig} id={rig}>
                     <h4>{rig}</h4>
                 </div>

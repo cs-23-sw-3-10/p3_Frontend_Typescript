@@ -8,8 +8,8 @@ function ScheduleComponent() {
     const [showPasswordPrompt, setShowPasswordPrompt] = useState(false);
     const [password, setPassword] = useState(""); // State to store the entered password
 
-    const viewSchedule = DisplayComponent(editMode, setEditMode, setShowPasswordPrompt);
-    const editSchedule = DisplayComponent(editMode, setEditMode, setShowPasswordPrompt);
+    const viewSchedule = <DisplayComponent editMode={editMode} setEditMode={setEditMode} setShowPasswordPrompt={setShowPasswordPrompt}/>;
+    const editSchedule = <DisplayComponent editMode={editMode} setEditMode={setEditMode} setShowPasswordPrompt={setShowPasswordPrompt}/>;
    
     const scheduleHeader = [
         <h1>Edit Mode</h1>,
