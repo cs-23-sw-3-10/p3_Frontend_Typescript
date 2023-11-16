@@ -7,6 +7,7 @@ type TimelineFieldProps = {
     rigs: string[];
     months: Date[];
     allBladeTaskCards: React.ReactNode[];
+    setter: any;
 };
 
 export const dateDivLength = 25; // px length of the dates in the schedule
@@ -76,6 +77,8 @@ function CreateTimelineField(props: TimelineFieldProps) {
                             allDates={allDates}
                             fieldWidth={fieldWidth}
                             columns={columnsOfSchedule}
+                            setter={props.setter}
+                            allBladeTaskCards={props.allBladeTaskCards}
                             BladeTaskCards={props.allBladeTaskCards.filter(
                                 (bladeTask: React.ReactNode) => {
                                     //Finds the blade tasks placed on the rig

@@ -25,17 +25,7 @@ function CreateRigFieldDate(props: RigFieldDateProps) {
     let monthNumber = props.date.getMonth();
     let dateNumber = props.date.getDate();
     let weekDay = props.date.getDay(); // 0 = Sunday, 6 = Saturday to gray out weekends
-    let idSTR = `${props.rig}-${year}-${monthNumber}-${dateNumber}}`; // id for the date div
-
-    let RigFieldDatesStyle = {
-        // Style for the RigFieldDate
-        gridColumn: `date-${year}-${monthNumber}-${dateNumber}`,
-        gridRow: "1",
-        backgroundColor: "white", // Default color
-    };
-    if (weekDay === 0 || weekDay === 6) {
-        RigFieldDatesStyle.backgroundColor = "lightgrey"; // Gray out weekends
-    }
+    let idSTR = `${props.rig}-${year}-${monthNumber}-${dateNumber}`; // id for the date div
 
     const dateStyle: RigFieldDateStyle = {
         gridColumn: `date-${year}-${monthNumber}-${dateNumber}`,
@@ -63,8 +53,8 @@ function Droppable(props: RigFieldDateDroppableProps) {
     return (
         <DndContext
             key={props.id}
-            onDragStart={handleDragStart}
-            onDragEnd={handleDragEnd}
+            // onDragStart={handleDragStart}
+            // onDragEnd={handleDragEnd}
         >
             <div
                 ref={setNodeRef}

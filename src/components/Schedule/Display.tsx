@@ -2,9 +2,10 @@ import { DndContext } from "@dnd-kit/core";
 import "./Display.css";
 import CreateTestRigDivs from "./TestRigDivs";
 import CreateTimelineField from "./TimelineField";
-import { bladeTaskCards } from "./BladeTaskCard";
+import BladeTaskCard from "./BladeTaskCard";
 import React, { useState } from "react";
 import CreateAdditionalContent from "./AdditionalContent";
+import { bladeTaskCards } from "./BladeTaskCard";
 
 let date = new Date(Date.now());
 const firstStartDate = new Date(
@@ -28,6 +29,10 @@ function DisplayComponent(props: DisplayProps) {
         "Rig 4",
         "Rig 5",
         "Rig 6",
+    ]);
+
+    const [btCards, setBladeTaskCards] = useState([
+        ...bladeTaskCards
     ]);
 
     const [dates, setDates] = useState([
@@ -99,12 +104,12 @@ function DisplayComponent(props: DisplayProps) {
             </div>
             <div className="ScheduleDisplay">
                 <CreateTestRigDivs rigs={rigs} />
-                {/* {CreateTestRigDivs(rigs)}  */}
                 <DndContext>
                     <CreateTimelineField
                         rigs={rigs}
                         months={dates}
-                        allBladeTaskCards={bladeTaskCards}
+                        allBladeTaskCards={btCards}
+                        setter={setBladeTaskCards}
                     />
                 </DndContext>
             </div>

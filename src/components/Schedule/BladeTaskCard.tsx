@@ -12,6 +12,7 @@ interface BladeTaskCardProps {
     rig?: string;
     projectColor: string;
     taskName: string;
+    id: string;
 }
 interface BladeTaskDroppableProps {
     style: any;
@@ -30,21 +31,15 @@ function BladeTaskCard(props: BladeTaskCardProps) {
 
     const droppableProps: BladeTaskDroppableProps = {
         style: cardStyle,
-        id:
-            props.taskName +
-            "-" +
-            props.rig +
-            "-" +
-            props.startDate +
-            props.projectColor,
+        id: props.taskName + "-" + props.rig + "-" + props.startDate,
         taskName: props.taskName,
     };
 
-    return <Draggable {...droppableProps} />;
+    return <DraggableBladeTask {...droppableProps} />;
 }
 export default BladeTaskCard;
 
-function Draggable(props: BladeTaskDroppableProps) {
+function DraggableBladeTask(props: BladeTaskDroppableProps) {
     const { attributes, listeners, setNodeRef, transform } = useDraggable({
         id: props.id,
     });
@@ -54,14 +49,13 @@ function Draggable(props: BladeTaskDroppableProps) {
     };
 
     return (
-        <div
-            className="bladeTaskCard"
-            
-            style={style}
-            id={props.id}
-            
-        >
-            <div className="bladeTaskCardHandle" ref={setNodeRef} {...listeners} {...attributes}></div>
+        <div className="bladeTaskCard" style={style} id={props.id}>
+            <div
+                className="bladeTaskCardHandle"
+                ref={setNodeRef}
+                {...listeners}
+                {...attributes}
+            ></div>
             <div>{props.taskName}</div>
         </div>
     );
@@ -76,6 +70,7 @@ let bladeTaskCards = [
         taskName="BT-1"
         startDate={new Date(2023, 10, 1)}
         rig="Rig 1"
+        id={`BT-1-Rig 1-${new Date(2023, 10, 1)}`}
     />,
     <BladeTaskCard
         key={"BT-2Rig1"}
@@ -84,6 +79,7 @@ let bladeTaskCards = [
         taskName="BT-2"
         startDate={new Date(2023, 10, 6)}
         rig="Rig 1"
+        id={`BT-2-Rig 1-${new Date(2023, 10, 6)}`}
     />,
     <BladeTaskCard
         key={"BT-3Rig1"}
@@ -92,6 +88,7 @@ let bladeTaskCards = [
         taskName="BT-1"
         startDate={new Date(2023, 10, 20)}
         rig="Rig 2"
+        id={`BT-1-Rig 2-${new Date(2023, 10, 20)}`}
     />,
     <BladeTaskCard
         key={"BT-4Rig1"}
@@ -100,6 +97,7 @@ let bladeTaskCards = [
         taskName="BT-2"
         startDate={new Date(2023, 11, 1)}
         rig="Rig 2"
+        id={`BT-2-Rig 2-${new Date(2023, 11, 1)}`}
     />,
     <BladeTaskCard
         key={"BT-5Rig1"}
@@ -108,6 +106,7 @@ let bladeTaskCards = [
         taskName="BT-3"
         startDate={new Date(2023, 10, 29)}
         rig="Rig 3"
+        id={`BT-3-Rig 3-${new Date(2023, 10, 29)}`}
     />,
     <BladeTaskCard
         key={"BT-6Rig1"}
@@ -116,6 +115,7 @@ let bladeTaskCards = [
         taskName="BT-1"
         startDate={new Date(2023, 10, 1)}
         rig="Rig 3"
+        id={`BT-1-Rig 3-${new Date(2023, 10, 1)}`}
     />,
     <BladeTaskCard
         key={"BT-7Rig1"}
@@ -124,6 +124,7 @@ let bladeTaskCards = [
         taskName="BT-2"
         startDate={new Date(2023, 10, 3)}
         rig="Rig 3"
+        id={`BT-2-Rig 3-${new Date(2023, 10, 3)}`}
     />,
     <BladeTaskCard
         key={"BT-8Rig1"}
@@ -132,6 +133,7 @@ let bladeTaskCards = [
         taskName="BT-1"
         startDate={new Date(2023, 10, 1)}
         rig="Rig 4"
+        id={`BT-1-Rig 4-${new Date(2023, 10, 1)}`}
     />,
     <BladeTaskCard
         key={"BT-9Rig1"}
@@ -140,6 +142,7 @@ let bladeTaskCards = [
         taskName="BT-2"
         startDate={new Date(2023, 10, 16)}
         rig="Rig 5"
+        id={`BT-2-Rig 5-${new Date(2023, 10, 16)}`}
     />,
     <BladeTaskCard
         key={"BT-10Rig1"}
@@ -148,6 +151,7 @@ let bladeTaskCards = [
         taskName="BT-3"
         startDate={new Date(2023, 11, 11)}
         rig="Rig 5"
+        id={`BT-3-Rig 5-${new Date(2023, 11, 11)}`}
     />,
     <BladeTaskCard
         key={"BT-11Rig1"}
@@ -156,6 +160,7 @@ let bladeTaskCards = [
         taskName="BT-3"
         startDate={new Date(2023, 11, 16)}
         rig="Rig 5"
+        id={`BT-3-Rig 5-${new Date(2023, 11, 16)}`}
     />,
     <BladeTaskCard
         key={"BT-12Rig1"}
@@ -164,6 +169,7 @@ let bladeTaskCards = [
         taskName="BT-1"
         startDate={new Date(2023, 11, 1)}
         rig="Rig 6"
+        id={`BT-1-Rig 6-${new Date(2023, 11, 1)}`}
     />,
 ];
 export { bladeTaskCards };
