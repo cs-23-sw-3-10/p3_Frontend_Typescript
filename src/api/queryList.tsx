@@ -68,6 +68,17 @@ export const GET_BT_DATE_INFO = gql`
 }
 `;
 
+export const GET_ALL_ENGINEERS = gql`
+query AllEngineers{
+  AllEngineers{
+    id
+    name
+    workHours
+    maxWorkHours
+  }
+}
+`;
+
 
 
 

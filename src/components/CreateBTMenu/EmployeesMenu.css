@@ -127,6 +127,7 @@
     grid-row: 2 / 3;
     grid-column: 1 / 2;
     border-top: 2px solid;
+    overflow-y: auto;
 }
 
 .employee_selector_menu_technicians{
@@ -148,6 +149,50 @@
     grid-row: 2 / 3;
     grid-column: 1 / 2;
     border-top: 2px solid;
+    overflow: auto;
+}
+
+/*Styles for a Employee entry(Both engineer and technician*/
+
+.employee_selector_menu_entry{
+    display: grid;
+    height: 50px;
+    grid-template-columns: 60px 186px;
+}
+
+.employee_selector_menu_entry:hover{
+    background-color: rgb(240, 240, 240);
+}
+
+.employee_selector_menu_entry_button{
+    background: none;
+	color: inherit;
+	border: none;
+	padding: 0;
+	font: inherit;
+	cursor: pointer;
+	outline: inherit;
+}
+
+.employee_initials_profile{
+    background-color: rgb(171, 39, 171);
+    width: 30px;
+    height: 30px;
+    border-radius: 20px;
+    margin-top: 9px;
+    margin-left: 20px;
+}
+
+.employee_initials{
+    text-align: center;
+    font-size: 18px;
+    margin-top: 2px;
+}
+
+.employee_selector_menu_entry_name{
+    font-size: 15px;
+    text-align: left;
+    margin-top: 10px;
 }
 
 
