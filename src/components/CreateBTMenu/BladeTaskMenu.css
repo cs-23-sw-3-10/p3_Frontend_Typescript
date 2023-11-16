@@ -98,51 +98,6 @@
   transform: translateY(4px);
 }
 
-/* EMPLOYEE SECTION OF BT-MENU */
-.employees_wrapper{
-    display: grid;
-    grid-template-columns: 1fr;
-    grid-template-rows: 1fr 1fr 1fr;
-    grid-row: 5 / 6;
-    grid-column: 1 / 6;
-    border-top: 1px solid;
-}
-
-
-.title.staff{
-    font-size: 20px;
-    grid-row: 1 / 2;
-}
-
-.employee_select{
-    display: grid;
-    grid-template-columns: 50px 150px 1fr;
-    border-style: solid;
-}
-
-.material-symbols-outlined.badge{
-    font-size: 40px;
-    grid-column: 1 / 2;
-    width: 20px;
-}
-
-.title.employee{
-    grid-column: 2 / 3;
-    width: 100px;
-    text-align: center;
-}
-
-.expand{
-    grid-column: 3 / 4;
-    padding: 0px;
-    margin: 2px;
-    text-align: right;
-}
-
-.material-symbols-outlined.expand{
-    font-size: 40px;
-}
-
 .title{
     font-size: 15px;
     font-weight: bold;
@@ -153,6 +108,4 @@
     border-style: solid;
     border-color: red;
 }
-
-
 

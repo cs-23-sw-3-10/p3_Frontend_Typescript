@@ -3,6 +3,7 @@ import TaskNameSelector from './TaskNameSelector';
 import TestTypeOptions from './TestTypeSelector';
 import TestRigOptions from './TestRigSelector';
 import EquipmentSelectionMenu from './EquipmentSelector';
+import EmployeesMenu from './EmployeesMenu';
 import { ResourceOrderContext } from './BladeTaskOrderContext';
 import React, {useState, useEffect} from 'react';
 import {BTOrder, InErrorChart, ResourceOrder} from './BTMenuTypes'
@@ -147,7 +148,9 @@ function BladeTaskMenu(){
                     
 
                 </div>
-    
+                
+                <EmployeesMenu/>
+                {/* COMMENTED OUT UNTILL I FIX COMPONENT
                 <div className="item employees_wrapper">
                     <h2 className='title staff'>Staff</h2>
                     <div className='employee_select'>
@@ -159,6 +162,7 @@ function BladeTaskMenu(){
                         <div className='employee_entry'></div>
                     </div>
                 </div>
+                */}
             </div>
         );
 }
