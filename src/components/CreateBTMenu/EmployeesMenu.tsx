@@ -1,6 +1,6 @@
 import React,{useEffect, useState} from 'react';
 import { useQuery } from '@apollo/client';
-import { GET_ALL_ENGINEERS } from '../../api/queryList';
+import { GET_ALL_ENGINEERS, GET_ALL_TECHNICIANS } from '../../api/queryList';
 import './EmployeesMenu.css';
 
 function EmployeesMenu(){
@@ -49,7 +49,7 @@ function EmployeesSelectorMenu({setSelectorActive}:{setSelectorActive:Function})
                 <h2 className='title employee_selector_menu_technicians_title'>Technicians</h2>
                 <div className='employee_selector_menu_technicians_list'>
                     <div className='employee_selector_menu_technicians_entry'>
-
+                        <TechnicianList/>
                     </div>
                 </div>
             </div>
@@ -57,9 +57,13 @@ function EmployeesSelectorMenu({setSelectorActive}:{setSelectorActive:Function})
     );
 }
 
-function EmployeeEntry({name}:{name:string}){
+function EmployeeEntry({name, typename}:{name:string, typename:string}){
     let nameArray:Array<string> = name.split(' ');
-    let initials:string = nameArray[0][0] + nameArray[1][0];
+    let initials:string = '';
+    console.log(typename);
+    if(typename === "Engineer"){
+      initials = nameArray[0][0] + nameArray[1][0];
+    }
     return(
         <button className='employee_selector_menu_entry_button'>
         <div className='employee_selector_menu_entry'>
@@ -86,9 +90,30 @@ function EngineerList(){
 
     console.log(data.AllEngineers);
 
-    return data.AllEngineers.map(({name}:{name:string}) => 
-        (<EmployeeEntry name={name}/>)
+    return data.AllEngineers.map(({name, __typename}:{name:string, __typename:string}) => 
+        (<EmployeeEntry name={name} typename={__typename}/>)
     );
 }
+
+function TechnicianList(){
+    const { loading, error, data} = useQuery(GET_ALL_TECHNICIANS);
+
+    //Whilst list is loading, the only element in the list is "LOADING"
+    if(loading) return(<div>LOADING</div>);
+
+    //Error returns an empty list
+    if(error){
+        console.log(error.message);
+        return (<div>ERROR</div>);
+    }
+
+    console.log(data.AllTechnicians);
+
+    return data.AllTechnicians.map(({type, __typename}:{type:string, __typename: string}) => 
+    (<EmployeeEntry name={type} typename={__typename}/>)
+);
+}
+
+
 
 export default EmployeesMenu;

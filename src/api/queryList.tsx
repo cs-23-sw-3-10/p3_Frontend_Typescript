@@ -79,6 +79,18 @@ query AllEngineers{
 }
 `;
 
+export const GET_ALL_TECHNICIANS = gql`
+query AllTechnicians{
+  AllTechnicians{
+    id
+    type
+    workHours
+    maxWorkHours
+    count
+  }
+}
+`;
+
 
 
 
