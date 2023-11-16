@@ -5,9 +5,10 @@ import BPOverviewPage from "./components/Projects/BPOverviewPage";
 import EquipmentPage from './components/Resources/EquipmentPage';
 import BladeTaskMenu from "./components/CreateBTMenu/BladeTaskMenu";
 import { Routes, Route, Navigate } from 'react-router-dom';
+import ResourceTable from "./components/RessourcesMenu/RessourceTable";
 import './App.css';
 
-import ScheduleComponent from "./components/Schedule/ScheduleComponent";
+import AddResourceTable from "./components/RessourcesMenu/TechnicianTable";
 
 function App() {
     return (
@@ -18,7 +19,8 @@ function App() {
                     <Routes>
                         <Route path="/" element={<BladeTaskMenu/>} />
                         <Route path="/projects" element={<BPOverviewPage />} />
-                        <Route path="/resources" element={<EquipmentPage />} />
+                        <Route path="/resources" element={<ResourceTable/>} />
+
                         <Route path="*" element={<Navigate to="/" />} />
                     </Routes>
                 </div>

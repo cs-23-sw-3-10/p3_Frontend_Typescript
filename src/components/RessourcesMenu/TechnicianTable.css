@@ -1,0 +1,27 @@
+
+
+.EmployeeOuterContainer {
+  outline: rgb(0, 255, 8) solid 2px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start; /* align items to the left */
+  margin-top: 20px;
+}
+
+.TextBoxContainer {
+  outline: rgb(8, 0, 255) solid 2px;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start; /* justify content to the left */
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.TextBox {
+  outline: rgb(255, 0, 0) solid 2px;
+  width: 200px;
+  height: 30px;
+  margin-right: 10px;
+}
+
