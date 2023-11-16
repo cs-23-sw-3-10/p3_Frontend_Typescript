@@ -6,12 +6,15 @@ import { couldStartTrivia } from 'typescript';
 
 
 function EquipmentList({ resourceOrders }: { resourceOrders: ResourceOrder[] }) {
-    const changeResourceOrder = useResourceOrderContext;
-    /*
-    const handleOrderRemoval = (order:ResourceOrder) => {
-        changeResourceOrder((prevResourceOrder: ResourceOrder[]) => {console.log("WHAT THE HELL")});
-    }
-    */
+    const changeResourceOrder = useResourceOrderContext();
+    
+    const handleOrderRemoval = (index: number) => {
+        // Remove the order at the specified index
+        const updatedOrders = [...resourceOrders];
+        updatedOrders.splice(index, 1);
+        changeResourceOrder(updatedOrders);
+    };
+    
     
     return (
         <div className="equipment_list">
@@ -26,7 +29,7 @@ function EquipmentList({ resourceOrders }: { resourceOrders: ResourceOrder[] }) 
                             <CheckBox name="testPeriod" resourceIndex={resourceOrders.indexOf(order)} title="Test" key={resourceOrders.indexOf(order)}/>
                             <CheckBox name="detachPeriod" resourceIndex={resourceOrders.indexOf(order)} title="Detach" key={resourceOrders.indexOf(order)}/>
                         </fieldset>
-                        <button className='remove_equipment_button'><span className="material-symbols-outlined">cancel</span></button>
+                        <button className='remove_equipment_button' onClick={() => handleOrderRemoval(resourceOrders.indexOf(order))}><span className="material-symbols-outlined">cancel</span></button>
                     </div>
                     
                 </div>
