@@ -1,4 +1,6 @@
+import { useMutation } from '@apollo/client';
 import React, {useState} from 'react';
+import { CREATE_EQUIPMENT_MUTATION } from '../../api/mutationList';
 
 interface EquipmentFormData {
     type : string;
@@ -16,6 +18,8 @@ function EquipmentTable(){
     const [formData, setFormData] = useState<EquipmentFormData>({
         type : "", calibrationExpirationDate: "", name : ""});
     const [errors, setErros] = useState<EquipmentErrors>({type:'', calibrationExpirationDate:'', name:''});
+    const [createEquipment, { loading, error }] = useMutation(CREATE_EQUIPMENT_MUTATION);
+
 
     function validateForm() : boolean{ 
         let tempErros: EquipmentErrors = {type:'', calibrationExpirationDate:'', name:''};
@@ -44,8 +48,15 @@ function EquipmentTable(){
     function handleSubmit(e: React.FormEvent) {
         e.preventDefault();
         if(validateForm()) {
-            console.log("OK: " + formData);
-            //send data to server
+            createEquipment({variables: {
+                type: formData.type,
+                calibrationExpirationDate: formData.calibrationExpirationDate,
+                name: formData.name
+            }}).then(response => {
+                console.log('Equipment created: ' + response);
+            }).catch(error => {
+                console.log('Error creating Equipment: ' + error);
+            });
         }
     }
 
