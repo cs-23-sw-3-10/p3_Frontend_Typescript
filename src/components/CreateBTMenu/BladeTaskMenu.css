@@ -1,5 +1,5 @@
 .btmenu-container{
-    grid-template-rows: 100px 75px 200px 2fr 2fr;
+    grid-template-rows: 100px 75px 200px 300px 400px;
     grid-template-columns: repeat(5, 1fr);
     width: 700px;
     height: auto;
