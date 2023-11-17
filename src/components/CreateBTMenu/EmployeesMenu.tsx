@@ -1,6 +1,8 @@
 import React,{useEffect, useState} from 'react';
 import { useQuery } from '@apollo/client';
 import { GET_ALL_ENGINEERS, GET_ALL_TECHNICIANS } from '../../api/queryList';
+import { ResourceOrder } from './BTMenuTypes';
+import { useResourceOrderContext } from './BladeTaskOrderContext';
 import './EmployeesMenu.css';
 
 function EmployeesMenu(){
@@ -22,9 +24,25 @@ function EmployeesMenu(){
                         {selectorActive ? <EmployeesSelectorMenu setSelectorActive={setSelectorActive}/> : <></>}
                     </div>
                     <div className='employee_list'>
-                        <div className='employee_entry'></div>
+                        <div className='employee_entry'>
+                            <button className='employee_entry_remove'>
+                                <span className="material-symbols-outlined">chips</span>
+                            </button>
+                            <div className='employee_entry_icon'>
+                                <h2 className='employee_entry_initials'>JJ</h2>
+                            </div>
+                            <div className='employee_entry_name_wrapper'>
+                                <h2 className='employee_entry_name'>Jeppe Jepsen</h2>
+                            </div>
+                            <div className='employee_entry_hours'>
+                                <input
+                                    className='emoloyee_entry_hours_input'
+                                    type="number"
+                                    placeholder='Hours'
+                                />
+                            </div>
+                        </div>
                     </div>
-
         </div>
 
     );
@@ -58,14 +76,21 @@ function EmployeesSelectorMenu({setSelectorActive}:{setSelectorActive:Function})
 }
 
 function EmployeeEntry({name, typename}:{name:string, typename:string}){
+    const changeResourceOrders = useResourceOrderContext();
     let nameArray:Array<string> = name.split(' ');
     let initials:string = '';
-    console.log(typename);
     if(typename === "Engineer"){
       initials = nameArray[0][0] + nameArray[1][0];
     }
+
+    const handleResourceCreation = () => {
+        changeResourceOrders((prevResourceOrder:ResourceOrder[]) => {
+            let newResourceOrder = [...prevResourceOrder];
+        })
+    }
+
     return(
-        <button className='employee_selector_menu_entry_button'>
+        <button className='employee_selector_menu_entry_button' onClick={handleResourceCreation}>
         <div className='employee_selector_menu_entry'>
             <div className='employee_initials_profile'>
                 <h2 className='employee_initials'>{initials}</h2>
@@ -113,6 +138,8 @@ function TechnicianList(){
     (<EmployeeEntry name={type} typename={__typename}/>)
 );
 }
+
+
 
 
 
