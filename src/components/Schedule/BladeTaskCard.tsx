@@ -14,7 +14,7 @@ interface BladeTaskCardProps {
     taskName: string;
     id: string;
 }
-interface BladeTaskDroppableProps {
+interface BladeTaskDraggableProps {
     style: any;
     id: string;
     taskName: string;
@@ -29,9 +29,9 @@ function BladeTaskCard(props: BladeTaskCardProps) {
         }`,
     };
 
-    const droppableProps: BladeTaskDroppableProps = {
+    const droppableProps: BladeTaskDraggableProps = {
         style: cardStyle,
-        id: props.taskName + "-" + props.rig + "-" + props.startDate,
+        id: props.id,
         taskName: props.taskName,
     };
 
@@ -39,7 +39,7 @@ function BladeTaskCard(props: BladeTaskCardProps) {
 }
 export default BladeTaskCard;
 
-function DraggableBladeTask(props: BladeTaskDroppableProps) {
+function DraggableBladeTask(props: BladeTaskDraggableProps) {
     const { attributes, listeners, setNodeRef, transform } = useDraggable({
         id: props.id,
     });
@@ -70,7 +70,7 @@ let bladeTaskCards = [
         taskName="BT-1"
         startDate={new Date(2023, 10, 1)}
         rig="Rig 1"
-        id={`BT-1-Rig 1-${new Date(2023, 10, 1)}`}
+        id={`blue-BT-1`}
     />,
     <BladeTaskCard
         key={"BT-2Rig1"}
@@ -79,7 +79,7 @@ let bladeTaskCards = [
         taskName="BT-2"
         startDate={new Date(2023, 10, 6)}
         rig="Rig 1"
-        id={`BT-2-Rig 1-${new Date(2023, 10, 6)}`}
+        id={`blue-BT-2`}
     />,
     <BladeTaskCard
         key={"BT-3Rig1"}
@@ -88,7 +88,7 @@ let bladeTaskCards = [
         taskName="BT-1"
         startDate={new Date(2023, 10, 20)}
         rig="Rig 2"
-        id={`BT-1-Rig 2-${new Date(2023, 10, 20)}`}
+        id={`red-BT-1`}
     />,
     <BladeTaskCard
         key={"BT-4Rig1"}
@@ -97,7 +97,7 @@ let bladeTaskCards = [
         taskName="BT-2"
         startDate={new Date(2023, 11, 1)}
         rig="Rig 2"
-        id={`BT-2-Rig 2-${new Date(2023, 11, 1)}`}
+        id={`red-BT-2`}
     />,
     <BladeTaskCard
         key={"BT-5Rig1"}
@@ -106,7 +106,7 @@ let bladeTaskCards = [
         taskName="BT-3"
         startDate={new Date(2023, 10, 29)}
         rig="Rig 3"
-        id={`BT-3-Rig 3-${new Date(2023, 10, 29)}`}
+        id={`green-BT-3`}
     />,
     <BladeTaskCard
         key={"BT-6Rig1"}
@@ -115,7 +115,7 @@ let bladeTaskCards = [
         taskName="BT-1"
         startDate={new Date(2023, 10, 1)}
         rig="Rig 3"
-        id={`BT-1-Rig 3-${new Date(2023, 10, 1)}`}
+        id={`green-BT-1`}
     />,
     <BladeTaskCard
         key={"BT-7Rig1"}
@@ -124,7 +124,7 @@ let bladeTaskCards = [
         taskName="BT-2"
         startDate={new Date(2023, 10, 3)}
         rig="Rig 3"
-        id={`BT-2-Rig 3-${new Date(2023, 10, 3)}`}
+        id={`green-BT-2`}
     />,
     <BladeTaskCard
         key={"BT-8Rig1"}
@@ -133,7 +133,7 @@ let bladeTaskCards = [
         taskName="BT-1"
         startDate={new Date(2023, 10, 1)}
         rig="Rig 4"
-        id={`BT-1-Rig 4-${new Date(2023, 10, 1)}`}
+        id={`brown-BT-1`}
     />,
     <BladeTaskCard
         key={"BT-9Rig1"}
@@ -142,7 +142,7 @@ let bladeTaskCards = [
         taskName="BT-2"
         startDate={new Date(2023, 10, 16)}
         rig="Rig 5"
-        id={`BT-2-Rig 5-${new Date(2023, 10, 16)}`}
+        id={`brown-BT-2`}
     />,
     <BladeTaskCard
         key={"BT-10Rig1"}
@@ -151,7 +151,7 @@ let bladeTaskCards = [
         taskName="BT-3"
         startDate={new Date(2023, 11, 11)}
         rig="Rig 5"
-        id={`BT-3-Rig 5-${new Date(2023, 11, 11)}`}
+        id={`red-BT-3`}
     />,
     <BladeTaskCard
         key={"BT-11Rig1"}
@@ -160,7 +160,7 @@ let bladeTaskCards = [
         taskName="BT-3"
         startDate={new Date(2023, 11, 16)}
         rig="Rig 5"
-        id={`BT-3-Rig 5-${new Date(2023, 11, 16)}`}
+        id={`blue-BT-3`}
     />,
     <BladeTaskCard
         key={"BT-12Rig1"}
@@ -169,7 +169,7 @@ let bladeTaskCards = [
         taskName="BT-1"
         startDate={new Date(2023, 11, 1)}
         rig="Rig 6"
-        id={`BT-1-Rig 6-${new Date(2023, 11, 1)}`}
+        id={`cyan-BT-1`}
     />,
 ];
 export { bladeTaskCards };

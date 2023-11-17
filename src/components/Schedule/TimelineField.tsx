@@ -9,7 +9,6 @@ import {BladeTaskHolder} from "./BladeTaskHolder";
 type TimelineFieldProps = {
     rigs: string[];
     months: Date[];
-    
 };
 
 export const dateDivLength = 25; // px length of the dates in the schedule
@@ -59,7 +58,7 @@ function CreateTimelineField(props: TimelineFieldProps) {
     };
 
     let bladeTasks = new BladeTaskHolder(bladeTaskCards)
-    const [update, setUpdate] = useState(false);
+    const [isDragging, setDragging] = useState(false);
 
     return (
         <div className="TimelineFieldContainer">
@@ -82,7 +81,8 @@ function CreateTimelineField(props: TimelineFieldProps) {
                             allDates={allDates}
                             fieldWidth={fieldWidth}
                             columns={columnsOfSchedule}
-                            setter={setUpdate}
+                            isDragging={isDragging}
+                            setDragging={setDragging}
                             BladeTaskHolder={bladeTasks}
                             BladeTaskCards={bladeTasks.getBladeTasks().filter(
                                 (bladeTask: React.ReactNode) => {
@@ -142,3 +142,4 @@ export function createGridColumns(allDates: Date[]) {
 function getMonthContainerKey(month: Date) {
     return `month-${month.getFullYear()}-${month.getMonth()}-Container`;
 }
+

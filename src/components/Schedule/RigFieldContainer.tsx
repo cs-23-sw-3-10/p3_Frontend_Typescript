@@ -11,7 +11,8 @@ type RigFieldContainerProps = {
     columns: string; // The columns of the schedule
     BladeTaskHolder: BladeTaskHolder;
     BladeTaskCards: React.ReactNode[];
-    setter: any;
+    isDragging: boolean;
+    setDragging: any;
 };
 
 function CreateRigFieldContainer(props: RigFieldContainerProps) {
@@ -28,9 +29,11 @@ function CreateRigFieldContainer(props: RigFieldContainerProps) {
     return (
         <DndContext
             key={props.rig}
-            onDragStart={handleDragStart}
+            onDragStart={(event) => {
+                handleDragStart(event, props.isDragging, props.setDragging);
+            }}
             onDragEnd={(event) => {
-                handleDragEnd(event, props.BladeTaskHolder, props.setter);
+                handleDragEnd(event, props.BladeTaskHolder, props.setDragging);
             }}
         >
             <div key={props.rig} className="RigField" style={rigStyle}>
@@ -40,6 +43,8 @@ function CreateRigFieldContainer(props: RigFieldContainerProps) {
                             key={getRigDateKey(props.rig, date)}
                             rig={props.rig}
                             date={date}
+                            bladeTaskHolder={props.BladeTaskHolder}
+                            setDragging={props.setDragging}
                         />
                     ) // Create a date for each day in the month
                 )}
@@ -51,16 +56,19 @@ function CreateRigFieldContainer(props: RigFieldContainerProps) {
 }
 export default CreateRigFieldContainer;
 
-export function handleDragStart(event: any) {
+export function handleDragStart(event: any, isDragging: boolean, setDragging: any) {
     const { active } = event;
     console.log("drag started");
-    // console.log(active.id);
+    if (active !== null) {
+        setDragging(true);
+    }
+    
 }
 
 export function handleDragEnd(
     event: any,
     bladeTaskHolder: BladeTaskHolder,
-    update: any
+    setDragging: any
 ) {
     console.log("drag ended");
     const { active, over } = event;
@@ -72,8 +80,10 @@ export function handleDragEnd(
             overIdSlpit[2],
             overIdSlpit[3]
         );
+        console.log("active: " , active)
         const findBTIndex = (bladeTaskCards: any) => {
             for (let i: number = 0; i < bladeTaskCards.length; i++) {
+                console.log(".props.id: ", bladeTaskCards[i].props.id)
                 if (active.id === bladeTaskCards[i].props.id) {
                     return i;
                 }
@@ -97,7 +107,7 @@ export function handleDragEnd(
                 />
             );
             bladeTaskHolder.setBladeTasks(updatedBladeTaskCards);
-            update((prev: boolean) => !prev);
+            setDragging(false);
         }
     } else {
         console.log("over er null");

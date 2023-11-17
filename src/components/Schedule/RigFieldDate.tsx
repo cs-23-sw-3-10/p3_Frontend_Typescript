@@ -1,5 +1,6 @@
 import { DndContext, useDroppable } from "@dnd-kit/core";
-import { handleDragEnd, handleDragStart } from "./RigFieldContainer";
+import { handleDragEnd } from "./RigFieldContainer";
+import { BladeTaskHolder } from "./BladeTaskHolder";
 
 interface RigFieldDateDroppableProps {
     className: "RigFieldDate";
@@ -7,6 +8,8 @@ interface RigFieldDateDroppableProps {
     rig: string;
     date: Date;
     style: RigFieldDateStyle;
+    bladeTaskHolder: BladeTaskHolder;
+    setDragging: any;
 }
 
 interface RigFieldDateStyle {
@@ -18,6 +21,8 @@ interface RigFieldDateStyle {
 type RigFieldDateProps = {
     rig: string;
     date: Date;
+    bladeTaskHolder: BladeTaskHolder;
+    setDragging: any;
 };
 
 function CreateRigFieldDate(props: RigFieldDateProps) {
@@ -39,6 +44,8 @@ function CreateRigFieldDate(props: RigFieldDateProps) {
         rig: props.rig,
         date: props.date,
         style: dateStyle,
+        bladeTaskHolder: props.bladeTaskHolder,
+        setDragging: props.setDragging,
     };
 
     return Droppable(dateProps);
@@ -46,15 +53,18 @@ function CreateRigFieldDate(props: RigFieldDateProps) {
 export default CreateRigFieldDate;
 
 function Droppable(props: RigFieldDateDroppableProps) {
+    let idSTR = `${props.id}-droppable`
     const { setNodeRef } = useDroppable({
-        id: props.id,
+        id: idSTR,
     });
 
     return (
         <DndContext
             key={props.id}
             // onDragStart={handleDragStart}
-            // onDragEnd={handleDragEnd}
+            onDragEnd={(event) => {
+                handleDragEnd(event, props.bladeTaskHolder, props.setDragging);
+            }}
         >
             <div
                 ref={setNodeRef}
