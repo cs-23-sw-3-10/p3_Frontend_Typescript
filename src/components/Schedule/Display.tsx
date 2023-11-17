@@ -41,8 +41,6 @@ function DisplayComponent(props: DisplayProps) {
         new Date(firstStartDate.getFullYear(), firstStartDate.getMonth() + 2),
     ]); // should be imported from database
 
-    const additionalContent = <CreateAdditionalContent />;
-
     const [selectedDate, setSelectedDate] = useState(""); // State to store the selected date
     const [numberOfMonths, setNumberOfMonths] = useState(3); // State to store the number of months to display
 
@@ -113,11 +111,10 @@ function DisplayComponent(props: DisplayProps) {
                     />
                 </DndContext>
             </div>
-            {props.editMode ? additionalContent : null}
+            {props.editMode ? <CreateAdditionalContent /> : null}
         </div>
     );
 }
-
 export default DisplayComponent;
 
 function CreateDisplayMonths(startDate: Date, numberOfMonths: number) {
