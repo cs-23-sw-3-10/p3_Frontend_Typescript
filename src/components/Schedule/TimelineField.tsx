@@ -2,12 +2,14 @@ import { DndContext, useDroppable } from "@dnd-kit/core";
 import CreateMonthDateContainer from "./MonthDateContainer";
 import CreateRigFieldContainer from "./RigFieldContainer";
 import MonthLengths from "./MonthLengthsEnum";
+import React, { useState } from "react";
+import { bladeTaskCards } from "./BladeTaskCard";
+import {BladeTaskHolder} from "./BladeTaskHolder";
 
 type TimelineFieldProps = {
     rigs: string[];
     months: Date[];
-    allBladeTaskCards: React.ReactNode[];
-    setter: any;
+    
 };
 
 export const dateDivLength = 25; // px length of the dates in the schedule
@@ -56,6 +58,9 @@ function CreateTimelineField(props: TimelineFieldProps) {
         minHeight: props.rigs.length * 50 + "px",
     };
 
+    let bladeTasks = new BladeTaskHolder(bladeTaskCards)
+    const [update, setUpdate] = useState(false);
+
     return (
         <div className="TimelineFieldContainer">
             <div className="TimelineField" style={BTFieldStyle}>
@@ -77,9 +82,9 @@ function CreateTimelineField(props: TimelineFieldProps) {
                             allDates={allDates}
                             fieldWidth={fieldWidth}
                             columns={columnsOfSchedule}
-                            setter={props.setter}
-                            allBladeTaskCards={props.allBladeTaskCards}
-                            BladeTaskCards={props.allBladeTaskCards.filter(
+                            setter={setUpdate}
+                            BladeTaskHolder={bladeTasks}
+                            BladeTaskCards={bladeTasks.getBladeTasks().filter(
                                 (bladeTask: React.ReactNode) => {
                                     //Finds the blade tasks placed on the rig
                                     if (bladeTask) {

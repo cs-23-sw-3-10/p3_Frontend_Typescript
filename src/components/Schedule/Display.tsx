@@ -31,9 +31,7 @@ function DisplayComponent(props: DisplayProps) {
         "Rig 6",
     ]);
 
-    const [btCards, setBladeTaskCards] = useState([
-        ...bladeTaskCards
-    ]);
+    // const [btCards, setBladeTaskCards] = useState(getBladeTasks());
 
     const [dates, setDates] = useState([
         new Date(firstStartDate),
@@ -106,8 +104,7 @@ function DisplayComponent(props: DisplayProps) {
                     <CreateTimelineField
                         rigs={rigs}
                         months={dates}
-                        allBladeTaskCards={btCards}
-                        setter={setBladeTaskCards}
+                        
                     />
                 </DndContext>
             </div>
