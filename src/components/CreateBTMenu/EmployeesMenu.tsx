@@ -60,10 +60,9 @@ function EmployeesSelectorMenu({ setSelectorActive }: { setSelectorActive: Funct
 
 function EmployeeEntrySelectorMenu({ name, typeName }: { name: string, typeName: string }) {
     const changeResourceOrders = useResourceOrderContext();
-    let nameArray: Array<string> = name.split(' ');
     let initials: string = '';
     if (typeName === "Engineer") {
-        initials = nameArray[0][0] + nameArray[1][0];
+        initials = GetInitials(name);
     }
 
     const handleResourceCreation = () => {
@@ -83,6 +82,13 @@ function EmployeeEntrySelectorMenu({ name, typeName }: { name: string, typeName:
             </div>
         </button>
     );
+}
+
+function GetInitials(name:string){
+    let nameArray: Array<string> = name.split(' ');
+    let initials: string = nameArray[0][0] + nameArray[1][0];
+    return initials;
+    
 }
 
 function EmployeeEntry({name, initials}:{name:string, initials:string}) {
@@ -139,8 +145,6 @@ function TechnicianList() {
         return (<div>ERROR</div>);
     }
 
-    console.log(data.AllTechnicians);
-
     return data.AllTechnicians.map(({ type, __typename }: { type: string, __typename: string }) =>
         (<EmployeeEntrySelectorMenu name={type} typeName={__typename} />)
     );
@@ -148,11 +152,13 @@ function TechnicianList() {
 
 function EmployeeList({resourceOrders}:{resourceOrders:ResourceOrder[]})
 {
-    return <div></div>;
+    let employeeResourceOrders = resourceOrders.filter((order:ResourceOrder) => ((order.ResourceType === "Engineer") || (order.ResourceType === "Technician")));
+    return <>{employeeResourceOrders.map((order) => 
+        <EmployeeEntry 
+        name={order.ResourceName} 
+        initials={(order.ResourceName === "Engineer" ? GetInitials(order.ResourceName) : "")}
+        />
+    )}</>
 }
-
-
-
-
 
 export default EmployeesMenu;
