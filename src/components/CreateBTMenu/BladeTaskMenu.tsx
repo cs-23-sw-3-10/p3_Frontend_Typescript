@@ -145,24 +145,10 @@ function BladeTaskMenu(){
                     :
                     <></>
                     }
-                    
-
                 </div>
-                
-                <EmployeesMenu/>
-                {/* COMMENTED OUT UNTILL I FIX COMPONENT
-                <div className="item employees_wrapper">
-                    <h2 className='title staff'>Staff</h2>
-                    <div className='employee_select'>
-                        <span className="material-symbols-outlined badge">badge</span>
-                        <h2 className="title employee">Employees</h2>
-                        <p className='expand'><span className="material-symbols-outlined expand">expand_circle_right</span></p>
-                    </div>
-                    <div className='employee_list'>
-                        <div className='employee_entry'></div>
-                    </div>
-                </div>
-                */}
+                <ResourceOrderContext.Provider value={setResourceOrder}>
+                    <EmployeesMenu resourceOrders={resourceOrders}/>
+                </ResourceOrderContext.Provider>
             </div>
         );
 }

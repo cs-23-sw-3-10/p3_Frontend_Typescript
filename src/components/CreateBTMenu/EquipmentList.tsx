@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import './EquipmentList.css';
 import { ResourceOrder } from './BTMenuTypes';
 import { useResourceOrderContext } from './BladeTaskOrderContext';
-import { couldStartTrivia } from 'typescript';
 
 
 function EquipmentList({ resourceOrders }: { resourceOrders: ResourceOrder[] }) {
@@ -19,6 +18,9 @@ function EquipmentList({ resourceOrders }: { resourceOrders: ResourceOrder[] }) 
     return (
         <div className="equipment_list">
             {resourceOrders.map((order) => (
+                <>
+                
+                {( (order.ResourceType !== "Engineer") && (order.ResourceType !== "Technician")) ?
                 <div className='equipment_entry'>
                     <div className='type'>
                         <h2 className='title'>{order.ResourceType}</h2>
@@ -31,8 +33,12 @@ function EquipmentList({ resourceOrders }: { resourceOrders: ResourceOrder[] }) 
                         </fieldset>
                         <button className='remove_equipment_button' onClick={() => handleOrderRemoval(resourceOrders.indexOf(order))}><span className="material-symbols-outlined">cancel</span></button>
                     </div>
-                    
                 </div>
+                :
+                <></>
+                }
+                
+                </>
             ))}
         </div>
     );

@@ -21,6 +21,7 @@ export type BTOrder = {
 
 export type ResourceOrder = {
     ResourceType: string;
+    ResourceName: string;
     EquipmentAmount: number;
     WorkHours: number;
     Period: Array<boolean>;

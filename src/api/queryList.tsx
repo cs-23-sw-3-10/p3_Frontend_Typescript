@@ -44,7 +44,7 @@ query GetTestRigs{
 `;
 
 export const GET_ALL_EQUIPMENT_TYPES = gql`
-query GetBTDateInfo{
+query GetAllEquipmentTypes{
     DictionaryAllByCategory(category:"equipmentType"){
       id
     	label
@@ -71,6 +71,7 @@ export const GET_BT_DATE_INFO = gql`
 export const GET_ALL_ENGINEERS = gql`
 query AllEngineers{
   AllEngineers{
+    __typename
     id
     name
     workHours
@@ -82,6 +83,7 @@ query AllEngineers{
 export const GET_ALL_TECHNICIANS = gql`
 query AllTechnicians{
   AllTechnicians{
+    __typename
     id
     type
     workHours
