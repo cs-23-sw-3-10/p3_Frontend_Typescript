@@ -1,7 +1,5 @@
-import { DndContext } from "@dnd-kit/core";
 import CreateRigFieldDate from "./RigFieldDate";
 import React, { useState } from "react";
-import BladeTaskCard from "./BladeTaskCard";
 import { BladeTaskHolder } from "./BladeTaskHolder";
 
 type RigFieldContainerProps = {
@@ -12,7 +10,7 @@ type RigFieldContainerProps = {
     BladeTaskHolder: BladeTaskHolder;
     BladeTaskCards: React.ReactNode[];
     isDragging: boolean;
-    setDragging: any;
+    setDragging: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 function CreateRigFieldContainer(props: RigFieldContainerProps) {
@@ -27,28 +25,24 @@ function CreateRigFieldContainer(props: RigFieldContainerProps) {
     // ]);
 
     return (
-        
-            <div key={props.rig} className="RigField" style={rigStyle}>
-                {props.allDates.map(
-                    (date) => (
-                        <CreateRigFieldDate
-                            key={getRigDateKey(props.rig, date)}
-                            rig={props.rig}
-                            date={date}
-                            bladeTaskHolder={props.BladeTaskHolder}
-                            setDragging={props.setDragging}
-                        />
-                    ) // Create a date for each day in the month
-                )}
-                {props.BladeTaskCards}{" "}
-                {/*automatically spreads out the entries of BladeTaskCards */}
-            </div>
-        
+        <div key={props.rig} className="RigField" style={rigStyle}>
+            {props.allDates.map(
+                (date) => (
+                    <CreateRigFieldDate
+                        key={getRigDateKey(props.rig, date)}
+                        rig={props.rig}
+                        date={date}
+                        bladeTaskHolder={props.BladeTaskHolder}
+                        setDragging={props.setDragging}
+                    />
+                ) // Create a date for each day in the month
+            )}
+            {props.BladeTaskCards}{" "}
+            {/*automatically spreads out the entries of BladeTaskCards */}
+        </div>
     );
 }
 export default CreateRigFieldContainer;
-
-
 
 function getRigDateKey(rig: string, date: Date) {
     return `${rig}-${date.getFullYear()}-${date.getMonth()}-${date.getDate()}`;

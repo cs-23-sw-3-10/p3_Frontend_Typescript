@@ -1,10 +1,10 @@
-import { DndContext, useDroppable } from "@dnd-kit/core";
+import { DndContext } from "@dnd-kit/core";
 import CreateMonthDateContainer from "./MonthDateContainer";
 import CreateRigFieldContainer from "./RigFieldContainer";
 import MonthLengths from "./MonthLengthsEnum";
 import React, { useState } from "react";
 import BladeTaskCard, { bladeTaskCards } from "./BladeTaskCard";
-import {BladeTaskHolder} from "./BladeTaskHolder";
+import { BladeTaskHolder } from "./BladeTaskHolder";
 
 type TimelineFieldProps = {
     rigs: string[];
@@ -57,7 +57,7 @@ function CreateTimelineField(props: TimelineFieldProps) {
         minHeight: props.rigs.length * 50 + "px",
     };
 
-    let bladeTasks = new BladeTaskHolder(bladeTaskCards)
+    let bladeTasks = new BladeTaskHolder(bladeTaskCards);
     const [isDragging, setDragging] = useState(false);
 
     return (
@@ -71,43 +71,43 @@ function CreateTimelineField(props: TimelineFieldProps) {
                 ))}
                 <DndContext
                     onDragStart={(event) => {
-                        handleDragStart(event, isDragging, setDragging);
+                        handleDragStart(event, setDragging);
                     }}
                     onDragEnd={(event) => {
                         handleDragEnd(event, bladeTasks, setDragging);
                     }}
                 >
-                <div
-                    className="RigFieldContainer"
-                    style={rigFieldContainerStyle}
-                >
-                    {props.rigs.map((rig) => (
-                        // Create a rig field for each rig
-                        <CreateRigFieldContainer
-                            key={rig}
-                            rig={rig}
-                            allDates={allDates}
-                            fieldWidth={fieldWidth}
-                            columns={columnsOfSchedule}
-                            isDragging={isDragging}
-                            setDragging={setDragging}
-                            BladeTaskHolder={bladeTasks}
-                            BladeTaskCards={bladeTasks.getBladeTasks().filter(
-                                (bladeTask: React.ReactNode) => {
-                                    //Finds the blade tasks placed on the rig
-                                    if (bladeTask) {
-                                        return (
-                                            (
-                                                bladeTask as React.ReactElement<any>
-                                            ).props.rig === rig
-                                        );
-                                    }
-                                    return false;
-                                }
-                            )}
-                        />
-                    ))}
-                </div>
+                    <div
+                        className="RigFieldContainer"
+                        style={rigFieldContainerStyle}
+                    >
+                        {props.rigs.map((rig) => (
+                            // Create a rig field for each rig
+                            <CreateRigFieldContainer
+                                key={rig}
+                                rig={rig}
+                                allDates={allDates}
+                                fieldWidth={fieldWidth}
+                                columns={columnsOfSchedule}
+                                isDragging={isDragging}
+                                setDragging={setDragging}
+                                BladeTaskHolder={bladeTasks}
+                                BladeTaskCards={bladeTasks
+                                    .getBladeTasks()
+                                    .filter((bladeTask: React.ReactNode) => {
+                                        //Finds the blade tasks placed on the rig
+                                        if (bladeTask) {
+                                            return (
+                                                (
+                                                    bladeTask as React.ReactElement<any>
+                                                ).props.rig === rig
+                                            );
+                                        }
+                                        return false;
+                                    })}
+                            />
+                        ))}
+                    </div>
                 </DndContext>
             </div>
         </div>
@@ -152,19 +152,21 @@ function getMonthContainerKey(month: Date) {
     return `month-${month.getFullYear()}-${month.getMonth()}-Container`;
 }
 
-export function handleDragStart(event: any, isDragging: boolean, setDragging: any) {
+export function handleDragStart(
+    event: any,
+    setDragging: React.Dispatch<React.SetStateAction<boolean>>
+) {
     const { active } = event;
     console.log("drag started");
     if (active !== null) {
         setDragging(true);
     }
-    
 }
 
 export function handleDragEnd(
     event: any,
     bladeTaskHolder: BladeTaskHolder,
-    setDragging: any
+    setDragging: React.Dispatch<React.SetStateAction<boolean>>
 ) {
     console.log("drag ended");
     const { active, over } = event;
@@ -178,17 +180,23 @@ export function handleDragEnd(
         );
         const findBTIndex = (bladeTaskCards: any) => {
             for (let i: number = 0; i < bladeTaskCards.length; i++) {
-                if (active.id === bladeTaskCards[i].props.id) {
+                if (
+                    bladeTaskCards[i] &&
+                    active.id === bladeTaskCards[i].props.id
+                ) {
                     return i;
                 }
             }
+            console.log("blade task not found");
             return -1;
         };
         const indexBT = findBTIndex(bladeTaskHolder.getBladeTasks());
 
         if (indexBT !== -1) {
             const updatedBladeTaskCards = bladeTaskHolder.getBladeTasks();
-            const draggedCard = updatedBladeTaskCards[indexBT] as React.ReactElement;
+            const draggedCard = updatedBladeTaskCards[
+                indexBT
+            ] as React.ReactElement;
             updatedBladeTaskCards[indexBT] = (
                 <BladeTaskCard
                     key={draggedCard.key}

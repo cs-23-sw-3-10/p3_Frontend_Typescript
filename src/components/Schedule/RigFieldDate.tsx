@@ -1,5 +1,6 @@
-import { DndContext, useDroppable } from "@dnd-kit/core";
+import { useDroppable } from "@dnd-kit/core";
 import { BladeTaskHolder } from "./BladeTaskHolder";
+import React from "react";
 
 interface RigFieldDateDroppableProps {
     className: "RigFieldDate";
@@ -8,7 +9,7 @@ interface RigFieldDateDroppableProps {
     date: Date;
     style: RigFieldDateStyle;
     bladeTaskHolder: BladeTaskHolder;
-    setDragging: any;
+    setDragging: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 interface RigFieldDateStyle {
@@ -21,15 +22,15 @@ type RigFieldDateProps = {
     rig: string;
     date: Date;
     bladeTaskHolder: BladeTaskHolder;
-    setDragging: any;
+    setDragging: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 function CreateRigFieldDate(props: RigFieldDateProps) {
-    let year = props.date.getFullYear();
-    let monthNumber = props.date.getMonth();
-    let dateNumber = props.date.getDate();
-    let weekDay = props.date.getDay(); // 0 = Sunday, 6 = Saturday to gray out weekends
-    let idSTR = `${props.rig}-${year}-${monthNumber}-${dateNumber}`; // id for the date div
+    const year = props.date.getFullYear();
+    const monthNumber = props.date.getMonth();
+    const dateNumber = props.date.getDate();
+    const weekDay = props.date.getDay(); // 0 = Sunday, 6 = Saturday to gray out weekends
+    const idSTR = `${props.rig}-${year}-${monthNumber}-${dateNumber}`; // id for the date div
 
     const dateStyle: RigFieldDateStyle = {
         gridColumn: `date-${year}-${monthNumber}-${dateNumber}`,
@@ -52,19 +53,17 @@ function CreateRigFieldDate(props: RigFieldDateProps) {
 export default CreateRigFieldDate;
 
 function Droppable(props: RigFieldDateDroppableProps) {
-    let idSTR = `${props.id}-droppable`
     const { setNodeRef } = useDroppable({
-        id: idSTR,
+        id: props.id,
     });
 
     return (
-        
-            <div
-                ref={setNodeRef}
-                key={props.id}
-                className="RigFieldDate"
-                id={props.id}
-                style={props.style}
-            ></div>
+        <div
+            ref={setNodeRef}
+            key={props.id}
+            className="RigFieldDate"
+            id={props.id}
+            style={props.style}
+        ></div>
     );
 }
