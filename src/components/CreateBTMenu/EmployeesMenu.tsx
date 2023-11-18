@@ -93,6 +93,7 @@ function GetInitials(name:string){
 
 function EmployeeEntry({name, initials, resourceOrders}:{name:string, initials:string, resourceOrders:ResourceOrder[]}) {
     const changeResourceOrders = useResourceOrderContext();
+
     const handleRemoval = () => {
         const updatedOrders = [...resourceOrders];
         const currentOrder = updatedOrders.filter((order) => order.ResourceName === name)[0];
@@ -165,7 +166,7 @@ function EmployeeList({resourceOrders}:{resourceOrders:ResourceOrder[]})
     return <>{employeeResourceOrders.map((order) => 
         <EmployeeEntry 
         name={order.ResourceName} 
-        initials={(order.ResourceName === "Engineer" ? GetInitials(order.ResourceName) : "")}
+        initials={(order.ResourceType === "Engineer") ? GetInitials(order.ResourceName) : ""}
         resourceOrders={resourceOrders}
         />
     )}</>
