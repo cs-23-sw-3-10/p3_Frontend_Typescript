@@ -1,5 +1,4 @@
 import { DndContext, useDroppable } from "@dnd-kit/core";
-import { handleDragEnd } from "./RigFieldContainer";
 import { BladeTaskHolder } from "./BladeTaskHolder";
 
 interface RigFieldDateDroppableProps {
@@ -59,13 +58,7 @@ function Droppable(props: RigFieldDateDroppableProps) {
     });
 
     return (
-        <DndContext
-            key={props.id}
-            // onDragStart={handleDragStart}
-            onDragEnd={(event) => {
-                handleDragEnd(event, props.bladeTaskHolder, props.setDragging);
-            }}
-        >
+        
             <div
                 ref={setNodeRef}
                 key={props.id}
@@ -73,6 +66,5 @@ function Droppable(props: RigFieldDateDroppableProps) {
                 id={props.id}
                 style={props.style}
             ></div>
-        </DndContext>
     );
 }

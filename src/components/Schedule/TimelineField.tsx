@@ -3,7 +3,7 @@ import CreateMonthDateContainer from "./MonthDateContainer";
 import CreateRigFieldContainer from "./RigFieldContainer";
 import MonthLengths from "./MonthLengthsEnum";
 import React, { useState } from "react";
-import { bladeTaskCards } from "./BladeTaskCard";
+import BladeTaskCard, { bladeTaskCards } from "./BladeTaskCard";
 import {BladeTaskHolder} from "./BladeTaskHolder";
 
 type TimelineFieldProps = {
@@ -69,6 +69,14 @@ function CreateTimelineField(props: TimelineFieldProps) {
                         currentMonth={month}
                     />
                 ))}
+                <DndContext
+                    onDragStart={(event) => {
+                        handleDragStart(event, isDragging, setDragging);
+                    }}
+                    onDragEnd={(event) => {
+                        handleDragEnd(event, bladeTasks, setDragging);
+                    }}
+                >
                 <div
                     className="RigFieldContainer"
                     style={rigFieldContainerStyle}
@@ -100,6 +108,7 @@ function CreateTimelineField(props: TimelineFieldProps) {
                         />
                     ))}
                 </div>
+                </DndContext>
             </div>
         </div>
     );
@@ -143,3 +152,58 @@ function getMonthContainerKey(month: Date) {
     return `month-${month.getFullYear()}-${month.getMonth()}-Container`;
 }
 
+export function handleDragStart(event: any, isDragging: boolean, setDragging: any) {
+    const { active } = event;
+    console.log("drag started");
+    if (active !== null) {
+        setDragging(true);
+    }
+    
+}
+
+export function handleDragEnd(
+    event: any,
+    bladeTaskHolder: BladeTaskHolder,
+    setDragging: any
+) {
+    console.log("drag ended");
+    const { active, over } = event;
+    if (over !== null) {
+        const overIdSlpit = over.id.split("-");
+        const overRig = overIdSlpit[0];
+        const overDate = new Date(
+            overIdSlpit[1],
+            overIdSlpit[2],
+            overIdSlpit[3]
+        );
+        const findBTIndex = (bladeTaskCards: any) => {
+            for (let i: number = 0; i < bladeTaskCards.length; i++) {
+                if (active.id === bladeTaskCards[i].props.id) {
+                    return i;
+                }
+            }
+            return -1;
+        };
+        const indexBT = findBTIndex(bladeTaskHolder.getBladeTasks());
+
+        if (indexBT !== -1) {
+            const updatedBladeTaskCards = bladeTaskHolder.getBladeTasks();
+            const draggedCard = updatedBladeTaskCards[indexBT] as React.ReactElement;
+            updatedBladeTaskCards[indexBT] = (
+                <BladeTaskCard
+                    key={draggedCard.key}
+                    id={`${draggedCard.props.taskName}-${overRig}-${overDate}`}
+                    duration={draggedCard.props.duration}
+                    projectColor={draggedCard.props.projectColor}
+                    taskName={draggedCard.props.taskName}
+                    startDate={overDate}
+                    rig={overRig}
+                />
+            );
+            bladeTaskHolder.setBladeTasks(updatedBladeTaskCards);
+            setDragging(false);
+        }
+    } else {
+        console.log("over er null");
+    }
+}
