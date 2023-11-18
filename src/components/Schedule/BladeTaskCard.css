@@ -3,8 +3,17 @@
     z-index: 1 ; /* stacks bladeTaskCards on top of the date tiles  */
     grid-row: 1;
     display: flex;
-    justify-content: center;
+    flex-direction: row;
+    /* justify-content: center; */
     align-items: center;
     border-radius: 8px;
     border: 2px solid rgba(0,0,0, 0.60); /*border in a darker tone of the project color */
+}
+
+.bladeTaskCardHandle {
+    border : 1px dashed rgba(0,0,0, 0.80); /*border in a darker tone of the project color */
+    height : 12px;
+    width : 10px;
+    align-items: left;
+    justify-content: left;
 }

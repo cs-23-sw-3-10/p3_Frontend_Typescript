@@ -2,9 +2,10 @@ import { DndContext } from "@dnd-kit/core";
 import "./Display.css";
 import CreateTestRigDivs from "./TestRigDivs";
 import CreateTimelineField from "./TimelineField";
-import {bladeTaskCards} from "./BladeTaskCard";
+import BladeTaskCard from "./BladeTaskCard";
 import React, { useState } from "react";
-
+import CreateAdditionalContent from "./AdditionalContent";
+import { bladeTaskCards } from "./BladeTaskCard";
 
 let date = new Date(Date.now());
 const firstStartDate = new Date(
@@ -13,7 +14,13 @@ const firstStartDate = new Date(
     date.getDate()
 );
 
-function DisplayComponent(editMode: boolean ,setEditMode: React.Dispatch<React.SetStateAction<boolean>>, setShowPasswordPrompt: React.Dispatch<React.SetStateAction<boolean>>) {
+type DisplayProps = {
+    editMode: boolean;
+    setEditMode: React.Dispatch<React.SetStateAction<boolean>>;
+    setShowPasswordPrompt: React.Dispatch<React.SetStateAction<boolean>>;
+};
+
+function DisplayComponent(props: DisplayProps) {
     const [rigs, setRigs] = useState([
         // should be imported from database
         "Rig 1",
@@ -24,34 +31,33 @@ function DisplayComponent(editMode: boolean ,setEditMode: React.Dispatch<React.S
         "Rig 6",
     ]);
 
+    // const [btCards, setBladeTaskCards] = useState(getBladeTasks());
+
     const [dates, setDates] = useState([
         new Date(firstStartDate),
         new Date(firstStartDate.getFullYear(), firstStartDate.getMonth() + 1),
         new Date(firstStartDate.getFullYear(), firstStartDate.getMonth() + 2),
     ]); // should be imported from database
 
-    const additionalContent = CreateAdditionalContent();
-
     const [selectedDate, setSelectedDate] = useState(""); // State to store the selected date
     const [numberOfMonths, setNumberOfMonths] = useState(3); // State to store the number of months to display
-    
 
     const handleDateChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setSelectedDate(event.target.value);
     };
 
-    const handleNumberChange = (event: React.ChangeEvent<HTMLInputElement>) => {  
+    const handleNumberChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setNumberOfMonths(parseInt(event.target.value));
     };
 
     const handleModeChange = () => {
-        if (!editMode) {
+        if (!props.editMode) {
             // If switching to edit mode, show password prompt
-            setShowPasswordPrompt(true);
-          } else {
+            props.setShowPasswordPrompt(true);
+        } else {
             // If switching from edit mode, just toggle the edit mode
-            setEditMode(!editMode);
-          }
+            props.setEditMode(!props.editMode);
+        }
     };
 
     const goTo = () => {
@@ -59,7 +65,6 @@ function DisplayComponent(editMode: boolean ,setEditMode: React.Dispatch<React.S
         if (!isNaN(newDate.valueOf())) {
             setDates(CreateDisplayMonths(newDate, numberOfMonths));
         } else {
-            console.log("Invalid date");
             setDates(CreateDisplayMonths(newDate, numberOfMonths));
         }
     };
@@ -91,19 +96,22 @@ function DisplayComponent(editMode: boolean ,setEditMode: React.Dispatch<React.S
                     <option value="Customer 2">Customer 2</option>
                 </select>
                 <label className="switch"> Edit Mode</label>
-                <input type="checkbox" onChange={handleModeChange}/>
+                <input type="checkbox" onChange={handleModeChange} />
             </div>
             <div className="ScheduleDisplay">
-                {CreateTestRigDivs(rigs)} 
+                <CreateTestRigDivs rigs={rigs} />
                 <DndContext>
-                    {CreateTimelineField(rigs, dates, bladeTaskCards)}
+                    <CreateTimelineField
+                        rigs={rigs}
+                        months={dates}
+                        
+                    />
                 </DndContext>
             </div>
-            {editMode ? additionalContent : null}
+            {props.editMode ? <CreateAdditionalContent /> : null}
         </div>
     );
 }
-
 export default DisplayComponent;
 
 function CreateDisplayMonths(startDate: Date, numberOfMonths: number) {
@@ -118,12 +126,4 @@ function CreateDisplayMonths(startDate: Date, numberOfMonths: number) {
         months = CreateDisplayMonths(firstStartDate, numberOfMonths);
     }
     return months;
-}
-
-function CreateAdditionalContent() {
-    return (
-        <div className="AdditionalContent">
-            <h3>AdditionalContent</h3>
-        </div>
-    );
 }
