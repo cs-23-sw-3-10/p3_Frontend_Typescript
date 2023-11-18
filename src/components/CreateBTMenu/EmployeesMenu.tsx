@@ -58,7 +58,7 @@ function EmployeesSelectorMenu({ setSelectorActive }: { setSelectorActive: Funct
     );
 }
 
-function EmployeeEntrySelectorMenu({ name, typeName }: { name: string, typeName: string }) {
+function EmployeeEntrySelectorMenu({ name, typeName}: { name: string, typeName: string}) {
     const changeResourceOrders = useResourceOrderContext();
     let initials: string = '';
     if (typeName === "Engineer") {
@@ -91,10 +91,19 @@ function GetInitials(name:string){
     
 }
 
-function EmployeeEntry({name, initials}:{name:string, initials:string}) {
+function EmployeeEntry({name, initials, resourceOrders}:{name:string, initials:string, resourceOrders:ResourceOrder[]}) {
+    const changeResourceOrders = useResourceOrderContext();
+    const handleRemoval = () => {
+        const updatedOrders = [...resourceOrders];
+        const currentOrder = updatedOrders.filter((order) => order.ResourceName === name)[0];
+        const currentEntryIndex = updatedOrders.indexOf(currentOrder);
+        updatedOrders.splice(currentEntryIndex, 1);
+        changeResourceOrders(updatedOrders);
+    }
+    
     return (
         <div className='employee_entry'>
-            <button className='employee_entry_remove'>
+            <button className='employee_entry_remove' onClick={handleRemoval}>
                 <span className="material-symbols-outlined">chips</span>
             </button>
             <div className='employee_entry_icon'>
@@ -157,6 +166,7 @@ function EmployeeList({resourceOrders}:{resourceOrders:ResourceOrder[]})
         <EmployeeEntry 
         name={order.ResourceName} 
         initials={(order.ResourceName === "Engineer" ? GetInitials(order.ResourceName) : "")}
+        resourceOrders={resourceOrders}
         />
     )}</>
 }

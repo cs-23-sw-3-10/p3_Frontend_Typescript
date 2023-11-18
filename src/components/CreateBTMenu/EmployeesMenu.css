@@ -63,14 +63,12 @@
 .employee_list{
     grid-column: 1 / 2;
     grid-row: 3 / 4;
-    display: grid;
-    grid-template-columns: 1fr;
     overflow-x: auto;
 }
 
 .employee_entry{
     grid-column: 1 / 2;
-    height: 60px;
+    height: 50px;
     display: grid;
     grid-template-columns: 60px 60px 250px 1fr;
     grid-template-rows: 50px;
