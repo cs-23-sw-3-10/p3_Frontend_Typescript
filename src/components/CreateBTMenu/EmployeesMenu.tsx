@@ -3,10 +3,15 @@ import { useQuery } from '@apollo/client';
 import { GET_ALL_ENGINEERS, GET_ALL_TECHNICIANS } from '../../api/queryList';
 import { ResourceOrder } from './BTMenuTypes';
 import { useResourceOrderContext } from './BladeTaskOrderContext';
+import { ActiveEmployeesContext, useActiveEmployeesContext } from './EmployeesActiveContext';
 import './EmployeesMenu.css';
+import { act } from 'react-dom/test-utils';
+
 
 function EmployeesMenu({resourceOrders}:{resourceOrders:ResourceOrder[]}) {
+    const employeeList: {name: string, active: boolean}[] = [];
     const [selectorActive, setSelectorActive] = useState(false);
+    const [activeEmployeesList, setActiveEmployees] = useState(employeeList);
 
     useEffect(() => {
         console.log(selectorActive);
@@ -14,6 +19,7 @@ function EmployeesMenu({resourceOrders}:{resourceOrders:ResourceOrder[]}) {
 
     return (
         <div className="employees_wrapper">
+            <ActiveEmployeesContext.Provider value={setActiveEmployees}>
             <h2 className='title staff'>Staff</h2>
             <div className='employee_select'>
                 <span className="material-symbols-outlined badge">badge</span>
@@ -21,17 +27,18 @@ function EmployeesMenu({resourceOrders}:{resourceOrders:ResourceOrder[]}) {
                 <button className='expand' onClick={() => setSelectorActive(true)}>
                     <span className="material-symbols-outlined expand">expand_circle_right</span>
                 </button>
-                {selectorActive ? <EmployeesSelectorMenu setSelectorActive={setSelectorActive} /> : <></>}
+                {selectorActive ? <EmployeesSelectorMenu setSelectorActive={setSelectorActive} activeEmployeesList={activeEmployeesList}/> : <></>}
             </div>
             <div className='employee_list'>
-                <EmployeeList resourceOrders={resourceOrders}/>
+                <EmployeeList resourceOrders={resourceOrders} activeEmployeesList={activeEmployeesList}/>
             </div>
+            </ActiveEmployeesContext.Provider>
         </div>
 
     );
 }
 
-function EmployeesSelectorMenu({ setSelectorActive }: { setSelectorActive: Function }) {
+function EmployeesSelectorMenu({ setSelectorActive, activeEmployeesList}: { setSelectorActive: Function, activeEmployeesList: {name: string, active: boolean}[]}) {
     return (
         <div className='employee_selector_menu'>
             <div className='employee_selector_menu_header'>
@@ -43,14 +50,14 @@ function EmployeesSelectorMenu({ setSelectorActive }: { setSelectorActive: Funct
             <div className='employee_selector_menu_engineers'>
                 <h2 className='title employee_selector_menu_engineers_title'>Engineers</h2>
                 <div className='employee_selector_menu_engineers_list'>
-                    <EngineerList />
+                    <EngineerList activeEmployeesList={activeEmployeesList}/>
                 </div>
             </div>
             <div className='employee_selector_menu_technicians'>
                 <h2 className='title employee_selector_menu_technicians_title'>Technicians</h2>
                 <div className='employee_selector_menu_technicians_list'>
                     <div className='employee_selector_menu_technicians_entry'>
-                        <TechnicianList />
+                        <TechnicianList activeEmployeesList={activeEmployeesList}/>
                     </div>
                 </div>
             </div>
@@ -58,21 +65,38 @@ function EmployeesSelectorMenu({ setSelectorActive }: { setSelectorActive: Funct
     );
 }
 
-function EmployeeEntrySelectorMenu({ name, typeName}: { name: string, typeName: string}) {
+function EmployeeEntrySelectorMenu({ name, typeName, activeEmployeesList}: {name: string, typeName: string, activeEmployeesList: {name: string, active: boolean}[]}) {
     const changeResourceOrders = useResourceOrderContext();
+    const changeActiveEmployees = useActiveEmployeesContext();
+
     let initials: string = '';
     if (typeName === "Engineer") {
         initials = GetInitials(name);
     }
 
+    useEffect(() => {
+        console.log(activeEmployeesList);
+        console.log(name);
+        console.log(activeEmployeesList.filter((e) => e.name === name).length > 0);
+    }, [activeEmployeesList])
+
     const handleResourceCreation = () => {
         changeResourceOrders((prevResourceOrders: ResourceOrder[]) => {
             let newResourceOrders = [...prevResourceOrders, {ResourceType:typeName, ResourceName:name, EquipmentAmount:1, WorkHours:0, Period:[false,false,false]}];
             return newResourceOrders;
+        });
+        changeActiveEmployees((currentList:{name:string, active:boolean}[]) => {
+            let newList = [...currentList, {name: name, active:true}];
+            return newList;
         })
     }
 
     return (
+        <>
+        {activeEmployeesList.filter((e) => e.name === name).length > 0 
+        ? 
+        <></>
+        :
         <button className='employee_selector_menu_entry_button' onClick={handleResourceCreation}>
             <div className='employee_selector_menu_entry'>
                 <div className='employee_initials_profile'>
@@ -80,7 +104,8 @@ function EmployeeEntrySelectorMenu({ name, typeName}: { name: string, typeName: 
                 </div>
                 <h2 className='employee_selector_menu_entry_name'>{name}</h2>
             </div>
-        </button>
+        </button>}
+        </>
     );
 }
 
@@ -91,8 +116,9 @@ function GetInitials(name:string){
     
 }
 
-function EmployeeEntry({name, initials, resourceOrders}:{name:string, initials:string, resourceOrders:ResourceOrder[]}) {
+function EmployeeEntry({name, initials, resourceOrders, activeEmployeesList}:{name:string, initials:string, resourceOrders:ResourceOrder[], activeEmployeesList: {name: string, active: boolean}[]}) {
     const changeResourceOrders = useResourceOrderContext();
+    const changeActiveEmployees = useActiveEmployeesContext();
 
     const handleRemoval = () => {
         const updatedOrders = [...resourceOrders];
@@ -100,6 +126,12 @@ function EmployeeEntry({name, initials, resourceOrders}:{name:string, initials:s
         const currentEntryIndex = updatedOrders.indexOf(currentOrder);
         updatedOrders.splice(currentEntryIndex, 1);
         changeResourceOrders(updatedOrders);
+
+        const updatedEmployees = [...activeEmployeesList];
+        const currentEmployee = updatedEmployees.filter((employee) => employee.name === name)[0];
+        const currentEmployeeIndex = updatedEmployees.indexOf(currentEmployee);
+        updatedEmployees.splice(currentEmployeeIndex, 1);
+        changeActiveEmployees(updatedEmployees);
     }
     
     return (
@@ -124,7 +156,7 @@ function EmployeeEntry({name, initials, resourceOrders}:{name:string, initials:s
     );
 }
 
-function EngineerList() {
+function EngineerList({activeEmployeesList}:{activeEmployeesList: {name: string, active: boolean}[]}) {
     const { loading, error, data } = useQuery(GET_ALL_ENGINEERS);
 
     //Whilst list is loading, the only element in the list is "LOADING"
@@ -135,15 +167,12 @@ function EngineerList() {
         console.log(error.message);
         return (<div>ERROR</div>);
     }
-
-    console.log(data.AllEngineers);
-
     return data.AllEngineers.map(({ name, __typename }: { name: string, __typename: string }) =>
-        (<EmployeeEntrySelectorMenu name={name} typeName={__typename} />)
+        (<EmployeeEntrySelectorMenu name={name} typeName={__typename} activeEmployeesList={activeEmployeesList}/>)
     );
 }
 
-function TechnicianList() {
+function TechnicianList({activeEmployeesList}:{activeEmployeesList: {name: string, active: boolean}[]}) {
     const { loading, error, data } = useQuery(GET_ALL_TECHNICIANS);
 
     //Whilst list is loading, the only element in the list is "LOADING"
@@ -156,11 +185,11 @@ function TechnicianList() {
     }
 
     return data.AllTechnicians.map(({ type, __typename }: { type: string, __typename: string }) =>
-        (<EmployeeEntrySelectorMenu name={type} typeName={__typename} />)
+        (<EmployeeEntrySelectorMenu name={type} typeName={__typename} activeEmployeesList={activeEmployeesList}/>)
     );
 }
 
-function EmployeeList({resourceOrders}:{resourceOrders:ResourceOrder[]})
+function EmployeeList({resourceOrders, activeEmployeesList}:{resourceOrders:ResourceOrder[], activeEmployeesList: {name: string, active: boolean}[]})
 {
     let employeeResourceOrders = resourceOrders.filter((order:ResourceOrder) => ((order.ResourceType === "Engineer") || (order.ResourceType === "Technician")));
     return <>{employeeResourceOrders.map((order) => 
@@ -168,6 +197,7 @@ function EmployeeList({resourceOrders}:{resourceOrders:ResourceOrder[]})
         name={order.ResourceName} 
         initials={(order.ResourceType === "Engineer") ? GetInitials(order.ResourceName) : ""}
         resourceOrders={resourceOrders}
+        activeEmployeesList={activeEmployeesList}
         />
     )}</>
 }
