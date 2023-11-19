@@ -4,12 +4,15 @@ import TestTypeSelector from './TestTypeSelector';
 import DurationSelector from './DurationSelecter';
 import StartDateSelector from './StartDateSelector';
 import TestRigSelector from './TestRigSelector';
+import AttachPeriodSelector from './AttachPeriodSelector';
+import DetachPeriodSelector from './DetachPeriodSelector';
 import EquipmentSelectionMenu from './EquipmentSelector';
 import EmployeesMenu from './EmployeesMenu';
 import { ResourceOrderContext } from './BladeTaskOrderContext';
 import React, { useState, useEffect } from 'react';
 import { BTOrder, InErrorChart, ResourceOrder } from './BTMenuTypes'
 import EquipmentList from './EquipmentList';
+import { de } from 'date-fns/locale';
 
 function BladeTaskMenu() {
     //All the states for the form -> Inserted into the BT-order as the user fills it out
@@ -54,7 +57,7 @@ function BladeTaskMenu() {
 
     useEffect(() => {
         console.log(currentOrder);
-    }, [testRig])
+    }, [attachPeriod])
 
     return (
         <div className='btmenu-container'>
@@ -62,8 +65,34 @@ function BladeTaskMenu() {
             <TestTypeSelector setTestType={setType}/>
 
             <div className='item date_selection_wrapper'>
-                <StartDateSelector startDate={startDate} setStartDate={setStartDate} inErrorChart={inErrorChart} setInErrorChart={setInErrorChart}/>
-                <DurationSelector duration={duration} setDuration={setDuration} inErrorChart={inErrorChart} setInErrorChart={setInErrorChart}/>
+                <StartDateSelector 
+                    startDate={startDate} 
+                    setStartDate={setStartDate} 
+                    inErrorChart={inErrorChart} 
+                    setInErrorChart={setInErrorChart}
+                />
+                <DurationSelector 
+                    duration={duration} 
+                    setDuration={setDuration} 
+                    inErrorChart={inErrorChart} 
+                    setInErrorChart={setInErrorChart}
+                />
+                <AttachPeriodSelector 
+                    duration={duration} 
+                    detachPeriod={detachPeriod}
+                    attachPeriod={attachPeriod}
+                    setAttachPeriod={setAttachPeriod}
+                    inErrorChart={inErrorChart}
+                    setInErrorChart={setInErrorChart}
+                />
+                <DetachPeriodSelector
+                    duration={duration}
+                    attachPeriod={attachPeriod}
+                    detachPeriod={detachPeriod}
+                    setDetachPeriod={setDetachPeriod}
+                    inErrorChart={inErrorChart}
+                    setInErrorChart={setInErrorChart}
+                />
                 <TestRigSelector setTestRig={setTestRig}/>
             </div>
 

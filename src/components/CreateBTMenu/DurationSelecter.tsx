@@ -20,10 +20,12 @@ function DurationSelector({duration, setDuration, inErrorChart, setInErrorChart}
 
 function handleDurationValidation(e: React.FormEvent<HTMLInputElement>, setDuration:Function, inErrorChart:InErrorChart, setInErrorChart:Function){
     const newInErrorChart:InErrorChart = {...inErrorChart};
-    if(Number(e.currentTarget.value) > 0){
+    const userInput = Number(e.currentTarget.value);
+
+    if(userInput > 0){
         newInErrorChart.Duration = false;
         setInErrorChart(newInErrorChart);
-        setDuration(e.currentTarget.value);
+        setDuration(userInput);
     }else{
         newInErrorChart.Duration = true;
         setInErrorChart(newInErrorChart);
