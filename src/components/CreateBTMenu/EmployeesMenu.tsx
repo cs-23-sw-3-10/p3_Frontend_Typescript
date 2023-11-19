@@ -119,6 +119,7 @@ function GetInitials(name:string){
 function EmployeeEntry({name, initials, resourceOrders, activeEmployeesList}:{name:string, initials:string, resourceOrders:ResourceOrder[], activeEmployeesList: {name: string, active: boolean}[]}) {
     const changeResourceOrders = useResourceOrderContext();
     const changeActiveEmployees = useActiveEmployeesContext();
+    const [employeeHours, setEmployeeHours] = useState(0);
 
     const handleRemoval = () => {
         const updatedOrders = [...resourceOrders];
@@ -132,6 +133,15 @@ function EmployeeEntry({name, initials, resourceOrders, activeEmployeesList}:{na
         const currentEmployeeIndex = updatedEmployees.indexOf(currentEmployee);
         updatedEmployees.splice(currentEmployeeIndex, 1);
         changeActiveEmployees(updatedEmployees);
+    }
+
+    const handleEmployeeHours = (hours:number) => {
+        setEmployeeHours(hours);
+        const updatedOrders = [...resourceOrders];
+        const currentOrder = updatedOrders.filter((order) => order.ResourceName === name)[0];
+        const currentOrderIndex = updatedOrders.indexOf(currentOrder);
+        updatedOrders[currentOrderIndex].WorkHours = hours;
+        changeResourceOrders(updatedOrders);
     }
     
     return (
@@ -150,6 +160,7 @@ function EmployeeEntry({name, initials, resourceOrders, activeEmployeesList}:{na
                     className='emoloyee_entry_hours_input'
                     type="number"
                     placeholder='Hours'
+                    onChange={(e) => handleEmployeeHours(Number(e.currentTarget.value))}
                 />
             </div>
         </div>
