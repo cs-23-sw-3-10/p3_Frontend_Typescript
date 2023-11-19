@@ -1,6 +1,7 @@
 import './BladeTaskMenu.css';
 import TaskNameSelector from './TaskNameSelector';
 import TestTypeSelector from './TestTypeSelector';
+import DurationSelector from './DurationSelecter';
 import TestRigOptions from './TestRigSelector';
 import StartDateSelector from './StartDateSelector';
 import EquipmentSelectionMenu from './EquipmentSelector';
@@ -9,10 +10,6 @@ import { ResourceOrderContext } from './BladeTaskOrderContext';
 import React, { useState, useEffect } from 'react';
 import { BTOrder, InErrorChart, ResourceOrder } from './BTMenuTypes'
 import EquipmentList from './EquipmentList';
-
-function handleDurationChange(e: React.FormEvent<HTMLInputElement>, setDuration: Function) {
-    setDuration(e.currentTarget.value);
-}
 
 function BladeTaskMenu() {
     //All the states for the form -> Inserted into the BT-order as the user fills it out
@@ -57,7 +54,7 @@ function BladeTaskMenu() {
 
     useEffect(() => {
         console.log(currentOrder);
-    }, [startDate])
+    }, [duration])
 
     return (
         <div className='btmenu-container'>
@@ -66,18 +63,9 @@ function BladeTaskMenu() {
 
             <div className='item date_selection_wrapper'>
                 <StartDateSelector startDate={startDate} setStartDate={setStartDate} inErrorChart={inErrorChart} setInErrorChart={setInErrorChart}/>
-                <h2 className="title">{"Duration(Days)"}</h2>
-                <input
-                    type="number"
-                    className="item duration_select"
-                    name="duration_select"
-                    placeholder='Days'
-                    min={0}
-                    onChange={(e) => handleDurationChange(e, setDuration)}
-                />
+                <DurationSelector duration={duration} setDuration={setDuration} inErrorChart={inErrorChart} setInErrorChart={setInErrorChart}/>
 
                 <h2 className="title">Test Rig</h2>
-
                 <select id="testrig" name="testrig">
                     <TestRigOptions />
                 </select>
