@@ -2,6 +2,7 @@ import './BladeTaskMenu.css';
 import TaskNameSelector from './TaskNameSelector';
 import TestTypeSelector from './TestTypeSelector';
 import TestRigOptions from './TestRigSelector';
+import StartDateSelector from './StartDateSelector';
 import EquipmentSelectionMenu from './EquipmentSelector';
 import EmployeesMenu from './EmployeesMenu';
 import { ResourceOrderContext } from './BladeTaskOrderContext';
@@ -9,49 +10,16 @@ import React, { useState, useEffect } from 'react';
 import { BTOrder, InErrorChart, ResourceOrder } from './BTMenuTypes'
 import EquipmentList from './EquipmentList';
 
-
-function handleDateChange(e: React.FormEvent<HTMLInputElement>, setDate: Function) {
-    setDate(e.currentTarget.value);
-}
-
 function handleDurationChange(e: React.FormEvent<HTMLInputElement>, setDuration: Function) {
     setDuration(e.currentTarget.value);
 }
 
-function handleDateValidation(e: React.FormEvent<HTMLInputElement>, setDate: Function, setErrorStyle: Function, inErrorChart: InErrorChart) {
-    let inputFromForm: string = e.currentTarget.value;
-    let currentDate: Date = new Date()
-    let inputDate: Date = new Date(inputFromForm);
-
-    //Granularity of days -> Set hour to the same value for both dates
-    currentDate.setHours(1, 0, 0, 0);
-    inputDate.setHours(1, 0, 0, 0);
-
-    //Setting the date in input element requires date to be in string format
-    let currentDateString: string = currentDate.toISOString().split('T')[0];
-
-    //
-    if (inputDate >= currentDate) {
-        inErrorChart.StartDate = false;
-        console.log(inErrorChart);
-        setErrorStyle(inErrorChart);
-        setDate(inputFromForm);
-    } else {
-        inErrorChart.StartDate = true;
-        setErrorStyle(inErrorChart);
-        setDate(currentDateString);
-    }
-}
-
 function BladeTaskMenu() {
-    //Finds the current date in the format 'dd-mm-yyyy'
-    const currentDate = new Date().toISOString().split('T')[0];
-
     //All the states for the form -> Inserted into the BT-order as the user fills it out
     const [project, setProject] = useState('');
     const [BTName, setBTName] = useState('');
     const [type, setType] = useState('');
-    const [startDate, setDate] = useState(currentDate);
+    const [startDate, setStartDate] = useState(new Date().toISOString().split('T')[0]); //Sets the date to be the current day as initial value;
     const [duration, setDuration] = useState(0);
     const [attachPeriod, setAttachPeriod] = useState(0);
     const [detachPeriod, setDetachPeriod] = useState(0);
@@ -75,11 +43,13 @@ function BladeTaskMenu() {
         ResourceOrders: []
     };
 
-    const [inErrorChart, setErrorStyle] = useState({
+    const [inErrorChart, setInErrorChart] = useState({
         BTName: false,
         Type: false,
         StartDate: false,
         Duration: false,
+        AttachPeriod: false,
+        DetachPeriod: false,
         TestRig: false,
         Equipment: false,
         Employees: false,
@@ -87,7 +57,7 @@ function BladeTaskMenu() {
 
     useEffect(() => {
         console.log(currentOrder);
-    }, [type])
+    }, [startDate])
 
     return (
         <div className='btmenu-container'>
@@ -95,17 +65,7 @@ function BladeTaskMenu() {
             <TestTypeSelector setTestType={setType}/>
 
             <div className='item date_selection_wrapper'>
-                <h2 className='title'>Start Date</h2>
-                {/*Element appears when user provides invalid input for date*/}
-                {/*invalidInput ? <InvalidInputElement message="Start date cannot be before todays date"/> : <></> */}
-                <input
-                    type="date"
-                    className={inErrorChart.StartDate ? "error" : "startdate_select"}
-                    value={startDate}
-                    onChange={(e) => handleDateChange(e, setDate)}
-                    onBlur={(e) => handleDateValidation(e, setDate, setErrorStyle, inErrorChart)}
-                />
-
+                <StartDateSelector startDate={startDate} setStartDate={setStartDate} inErrorChart={inErrorChart} setInErrorChart={setInErrorChart}/>
                 <h2 className="title">{"Duration(Days)"}</h2>
                 <input
                     type="number"

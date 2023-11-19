@@ -3,6 +3,8 @@ export type InErrorChart = {
     Type: boolean;
     StartDate: boolean;
     Duration: boolean;
+    AttachPeriod: boolean;
+    DetachPeriod: boolean;
     TestRig: boolean;
     Equipment: boolean;
     Employees: boolean;
