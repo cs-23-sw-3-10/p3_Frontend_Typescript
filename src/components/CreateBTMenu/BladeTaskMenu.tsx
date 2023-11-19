@@ -2,8 +2,8 @@ import './BladeTaskMenu.css';
 import TaskNameSelector from './TaskNameSelector';
 import TestTypeSelector from './TestTypeSelector';
 import DurationSelector from './DurationSelecter';
-import TestRigOptions from './TestRigSelector';
 import StartDateSelector from './StartDateSelector';
+import TestRigSelector from './TestRigSelector';
 import EquipmentSelectionMenu from './EquipmentSelector';
 import EmployeesMenu from './EmployeesMenu';
 import { ResourceOrderContext } from './BladeTaskOrderContext';
@@ -54,7 +54,7 @@ function BladeTaskMenu() {
 
     useEffect(() => {
         console.log(currentOrder);
-    }, [duration])
+    }, [testRig])
 
     return (
         <div className='btmenu-container'>
@@ -64,12 +64,7 @@ function BladeTaskMenu() {
             <div className='item date_selection_wrapper'>
                 <StartDateSelector startDate={startDate} setStartDate={setStartDate} inErrorChart={inErrorChart} setInErrorChart={setInErrorChart}/>
                 <DurationSelector duration={duration} setDuration={setDuration} inErrorChart={inErrorChart} setInErrorChart={setInErrorChart}/>
-
-                <h2 className="title">Test Rig</h2>
-                <select id="testrig" name="testrig">
-                    <TestRigOptions />
-                </select>
-
+                <TestRigSelector setTestRig={setTestRig}/>
             </div>
 
             <div className='item equipment_wrapper'>
