@@ -1,7 +1,3 @@
-import {GET_ALL_BT_NAMES} from '../../api/queryList';
-import { useLazyQuery} from '@apollo/client';
-import  {client} from '../../index';
-
 function TaskNameSelector({setBTName}:{setBTName:Function}){
     return(
         <input 
