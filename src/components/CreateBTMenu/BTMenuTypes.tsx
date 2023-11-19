@@ -10,6 +10,7 @@ export type InErrorChart = {
 
 export type BTOrder = {
     Project: string;
+    BTName: string;
     Type: string;
     StartDate: string;
     Duration: number;
@@ -26,3 +27,5 @@ export type ResourceOrder = {
     WorkHours: number;
     Period: Array<boolean>;
 }
+
+
