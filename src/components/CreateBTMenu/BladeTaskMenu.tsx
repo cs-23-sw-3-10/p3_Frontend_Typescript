@@ -93,14 +93,6 @@ function BladeTaskMenu() {
         <div className='btmenu-container'>
             <TaskNameSelector setBTName={setBTName}/>
             <TestTypeSelector setTestType={setType}/>
-            {/*
-            <div className="item testtype_wrapper">
-                <h2 className="title">Type</h2>
-                <select className="testtype_select" id="testtype" name="testtype">
-                    <TestTypeOptions />
-                </select>
-            </div>
-            */}
 
             <div className='item date_selection_wrapper'>
                 <h2 className='title'>Start Date</h2>
