@@ -40,7 +40,7 @@ function BladeTaskMenu() {
         AttachPeriod: attachPeriod,
         DetachPeriod: detachPeriod,
         TestRig: testRig,
-        ResourceOrders: []
+        ResourceOrders: resourceOrders,
     };
 
     const [inErrorChart, setInErrorChart] = useState({
@@ -57,7 +57,7 @@ function BladeTaskMenu() {
 
     useEffect(() => {
         console.log(currentOrder);
-    }, [attachPeriod])
+    }, [project, BTName, type, startDate, duration, attachPeriod, detachPeriod, testRig, resourceOrders])
 
     return (
         <div className='btmenu-container'>
