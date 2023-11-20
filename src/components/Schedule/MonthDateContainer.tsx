@@ -24,7 +24,7 @@ function CreateMonthDateContainer(props: MonthDateContainerProps) {
 
     for (
         let i = 1;
-        i <= MonthLengths[month as keyof typeof MonthLengths];
+        i <= getMonthLength(month, year);
         i++
     ) {
         let date = new Date(
@@ -34,6 +34,10 @@ function CreateMonthDateContainer(props: MonthDateContainerProps) {
         );
         monthDates.push(date);
     }
+    if (month === "Februar") {
+        console.log(monthDates.length);
+    }
+
     const columnTemplate = monthDates // Create the grid columns for the month
         .map(
             (
@@ -42,6 +46,9 @@ function CreateMonthDateContainer(props: MonthDateContainerProps) {
                 `[date-${date.getFullYear()}-${date.getMonth()}-${date.getDate()}] ${dateDivLength}px`
         )
         .join(" "); // Join the columns into a string
+        if (month === "Februar") {
+            console.log(columnTemplate);
+        }
 
     let firstDay = `date-${year}-${monthNumber}-1`; // Get the first day of the month
 

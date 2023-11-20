@@ -32,7 +32,7 @@ function CreateTimelineField(props: TimelineFieldProps) {
         for (
             // Create a date for each day in the month
             let i = 1;
-            i <= MonthLengths[monthName as keyof typeof MonthLengths];
+            i <= getMonthLength(monthName, month.getFullYear());
             i++
         ) {
             let date = new Date(month.getFullYear(), month.getMonth(), i);
@@ -121,7 +121,7 @@ export function getTotalWidth(month: string, year: number) {
 }
 
 export function getMonthLength(month: string, year: number) {
-    return month === "February" // Check if the month is February
+    return month === "February" || month === "Februar" // Check if the month is February
         ? getDaysInFebruary(year) // If it is, get the number of days in February
         : MonthLengths[month as keyof typeof MonthLengths]; // Else, get the number of days in the month
 }
