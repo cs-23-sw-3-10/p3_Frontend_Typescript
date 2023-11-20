@@ -12,7 +12,6 @@ import { ResourceOrderContext } from './BladeTaskOrderContext';
 import React, { useState, useEffect } from 'react';
 import { BTOrder, InErrorChart, ResourceOrder } from './BTMenuTypes'
 import EquipmentList from './EquipmentList';
-import { de } from 'date-fns/locale';
 
 function BladeTaskMenu() {
     //All the states for the form -> Inserted into the BT-order as the user fills it out
