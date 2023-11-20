@@ -14,6 +14,7 @@ import { BTOrder, InErrorChart, ResourceOrder } from './BTMenuTypes'
 import EquipmentList from './EquipmentList';
 import { useMutation } from '@apollo/client';
 import { ADD_BT } from '../../api/mutationList';
+import { ValidateForm } from './ValidateForm';
 
 
 function BladeTaskMenu() {
@@ -21,19 +22,21 @@ function BladeTaskMenu() {
     const [addBT, {loading, error }] = useMutation(ADD_BT);
 
     const handleSubmit = () => {
-        addBT({variables:{
-            bladeTask:{
-                bladeProjectId: "1",
-                taskName: BTName,
-                testType: type,
-                startDate: startDate,
-                duration: duration,
-                attachPeriod: attachPeriod,
-                detachPeriod: detachPeriod,
-                testRig: testRig,
-                resourceOrders: resourceOrders,
-            }
-        }}).then((response) => console.log(response));
+        if(ValidateForm(currentOrder)){
+            addBT({variables:{
+                bladeTask:{
+                    bladeProjectId: "1",
+                    taskName: BTName,
+                    testType: type,
+                    startDate: startDate,
+                    duration: duration,
+                    attachPeriod: attachPeriod,
+                    detachPeriod: detachPeriod,
+                    testRig: testRig,
+                    resourceOrders: resourceOrders,
+                }
+            }}).then((response) => console.log(response));
+        }else console.log("Required fields have not been filled out");
     }
     
     //All the states for the form -> Inserted into the BT-order as the user fills it out
