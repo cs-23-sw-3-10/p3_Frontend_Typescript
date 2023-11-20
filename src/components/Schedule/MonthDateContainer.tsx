@@ -6,7 +6,6 @@ import {
     getTotalWidth,
     dateDivLength,
 } from "./TimelineField";
-import MonthLengths from "./MonthLengthsEnum";
 
 type MonthDateContainerProps = {
     currentMonth: Date;
