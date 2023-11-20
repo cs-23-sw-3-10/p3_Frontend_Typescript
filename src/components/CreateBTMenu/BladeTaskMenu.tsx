@@ -12,9 +12,30 @@ import { ResourceOrderContext } from './BladeTaskOrderContext';
 import React, { useState, useEffect } from 'react';
 import { BTOrder, InErrorChart, ResourceOrder } from './BTMenuTypes'
 import EquipmentList from './EquipmentList';
-import { de } from 'date-fns/locale';
+import { useMutation } from '@apollo/client';
+import { ADD_BT } from '../../api/mutationList';
+
 
 function BladeTaskMenu() {
+    //Apollo mutation setup:
+    const [addBT, {loading, error }] = useMutation(ADD_BT);
+
+    const handleSubmit = () => {
+        addBT({variables:{
+            bladeTask:{
+                bladeProjectId: "1",
+                taskName: BTName,
+                testType: type,
+                startDate: startDate,
+                duration: duration,
+                attachPeriod: attachPeriod,
+                detachPeriod: detachPeriod,
+                testRig: testRig,
+                resourceOrders: resourceOrders,
+            }
+        }}).then((response) => console.log(response));
+    }
+    
     //All the states for the form -> Inserted into the BT-order as the user fills it out
     const [project, setProject] = useState('');
     const [BTName, setBTName] = useState('');
@@ -58,6 +79,8 @@ function BladeTaskMenu() {
     useEffect(() => {
         console.log(currentOrder);
     }, [project, BTName, type, startDate, duration, attachPeriod, detachPeriod, testRig, resourceOrders])
+
+   
 
     return (
         <div className='btmenu-container'>
@@ -128,6 +151,7 @@ function BladeTaskMenu() {
             <ResourceOrderContext.Provider value={setResourceOrder}>
                 <EmployeesMenu resourceOrders={resourceOrders} />
             </ResourceOrderContext.Provider>
+        <button className="submit_BT" onClick={handleSubmit}>Submit</button>
         </div>
     );
 }
