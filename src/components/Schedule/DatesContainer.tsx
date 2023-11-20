@@ -1,4 +1,3 @@
-import { type } from "os";
 import CreateOverviewDate from "./OverviewDate";
 
 type DatesContainerProps = {
