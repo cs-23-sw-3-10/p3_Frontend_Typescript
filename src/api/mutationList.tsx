@@ -1,6 +1,6 @@
 import { gql } from "@apollo/client";
 
-const addBT = gql`
+export const ADD_BT = gql`
 mutation CreateBladeTask($bladeTask: BladeTaskInput!) {
     createBladeTask(bladeTask: $bladeTask){
       id

@@ -20,10 +20,10 @@ function EquipmentList({ resourceOrders }: { resourceOrders: ResourceOrder[] }) 
             {resourceOrders.map((order) => (
                 <>
                 
-                {( (order.ResourceType !== "Engineer") && (order.ResourceType !== "Technician")) ?
+                {( (order.resourceType !== "Engineer") && (order.resourceType !== "Technician")) ?
                 <div className='equipment_entry'>
                     <div className='type'>
-                        <h2 className='title'>{order.ResourceType}</h2>
+                        <h2 className='title'>{order.resourceType}</h2>
                     </div>
                     <div className="period">
                         <fieldset className='period_selector'>
@@ -53,13 +53,13 @@ function CheckBox({name,resourceIndex, title}:{name:string,resourceIndex:number,
         changeResourceOrder((prevResourceOrder: ResourceOrder[]) => {
             let newResourceOrder = [...prevResourceOrder];
             if (title === "Attach") {
-                newResourceOrder[resourceIndex].Period[0] = !checked;
+                newResourceOrder[resourceIndex].equipmentAssignmentStatus[0] = !checked;
             }
             if (title === "Test") {
-                newResourceOrder[resourceIndex].Period[1] = !checked;
+                newResourceOrder[resourceIndex].equipmentAssignmentStatus[1] = !checked;
             }
             if (title === "Detach") {
-                newResourceOrder[resourceIndex].Period[2] = !checked;
+                newResourceOrder[resourceIndex].equipmentAssignmentStatus[2] = !checked;
             }
             return newResourceOrder;
         });

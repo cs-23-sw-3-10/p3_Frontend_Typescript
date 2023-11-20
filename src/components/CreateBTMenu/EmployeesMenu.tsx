@@ -5,7 +5,6 @@ import { ResourceOrder } from './BTMenuTypes';
 import { useResourceOrderContext } from './BladeTaskOrderContext';
 import { ActiveEmployeesContext, useActiveEmployeesContext } from './EmployeesActiveContext';
 import './EmployeesMenu.css';
-import { act } from 'react-dom/test-utils';
 
 
 function EmployeesMenu({resourceOrders}:{resourceOrders:ResourceOrder[]}) {
@@ -74,15 +73,9 @@ function EmployeeEntrySelectorMenu({ name, typeName, activeEmployeesList}: {name
         initials = GetInitials(name);
     }
 
-    useEffect(() => {
-        console.log(activeEmployeesList);
-        console.log(name);
-        console.log(activeEmployeesList.filter((e) => e.name === name).length > 0);
-    }, [activeEmployeesList])
-
     const handleResourceCreation = () => {
         changeResourceOrders((prevResourceOrders: ResourceOrder[]) => {
-            let newResourceOrders = [...prevResourceOrders, {ResourceType:typeName, ResourceName:name, EquipmentAmount:1, WorkHours:0, Period:[false,false,false]}];
+            let newResourceOrders = [...prevResourceOrders, {resourceType:typeName, resourceName:name, equipmentAssignmentStatus:[true,true,true], workHours:0}];
             return newResourceOrders;
         });
         changeActiveEmployees((currentList:{name:string, active:boolean}[]) => {
@@ -123,7 +116,7 @@ function EmployeeEntry({name, initials, resourceOrders, activeEmployeesList}:{na
 
     const handleRemoval = () => {
         const updatedOrders = [...resourceOrders];
-        const currentOrder = updatedOrders.filter((order) => order.ResourceName === name)[0];
+        const currentOrder = updatedOrders.filter((order) => order.resourceName === name)[0];
         const currentEntryIndex = updatedOrders.indexOf(currentOrder);
         updatedOrders.splice(currentEntryIndex, 1);
         changeResourceOrders(updatedOrders);
@@ -138,9 +131,9 @@ function EmployeeEntry({name, initials, resourceOrders, activeEmployeesList}:{na
     const handleEmployeeHours = (hours:number) => {
         setEmployeeHours(hours);
         const updatedOrders = [...resourceOrders];
-        const currentOrder = updatedOrders.filter((order) => order.ResourceName === name)[0];
+        const currentOrder = updatedOrders.filter((order) => order.resourceName === name)[0];
         const currentOrderIndex = updatedOrders.indexOf(currentOrder);
-        updatedOrders[currentOrderIndex].WorkHours = hours;
+        updatedOrders[currentOrderIndex].workHours = hours;
         changeResourceOrders(updatedOrders);
     }
     
@@ -202,11 +195,11 @@ function TechnicianList({activeEmployeesList}:{activeEmployeesList: {name: strin
 
 function EmployeeList({resourceOrders, activeEmployeesList}:{resourceOrders:ResourceOrder[], activeEmployeesList: {name: string, active: boolean}[]})
 {
-    let employeeResourceOrders = resourceOrders.filter((order:ResourceOrder) => ((order.ResourceType === "Engineer") || (order.ResourceType === "Technician")));
+    let employeeResourceOrders = resourceOrders.filter((order:ResourceOrder) => ((order.resourceType === "Engineer") || (order.resourceType === "Technician")));
     return <>{employeeResourceOrders.map((order) => 
         <EmployeeEntry 
-        name={order.ResourceName} 
-        initials={(order.ResourceType === "Engineer") ? GetInitials(order.ResourceName) : ""}
+        name={order.resourceName} 
+        initials={(order.resourceType === "Engineer") ? GetInitials(order.resourceName) : ""}
         resourceOrders={resourceOrders}
         activeEmployeesList={activeEmployeesList}
         />
