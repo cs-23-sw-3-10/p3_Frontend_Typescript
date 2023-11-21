@@ -30,6 +30,45 @@ export const GET_ALL_BT = gql`
     }
 `;
 
+export const GET_ALL_BT_WITH_BOOKINGS_EQNAME = gql`
+query AllBladeTasks {
+    AllBladeTasks {
+        id
+        startDate
+        endDate
+        duration
+        testType
+        attachPeriod
+        detachPeriod
+        taskName
+        testRig
+        bladeProject {
+            id
+        }
+        bookings {
+            id
+            startDate
+            endDate
+            duration
+            resourceType
+            workHours
+            equipment {
+                id
+                name
+            }
+            engineer {
+                name
+            }
+            technician {
+                id
+            }
+        }
+    }
+}
+`;
+
+
+
 export const GET_ALL_BP = gql`
 query AllBladeProjects {
     AllBladeProjects {

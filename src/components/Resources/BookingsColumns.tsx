@@ -2,9 +2,11 @@
 import { ColumnDef } from "@tanstack/react-table";
 import { BookingDataQuery } from "./BookingData";
 
+
+let displayValue = "";
 export const columnBookings: ColumnDef<BookingDataQuery>[] = [
     {
-        accessorKey: "id",
+        accessorKey:"combined",
         header: ({ column }) => {
             return (
                 <button
@@ -12,7 +14,7 @@ export const columnBookings: ColumnDef<BookingDataQuery>[] = [
                         column.toggleSorting(column.getIsSorted() === "asc")
                     }
                 >
-                    Booking Id
+                    Specific Resource
                 </button>
             );
         },
@@ -45,6 +47,20 @@ export const columnBookings: ColumnDef<BookingDataQuery>[] = [
                     )}
                     {getValue()}
                 </>
+            );
+        },
+    },
+    {
+        accessorKey: "resourceType",
+        header: ({ column }) => {
+            return (
+                <button
+                    onClick={() =>
+                        column.toggleSorting(column.getIsSorted() === "asc")
+                    }
+                >
+                    Resource Type
+                </button>
             );
         },
     },
@@ -86,20 +102,6 @@ export const columnBookings: ColumnDef<BookingDataQuery>[] = [
                     }
                 >
                     Duration
-                </button>
-            );
-        },
-    },
-    {
-        accessorKey: "resourceType",
-        header: ({ column }) => {
-            return (
-                <button
-                    onClick={() =>
-                        column.toggleSorting(column.getIsSorted() === "asc")
-                    }
-                >
-                    Resource Type
                 </button>
             );
         },
