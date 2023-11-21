@@ -5,7 +5,6 @@ import MonthLengths from "./MonthLengthsEnum";
 import React, { useState } from "react";
 import BladeTaskCard from "./BladeTaskCard";
 import { BladeTaskHolder } from "./BladeTaskHolder";
-import { cornersOfRectangle } from "@dnd-kit/core/dist/utilities/algorithms/helpers";
 
 type TimelineFieldProps = {
     rigs: { rigName: string; rigNumber: number }[];
