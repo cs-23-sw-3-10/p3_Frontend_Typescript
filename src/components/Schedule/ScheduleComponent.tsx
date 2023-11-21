@@ -36,7 +36,7 @@ function ScheduleComponent() {
     };
 
     return (
-        <DndContext key={"scheduleComponentDnD"}>
+        
             <div>
                 {editMode ? scheduleHeader[0] : scheduleHeader[1]}
                 {showPasswordPrompt && (
@@ -53,7 +53,7 @@ function ScheduleComponent() {
                 )}
                 {editMode ? editSchedule : viewSchedule}
             </div>
-        </DndContext>
+        
     );
 }
 export default ScheduleComponent;

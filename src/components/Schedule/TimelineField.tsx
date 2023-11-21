@@ -3,12 +3,14 @@ import CreateMonthDateContainer from "./MonthDateContainer";
 import CreateRigFieldContainer from "./RigFieldContainer";
 import MonthLengths from "./MonthLengthsEnum";
 import React, { useState } from "react";
-import BladeTaskCard, { bladeTaskCards } from "./BladeTaskCard";
+import BladeTaskCard from "./BladeTaskCard";
 import { BladeTaskHolder } from "./BladeTaskHolder";
 
+
 type TimelineFieldProps = {
-    rigs: string[];
+    rigs: { rigName: string; rigNumber: number }[];
     months: Date[];
+    btCards: React.ReactNode[];
 };
 
 export const dateDivLength = 25; // px length of the dates in the schedule
@@ -57,9 +59,10 @@ function CreateTimelineField(props: TimelineFieldProps) {
         minHeight: props.rigs.length * 50 + "px",
     };
 
-    let bladeTasks = new BladeTaskHolder(bladeTaskCards);
+
     const [isDragging, setDragging] = useState(false);
 
+    let bladeTasks = new BladeTaskHolder(props.btCards);
     return (
         <div className="TimelineFieldContainer">
             <div className="TimelineField" style={BTFieldStyle}>
@@ -84,8 +87,9 @@ function CreateTimelineField(props: TimelineFieldProps) {
                         {props.rigs.map((rig) => (
                             // Create a rig field for each rig
                             <CreateRigFieldContainer
-                                key={rig}
-                                rig={rig}
+                                key={rig.rigName}
+                                rig={rig.rigName}
+                                rigNumber={rig.rigNumber}
                                 allDates={allDates}
                                 fieldWidth={fieldWidth}
                                 columns={columnsOfSchedule}
@@ -100,7 +104,7 @@ function CreateTimelineField(props: TimelineFieldProps) {
                                             return (
                                                 (
                                                     bladeTask as React.ReactElement<any>
-                                                ).props.rig === rig
+                                                ).props.rig === rig.rigNumber
                                             );
                                         }
                                         return false;
@@ -171,8 +175,10 @@ export function handleDragEnd(
     console.log("drag ended");
     const { active, over } = event;
     if (over !== null) {
+        console.log("over " ,over.id);
         const overIdSlpit = over.id.split("-");
-        const overRig = overIdSlpit[0];
+        const overRig = parseInt(overIdSlpit[0].split(" ")[1]);
+        console.log("over rig " ,overRig);
         const overDate = new Date(
             overIdSlpit[1],
             overIdSlpit[2],
@@ -197,10 +203,11 @@ export function handleDragEnd(
             const draggedCard = updatedBladeTaskCards[
                 indexBT
             ] as React.ReactElement;
+            console.log("dragged card ", draggedCard.key);
             updatedBladeTaskCards[indexBT] = (
                 <BladeTaskCard
                     key={draggedCard.key}
-                    id={`${draggedCard.props.taskName}-${overRig}-${overDate}`}
+                    id={draggedCard.props.id}
                     duration={draggedCard.props.duration}
                     projectColor={draggedCard.props.projectColor}
                     taskName={draggedCard.props.taskName}
@@ -209,6 +216,7 @@ export function handleDragEnd(
                 />
             );
             bladeTaskHolder.setBladeTasks(updatedBladeTaskCards);
+            console.log("blade task moved ", updatedBladeTaskCards[indexBT]);
             setDragging(false);
         }
     } else {

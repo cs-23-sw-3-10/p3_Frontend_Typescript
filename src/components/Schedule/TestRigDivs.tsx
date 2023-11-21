@@ -1,5 +1,5 @@
 type TestRigDivsProps = {
-    rigs: string[];
+    rigs: { rigName: string; rigNumber: number }[]
 };
 
 function CreateTestRigDivs(props: TestRigDivsProps) {
@@ -9,8 +9,8 @@ function CreateTestRigDivs(props: TestRigDivsProps) {
             <div className="TestRigDateHeaderSpace"></div>
 
             {props.rigs.map((rig) => (
-                <div className="TestRigOverviewElement" key={rig} id={rig}>
-                    <h4>{rig}</h4>
+                <div className="TestRigOverviewElement" key={rig.rigName} id={rig.rigName}>
+                    <h4>{rig.rigName}</h4>
                 </div>
             ))}
         </div>
