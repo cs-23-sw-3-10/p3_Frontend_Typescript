@@ -93,6 +93,17 @@ query AllTechnicians{
 }
 `;
 
+export const GET_ALL_BLADE_PROJECTS = gql`
+query GetAllBladeProjects{
+  AllBladeProjects{
+    __typename
+    id
+    projectName
+    customer
+  }
+}
+`;
+
 
 
 

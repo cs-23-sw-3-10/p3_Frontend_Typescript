@@ -1,4 +1,5 @@
 import './BladeTaskMenu.css';
+import ProjectSelector from './ProjectSelector';
 import TaskNameSelector from './TaskNameSelector';
 import TestTypeSelector from './TestTypeSelector';
 import DurationSelector from './DurationSelecter';
@@ -25,7 +26,7 @@ function BladeTaskMenu() {
         if(ValidateForm(currentOrder)){
             addBT({variables:{
                 bladeTask:{
-                    bladeProjectId: "1",
+                    bladeProjectId: project,
                     taskName: BTName,
                     testType: type,
                     startDate: startDate,
@@ -87,7 +88,11 @@ function BladeTaskMenu() {
 
     return (
         <div className='btmenu-container'>
-            <TaskNameSelector setBTName={setBTName}/>
+            <div className='name_and_project_selection_wrapper'>
+                <ProjectSelector setProject={setProject}/>
+                <TaskNameSelector setBTName={setBTName}/>
+            </div>
+
             <TestTypeSelector setTestType={setType}/>
 
             <div className='item date_selection_wrapper'>

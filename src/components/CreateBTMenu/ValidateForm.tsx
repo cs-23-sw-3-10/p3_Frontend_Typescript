@@ -9,7 +9,7 @@ export function ValidateForm(currentOrder:BTOrder){
     let durationIsValid = (currentOrder.Duration > 0);
     let attachPeriodIsValid = (currentOrder.AttachPeriod > 0);
     let detachPeriodIsValid = (currentOrder.DetachPeriod > 0);
-    let sumOfAttachAndDetachIsValid = (currentOrder.AttachPeriod + currentOrder.DetachPeriod < currentOrder.Duration);
+    let sumOfAttachAndDetachIsValid = ((currentOrder.AttachPeriod + currentOrder.DetachPeriod) <= currentOrder.Duration);
     
     if(btNameIsValid && typeIsValid && 
        projectIsValid && durationIsValid && 
