@@ -213,8 +213,10 @@ export function handleDragEnd(
             console.log("isOverlap:", isOverlap);
 
             if (!isOverlap) {
-                let newEndDate=new Date(overDate);
-                newEndDate.setDate(newEndDate.getDate()+draggedCard.props.duration);
+                let newEndDate = new Date(overDate);
+                newEndDate.setDate(
+                    newEndDate.getDate() + draggedCard.props.duration
+                );
                 console.log("newEndDte:", newEndDate);
 
                 updatedBladeTaskCards[indexBT] = (
@@ -264,19 +266,22 @@ function checkForOverlap(
         //start-/end date for i'th card
         const startDateB = bladeTaskCards[i].props.startDate;
         const endDateB = bladeTaskCards[i].props.endDate;
-        console.log("endDateB :",endDateB);
+
+        console.log("endDateA :", endDateA);
+        console.log("endDateB :", endDateB);
+        console.log("startDateA :", startDateA);
+        console.log("startDateB :", startDateB);
 
         if (i !== BTIndex) {
             //skip comparison with itself
             if (bladeTaskCards[i].props.rig === overRig) {
                 // skip comparison with cards on different rigs
                 //Overlaps are covered by two cases. A check is made for each case.
-                if (startDateA < startDateB) {
+                if (startDateA <= startDateB) {
                     if (!(endDateA < startDateB)) {
                         return true;
                     }
-                } else if (startDateB < startDateA) {
-     
+                } else if (startDateB <= startDateA) {
                     if (!(endDateB < startDateA)) {
                         return true;
                     }
