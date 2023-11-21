@@ -224,7 +224,7 @@ export function handleDragEnd(
                         duration={draggedCard.props.duration}
                         projectColor={draggedCard.props.projectColor}
                         taskName={draggedCard.props.taskName}
-                        startDate={overDate}
+                        startDate={new Date(overDate)}
                         endDate={newEndDate}
                         rig={overRig}
                     />
@@ -258,8 +258,8 @@ function checkForOverlap(
     for (let i: number = 0; i < bladeTaskCards.length; i++) {
         //start-/end date for dragged card
         const startDateA = newStartDate;
-        let endDateA = new Date();
-        endDateA.setDate(startDateA.getDate() + draggedCard.props.duration);
+        let endDateA = new Date(newStartDate);
+        endDateA.setDate(endDateA.getDate() + draggedCard.props.duration);
 
         //start-/end date for i'th card
         const startDateB = bladeTaskCards[i].props.startDate;
@@ -276,10 +276,8 @@ function checkForOverlap(
                         return true;
                     }
                 } else if (startDateB < startDateA) {
-                    console.log("1:",endDateB);
-                    console.log("2:", startDateA);
+     
                     if (!(endDateB < startDateA)) {
-                        console.log("test 5")
                         return true;
                     }
                 }
