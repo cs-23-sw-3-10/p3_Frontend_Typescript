@@ -6,7 +6,6 @@ import React, { useState } from "react";
 import BladeTaskCard from "./BladeTaskCard";
 import { BladeTaskHolder } from "./BladeTaskHolder";
 
-
 type TimelineFieldProps = {
     rigs: { rigName: string; rigNumber: number }[];
     months: Date[];
@@ -58,7 +57,6 @@ function CreateTimelineField(props: TimelineFieldProps) {
         maxHeight: props.rigs.length * 50 + "px",
         minHeight: props.rigs.length * 50 + "px",
     };
-
 
     const [isDragging, setDragging] = useState(false);
 
@@ -175,10 +173,10 @@ export function handleDragEnd(
     console.log("drag ended");
     const { active, over } = event;
     if (over !== null) {
-        console.log("over " ,over.id);
+        console.log("over ", over.id);
         const overIdSlpit = over.id.split("-");
         const overRig = parseInt(overIdSlpit[0].split(" ")[1]);
-        console.log("over rig " ,overRig);
+        console.log("over rig ", overRig);
         const overDate = new Date(
             overIdSlpit[1],
             overIdSlpit[2],
@@ -204,22 +202,80 @@ export function handleDragEnd(
                 indexBT
             ] as React.ReactElement;
             console.log("dragged card ", draggedCard.key);
-            updatedBladeTaskCards[indexBT] = (
-                <BladeTaskCard
-                    key={draggedCard.key}
-                    id={draggedCard.props.id}
-                    duration={draggedCard.props.duration}
-                    projectColor={draggedCard.props.projectColor}
-                    taskName={draggedCard.props.taskName}
-                    startDate={overDate}
-                    rig={overRig}
-                />
+
+            // Check for overlap before updating the cards
+            const isOverlap = checkForOverlap(
+                updatedBladeTaskCards,
+                indexBT,
+                overDate,
+                overRig
             );
-            bladeTaskHolder.setBladeTasks(updatedBladeTaskCards);
-            console.log("blade task moved ", updatedBladeTaskCards[indexBT]);
+            console.log("isOverlap:", isOverlap);
+
+            if (!isOverlap) {
+                updatedBladeTaskCards[indexBT] = (
+                    <BladeTaskCard
+                        key={draggedCard.key}
+                        id={draggedCard.props.id}
+                        duration={draggedCard.props.duration}
+                        projectColor={draggedCard.props.projectColor}
+                        taskName={draggedCard.props.taskName}
+                        startDate={overDate}
+                        endDate={
+                            overDate.getDate() + draggedCard.props.duration
+                        }
+                        rig={overRig}
+                    />
+                );
+                console.log(
+                    "blade task moved ",
+                    updatedBladeTaskCards[indexBT]
+                );
+                bladeTaskHolder.setBladeTasks(updatedBladeTaskCards);
+            } else {
+                console.log("Overlap detected. drag opreation cancelled");
+
+                updatedBladeTaskCards[indexBT] = draggedCard;
+                bladeTaskHolder.setBladeTasks(updatedBladeTaskCards);
+            }
             setDragging(false);
         }
     } else {
         console.log("over er null");
     }
+}
+
+function checkForOverlap(
+    bladeTaskCards: any,
+    BTIndex: number,
+    newStartDate: Date,
+    overRig: number
+) {
+    const draggedCard = bladeTaskCards[BTIndex];
+
+    for (let i: number = 0; i < bladeTaskCards.length; i++) {
+        //start-/end date for dragged card
+        const startDateA = newStartDate;
+        let endDateA = startDateA.getDate() + draggedCard.props.duration;
+
+        //start-/end date for i'th card
+        const startDateB = bladeTaskCards[i].props.startDate;
+        const endDateB = bladeTaskCards[i].props.endDate;
+
+        if (i !== BTIndex) {
+            //skip comparison with itself
+            if (bladeTaskCards[i].props.rig === overRig) {
+                // skip comparison with cards on different rigs
+                //Overlaps are covered by two cases. A check is made for each case.
+                if (startDateA < startDateB) {
+                    if (!(endDateA < startDateB)) {
+                        return true;
+                    }
+                } else if (startDateB < startDateA) {
+                    if (!(endDateB < startDateA)) return true;
+                }
+            }
+        }
+    }
+    return false;
 }

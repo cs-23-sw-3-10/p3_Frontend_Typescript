@@ -26,28 +26,28 @@ function DisplayComponent(props: DisplayProps) {
         // should be imported from database
         {
             rigName: "Rig 1",
-            rigNumber: 1
+            rigNumber: 1,
         },
         {
             rigName: "Rig 2",
-            rigNumber: 2
+            rigNumber: 2,
         },
         {
             rigName: "Rig 3",
-            rigNumber: 3
+            rigNumber: 3,
         },
         {
             rigName: "Rig 4",
-            rigNumber: 4
+            rigNumber: 4,
         },
         {
             rigName: "Rig 5",
-            rigNumber: 5
+            rigNumber: 5,
         },
         {
             rigName: "Rig 6",
-            rigNumber: 6
-        }
+            rigNumber: 6,
+        },
     ]);
 
     // const [btCards, setBladeTaskCards] = useState(getBladeTasks());
@@ -99,19 +99,24 @@ function DisplayComponent(props: DisplayProps) {
     let btCards: React.ReactNode[] = [];
     console.log("bts hentet");
     data["AllBladeTasks"].forEach((bt: any) => {
-        
-        let dateSplit = bt.startDate.split("-");
-        const year = parseInt(dateSplit[0]);
-        const month = parseInt(dateSplit[1]) - 1;
-        const day = parseInt(dateSplit[2]);
-        // console.log("dato ", year, month, day);
+        let startDateSplit = bt.startDate.split("-");
+        const startYear = parseInt(startDateSplit[0]);
+        const startMonth = parseInt(startDateSplit[1]) - 1;
+        const startDay = parseInt(startDateSplit[2]);
+
+        let endDateSplit = bt.endDate.split("-");
+        const endYear = parseInt(endDateSplit[0]);
+        const endMonth = parseInt(endDateSplit[1]) - 1;
+        const endDay = parseInt(endDateSplit[2]);
+
         btCards.push(
             <BladeTaskCard
                 key={bt.id} //BTCards skal have et unikt key for at fungere godt i react
                 duration={bt.duration} //måske vi skal overveje at lave dem på en anden måde
-                projectColor={`rgb(${bt.id*2}, ${bt.id/2}, 0, 70)`} //skal ændres
+                projectColor={`rgb(${bt.id * 2}, ${bt.id / 2}, 0, 70)`} //skal ændres
                 taskName={bt.taskName}
-                startDate={new Date(year, month, day)}
+                startDate={new Date(startYear, startMonth, startDay)}
+                endDate={new Date(endYear, endMonth, endDay)}
                 rig={bt.testRig}
                 id={bt.id}
             />
@@ -154,7 +159,6 @@ function DisplayComponent(props: DisplayProps) {
                         rigs={rigs}
                         months={dates}
                         btCards={btCards}
-                        
                     />
                 </DndContext>
             </div>
