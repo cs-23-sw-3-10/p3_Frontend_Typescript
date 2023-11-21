@@ -267,11 +267,6 @@ function checkForOverlap(
         const startDateB = bladeTaskCards[i].props.startDate;
         const endDateB = bladeTaskCards[i].props.endDate;
 
-        console.log("endDateA :", endDateA);
-        console.log("endDateB :", endDateB);
-        console.log("startDateA :", startDateA);
-        console.log("startDateB :", startDateB);
-
         if (i !== BTIndex) {
             //skip comparison with itself
             if (bladeTaskCards[i].props.rig === overRig) {
