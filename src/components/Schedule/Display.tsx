@@ -2,10 +2,11 @@ import { DndContext } from "@dnd-kit/core";
 import "./Display.css";
 import CreateTestRigDivs from "./TestRigDivs";
 import CreateTimelineField from "./TimelineField";
-import BladeTaskCard from "./BladeTaskCard";
 import React, { useState } from "react";
 import CreateAdditionalContent from "./AdditionalContent";
-import { bladeTaskCards } from "./BladeTaskCard";
+import BladeTaskCard from "./BladeTaskCard";
+import { useQuery } from "@apollo/client";
+import { GET_ALL_BT } from "../../api/queryList";
 
 let date = new Date(Date.now());
 const firstStartDate = new Date(
@@ -23,12 +24,30 @@ type DisplayProps = {
 function DisplayComponent(props: DisplayProps) {
     const [rigs, setRigs] = useState([
         // should be imported from database
-        "Rig 1",
-        "Rig 2",
-        "Rig 3",
-        "Rig 4",
-        "Rig 5",
-        "Rig 6",
+        {
+            rigName: "Rig 1",
+            rigNumber: 1
+        },
+        {
+            rigName: "Rig 2",
+            rigNumber: 2
+        },
+        {
+            rigName: "Rig 3",
+            rigNumber: 3
+        },
+        {
+            rigName: "Rig 4",
+            rigNumber: 4
+        },
+        {
+            rigName: "Rig 5",
+            rigNumber: 5
+        },
+        {
+            rigName: "Rig 6",
+            rigNumber: 6
+        }
     ]);
 
     // const [btCards, setBladeTaskCards] = useState(getBladeTasks());
@@ -69,6 +88,36 @@ function DisplayComponent(props: DisplayProps) {
         }
     };
 
+    const { loading, error, data } = useQuery(GET_ALL_BT);
+
+    if (loading) {
+        return <p>Loading...</p>;
+    }
+    if (error) {
+        return <p>Error {error.message}</p>;
+    }
+    let btCards: React.ReactNode[] = [];
+    console.log("bts hentet");
+    data["AllBladeTasks"].forEach((bt: any) => {
+        
+        let dateSplit = bt.startDate.split("-");
+        const year = parseInt(dateSplit[0]);
+        const month = parseInt(dateSplit[1]) - 1;
+        const day = parseInt(dateSplit[2]);
+        // console.log("dato ", year, month, day);
+        btCards.push(
+            <BladeTaskCard
+                key={bt.id} //BTCards skal have et unikt key for at fungere godt i react
+                duration={bt.duration} //måske vi skal overveje at lave dem på en anden måde
+                projectColor={`rgb(${bt.id*2}, ${bt.id/2}, 0, 70)`} //skal ændres
+                taskName={bt.taskName}
+                startDate={new Date(year, month, day)}
+                rig={bt.testRig}
+                id={bt.id}
+            />
+        );
+    });
+
     return (
         <div className="ScheduleContentContainer">
             <div className="ScheduleViewControl">
@@ -104,6 +153,7 @@ function DisplayComponent(props: DisplayProps) {
                     <CreateTimelineField
                         rigs={rigs}
                         months={dates}
+                        btCards={btCards}
                         
                     />
                 </DndContext>

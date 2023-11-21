@@ -4,6 +4,7 @@ import { BladeTaskHolder } from "./BladeTaskHolder";
 
 type RigFieldContainerProps = {
     rig: string;
+    rigNumber: number;
     allDates: Date[];
     fieldWidth: number;
     columns: string; // The columns of the schedule
