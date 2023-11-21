@@ -30,6 +30,22 @@ export const GET_ALL_BT = gql`
     }
 `;
 
+export const GET_BT_IN_RANGE = gql`
+query AllBladeTasksInRange($startDate: String!, $endDate: String!) {
+    AllBladeTasksInRange(startDate: $startDate, endDate: $endDate) {
+        id
+        startDate
+        endDate
+        duration
+        testType
+        attachPeriod
+        detachPeriod
+        taskName
+        testRig
+    }
+}
+`;
+
 export const GET_ALL_BP = gql`
 query AllBladeProjects {
     AllBladeProjects {

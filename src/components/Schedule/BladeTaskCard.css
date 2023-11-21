@@ -8,6 +8,7 @@
     align-items: center;
     border-radius: 8px;
     border: 2px solid rgba(0,0,0, 0.60); /*border in a darker tone of the project color */
+    overflow: hidden;
 }
 
 .bladeTaskCardHandle {
