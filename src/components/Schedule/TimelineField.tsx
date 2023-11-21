@@ -7,7 +7,6 @@ import BladeTaskCard from "./BladeTaskCard";
 import { BladeTaskHolder } from "./BladeTaskHolder";
 import { cornersOfRectangle } from "@dnd-kit/core/dist/utilities/algorithms/helpers";
 
-
 type TimelineFieldProps = {
     rigs: { rigName: string; rigNumber: number }[];
     months: Date[];
@@ -60,7 +59,6 @@ function CreateTimelineField(props: TimelineFieldProps) {
         minHeight: props.rigs.length * 50 + "px",
     };
 
-
     const [isDragging, setDragging] = useState(false);
 
     let bladeTasks = new BladeTaskHolder(props.btCards);
@@ -68,10 +66,7 @@ function CreateTimelineField(props: TimelineFieldProps) {
         <div className="TimelineFieldContainer">
             <div className="TimelineField" style={BTFieldStyle}>
                 {props.months.map((month) => (
-                    <CreateMonthDateContainer
-                        key={getMonthContainerKey(month)}
-                        currentMonth={month}
-                    />
+                    <CreateMonthDateContainer key={getMonthContainerKey(month)} currentMonth={month} />
                 ))}
                 <DndContext
                     onDragStart={(event) => {
@@ -81,10 +76,7 @@ function CreateTimelineField(props: TimelineFieldProps) {
                         handleDragEnd(event, bladeTasks, setDragging);
                     }}
                 >
-                    <div
-                        className="RigFieldContainer"
-                        style={rigFieldContainerStyle}
-                    >
+                    <div className="RigFieldContainer" style={rigFieldContainerStyle}>
                         {props.rigs.map((rig) => (
                             // Create a rig field for each rig
                             <CreateRigFieldContainer
@@ -97,19 +89,13 @@ function CreateTimelineField(props: TimelineFieldProps) {
                                 isDragging={isDragging}
                                 setDragging={setDragging}
                                 BladeTaskHolder={bladeTasks}
-                                BladeTaskCards={bladeTasks
-                                    .getBladeTasks()
-                                    .filter((bladeTask: React.ReactNode) => {
-                                        //Finds the blade tasks placed on the rig
-                                        if (bladeTask) {
-                                            return (
-                                                (
-                                                    bladeTask as React.ReactElement<any>
-                                                ).props.rig === rig.rigNumber
-                                            );
-                                        }
-                                        return false;
-                                    })}
+                                BladeTaskCards={bladeTasks.getBladeTasks().filter((bladeTask: React.ReactNode) => {
+                                    //Finds the blade tasks placed on the rig
+                                    if (bladeTask) {
+                                        return (bladeTask as React.ReactElement<any>).props.rig === rig.rigNumber;
+                                    }
+                                    return false;
+                                })}
                             />
                         ))}
                     </div>
@@ -157,10 +143,7 @@ function getMonthContainerKey(month: Date) {
     return `month-${month.getFullYear()}-${month.getMonth()}-Container`;
 }
 
-export function handleDragStart(
-    event: any,
-    setDragging: React.Dispatch<React.SetStateAction<boolean>>
-) {
+export function handleDragStart(event: any, setDragging: React.Dispatch<React.SetStateAction<boolean>>) {
     const { active } = event;
     console.log("drag started");
     if (active !== null) {
@@ -168,29 +151,18 @@ export function handleDragStart(
     }
 }
 
-export function handleDragEnd(
-    event: any,
-    bladeTaskHolder: BladeTaskHolder,
-    setDragging: React.Dispatch<React.SetStateAction<boolean>>
-) {
+export function handleDragEnd(event: any, bladeTaskHolder: BladeTaskHolder, setDragging: React.Dispatch<React.SetStateAction<boolean>>) {
     console.log("drag ended");
     const { active, over } = event;
     if (over !== null) {
-        console.log("over " ,over.id);
+        console.log("over ", over.id);
         const overIdSlpit = over.id.split("-");
         const overRig = parseInt(overIdSlpit[0].split(" ")[1]);
-        console.log("over rig " ,overRig);
-        const overDate = new Date(
-            overIdSlpit[1],
-            overIdSlpit[2],
-            overIdSlpit[3]
-        );
+        console.log("over rig ", overRig);
+        const overDate = new Date(overIdSlpit[1], overIdSlpit[2], overIdSlpit[3]);
         const findBTIndex = (bladeTaskCards: any) => {
             for (let i: number = 0; i < bladeTaskCards.length; i++) {
-                if (
-                    bladeTaskCards[i] &&
-                    active.id === bladeTaskCards[i].props.id
-                ) {
+                if (bladeTaskCards[i] && active.id === bladeTaskCards[i].props.id) {
                     return i;
                 }
             }
@@ -201,35 +173,33 @@ export function handleDragEnd(
 
         if (indexBT !== -1) {
             const updatedBladeTaskCards = bladeTaskHolder.getBladeTasks();
-            const draggedCard = updatedBladeTaskCards[
-                indexBT
-            ] as React.ReactElement;
+            const draggedCard = updatedBladeTaskCards[indexBT] as React.ReactElement;
             console.log("dragged card ", draggedCard.key);
 
             // Check for overlap before updating the cards
             const isOverlap = checkForOverlap(updatedBladeTaskCards, indexBT, overDate, overRig);
-            console.log("isOverlap:", isOverlap)
+            console.log("isOverlap:", isOverlap);
 
             if (!isOverlap) {
-            updatedBladeTaskCards[indexBT] = (
-                <BladeTaskCard
-                    key={draggedCard.key}
-                    id={draggedCard.props.id}
-                    duration={draggedCard.props.duration}
-                    projectColor={draggedCard.props.projectColor}
-                    taskName={draggedCard.props.taskName}
-                    startDate={overDate}
-                    rig={overRig}
-                />
-            );
-            console.log("blade task moved ", updatedBladeTaskCards[indexBT]);
-            bladeTaskHolder.setBladeTasks(updatedBladeTaskCards);
-            }else{
-                console.log("Overlap detected. drag opreation cancelled")
+                updatedBladeTaskCards[indexBT] = (
+                    <BladeTaskCard
+                        key={draggedCard.key}
+                        id={draggedCard.props.id}
+                        duration={draggedCard.props.duration}
+                        projectColor={draggedCard.props.projectColor}
+                        taskName={draggedCard.props.taskName}
+                        startDate={overDate}
+                        endDate={overDate.getDate() + draggedCard.props.duration}
+                        rig={overRig}
+                    />
+                );
+                console.log("blade task moved ", updatedBladeTaskCards[indexBT]);
+                bladeTaskHolder.setBladeTasks(updatedBladeTaskCards);
+            } else {
+                console.log("Overlap detected. drag opreation cancelled");
                 updatedBladeTaskCards[indexBT] = draggedCard;
 
                 bladeTaskHolder.setBladeTasks(updatedBladeTaskCards);
-
             }
             setDragging(false);
         }
@@ -238,47 +208,30 @@ export function handleDragEnd(
     }
 }
 
-function checkForOverlap(bladeTaskCards: any,BTIndex: number, newStartDate: Date , overRig: number){
-    const draggedCard=bladeTaskCards.splice(BTIndex,1)[0];
-    console.log("length: ",bladeTaskCards.length);
+function checkForOverlap(bladeTaskCards: any, BTIndex: number, newStartDate: Date, overRig: number) {
+    const draggedCard = bladeTaskCards[BTIndex];
 
-    for(let i: number=0; i<bladeTaskCards.length; i++){
-        //start-/end date for dragged card 
-        const startDateA=newStartDate; 
-        let endDateA = new Date(startDateA);
-        endDateA.setDate(endDateA.getDate() + draggedCard.props.duration);
-        //start-/end date for other card
-        const startDateB=bladeTaskCards[i].props.startDate
-        const endDateB=bladeTaskCards[i].props.endDate
-
-
-        console.log("startDateA<startDateB ",startDateA<startDateB);
-        console.log("startDateB<startDateA :",startDateB<startDateA);
-        console.log("endDateA :",endDateA);
-        console.log("endDateB :",endDateB);
+    for (let i: number = 0; i < bladeTaskCards.length; i++) {
+        //start-/end date for dragged card
+        const startDateA = newStartDate;
+        let endDateA = startDateA.getDate() + draggedCard.props.duration;
         
-        console.log("draggedCard.rig", draggedCard.props.rig)
-        console.log("bladeTaskCards[i].props.rig ", bladeTaskCards[i].props.rig)
-        
-        if(bladeTaskCards[i].props.rig===overRig){
-            console.log("startDateB :", startDateB);
-            console.log("startDateA :", startDateA);
+        //start-/end date for i'th card
+        const startDateB = bladeTaskCards[i].props.startDate;
+        const endDateB = bladeTaskCards[i].props.endDate;
 
-            console.log("startDateA < startDateB: ",startDateA < startDateB)
-            console.log("endDateA < startDateB: ", endDateA < startDateB)
-
-            console.log("startDateB < startDateA :", startDateB < startDateA )
-            console.log("endDateB < startDateA :", endDateB < startDateA)
-
-            if( startDateA < startDateB ){
-                if(!(endDateA<startDateB)){
-                    return true;
-                }           
-            } else if(startDateB < startDateA){
-                if(!(endDateB<startDateA))
-                    return true
+        if (i !== BTIndex) { //skip comparison with itself
+            if (bladeTaskCards[i].props.rig === overRig) {// skip comparison with cards on different rigs
+                //Overlaps are covered by two cases. A check is made for each case. 
+                if (startDateA < startDateB) {
+                    if (!(endDateA < startDateB)) {
+                        return true;
+                    }
+                } else if (startDateB < startDateA) {
+                    if (!(endDateB < startDateA)) return true;
+                }
             }
-        }        
+        }
     }
     return false;
 }
