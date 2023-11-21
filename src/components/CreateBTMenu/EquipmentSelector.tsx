@@ -32,14 +32,14 @@ function EquipmentListGenerator(){
     <EquipmentMenuItem equipmentType={label} key={Number(id)}/>) 
 }
 
-function EquipmentMenuItem({equipmentType, key}:{equipmentType:string, key:number}){
+function EquipmentMenuItem({equipmentType}:{equipmentType:string}){
     const changeResourceOrder = useResourceOrderContext();
     return(
-        <div className="equipment_menu_item" key={key}>
+        <div className="equipment_menu_item">
                     <button 
                         className="equipment_menu_item_button"
                         onClick={() => changeResourceOrder((prevResourceOrder:ResourceOrder[]) => 
-                            EquipmentMenuItemLogic(prevResourceOrder, equipmentType, key))}
+                            EquipmentMenuItemLogic(prevResourceOrder, equipmentType))}
                     >
                             <span className="equipment_menu_item_icon material-symbols-outlined">add_circle</span>
                     </button>
@@ -48,7 +48,7 @@ function EquipmentMenuItem({equipmentType, key}:{equipmentType:string, key:numbe
     );
 }
 
-function EquipmentMenuItemLogic(prevResourceOrder:ResourceOrder[], equipmentType:string, key:number){
+function EquipmentMenuItemLogic(prevResourceOrder:ResourceOrder[], equipmentType:string){
     return [...prevResourceOrder, {resourceType:equipmentType, resourceName:"", equipmentAssignmentStatus:[false,false,false], workHours:0}];
 }
 
