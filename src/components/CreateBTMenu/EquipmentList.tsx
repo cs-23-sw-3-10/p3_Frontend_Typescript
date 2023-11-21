@@ -19,7 +19,6 @@ function EquipmentList({ resourceOrders }: { resourceOrders: ResourceOrder[] }) 
         <div className="equipment_list">
             {resourceOrders.map((order) => (
                 <>
-                
                 {( (order.resourceType !== "Engineer") && (order.resourceType !== "Technician")) ?
                 <div className='equipment_entry'>
                     <div className='type'>
@@ -45,22 +44,30 @@ function EquipmentList({ resourceOrders }: { resourceOrders: ResourceOrder[] }) 
 }
 
 function CheckBox({name,resourceIndex, title}:{name:string,resourceIndex:number, title:string}) {
-    const [checked, setChecked] = useState(false);
+    const [checked, setChecked] = useState(true);
     const changeResourceOrder = useResourceOrderContext();
 
     const handleCheckInput = () => {
         setChecked(!checked);
         changeResourceOrder((prevResourceOrder: ResourceOrder[]) => {
             let newResourceOrder = [...prevResourceOrder];
+            let currentAssignmentStatus:Array<boolean> = newResourceOrder[resourceIndex].equipmentAssignmentStatus
             if (title === "Attach") {
-                newResourceOrder[resourceIndex].equipmentAssignmentStatus[0] = !checked;
+                currentAssignmentStatus[0] = !checked;
             }
             if (title === "Test") {
-                newResourceOrder[resourceIndex].equipmentAssignmentStatus[1] = !checked;
+                if((currentAssignmentStatus[0] == true) && (currentAssignmentStatus[2] == true)
+                ){
+                    setChecked(!checked)
+                }else{
+                    newResourceOrder[resourceIndex].equipmentAssignmentStatus[1] = !checked;
+                }
             }
             if (title === "Detach") {
                 newResourceOrder[resourceIndex].equipmentAssignmentStatus[2] = !checked;
             }
+            newResourceOrder[resourceIndex].equipmentAssignmentStatus = currentAssignmentStatus;
+            //We canno
             return newResourceOrder;
         });
     };
