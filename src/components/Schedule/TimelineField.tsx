@@ -213,6 +213,10 @@ export function handleDragEnd(
             console.log("isOverlap:", isOverlap);
 
             if (!isOverlap) {
+                let newEndDate=new Date(overDate);
+                newEndDate.setDate(newEndDate.getDate()+draggedCard.props.duration);
+                console.log("newEndDte:", newEndDate);
+
                 updatedBladeTaskCards[indexBT] = (
                     <BladeTaskCard
                         key={draggedCard.key}
@@ -221,9 +225,7 @@ export function handleDragEnd(
                         projectColor={draggedCard.props.projectColor}
                         taskName={draggedCard.props.taskName}
                         startDate={overDate}
-                        endDate={
-                            overDate.getDate() + draggedCard.props.duration
-                        }
+                        endDate={newEndDate}
                         rig={overRig}
                     />
                 );
@@ -262,21 +264,20 @@ function checkForOverlap(
         //start-/end date for i'th card
         const startDateB = bladeTaskCards[i].props.startDate;
         const endDateB = bladeTaskCards[i].props.endDate;
+        console.log("endDateB :",endDateB);
 
         if (i !== BTIndex) {
-            console.log("test")
             //skip comparison with itself
             if (bladeTaskCards[i].props.rig === overRig) {
-                console.log("test 2")
                 // skip comparison with cards on different rigs
                 //Overlaps are covered by two cases. A check is made for each case.
                 if (startDateA < startDateB) {
-                    console.log("test 3")
                     if (!(endDateA < startDateB)) {
-                        console.log("test 4")
                         return true;
                     }
                 } else if (startDateB < startDateA) {
+                    console.log("1:",endDateB);
+                    console.log("2:", startDateA);
                     if (!(endDateB < startDateA)) {
                         console.log("test 5")
                         return true;
