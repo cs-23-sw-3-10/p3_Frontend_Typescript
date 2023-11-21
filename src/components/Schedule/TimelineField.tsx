@@ -256,23 +256,31 @@ function checkForOverlap(
     for (let i: number = 0; i < bladeTaskCards.length; i++) {
         //start-/end date for dragged card
         const startDateA = newStartDate;
-        let endDateA = startDateA.getDate() + draggedCard.props.duration;
+        let endDateA = new Date();
+        endDateA.setDate(startDateA.getDate() + draggedCard.props.duration);
 
         //start-/end date for i'th card
         const startDateB = bladeTaskCards[i].props.startDate;
         const endDateB = bladeTaskCards[i].props.endDate;
 
         if (i !== BTIndex) {
+            console.log("test")
             //skip comparison with itself
             if (bladeTaskCards[i].props.rig === overRig) {
+                console.log("test 2")
                 // skip comparison with cards on different rigs
                 //Overlaps are covered by two cases. A check is made for each case.
                 if (startDateA < startDateB) {
+                    console.log("test 3")
                     if (!(endDateA < startDateB)) {
+                        console.log("test 4")
                         return true;
                     }
                 } else if (startDateB < startDateA) {
-                    if (!(endDateB < startDateA)) return true;
+                    if (!(endDateB < startDateA)) {
+                        console.log("test 5")
+                        return true;
+                    }
                 }
             }
         }
