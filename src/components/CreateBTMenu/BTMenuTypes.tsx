@@ -1,4 +1,5 @@
 export type InErrorChart = {
+    Project: boolean;
     BTName: boolean;
     Type: boolean;
     StartDate: boolean;

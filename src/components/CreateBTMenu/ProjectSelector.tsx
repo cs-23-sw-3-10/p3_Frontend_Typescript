@@ -29,6 +29,6 @@ function BladeProjectOptions() {
     //Returns a dropdown of all the testrigs present in DB
     return data.AllBladeProjects.map(
         ({__typename, id, projectName, customer}:{__typename:string, id:string, projectName:string, customer:string}) => 
-        (<option value={id} key={id}>Test Rig {projectName}{"("}{customer}{")"}</option>));
+        (<option value={id} key={id}>{projectName}{"("}{customer}{")"}</option>));
 }
 export default ProjectSelector;

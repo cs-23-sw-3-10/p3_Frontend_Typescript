@@ -16,6 +16,7 @@
     display: grid;
     grid-template-columns: 1fr;
     grid-template-rows: 50px 50px;
+    position: relative;
 }
 
 .id_select{
@@ -147,3 +148,13 @@
     border-color: red;
 }
 
+.error_message_wrapper{
+    position: absolute;
+    transform: translate(693px,-7px);
+    display: grid;
+    grid-template-rows: 160px 50px 50px 50px 208px 364px 50px;
+}
+
+.error_message{
+    color: red;
+}

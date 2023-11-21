@@ -81,6 +81,7 @@ function BladeTaskMenu() {
     };
 
     const [inErrorChart, setInErrorChart] = useState({
+        Project: false,
         BTName: false,
         Type: false,
         StartDate: false,
@@ -100,9 +101,10 @@ function BladeTaskMenu() {
 
     return (
         <div className='btmenu-container'>
+            <ErrorMessageContainer inErrorChart={inErrorChart}/>
             <div className='name_and_project_selection_wrapper'>
+                <TaskNameSelector BTName={BTName} setBTName={setBTName} inErrorChart={inErrorChart} setInErrorChart={setInErrorChart}/>
                 <ProjectSelector setProject={setProject}/>
-                <TaskNameSelector setBTName={setBTName}/>
             </div>
 
             <TestTypeSelector setTestType={setType}/>
@@ -176,6 +178,20 @@ function BladeTaskMenu() {
             <button className="submit_BT" onClick={handleSubmit}>Submit</button>
         </div>
         </div>
+    );
+}
+
+function ErrorMessageContainer({inErrorChart}:{inErrorChart:InErrorChart}){
+    return(
+    <div className='error_message_wrapper'>
+        {inErrorChart.BTName ? <p className='error_message error_message_btname'>Invalid Name - Task name exists in system</p> : <div></div>}
+        {inErrorChart.StartDate ? <p className='error_message error_message_startdate'>Invalid Date - Date is before current date</p> : <div></div>}
+        {inErrorChart.Duration ? <p className='error_message error_message_duration'>Invalid Duration - Cannot Be Negative</p> : <div></div>}
+        {inErrorChart.AttachPeriod ? <p className='error_message error_message_attachPeriod'>Invalid Attach Period - Cannot Be Negative</p> : <div></div>}
+        {inErrorChart.DetachPeriod ?  <p className='error_message error_message_detachPeriod'>Invalid Detach Period - Cannot Be Negative</p> : <div></div>}
+        {inErrorChart.Equipment ? <p className='error_message error_message_equipment'>Invalid Equipment</p> : <div></div>}
+        {inErrorChart.Employees ? <p className='error_message error_message_employee'>Invalid Employee</p> : <div></div>}
+    </div>
     );
 }
 
