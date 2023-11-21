@@ -197,8 +197,8 @@ export function handleDragEnd(event: any, bladeTaskHolder: BladeTaskHolder, setD
                 bladeTaskHolder.setBladeTasks(updatedBladeTaskCards);
             } else {
                 console.log("Overlap detected. drag opreation cancelled");
+                
                 updatedBladeTaskCards[indexBT] = draggedCard;
-
                 bladeTaskHolder.setBladeTasks(updatedBladeTaskCards);
             }
             setDragging(false);
