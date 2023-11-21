@@ -7,6 +7,7 @@ import { CSS } from "@dnd-kit/utilities";
 interface BladeTaskCardProps {
     startDate: Date;
     duration: number;
+    endDate?:Date;
     attachPeriod?: number;
     detachPeriod?: number;
     rig?: number;

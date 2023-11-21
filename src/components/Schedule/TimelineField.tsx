@@ -5,6 +5,7 @@ import MonthLengths from "./MonthLengthsEnum";
 import React, { useState } from "react";
 import BladeTaskCard from "./BladeTaskCard";
 import { BladeTaskHolder } from "./BladeTaskHolder";
+import { cornersOfRectangle } from "@dnd-kit/core/dist/utilities/algorithms/helpers";
 
 
 type TimelineFieldProps = {
@@ -204,6 +205,12 @@ export function handleDragEnd(
                 indexBT
             ] as React.ReactElement;
             console.log("dragged card ", draggedCard.key);
+
+            // Check for overlap before updating the cards
+            const isOverlap = checkForOverlap(updatedBladeTaskCards, indexBT, overDate, overRig);
+            console.log("isOverlap:", isOverlap)
+
+            if (!isOverlap) {
             updatedBladeTaskCards[indexBT] = (
                 <BladeTaskCard
                     key={draggedCard.key}
@@ -215,11 +222,63 @@ export function handleDragEnd(
                     rig={overRig}
                 />
             );
-            bladeTaskHolder.setBladeTasks(updatedBladeTaskCards);
             console.log("blade task moved ", updatedBladeTaskCards[indexBT]);
+            bladeTaskHolder.setBladeTasks(updatedBladeTaskCards);
+            }else{
+                console.log("Overlap detected. drag opreation cancelled")
+                updatedBladeTaskCards[indexBT] = draggedCard;
+
+                bladeTaskHolder.setBladeTasks(updatedBladeTaskCards);
+
+            }
             setDragging(false);
         }
     } else {
         console.log("over er null");
     }
+}
+
+function checkForOverlap(bladeTaskCards: any,BTIndex: number, newStartDate: Date , overRig: number){
+    const draggedCard=bladeTaskCards.splice(BTIndex,1)[0];
+    console.log("length: ",bladeTaskCards.length);
+
+    for(let i: number=0; i<bladeTaskCards.length; i++){
+        //start-/end date for dragged card 
+        const startDateA=newStartDate; 
+        let endDateA = new Date(startDateA);
+        endDateA.setDate(endDateA.getDate() + draggedCard.props.duration);
+        //start-/end date for other card
+        const startDateB=bladeTaskCards[i].props.startDate
+        const endDateB=bladeTaskCards[i].props.endDate
+
+
+        console.log("startDateA<startDateB ",startDateA<startDateB);
+        console.log("startDateB<startDateA :",startDateB<startDateA);
+        console.log("endDateA :",endDateA);
+        console.log("endDateB :",endDateB);
+        
+        console.log("draggedCard.rig", draggedCard.props.rig)
+        console.log("bladeTaskCards[i].props.rig ", bladeTaskCards[i].props.rig)
+        
+        if(bladeTaskCards[i].props.rig===overRig){
+            console.log("startDateB :", startDateB);
+            console.log("startDateA :", startDateA);
+
+            console.log("startDateA < startDateB: ",startDateA < startDateB)
+            console.log("endDateA < startDateB: ", endDateA < startDateB)
+
+            console.log("startDateB < startDateA :", startDateB < startDateA )
+            console.log("endDateB < startDateA :", endDateB < startDateA)
+
+            if( startDateA < startDateB ){
+                if(!(endDateA<startDateB)){
+                    return true;
+                }           
+            } else if(startDateB < startDateA){
+                if(!(endDateB<startDateA))
+                    return true
+            }
+        }        
+    }
+    return false;
 }
