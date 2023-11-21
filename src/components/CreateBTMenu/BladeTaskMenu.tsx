@@ -150,7 +150,7 @@ function BladeTaskMenu() {
                     <h2 className='title'>Period</h2>
                 </div>
                 <ResourceOrderContext.Provider value={setResourceOrder}>
-                    <EquipmentList resourceOrders={resourceOrders} />
+                    <EquipmentList resourceOrders={resourceOrders}/>
                 </ResourceOrderContext.Provider>
 
                 <div className="equipment_interaction">

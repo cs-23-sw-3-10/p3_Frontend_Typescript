@@ -171,8 +171,8 @@ function EngineerList({activeEmployeesList}:{activeEmployeesList: {name: string,
         console.log(error.message);
         return (<div>ERROR</div>);
     }
-    return data.AllEngineers.map(({ name, __typename }: { name: string, __typename: string }) =>
-        (<EmployeeEntrySelectorMenu name={name} typeName={__typename} activeEmployeesList={activeEmployeesList}/>)
+    return data.AllEngineers.map(({ name, __typename, id }: { name: string, __typename: string, id:string}) =>
+        (<EmployeeEntrySelectorMenu name={name} typeName={__typename} activeEmployeesList={activeEmployeesList} key={id}/>)
     );
 }
 
@@ -188,8 +188,8 @@ function TechnicianList({activeEmployeesList}:{activeEmployeesList: {name: strin
         return (<div>ERROR</div>);
     }
 
-    return data.AllTechnicians.map(({ type, __typename }: { type: string, __typename: string }) =>
-        (<EmployeeEntrySelectorMenu name={type} typeName={__typename} activeEmployeesList={activeEmployeesList}/>)
+    return data.AllTechnicians.map(({ type, __typename, id}: { type: string, __typename: string, id:string}) =>
+        (<EmployeeEntrySelectorMenu name={type} typeName={__typename} activeEmployeesList={activeEmployeesList} key={id}/>)
     );
 }
 
@@ -202,6 +202,7 @@ function EmployeeList({resourceOrders, activeEmployeesList}:{resourceOrders:Reso
         initials={(order.resourceType === "Engineer") ? GetInitials(order.resourceName) : ""}
         resourceOrders={resourceOrders}
         activeEmployeesList={activeEmployeesList}
+        key={order.resourceName}
         />
     )}</>
 }
