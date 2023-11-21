@@ -1,5 +1,5 @@
 .btmenu-container{
-    grid-template-rows: 100px 50px 250px 300px 400px;
+    grid-template-rows: 100px 50px 250px 300px 300px 35px;
     grid-template-columns: repeat(5, 1fr);
     width: 700px;
     height: auto;
@@ -114,6 +114,26 @@
   background-color: rgb(30, 117, 30);
   box-shadow: 0 5px #666;
   transform: translateY(4px);
+}
+
+.submit_cancel_wrapper{
+    grid-row: 6 / 7;
+    grid-column: 1 / 6;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 35px;
+}
+
+.cancel_BT{
+    background-color: rgb(197, 0, 0);
+    font-family: inherit;
+    font-size: 25px;
+}
+
+.submit_BT{
+    background-color: green;
+    font-family: inherit;
+    font-size: 25px;
 }
 
 .title{

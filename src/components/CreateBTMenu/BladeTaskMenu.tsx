@@ -39,6 +39,18 @@ function BladeTaskMenu() {
             }}).then((response) => console.log(response));
         }else console.log("Required fields have not been filled out");
     }
+
+    const handleCancellation = () => {
+        setProject("");
+        setBTName("");
+        setType("");
+        setStartDate(new Date().toISOString().split('T')[0]);
+        setDuration(0);
+        setAttachPeriod(0);
+        setDetachPeriod(0);
+        setTestRig(0);
+        setResourceOrder([]);
+    }
     
     //All the states for the form -> Inserted into the BT-order as the user fills it out
     const [project, setProject] = useState('');
@@ -159,7 +171,10 @@ function BladeTaskMenu() {
             <ResourceOrderContext.Provider value={setResourceOrder}>
                 <EmployeesMenu resourceOrders={resourceOrders} />
             </ResourceOrderContext.Provider>
-        <button className="submit_BT" onClick={handleSubmit}>Submit</button>
+        <div className='submit_cancel_wrapper'>
+            <button className="cancel_BT" onClick={handleCancellation}>Cancel</button>
+            <button className="submit_BT" onClick={handleSubmit}>Submit</button>
+        </div>
         </div>
     );
 }

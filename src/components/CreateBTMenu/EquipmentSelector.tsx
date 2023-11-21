@@ -8,9 +8,8 @@ import { useResourceOrderContext } from './BladeTaskOrderContext';
 function EquipmentSelectionMenu({setEquipmentActive}:{setEquipmentActive:Function}) {
     return(
         <div className='equipment_menu'>
-            <h2 className="equipment_menu_title">DB</h2>
+            <h2 className="equipment_menu_title">Equipment</h2>
             <button className='equipment_menu_close' onClick={() => setEquipmentActive(false)}><span className="material-symbols-outlined">close</span></button>
-            <input className="equipment_menu_search" type="text" />
             <div className="equipment_menu_items_wrapper">
                 <EquipmentListGenerator/>
             </div>
