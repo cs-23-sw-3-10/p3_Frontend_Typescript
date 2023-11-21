@@ -65,7 +65,10 @@ function CreateTimelineField(props: TimelineFieldProps) {
         <div className="TimelineFieldContainer">
             <div className="TimelineField" style={BTFieldStyle}>
                 {props.months.map((month) => (
-                    <CreateMonthDateContainer key={getMonthContainerKey(month)} currentMonth={month} />
+                    <CreateMonthDateContainer
+                        key={getMonthContainerKey(month)}
+                        currentMonth={month}
+                    />
                 ))}
                 <DndContext
                     onDragStart={(event) => {
@@ -75,7 +78,10 @@ function CreateTimelineField(props: TimelineFieldProps) {
                         handleDragEnd(event, bladeTasks, setDragging);
                     }}
                 >
-                    <div className="RigFieldContainer" style={rigFieldContainerStyle}>
+                    <div
+                        className="RigFieldContainer"
+                        style={rigFieldContainerStyle}
+                    >
                         {props.rigs.map((rig) => (
                             // Create a rig field for each rig
                             <CreateRigFieldContainer
@@ -88,13 +94,19 @@ function CreateTimelineField(props: TimelineFieldProps) {
                                 isDragging={isDragging}
                                 setDragging={setDragging}
                                 BladeTaskHolder={bladeTasks}
-                                BladeTaskCards={bladeTasks.getBladeTasks().filter((bladeTask: React.ReactNode) => {
-                                    //Finds the blade tasks placed on the rig
-                                    if (bladeTask) {
-                                        return (bladeTask as React.ReactElement<any>).props.rig === rig.rigNumber;
-                                    }
-                                    return false;
-                                })}
+                                BladeTaskCards={bladeTasks
+                                    .getBladeTasks()
+                                    .filter((bladeTask: React.ReactNode) => {
+                                        //Finds the blade tasks placed on the rig
+                                        if (bladeTask) {
+                                            return (
+                                                (
+                                                    bladeTask as React.ReactElement<any>
+                                                ).props.rig === rig.rigNumber
+                                            );
+                                        }
+                                        return false;
+                                    })}
                             />
                         ))}
                     </div>
@@ -142,7 +154,10 @@ function getMonthContainerKey(month: Date) {
     return `month-${month.getFullYear()}-${month.getMonth()}-Container`;
 }
 
-export function handleDragStart(event: any, setDragging: React.Dispatch<React.SetStateAction<boolean>>) {
+export function handleDragStart(
+    event: any,
+    setDragging: React.Dispatch<React.SetStateAction<boolean>>
+) {
     const { active } = event;
     console.log("drag started");
     if (active !== null) {
@@ -150,7 +165,11 @@ export function handleDragStart(event: any, setDragging: React.Dispatch<React.Se
     }
 }
 
-export function handleDragEnd(event: any, bladeTaskHolder: BladeTaskHolder, setDragging: React.Dispatch<React.SetStateAction<boolean>>) {
+export function handleDragEnd(
+    event: any,
+    bladeTaskHolder: BladeTaskHolder,
+    setDragging: React.Dispatch<React.SetStateAction<boolean>>
+) {
     console.log("drag ended");
     const { active, over } = event;
     if (over !== null) {
@@ -158,10 +177,17 @@ export function handleDragEnd(event: any, bladeTaskHolder: BladeTaskHolder, setD
         const overIdSlpit = over.id.split("-");
         const overRig = parseInt(overIdSlpit[0].split(" ")[1]);
         console.log("over rig ", overRig);
-        const overDate = new Date(overIdSlpit[1], overIdSlpit[2], overIdSlpit[3]);
+        const overDate = new Date(
+            overIdSlpit[1],
+            overIdSlpit[2],
+            overIdSlpit[3]
+        );
         const findBTIndex = (bladeTaskCards: any) => {
             for (let i: number = 0; i < bladeTaskCards.length; i++) {
-                if (bladeTaskCards[i] && active.id === bladeTaskCards[i].props.id) {
+                if (
+                    bladeTaskCards[i] &&
+                    active.id === bladeTaskCards[i].props.id
+                ) {
                     return i;
                 }
             }
@@ -172,11 +198,18 @@ export function handleDragEnd(event: any, bladeTaskHolder: BladeTaskHolder, setD
 
         if (indexBT !== -1) {
             const updatedBladeTaskCards = bladeTaskHolder.getBladeTasks();
-            const draggedCard = updatedBladeTaskCards[indexBT] as React.ReactElement;
+            const draggedCard = updatedBladeTaskCards[
+                indexBT
+            ] as React.ReactElement;
             console.log("dragged card ", draggedCard.key);
 
             // Check for overlap before updating the cards
-            const isOverlap = checkForOverlap(updatedBladeTaskCards, indexBT, overDate, overRig);
+            const isOverlap = checkForOverlap(
+                updatedBladeTaskCards,
+                indexBT,
+                overDate,
+                overRig
+            );
             console.log("isOverlap:", isOverlap);
 
             if (!isOverlap) {
@@ -188,15 +221,20 @@ export function handleDragEnd(event: any, bladeTaskHolder: BladeTaskHolder, setD
                         projectColor={draggedCard.props.projectColor}
                         taskName={draggedCard.props.taskName}
                         startDate={overDate}
-                        endDate={overDate.getDate() + draggedCard.props.duration}
+                        endDate={
+                            overDate.getDate() + draggedCard.props.duration
+                        }
                         rig={overRig}
                     />
                 );
-                console.log("blade task moved ", updatedBladeTaskCards[indexBT]);
+                console.log(
+                    "blade task moved ",
+                    updatedBladeTaskCards[indexBT]
+                );
                 bladeTaskHolder.setBladeTasks(updatedBladeTaskCards);
             } else {
                 console.log("Overlap detected. drag opreation cancelled");
-                
+
                 updatedBladeTaskCards[indexBT] = draggedCard;
                 bladeTaskHolder.setBladeTasks(updatedBladeTaskCards);
             }
@@ -207,21 +245,28 @@ export function handleDragEnd(event: any, bladeTaskHolder: BladeTaskHolder, setD
     }
 }
 
-function checkForOverlap(bladeTaskCards: any, BTIndex: number, newStartDate: Date, overRig: number) {
+function checkForOverlap(
+    bladeTaskCards: any,
+    BTIndex: number,
+    newStartDate: Date,
+    overRig: number
+) {
     const draggedCard = bladeTaskCards[BTIndex];
 
     for (let i: number = 0; i < bladeTaskCards.length; i++) {
         //start-/end date for dragged card
         const startDateA = newStartDate;
         let endDateA = startDateA.getDate() + draggedCard.props.duration;
-        
+
         //start-/end date for i'th card
         const startDateB = bladeTaskCards[i].props.startDate;
         const endDateB = bladeTaskCards[i].props.endDate;
 
-        if (i !== BTIndex) { //skip comparison with itself
-            if (bladeTaskCards[i].props.rig === overRig) {// skip comparison with cards on different rigs
-                //Overlaps are covered by two cases. A check is made for each case. 
+        if (i !== BTIndex) {
+            //skip comparison with itself
+            if (bladeTaskCards[i].props.rig === overRig) {
+                // skip comparison with cards on different rigs
+                //Overlaps are covered by two cases. A check is made for each case.
                 if (startDateA < startDateB) {
                     if (!(endDateA < startDateB)) {
                         return true;
