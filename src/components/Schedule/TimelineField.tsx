@@ -217,7 +217,6 @@ export function handleDragEnd(
                 newEndDate.setDate(
                     newEndDate.getDate() + draggedCard.props.duration
                 );
-                console.log("newEndDte:", newEndDate);
 
                 updatedBladeTaskCards[indexBT] = (
                     <BladeTaskCard
