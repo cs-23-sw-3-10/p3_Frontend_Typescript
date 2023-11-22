@@ -87,7 +87,7 @@
 .RigField {
     display: grid;
     align-items: center;
-    justify-content: center;
+    justify-content: left;
     width: 100%;
     height: 50px;
     max-height: 50px;

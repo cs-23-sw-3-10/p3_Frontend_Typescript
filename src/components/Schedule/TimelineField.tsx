@@ -212,6 +212,11 @@ export function handleDragEnd(
             console.log("isOverlap:", isOverlap);
 
             if (!isOverlap) {
+                let newEndDate = new Date(overDate);
+                newEndDate.setDate(
+                    newEndDate.getDate() + draggedCard.props.duration - 1
+                );
+
                 updatedBladeTaskCards[indexBT] = (
                     <BladeTaskCard
                         key={draggedCard.key}
@@ -219,10 +224,8 @@ export function handleDragEnd(
                         duration={draggedCard.props.duration}
                         projectColor={draggedCard.props.projectColor}
                         taskName={draggedCard.props.taskName}
-                        startDate={overDate}
-                        endDate={
-                            overDate.getDate() + draggedCard.props.duration
-                        }
+                        startDate={new Date(overDate)}
+                        endDate={newEndDate}
                         rig={overRig}
                     />
                 );
@@ -251,12 +254,12 @@ function checkForOverlap(
     overRig: number
 ) {
     const draggedCard = bladeTaskCards[BTIndex];
+    //start-/end date for dragged card
+    const startDateA = newStartDate;
+    let endDateA = new Date(newStartDate);
+    endDateA.setDate(endDateA.getDate() + draggedCard.props.duration - 1);
 
     for (let i: number = 0; i < bladeTaskCards.length; i++) {
-        //start-/end date for dragged card
-        const startDateA = newStartDate;
-        let endDateA = startDateA.getDate() + draggedCard.props.duration;
-
         //start-/end date for i'th card
         const startDateB = bladeTaskCards[i].props.startDate;
         const endDateB = bladeTaskCards[i].props.endDate;
@@ -266,12 +269,14 @@ function checkForOverlap(
             if (bladeTaskCards[i].props.rig === overRig) {
                 // skip comparison with cards on different rigs
                 //Overlaps are covered by two cases. A check is made for each case.
-                if (startDateA < startDateB) {
+                if (startDateA <= startDateB) {
                     if (!(endDateA < startDateB)) {
                         return true;
                     }
-                } else if (startDateB < startDateA) {
-                    if (!(endDateB < startDateA)) return true;
+                } else if (startDateB <= startDateA) {
+                    if (!(endDateB < startDateA)) {
+                        return true;
+                    }
                 }
             }
         }
