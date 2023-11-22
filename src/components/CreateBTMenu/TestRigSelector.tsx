@@ -29,7 +29,7 @@ function TestRigOptions() {
     //We get the number of test rigs as a string -> Converted into number -> Then into an array [1..NumberOfTestRigs]
     let NumberOfTestRigs: number = Number(data.DictionaryAllByCategory[0].label);
     let TestRigArray = Array(NumberOfTestRigs);
-    for (let i = 1; i <= NumberOfTestRigs; i++) { TestRigArray[i] = i };
+    for (let i = 0; i < NumberOfTestRigs; i++) { TestRigArray[i] = i+1 };
 
 
     //Returns a dropdown of all the testrigs present in DB

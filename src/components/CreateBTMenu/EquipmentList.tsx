@@ -18,7 +18,7 @@ function EquipmentList({ resourceOrders }: { resourceOrders: ResourceOrder[] }) 
     return (
         <div className="equipment_list">
             {resourceOrders.map((order) => (
-                <>
+                <React.Fragment key={resourceOrders.indexOf(order)}> 
                 {( (order.resourceType !== "Engineer") && (order.resourceType !== "Technician")) ?
                 <div className='equipment_entry'>
                     <div className='type'>
@@ -26,9 +26,9 @@ function EquipmentList({ resourceOrders }: { resourceOrders: ResourceOrder[] }) 
                     </div>
                     <div className="period">
                         <fieldset className='period_selector'>
-                            <CheckBox name="attachPeriod" resourceIndex={resourceOrders.indexOf(order)} title="Attach"/>
-                            <CheckBox name="testPeriod" resourceIndex={resourceOrders.indexOf(order)} title="Test"/>
-                            <CheckBox name="detachPeriod" resourceIndex={resourceOrders.indexOf(order)} title="Detach"/>
+                            <CheckBox key={resourceOrders.indexOf(order) + "a"} name="attachPeriod" resourceIndex={resourceOrders.indexOf(order)} title="Attach"/>
+                            <CheckBox key={resourceOrders.indexOf(order) + "b"} name="testPeriod" resourceIndex={resourceOrders.indexOf(order)} title="Test"/>
+                            <CheckBox key={resourceOrders.indexOf(order) + "c"} name="detachPeriod" resourceIndex={resourceOrders.indexOf(order)} title="Detach"/>
                         </fieldset>
                         <button className='remove_equipment_button' onClick={() => handleOrderRemoval(resourceOrders.indexOf(order))}><span className="material-symbols-outlined">cancel</span></button>
                     </div>
@@ -36,8 +36,7 @@ function EquipmentList({ resourceOrders }: { resourceOrders: ResourceOrder[] }) 
                 :
                 <></>
                 }
-                
-                </>
+                </React.Fragment>
             ))}
         </div>
     );
