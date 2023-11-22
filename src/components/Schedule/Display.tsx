@@ -108,7 +108,7 @@ function DisplayComponent(props: DisplayProps) {
     }
     let btCards: React.ReactNode[] = [];
     
-    data["AllBladeTasks"].forEach((bt: any) => {
+    data["AllBladeTasksInRange"].forEach((bt: any) => {
         
         let dateSplit = bt.startDate.split("-");
         const year = parseInt(dateSplit[0]);
