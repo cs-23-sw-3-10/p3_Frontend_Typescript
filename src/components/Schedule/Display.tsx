@@ -121,9 +121,9 @@ function DisplayComponent(props: DisplayProps) {
         const endDate = parseInt(endDateSplit[2]);
         btCards.push(
             <BladeTaskCard
-                key={bt.id} //BTCards skal have et unikt key for at fungere godt i react
-                duration={bt.duration} //måske vi skal overveje at lave dem på en anden måde
-                projectColor={`rgb(${bt.id*2}, ${bt.id/2}, 0, 70)`} //skal ændres
+                key={bt.id} 
+                duration={bt.duration} 
+                projectColor={bt.bladeProject.color} 
                 taskName={bt.taskName}
                 startDate={new Date(year, month, day)}
                 endDate={new Date(endYear, endMonth, endDate)}
