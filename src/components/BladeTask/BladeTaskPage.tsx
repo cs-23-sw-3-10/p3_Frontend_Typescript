@@ -52,12 +52,12 @@ function BTPage() {
                                 name: String(booking.engineer?.name)
                             },
                             technician: {
-                                id: Number(booking.technician?.id),
+                                type: String(booking.technician?.type),
                             },
                             combined: [
                                 booking.equipment?.name,
                                 booking.engineer?.name,
-                                booking.technician?.id
+                                booking.technician?.type
                             ].filter(value => value !== undefined)
                         })) || [];
 

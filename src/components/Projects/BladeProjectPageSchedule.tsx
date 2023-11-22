@@ -11,7 +11,9 @@ import ScheduleComponent from "../Schedule/ScheduleComponent";
 import BladeTaskCard from "../Schedule/BladeTaskCard";
 import DisplayComponent from "../Schedule/Display";
 import CreateTimelineField from "../Schedule/TimelineField";
-
+import { getMonthsInView } from "../Schedule/Display";
+import { getMonthLength } from "../Schedule/TimelineField";
+import { capitalizeFirstLetter } from "../Schedule/TimelineField";
 
 let date = new Date(Date.now());
 const firstStartDate = new Date(
@@ -26,6 +28,18 @@ const firstStartDate = new Date(
  * if the bladeprojects contain bladeTasks, these are also rendered in a table when the bladeproject row is expanded
  * @returns the BladeProjectPage component
  */
+
+function countMonthsIncludingStartAndEnd(startDate: Date, endDate: Date) {
+
+    // Calculate the month difference
+    let months = (endDate.getFullYear() - startDate.getFullYear()) * 12;
+    months -= startDate.getMonth();
+    months += endDate.getMonth();
+
+    // Adjust to include both start and end months
+    return months + 1;
+}
+
 
 function BladeProjectPageWSchedule() {
     const [rigs, setRigs] = useState([
@@ -56,12 +70,6 @@ function BladeProjectPageWSchedule() {
         }
     ]);
 
-    const [dates, setDates] = useState([
-        new Date(firstStartDate),
-        new Date(firstStartDate.getFullYear(), firstStartDate.getMonth() + 1),
-        new Date(firstStartDate.getFullYear(), firstStartDate.getMonth() + 2),
-    ]); // should be imported from database
-
 
     //get data from the database
     const {
@@ -69,12 +77,6 @@ function BladeProjectPageWSchedule() {
         error: errorBP,
         data: dataBP,
     } = useQuery(GET_ALL_BP);
-    const {
-        loading: loadingBT,
-        error: errorBT,
-        data: dataBT,
-    } = useQuery(GET_ALL_BT);
-
 
     //handle loading and error states for the used queries
     if (loadingBP) return <p>Loading...</p>;
@@ -84,18 +86,7 @@ function BladeProjectPageWSchedule() {
         return <p> No data for {"AllBladeProjects"} </p>;
     }
 
-    if (loadingBT) return <p>Loading...</p>;
-    if (errorBT) return <p> Error {errorBT.message}</p>;
-
-    const BTData = dataBT["AllBladeTasks"];
-    if (!BTData) {
-        return <p> No data for {"AllBladeTasks"} </p>;
-    }
-
-    let btCards: React.ReactNode[] = [];
-   
-    
-    
+     
     /* renders the table. The renderExpandedComponent prop is used to render the bladeTasks table
      * based on the current row.id which is equal to the bladeproject ID. 
      * The data for the TableLogicWOHeaders is therefore only containing the bladeTasks for the expanded bladeproject
@@ -105,7 +96,54 @@ function BladeProjectPageWSchedule() {
             columns={columnBP}
             data={BPData}
             renderExpandedComponent={(row) => {
-                const dataForCurrentRow = dataBP["AllBladeProjects"].find((project: any) => project.id === row.id)
+                let btCards: React.ReactNode[] = [];
+                
+                let bladeProjectIndex = dataBP["AllBladeProjects"].find((project: any) => project.id === row.id)
+
+                
+                const dates = getMonthsInView(new Date(bladeProjectIndex.startDate), countMonthsIncludingStartAndEnd(new Date(bladeProjectIndex.startDate), new Date(bladeProjectIndex.endDate))); 
+                    
+
+
+                if(bladeProjectIndex && bladeProjectIndex.bladeTasks){
+                    bladeProjectIndex.bladeTasks.forEach((bladeTask: any) => {
+                    let dateSplit = bladeTask.startDate.split("-");
+                    const year = parseInt(dateSplit[0]);
+                    const month = parseInt(dateSplit[1]) - 1;
+                    const day = parseInt(dateSplit[2]);
+            
+                    let endDateSplit = bladeTask.endDate.split("-");
+                    const endYear = parseInt(endDateSplit[0]);
+                    const endMonth = parseInt(endDateSplit[1]) - 1;
+                    const endDate = parseInt(endDateSplit[2]);
+
+                    btCards.push(
+                        <BladeTaskCard
+                            key={bladeTask.id}
+                            duration={bladeTask.duration}
+                            projectColor={bladeTask.bladeProject.color}
+                            taskName={bladeTask.taskName}
+                            startDate={new Date(year, month, day)}
+                            endDate={new Date(endYear, endMonth, endDate)}
+                            rig={bladeTask.testRig}
+                            id={bladeTask.id}
+                        />
+                    );           
+                    
+                })}
+                return (
+                    console.log("btC",btCards),
+                    <CreateTimelineField rigs={rigs} months={dates} btCards={btCards} />
+                )}}
+                
+        />
+    );
+}
+
+export default BladeProjectPageWSchedule;
+
+/*
+const dataForCurrentRow = dataBP["AllBladeProjects"].find((project: any) => project.id === row.id)
                 ?.bladeTasks.map((bladeTask: any) => {
                     let dateSplit = bladeTask.startDate.split("-");
                     const year = parseInt(dateSplit[0]);
@@ -120,21 +158,13 @@ function BladeProjectPageWSchedule() {
                             startDate={new Date(year, month, day)}
                             rig={bladeTask.testRig}
                             id={bladeTask.id}
-                            projectColor={`white`}
+                            projectColor={bladeTask.bladeProject.color}
                           />     
                        )         
                     
                 })|| [];
 
-
+              
             return (
                 < CreateTimelineField rigs={rigs} months={dates} btCards={dataForCurrentRow} />
-            );
-            }
-            
-            }
-        />
-    );
-}
-
-export default BladeProjectPageWSchedule;
+            );*/

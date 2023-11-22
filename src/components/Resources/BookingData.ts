@@ -14,7 +14,7 @@ export type BookingDataQuery = {
         name: string;
     }],
     technician: [{
-        id: number;}]
+        type: string;}]
         ,
     combined:string;
 };

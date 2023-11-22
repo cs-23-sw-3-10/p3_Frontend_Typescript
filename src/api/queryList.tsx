@@ -79,7 +79,7 @@ query AllBladeTasks {
                 name
             }
             technician {
-                id
+                type
             }
         }
     }
@@ -107,6 +107,9 @@ query AllBladeProjects {
             detachPeriod
             taskName
             testRig
+            bladeProject {
+                color
+            }
             bookings {
                 id
                 startDate

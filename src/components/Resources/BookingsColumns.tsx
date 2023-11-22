@@ -18,37 +18,6 @@ export const columnBookings: ColumnDef<BookingDataQuery>[] = [
                 </button>
             );
         },
-        enableHiding: true,
-        cell: ({ row, getValue }) => {
-            return (
-                <>
-                    {row.getCanExpand() ? (
-                        <button
-                            {...{
-                                onClick: () => {
-                                    console.log("headingdf.name");
-                                },
-                                style: { cursor: "pointer" },
-                            }}
-                        >
-                            {row.getIsExpanded() ? "▲" : "▼"}
-                        </button>
-                    ) : (
-                        <button
-                            {...{
-                                onClick: () => {
-                                    row.toggleExpanded();
-                                },
-                                style: { cursor: "pointer" },
-                            }}
-                        >
-                            {row.getIsExpanded() ? "▲" : "▼"}
-                        </button>
-                    )}
-                    {getValue()}
-                </>
-            );
-        },
     },
     {
         accessorKey: "resourceType",
