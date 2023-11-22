@@ -281,7 +281,5 @@ function filterByCompany(
         });
         setRenderBladeTasks(filteredBladeTasks);
     } 
-    else {
-        setRenderBladeTasks(allBladeTasks);
-    }
+    setRenderBladeTasks(allBladeTasks);
 }
