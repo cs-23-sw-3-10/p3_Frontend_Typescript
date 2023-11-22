@@ -43,16 +43,15 @@ function DisplayComponent(props: DisplayProps) {
         },
         {
             rigName: "Rig 6",
-            rigNumber: 6,
-        },
+            rigNumber: 6
+        }
     ]);
 
     const [selectedDate, setSelectedDate] = useState(
         `${currentDate.getFullYear()}-${
             currentDate.getMonth() + 1
         }-${currentDate.getDate()}`
-    ); // State to store the selected date
-
+        ); // State to store the selected date
     const [numberOfMonths, setNumberOfMonths] = useState(3); // State to store the number of months to display
 
     const [dates, setDates] = useState(
@@ -108,15 +107,13 @@ function DisplayComponent(props: DisplayProps) {
         return <p>Error {error.message}</p>;
     }
     let btCards: React.ReactNode[] = [];
-    data["AllBladeTasksInRange"].forEach((bt: any) => {
+    
+    data["AllBladeTasks"].forEach((bt: any) => {
+        
         let dateSplit = bt.startDate.split("-");
-        const startYear = parseInt(dateSplit[0]);
-        const startMonth = parseInt(dateSplit[1]) - 1;
-        const startDate = parseInt(dateSplit[2]);
-        console.log("bt ", bt.startDate);
-        console.log("dato ", startYear, startMonth, startDate);
-        let hej = new Date(startYear, startMonth, startDate);
-        console.log("hej ", hej);
+        const year = parseInt(dateSplit[0]);
+        const month = parseInt(dateSplit[1]) - 1;
+        const day = parseInt(dateSplit[2]);
 
         let endDateSplit = bt.endDate.split("-");
         const endYear = parseInt(endDateSplit[0]);
@@ -124,11 +121,11 @@ function DisplayComponent(props: DisplayProps) {
         const endDate = parseInt(endDateSplit[2]);
         btCards.push(
             <BladeTaskCard
-                key={bt.id}
-                duration={bt.duration}
-                projectColor={bt.bladeProject.color}
+                key={bt.id} //BTCards skal have et unikt key for at fungere godt i react
+                duration={bt.duration} //måske vi skal overveje at lave dem på en anden måde
+                projectColor={`rgb(${bt.id*2}, ${bt.id/2}, 0, 70)`} //skal ændres
                 taskName={bt.taskName}
-                startDate={new Date(startYear, startMonth, startDate)}
+                startDate={new Date(year, month, day)}
                 endDate={new Date(endYear, endMonth, endDate)}
                 rig={bt.testRig}
                 id={bt.id}
