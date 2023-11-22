@@ -16,20 +16,14 @@ import { getMonthsInView } from "../Schedule/Display";
 import { getMonthLength } from "../Schedule/TimelineField";
 import { capitalizeFirstLetter } from "../Schedule/TimelineField";
 
-let date = new Date(Date.now());
-const firstStartDate = new Date(
-    date.getFullYear(),
-    date.getMonth(),
-    date.getDate()
-);
-
 
 /**
- * gets all bladeprojects from the database and renders them in a table
- * if the bladeprojects contain bladeTasks, these are also rendered in a table when the bladeproject row is expanded
- * @returns the BladeProjectPage component
+ * Calculates the number of months between start and enddate of a bladeproject, 
+ * which is used to regulate the number of months shown in the expanded table, when it is rendered
+ * @param startDate: the start date of the bladeproject
+ * @param endDate: the end date of the bladeproject
+ * @returns: the number of months between the start and end date
  */
-
 function countMonthsIncludingStartAndEnd(startDate: Date, endDate: Date) {
     // Calculate the month difference
     let months = (endDate.getFullYear() - startDate.getFullYear()) * 12;
@@ -40,6 +34,12 @@ function countMonthsIncludingStartAndEnd(startDate: Date, endDate: Date) {
     return months + 1;
 }
 
+
+/**
+ * gets all bladeprojects from the database and renders them in a table
+ * if the bladeprojects contain bladeTasks, these are also rendered in a table when the bladeproject row is expanded
+ * @returns the BladeProjectPage component
+ */
 
 function BladeProjectPageWithSchedule() {
     const [rigs, setRigs] = useState([
@@ -97,14 +97,10 @@ function BladeProjectPageWithSchedule() {
             data={BPData}
             renderExpandedComponent={(row) => {
                 let btCards: React.ReactNode[] = [];
-                
                 let bladeProjectIndex = dataBP["AllBladeProjects"].find((project: any) => project.id === row.id)
 
-                
                 const dates = getMonthsInView(new Date(bladeProjectIndex.startDate), countMonthsIncludingStartAndEnd(new Date(bladeProjectIndex.startDate), new Date(bladeProjectIndex.endDate))); 
                     
-
-
                 if(bladeProjectIndex && bladeProjectIndex.bladeTasks){
                     bladeProjectIndex.bladeTasks.forEach((bladeTask: any) => {
                     let dateSplit = bladeTask.startDate.split("-");
@@ -130,44 +126,18 @@ function BladeProjectPageWithSchedule() {
                         />
                     );           
                     
-                })}
+                }
+                )
+            }
                 return (
                     <div className="flex flex rows">
                         <CreateTestRigDivs rigs={rigs} />
                         <CreateTimelineField rigs={rigs} months={dates} btCards={btCards} />
-                    </div>
-                    
-                )}}
-                
+                    </div>        
+                )
+            }} 
         />
     );
 }
 
 export default BladeProjectPageWithSchedule;
-
-/*
-const dataForCurrentRow = dataBP["AllBladeProjects"].find((project: any) => project.id === row.id)
-                ?.bladeTasks.map((bladeTask: any) => {
-                    let dateSplit = bladeTask.startDate.split("-");
-                    const year = parseInt(dateSplit[0]);
-                    const month = parseInt(dateSplit[1]) - 1;
-                    const day = parseInt(dateSplit[2]);
-
-                    return(
-                        <BladeTaskCard
-                            key={bladeTask.id}
-                            duration={bladeTask.duration}
-                            taskName={bladeTask.taskName}
-                            startDate={new Date(year, month, day)}
-                            rig={bladeTask.testRig}
-                            id={bladeTask.id}
-                            projectColor={bladeTask.bladeProject.color}
-                          />     
-                       )         
-                    
-                })|| [];
-
-              
-            return (
-                < CreateTimelineField rigs={rigs} months={dates} btCards={dataForCurrentRow} />
-            );*/

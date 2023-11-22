@@ -193,7 +193,6 @@ function convertToQueryDate(year: number, month: number, day: number) {
     }
     return queryDateSTR;
 }
-
 export function getMonthsInView(startDate: Date, numberOfMonths: number) {
     let year = startDate.getFullYear();
     let month = startDate.getMonth();
