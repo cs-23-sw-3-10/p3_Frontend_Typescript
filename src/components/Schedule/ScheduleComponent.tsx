@@ -7,12 +7,15 @@ function ScheduleComponent() {
     const [editMode, setEditMode] = useState(false);
     const [showPasswordPrompt, setShowPasswordPrompt] = useState(false);
     const [password, setPassword] = useState(""); // State to store the entered password
+    const [filter, setFilter] = useState("None"); // State to store the filter
 
     const viewSchedule = (
         <DisplayComponent
             editMode={editMode}
             setEditMode={setEditMode}
             setShowPasswordPrompt={setShowPasswordPrompt}
+            filter={filter}
+            setFilter={setFilter}
         />
     );
     const editSchedule = (
@@ -20,6 +23,8 @@ function ScheduleComponent() {
             editMode={editMode}
             setEditMode={setEditMode}
             setShowPasswordPrompt={setShowPasswordPrompt}
+            filter={filter}
+            setFilter={setFilter}
         />
     );
 

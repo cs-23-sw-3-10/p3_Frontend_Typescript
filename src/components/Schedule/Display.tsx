@@ -16,6 +16,8 @@ type DisplayProps = {
     editMode: boolean;
     setEditMode: React.Dispatch<React.SetStateAction<boolean>>;
     setShowPasswordPrompt: React.Dispatch<React.SetStateAction<boolean>>;
+    filter: string;
+    setFilter: React.Dispatch<React.SetStateAction<string>>;
 };
 
 function DisplayComponent(props: DisplayProps) {
@@ -57,10 +59,6 @@ function DisplayComponent(props: DisplayProps) {
     const [dates, setDates] = useState(
         getMonthsInView(currentDate, numberOfMonths)
     ); // should be imported from database
-
-    const renderbladeTaskType: React.ReactNode[] = []; //used to define what renderBladeTasks should hold
-    const [renderBladeTasks, setRenderBladeTasks] =
-        useState(renderbladeTaskType);
 
     const handleDateChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setSelectedDate(event.target.value);
@@ -114,33 +112,35 @@ function DisplayComponent(props: DisplayProps) {
     let btCards: React.ReactNode[] = [];
 
     data["AllBladeTasksInRange"].forEach((bt: any) => {
-        let dateSplit = bt.startDate.split("-");
-        const year = parseInt(dateSplit[0]);
-        const month = parseInt(dateSplit[1]) - 1;
-        const day = parseInt(dateSplit[2]);
+        if (
+            bt.bladeProject.customer === props.filter ||
+            props.filter === "None"
+        ) {
+            let dateSplit = bt.startDate.split("-");
+            const year = parseInt(dateSplit[0]);
+            const month = parseInt(dateSplit[1]) - 1;
+            const day = parseInt(dateSplit[2]);
 
-        let endDateSplit = bt.endDate.split("-");
-        const endYear = parseInt(endDateSplit[0]);
-        const endMonth = parseInt(endDateSplit[1]) - 1;
-        const endDate = parseInt(endDateSplit[2]);
-        btCards.push(
-            <BladeTaskCard
-                key={bt.id}
-                duration={bt.duration}
-                projectColor={bt.bladeProject.color}
-                customer={bt.bladeProject.customer}
-                taskName={bt.taskName}
-                startDate={new Date(year, month, day)}
-                endDate={new Date(endYear, endMonth, endDate)}
-                rig={bt.testRig}
-                id={bt.id}
-                disableDraggable={!props.editMode}
-            />
-        );
+            let endDateSplit = bt.endDate.split("-");
+            const endYear = parseInt(endDateSplit[0]);
+            const endMonth = parseInt(endDateSplit[1]) - 1;
+            const endDate = parseInt(endDateSplit[2]);
+            btCards.push(
+                <BladeTaskCard
+                    key={bt.id}
+                    duration={bt.duration}
+                    projectColor={bt.bladeProject.color}
+                    customer={bt.bladeProject.customer}
+                    taskName={bt.taskName}
+                    startDate={new Date(year, month, day)}
+                    endDate={new Date(endYear, endMonth, endDate)}
+                    rig={bt.testRig}
+                    id={bt.id}
+                    disableDraggable={!props.editMode}
+                />
+            );
+        }
     });
-    if (renderBladeTasks.length === 0) {
-        setRenderBladeTasks(btCards);
-    }
 
     return (
         <div className="ScheduleContentContainer">
@@ -171,8 +171,8 @@ function DisplayComponent(props: DisplayProps) {
                 <select
                     name="customerFilter"
                     id="customerFilter"
-                    onChange={(event) => {
-                        filterByCompany(event, setRenderBladeTasks, btCards);
+                    onChange={(e) => {
+                        props.setFilter(e.target.value);
                     }}
                 >
                     <option value="None">None</option>
@@ -187,7 +187,7 @@ function DisplayComponent(props: DisplayProps) {
                 <CreateTimelineField
                     rigs={rigs}
                     months={dates}
-                    btCards={renderBladeTasks}
+                    btCards={btCards}
                 />
             </div>
             {props.editMode ? <CreateAdditionalContent /> : null}
@@ -265,27 +265,4 @@ function getQueryDates(startDate: Date, endDate: Date) {
         endDateDay
     );
     return { startDate: startDateSTR, endDate: endDateSTR };
-}
-
-function filterByCompany(
-    event: React.ChangeEvent<HTMLSelectElement>,
-    setRenderBladeTasks: React.Dispatch<
-        React.SetStateAction<React.ReactNode[]>
-    >,
-    allBladeTasks: React.ReactNode[]
-) {
-    let company = event.target.value;
-    let filteredBladeTasks: React.ReactNode[] = [];
-    if (company !== "None") {
-        allBladeTasks.forEach((bt: React.ReactNode) => {
-            let btElement = bt as React.ReactElement;
-            if (btElement.props.customer === company) {
-                filteredBladeTasks.push(bt);
-            }
-        });
-        setRenderBladeTasks(filteredBladeTasks);
-    }
-    if (filteredBladeTasks.length === 0) {
-        setRenderBladeTasks(allBladeTasks);
-    }
 }
