@@ -7,7 +7,6 @@ interface BladeTaskCardProps {
     startDate: Date;
     endDate?: Date;
     duration: number;
-    endDate?:Date;
     attachPeriod?: number;
     detachPeriod?: number;
     rig?: number;
