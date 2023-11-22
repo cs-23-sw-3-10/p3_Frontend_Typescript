@@ -59,7 +59,8 @@ function DisplayComponent(props: DisplayProps) {
     ); // should be imported from database
 
     const renderbladeTaskType: React.ReactNode[] = []; //used to define what renderBladeTasks should hold
-    const [renderBladeTasks, setRenderBladeTasks] = useState(renderbladeTaskType);
+    const [renderBladeTasks, setRenderBladeTasks] =
+        useState(renderbladeTaskType);
 
     const handleDateChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setSelectedDate(event.target.value);
@@ -136,7 +137,7 @@ function DisplayComponent(props: DisplayProps) {
             />
         );
     });
-    if (renderBladeTasks.length === 0){
+    if (renderBladeTasks.length === 0) {
         setRenderBladeTasks(btCards);
     }
 
@@ -182,11 +183,11 @@ function DisplayComponent(props: DisplayProps) {
             </div>
             <div className="ScheduleDisplay">
                 <CreateTestRigDivs rigs={rigs} />
-                    <CreateTimelineField
-                        rigs={rigs}
-                        months={dates}
-                        btCards={renderBladeTasks}
-                    />
+                <CreateTimelineField
+                    rigs={rigs}
+                    months={dates}
+                    btCards={renderBladeTasks}
+                />
             </div>
             {props.editMode ? <CreateAdditionalContent /> : null}
         </div>
@@ -267,12 +268,14 @@ function getQueryDates(startDate: Date, endDate: Date) {
 
 function filterByCompany(
     event: React.ChangeEvent<HTMLSelectElement>,
-    setRenderBladeTasks: React.Dispatch<React.SetStateAction<React.ReactNode[]>>,
+    setRenderBladeTasks: React.Dispatch<
+        React.SetStateAction<React.ReactNode[]>
+    >,
     allBladeTasks: React.ReactNode[]
 ) {
     let company = event.target.value;
+    let filteredBladeTasks: React.ReactNode[] = [];
     if (company !== "None") {
-        let filteredBladeTasks: React.ReactNode[] = [];
         allBladeTasks.forEach((bt: React.ReactNode) => {
             let btElement = bt as React.ReactElement;
             if (btElement.props.customer === company) {
@@ -280,6 +283,8 @@ function filterByCompany(
             }
         });
         setRenderBladeTasks(filteredBladeTasks);
-    } 
-    setRenderBladeTasks(allBladeTasks);
+    }
+    if (filteredBladeTasks.length === 0) {
+        setRenderBladeTasks(allBladeTasks);
+    }
 }
