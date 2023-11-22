@@ -77,6 +77,8 @@ function CreateTimelineField(props: TimelineFieldProps) {
                     onDragEnd={(event) => {
                         handleDragEnd(event, bladeTasks, setDragging);
                     }}
+                
+                    
                 >
                     <div
                         className="RigFieldContainer"

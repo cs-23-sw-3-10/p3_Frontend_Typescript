@@ -1,6 +1,7 @@
 import "./BladeTaskCard.css";
 import { useDraggable } from "@dnd-kit/core";
 import { CSS } from "@dnd-kit/utilities";
+import React, { useState } from "react";
 
 //interface used to define the types of the props of BladeTaskCard
 interface BladeTaskCardProps {
@@ -13,11 +14,13 @@ interface BladeTaskCardProps {
     projectColor: string;
     taskName: string;
     id: number;
+    isDraggable?: boolean;
 }
 interface BladeTaskDraggableProps {
     style: any;
     id: number;
     taskName: string;
+    isDraggable?: boolean;
 }
 
 
@@ -36,7 +39,10 @@ function BladeTaskCard(props: BladeTaskCardProps) {
         style: cardStyle,
         id: props.id,
         taskName: props.taskName,
+        isDraggable: props.isDraggable,
     };
+
+    
 
     return <DraggableBladeTask {...droppableProps} />;
 }
@@ -45,17 +51,34 @@ export default BladeTaskCard;
 function DraggableBladeTask(props: BladeTaskDraggableProps) {
     const { attributes, listeners, setNodeRef, transform } = useDraggable({
         id: props.id,
+        disabled: props.isDraggable,
     });
     const style = {
         ...props.style,
         transform: CSS.Translate.toString(transform),
     };
+    const [contextMenu, setContextMenu] = useState({ visible: false, x: 0, y: 0 });
+
+    const handleRightClick = (event: React.MouseEvent<HTMLDivElement>) => {
+        event.preventDefault(); // Prevent default context menu
+        setContextMenu({
+            visible: true,
+            x: event.clientX,
+            y: event.clientY
+        });
+       
+        // Custom logic here
+        console.log('Right-clicked on', props.taskName);
+    };
 
     return (
         <div className="bladeTaskCard" style={style} id={`${props.id}`} ref={setNodeRef}
         {...listeners}
-        {...attributes}>
+        {...attributes}
+        onContextMenu={handleRightClick}>
+            
             <div>{props.taskName}</div>
+            
         </div>
     );
 }
