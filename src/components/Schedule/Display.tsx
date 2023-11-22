@@ -48,19 +48,29 @@ function DisplayComponent(props: DisplayProps) {
     ]);
 
     const [selectedDate, setSelectedDate] = useState(
-        `${currentDate.getFullYear()}-${currentDate.getMonth()+1}-${currentDate.getDate()}`
+        `${currentDate.getFullYear()}-${
+            currentDate.getMonth() + 1
+        }-${currentDate.getDate()}`
     ); // State to store the selected date
 
     const [numberOfMonths, setNumberOfMonths] = useState(3); // State to store the number of months to display
 
-    const [dates, setDates] = useState(getMonthsInView(currentDate, numberOfMonths)); // should be imported from database
+    const [dates, setDates] = useState(
+        getMonthsInView(currentDate, numberOfMonths)
+    ); // should be imported from database
 
     const handleDateChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setSelectedDate(event.target.value);
     };
 
     const handleNumberChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setNumberOfMonths(parseInt(event.target.value));
+        let number = parseInt(event.target.value);
+        if (number < 2) {
+            number = 2;
+        } else if (number > 24) {
+            number = 24;
+        }
+        setNumberOfMonths(number);
     };
 
     const handleModeChange = () => {
@@ -84,8 +94,6 @@ function DisplayComponent(props: DisplayProps) {
 
     const queryDates = getQueryDates(dates[0], dates[dates.length - 1]);
 
-    console.log("queryDates", queryDates.startDate, queryDates.endDate);
-
     const { loading, error, data } = useQuery(GET_BT_IN_RANGE, {
         variables: {
             startDate: queryDates.startDate,
@@ -100,20 +108,28 @@ function DisplayComponent(props: DisplayProps) {
         return <p>Error {error.message}</p>;
     }
     let btCards: React.ReactNode[] = [];
-    console.log(data);
     data["AllBladeTasksInRange"].forEach((bt: any) => {
         let dateSplit = bt.startDate.split("-");
-        const year = parseInt(dateSplit[0]);
-        const month = parseInt(dateSplit[1]) - 1;
-        const day = parseInt(dateSplit[2]);
-        // console.log("dato ", year, month, day);
+        const startYear = parseInt(dateSplit[0]);
+        const startMonth = parseInt(dateSplit[1]) - 1;
+        const startDate = parseInt(dateSplit[2]);
+        console.log("bt ", bt.startDate);
+        console.log("dato ", startYear, startMonth, startDate);
+        let hej = new Date(startYear, startMonth, startDate);
+        console.log("hej ", hej);
+
+        let endDateSplit = bt.endDate.split("-");
+        const endYear = parseInt(endDateSplit[0]);
+        const endMonth = parseInt(endDateSplit[1]) - 1;
+        const endDate = parseInt(endDateSplit[2]);
         btCards.push(
             <BladeTaskCard
-                key={bt.id} //BTCards skal have et unikt key for at fungere godt i react
-                duration={bt.duration} //måske vi skal overveje at lave dem på en anden måde
-                projectColor={`rgb(${bt.id * 2}, ${bt.id / 2}, 0, 70)`} //skal ændres
+                key={bt.id}
+                duration={bt.duration}
+                projectColor={bt.bladeProject.color}
                 taskName={bt.taskName}
-                startDate={new Date(year, month, day)}
+                startDate={new Date(startYear, startMonth, startDate)}
+                endDate={new Date(endYear, endMonth, endDate)}
                 rig={bt.testRig}
                 id={bt.id}
             />
@@ -135,7 +151,7 @@ function DisplayComponent(props: DisplayProps) {
                     <label htmlFor="numberInput" style={{ fontSize: "10px" }}>
                         Months shown:
                     </label>
-                    <input type="number" onChange={handleNumberChange} />
+                    <input type="number" min="2" max="24"onChange={handleNumberChange} />
                     <input type="button" onClick={goTo} value={"Go To"} />
                 </form>
             </div>
@@ -202,21 +218,37 @@ function getMonthsInView(startDate: Date, numberOfMonths: number) {
             viewMonths = [];
             return viewMonths;
         }
-        viewMonths = getMonthsInView(currentDate, numberOfMonths-1);
+        viewMonths = getMonthsInView(currentDate, numberOfMonths - 1);
     }
     return viewMonths;
 }
 
 function getQueryDates(startDate: Date, endDate: Date) {
-    let startDateSTR = convertToQueryDate(
+    console.log("start and end date ", startDate, endDate)
+    let startDateSTR: String;
+    let endDateSTR: String;
+    let startDateDay = startDate.getDate();
+    let endDateDay = endDate.getDate();
+
+    if (startDate === endDate) {
+        let monthLength = getMonthLength(
+            capitalizeFirstLetter(
+                startDate.toLocaleString("default", { month: "long" })
+            ),
+            startDate.getFullYear()
+        );
+        endDateDay = monthLength;
+    }
+
+    startDateSTR = convertToQueryDate(
         startDate.getFullYear(),
         startDate.getMonth(),
-        startDate.getDate()
+        startDateDay
     );
-    let endDateSTR = convertToQueryDate(
+    endDateSTR = convertToQueryDate(
         endDate.getFullYear(),
         endDate.getMonth(),
-        endDate.getDate()
+        endDateDay
     );
     return { startDate: startDateSTR, endDate: endDateSTR };
 }

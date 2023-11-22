@@ -42,6 +42,9 @@ query AllBladeTasksInRange($startDate: String!, $endDate: String!) {
         detachPeriod
         taskName
         testRig
+        bladeProject {
+            color
+        }
     }
 }
 `;
