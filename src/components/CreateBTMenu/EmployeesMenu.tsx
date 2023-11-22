@@ -12,10 +12,6 @@ function EmployeesMenu({resourceOrders}:{resourceOrders:ResourceOrder[]}) {
     const [selectorActive, setSelectorActive] = useState(false);
     const [activeEmployeesList, setActiveEmployees] = useState(employeeList);
 
-    useEffect(() => {
-        console.log(selectorActive);
-    }, [selectorActive])
-
     return (
         <div className="employees_wrapper">
             <ActiveEmployeesContext.Provider value={setActiveEmployees}>
@@ -168,7 +164,6 @@ function EngineerList({activeEmployeesList}:{activeEmployeesList: {name: string,
 
     //Error returns an empty list
     if (error) {
-        console.log(error.message);
         return (<div>ERROR</div>);
     }
     return data.AllEngineers.map(({ name, __typename, id }: { name: string, __typename: string, id:string}) =>
@@ -184,7 +179,6 @@ function TechnicianList({activeEmployeesList}:{activeEmployeesList: {name: strin
 
     //Error returns an empty list
     if (error) {
-        console.log(error.message);
         return (<div>ERROR</div>);
     }
 
