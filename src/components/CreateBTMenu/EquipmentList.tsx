@@ -82,11 +82,7 @@ function CheckBox({name,resourceIndex, title}:{name:string,resourceIndex:number,
                     currentAssignmentStatus[2] = !checked;
                 }
             }
-
-            console.log(currentAssignmentStatus);
             newResourceOrders[resourceIndex].equipmentAssignmentStatus = currentAssignmentStatus;
-            
-            console.log(newResourceOrders);
             return newResourceOrders;
         });
     };

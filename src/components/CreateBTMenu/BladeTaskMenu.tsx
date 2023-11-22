@@ -98,10 +98,6 @@ function BladeTaskMenu() {
         employees: false,
     });
 
-    useEffect(() => {
-        console.log(currentOrder);
-    }, [bladeProjectId, taskName, testType, testRig, startDate, duration, attachPeriod, detachPeriod, resourceOrders])
-
     return (
         <div className='btmenu-container'>
             {/*ErrorMessageContainer is a menu next to the BT-Menu displaying error messages*/}
