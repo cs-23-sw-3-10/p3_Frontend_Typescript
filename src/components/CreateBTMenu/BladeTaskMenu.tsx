@@ -110,10 +110,10 @@ function BladeTaskMenu() {
              {/*Each selector is provided the state it controls*/}
             <div className='name_and_project_selection_wrapper'>
                 <TaskNameSelector taskName={taskName} setTaskName={setTaskName} inErrorChart={inErrorChart} setInErrorChart={setInErrorChart}/>
-                <ProjectSelector setBladeProjectId={setBladeProjectId}/>
+                <ProjectSelector bladeProjectId={bladeProjectId} setBladeProjectId={setBladeProjectId}/>
             </div>
 
-            <TestTypeSelector setTestType={setTestType}/>
+            <TestTypeSelector testType={testType} setTestType={setTestType}/>
 
             <div className='item date_selection_wrapper'>
                 <StartDateSelector 
@@ -144,7 +144,7 @@ function BladeTaskMenu() {
                     inErrorChart={inErrorChart}
                     setInErrorChart={setInErrorChart}
                 />
-                <TestRigSelector setTestRig={setTestRig}/>
+                <TestRigSelector testRig={testRig} setTestRig={setTestRig}/>
             </div>
 
             <div className='item equipment_wrapper'>

@@ -3,19 +3,19 @@ import { useQuery } from '@apollo/client';
 
 
 //Queries test types and insert them into the BT-Menu
-function TestTypeSelector({ setTestType }: { setTestType: Function }) {
+function TestTypeSelector({testType, setTestType}: {testType:string, setTestType: Function}) {
     return (
         <div className="item testtype_wrapper">
             <h2 className="title">Type</h2>
-            <select className="testtype_select input_sideborders" id="testtype" name="testtype" onChange={(e) => setTestType(e.currentTarget.value)}>
-                <TestTypeOptions />
+            <select className="testtype_select input_sideborders" id="testtype" name="testtype" onChange={(e) => setTestType(e.currentTarget.value)} value={testType}>
+                <TestTypeOptions testType={testType} setTestType={setTestType}/>
             </select>
         </div>
     );
 }
 
 
-function TestTypeOptions() {
+function TestTypeOptions({testType, setTestType}:{testType: string, setTestType:Function}) {
     const { loading, error, data } = useQuery(GET_TEST_TYPES);
 
     //Whilst list is loading, the only element in the list is "LOADING"
@@ -29,6 +29,11 @@ function TestTypeOptions() {
 
     //Used to give keys to elements in the list
     let key = 1;
+
+    //Defaults the value of Test Rig to the first option
+    if(testType === ""){
+        setTestType(data.DictionaryAllByCategory[0].label);
+    }
 
     //Returns a dropdown of all the test types present in DB
     return data.DictionaryAllByCategory.map(({ label }: { label: string }) => (<option value={label.toString()} key={key++}>{label}</option>));
