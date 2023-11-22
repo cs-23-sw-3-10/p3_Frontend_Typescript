@@ -10,8 +10,8 @@ import DetachPeriodSelector from './DetachPeriodSelector';
 import EquipmentSelectionMenu from './EquipmentSelector';
 import EmployeesMenu from './EmployeesMenu';
 import { ResourceOrderContext } from './BladeTaskOrderContext';
-import React, { useState, useEffect } from 'react';
-import { BTOrder, InErrorChart, ResourceOrder } from './BTMenuTypes'
+import { useState, useEffect } from 'react';
+import { BTOrder, InErrorChart } from './BTMenuTypes'
 import EquipmentList from './EquipmentList';
 import { useMutation } from '@apollo/client';
 import { ADD_BT } from '../../api/mutationList';
@@ -22,6 +22,9 @@ function BladeTaskMenu() {
     //Apollo mutation setup:
     const [addBT, {loading, error }] = useMutation(ADD_BT);
 
+    //Creates mutation based on the provided input
+    //Only triggers when following fields are provided: duration, attachPeriod, detachPeriod, bladeProjectId, taskName, testType
+    //Other fields are optional
     const handleSubmit = () => {
         if(ValidateForm(currentOrder)){
             addBT({variables:{
@@ -40,6 +43,7 @@ function BladeTaskMenu() {
         }else console.log("Required fields have not been filled out");
     }
 
+    //Resets all field to their initial value
     const handleCancellation = () => {
         setProject("");
         setBTName("");
@@ -52,7 +56,7 @@ function BladeTaskMenu() {
         setResourceOrder([]);
     }
     
-    //All the states for the form -> Inserted into the BT-order as the user fills it out
+    //All the states for the form -> Inserted into the BT-order as the user fills the form out
     const [project, setProject] = useState('');
     const [BTName, setBTName] = useState('');
     const [type, setType] = useState('');
@@ -66,7 +70,7 @@ function BladeTaskMenu() {
     //State for the equipment selection menu
     const [equipmentActive, setEquipmentActive] = useState(false);
 
-    //The BTOrder object sent to the server -> Creates a new instance in the DB
+    //The BTOrder object sent to the server -> Is created as a new Blade Tasks instance in DB and displayed in schedule
     let currentOrder: BTOrder =
     {
         Project: project,
@@ -80,6 +84,7 @@ function BladeTaskMenu() {
         ResourceOrders: resourceOrders,
     };
 
+    //Tracks which input fields are currently in an error state(Incorrect input has been provided)
     const [inErrorChart, setInErrorChart] = useState({
         Project: false,
         BTName: false,
@@ -93,15 +98,12 @@ function BladeTaskMenu() {
         Employees: false,
     });
 
-    useEffect(() => {
-        console.log(currentOrder);
-    }, [project, BTName, type, startDate, duration, attachPeriod, detachPeriod, testRig, resourceOrders])
-
-   
-
     return (
         <div className='btmenu-container'>
+            {/*ErrorMessageContainer is a menu next to the BT-Menu displaying error messages*/}
             <ErrorMessageContainer inErrorChart={inErrorChart}/>
+
+             {/*Each selector is provided the state it controls and */}
             <div className='name_and_project_selection_wrapper'>
                 <TaskNameSelector BTName={BTName} setBTName={setBTName} inErrorChart={inErrorChart} setInErrorChart={setInErrorChart}/>
                 <ProjectSelector setProject={setProject}/>
