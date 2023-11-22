@@ -129,7 +129,7 @@ function DisplayComponent(props: DisplayProps) {
                 endDate={new Date(endYear, endMonth, endDate)}
                 rig={bt.testRig}
                 id={bt.id}
-                isDraggable={!props.editMode}
+                disableDraggable={!props.editMode}
             />
         );
     });

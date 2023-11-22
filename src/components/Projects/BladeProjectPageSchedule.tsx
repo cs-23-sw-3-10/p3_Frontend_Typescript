@@ -123,6 +123,8 @@ function BladeProjectPageWithSchedule() {
                             endDate={new Date(endYear, endMonth, endDate)}
                             rig={bladeTask.testRig}
                             id={bladeTask.id}
+                            disableDraggable={true}
+                            
                         />
                     );           
                     

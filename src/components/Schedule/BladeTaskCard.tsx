@@ -14,13 +14,13 @@ interface BladeTaskCardProps {
     projectColor: string;
     taskName: string;
     id: number;
-    isDraggable?: boolean;
+    disableDraggable?: boolean;
 }
 interface BladeTaskDraggableProps {
     style: any;
     id: number;
     taskName: string;
-    isDraggable?: boolean;
+    disableDraggable?: boolean;
 }
 
 
@@ -39,7 +39,7 @@ function BladeTaskCard(props: BladeTaskCardProps) {
         style: cardStyle,
         id: props.id,
         taskName: props.taskName,
-        isDraggable: props.isDraggable,
+        disableDraggable: props.disableDraggable,
     };
 
     
@@ -51,7 +51,7 @@ export default BladeTaskCard;
 function DraggableBladeTask(props: BladeTaskDraggableProps) {
     const { attributes, listeners, setNodeRef, transform } = useDraggable({
         id: props.id,
-        disabled: props.isDraggable,
+        disabled: props.disableDraggable,
     });
     const style = {
         ...props.style,
