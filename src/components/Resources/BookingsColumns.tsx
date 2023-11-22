@@ -4,7 +4,7 @@ import { BookingDataQuery } from "./BookingData";
 
 export const columnBookings: ColumnDef<BookingDataQuery>[] = [
     {
-        accessorKey: "id",
+        accessorKey:"combined",
         header: ({ column }) => {
             return (
                 <button
@@ -12,39 +12,22 @@ export const columnBookings: ColumnDef<BookingDataQuery>[] = [
                         column.toggleSorting(column.getIsSorted() === "asc")
                     }
                 >
-                    Booking Id
+                    Specific Resource
                 </button>
             );
         },
-        enableHiding: true,
-        cell: ({ row, getValue }) => {
+    },
+    {
+        accessorKey: "resourceType",
+        header: ({ column }) => {
             return (
-                <>
-                    {row.getCanExpand() ? (
-                        <button
-                            {...{
-                                onClick: () => {
-                                    console.log("headingdf.name");
-                                },
-                                style: { cursor: "pointer" },
-                            }}
-                        >
-                            {row.getIsExpanded() ? "▲" : "▼"}
-                        </button>
-                    ) : (
-                        <button
-                            {...{
-                                onClick: () => {
-                                    row.toggleExpanded();
-                                },
-                                style: { cursor: "pointer" },
-                            }}
-                        >
-                            {row.getIsExpanded() ? "▲" : "▼"}
-                        </button>
-                    )}
-                    {getValue()}
-                </>
+                <button
+                    onClick={() =>
+                        column.toggleSorting(column.getIsSorted() === "asc")
+                    }
+                >
+                    Resource Type
+                </button>
             );
         },
     },
@@ -86,20 +69,6 @@ export const columnBookings: ColumnDef<BookingDataQuery>[] = [
                     }
                 >
                     Duration
-                </button>
-            );
-        },
-    },
-    {
-        accessorKey: "resourceType",
-        header: ({ column }) => {
-            return (
-                <button
-                    onClick={() =>
-                        column.toggleSorting(column.getIsSorted() === "asc")
-                    }
-                >
-                    Resource Type
                 </button>
             );
         },

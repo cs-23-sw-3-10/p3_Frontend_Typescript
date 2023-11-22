@@ -49,6 +49,45 @@ query AllBladeTasksInRange($startDate: String!, $endDate: String!) {
 }
 `;
 
+export const GET_ALL_BT_WITH_BOOKINGS_EQNAME = gql`
+query AllBladeTasks {
+    AllBladeTasks {
+        id
+        startDate
+        endDate
+        duration
+        testType
+        attachPeriod
+        detachPeriod
+        taskName
+        testRig
+        bladeProject {
+            id
+        }
+        bookings {
+            id
+            startDate
+            endDate
+            duration
+            resourceType
+            workHours
+            equipment {
+                id
+                name
+            }
+            engineer {
+                name
+            }
+            technician {
+                type
+            }
+        }
+    }
+}
+`;
+
+
+
 export const GET_ALL_BP = gql`
 query AllBladeProjects {
     AllBladeProjects {
@@ -68,6 +107,9 @@ query AllBladeProjects {
             detachPeriod
             taskName
             testRig
+            bladeProject {
+                color
+            }
             bookings {
                 id
                 startDate

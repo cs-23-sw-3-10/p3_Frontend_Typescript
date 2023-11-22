@@ -7,6 +7,7 @@ import "./App.css";
 import ScheduleComponent from "./components/Schedule/ScheduleComponent";
 import BladeProjectPage from "./components/Projects/BladeProjectPage";
 import BTPage from "./components/BladeTask/BladeTaskPage";
+import BladeProjectPageWithSchedule from "./components/Projects/BladeProjectPageSchedule";
 
 function App() {
     return (
@@ -18,7 +19,7 @@ function App() {
                         <Route path="/" element={<ScheduleComponent />} />
                         <Route
                             path="/projects"
-                            element={<BladeProjectPage />}
+                            element={<BladeProjectPageWithSchedule />}
                         />
                         <Route path="/bladetask" element={<BTPage />} />
                         <Route path="/resources" element={<EquipmentPage />} />
