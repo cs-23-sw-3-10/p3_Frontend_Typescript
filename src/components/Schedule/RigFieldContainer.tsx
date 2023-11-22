@@ -59,6 +59,9 @@ function CreateRigFieldContainer(props: RigFieldContainerProps) {
                 projectColor={
                     (bladeTask as React.ReactElement<any>).props.projectColor
                 }
+                customer={
+                    (bladeTask as React.ReactElement<any>).props.customer
+                }
                 taskName={(bladeTask as React.ReactElement<any>).props.taskName}
             />
         );

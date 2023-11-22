@@ -43,20 +43,23 @@ function DisplayComponent(props: DisplayProps) {
         },
         {
             rigName: "Rig 6",
-            rigNumber: 6
-        }
+            rigNumber: 6,
+        },
     ]);
 
     const [selectedDate, setSelectedDate] = useState(
         `${currentDate.getFullYear()}-${
             currentDate.getMonth() + 1
         }-${currentDate.getDate()}`
-        ); // State to store the selected date
+    ); // State to store the selected date
     const [numberOfMonths, setNumberOfMonths] = useState(3); // State to store the number of months to display
 
     const [dates, setDates] = useState(
         getMonthsInView(currentDate, numberOfMonths)
     ); // should be imported from database
+
+    const renderbladeTaskType: React.ReactNode[] = []; //used to define what renderBladeTasks should hold
+    const [renderBladeTasks, setRenderBladeTasks] = useState(renderbladeTaskType);
 
     const handleDateChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setSelectedDate(event.target.value);
@@ -106,10 +109,10 @@ function DisplayComponent(props: DisplayProps) {
     if (error) {
         return <p>Error {error.message}</p>;
     }
+
     let btCards: React.ReactNode[] = [];
-    
+
     data["AllBladeTasksInRange"].forEach((bt: any) => {
-        
         let dateSplit = bt.startDate.split("-");
         const year = parseInt(dateSplit[0]);
         const month = parseInt(dateSplit[1]) - 1;
@@ -121,9 +124,10 @@ function DisplayComponent(props: DisplayProps) {
         const endDate = parseInt(endDateSplit[2]);
         btCards.push(
             <BladeTaskCard
-                key={bt.id} 
-                duration={bt.duration} 
-                projectColor={bt.bladeProject.color} 
+                key={bt.id}
+                duration={bt.duration}
+                projectColor={bt.bladeProject.color}
+                customer={bt.bladeProject.customer}
                 taskName={bt.taskName}
                 startDate={new Date(year, month, day)}
                 endDate={new Date(endYear, endMonth, endDate)}
@@ -133,6 +137,9 @@ function DisplayComponent(props: DisplayProps) {
             />
         );
     });
+    if (renderBladeTasks.length === 0){
+        setRenderBladeTasks(btCards);
+    }
 
     return (
         <div className="ScheduleContentContainer">
@@ -149,29 +156,38 @@ function DisplayComponent(props: DisplayProps) {
                     <label htmlFor="numberInput" style={{ fontSize: "10px" }}>
                         Months shown:
                     </label>
-                    <input type="number" min="2" max="24"onChange={handleNumberChange} />
+                    <input
+                        type="number"
+                        min="2"
+                        max="24"
+                        onChange={handleNumberChange}
+                    />
                     <input type="button" onClick={goTo} value={"Go To"} />
                 </form>
             </div>
             <div className="ScheduleFilterAndMode">
                 <label>Filter:</label>
-                <select name="customerFilter" id="customerFilter">
+                <select
+                    name="customerFilter"
+                    id="customerFilter"
+                    onChange={(event) => {
+                        filterByCompany(event, setRenderBladeTasks, btCards);
+                    }}
+                >
                     <option value="None">None</option>
-                    <option value="Customer 1">Customer 1</option>
-                    <option value="Customer 2">Customer 2</option>
+                    <option value="Goldwind">Goldwind</option>
+                    <option value="Suzlon">Suzlon</option>
                 </select>
                 <label className="switch"> Edit Mode</label>
                 <input type="checkbox" onChange={handleModeChange} />
             </div>
             <div className="ScheduleDisplay">
                 <CreateTestRigDivs rigs={rigs} />
-                <DndContext>
                     <CreateTimelineField
                         rigs={rigs}
                         months={dates}
-                        btCards={btCards}
+                        btCards={renderBladeTasks}
                     />
-                </DndContext>
             </div>
             {props.editMode ? <CreateAdditionalContent /> : null}
         </div>
@@ -194,6 +210,7 @@ function convertToQueryDate(year: number, month: number, day: number) {
     }
     return queryDateSTR;
 }
+
 export function getMonthsInView(startDate: Date, numberOfMonths: number) {
     let year = startDate.getFullYear();
     let month = startDate.getMonth();
@@ -221,7 +238,6 @@ export function getMonthsInView(startDate: Date, numberOfMonths: number) {
 }
 
 function getQueryDates(startDate: Date, endDate: Date) {
-    console.log("start and end date ", startDate, endDate)
     let startDateSTR: String;
     let endDateSTR: String;
     let startDateDay = startDate.getDate();
@@ -248,4 +264,23 @@ function getQueryDates(startDate: Date, endDate: Date) {
         endDateDay
     );
     return { startDate: startDateSTR, endDate: endDateSTR };
+}
+
+function filterByCompany(
+    event: React.ChangeEvent<HTMLSelectElement>,
+    setRenderBladeTasks: React.Dispatch<React.SetStateAction<React.ReactNode[]>>,
+    allBladeTasks: React.ReactNode[]
+) {
+    let company = event.target.value;
+    if (company !== "None") {
+        let filteredBladeTasks: React.ReactNode[] = [];
+        allBladeTasks.forEach((bt: React.ReactNode) => {
+            let btElement = bt as React.ReactElement;
+            if (btElement.props.customer === company) {
+                filteredBladeTasks.push(bt);
+            }
+        });
+        setRenderBladeTasks(filteredBladeTasks);
+    } 
+    setRenderBladeTasks(allBladeTasks);
 }

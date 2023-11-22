@@ -44,6 +44,7 @@ query AllBladeTasksInRange($startDate: String!, $endDate: String!) {
         testRig
         bladeProject {
             color
+            customer
         }
     }
 }

@@ -118,6 +118,7 @@ function BladeProjectPageWithSchedule() {
                             key={bladeTask.id}
                             duration={bladeTask.duration}
                             projectColor={bladeTask.bladeProject.color}
+                            customer={bladeTask.bladeProject.customer}
                             taskName={bladeTask.taskName}
                             startDate={new Date(year, month, day)}
                             endDate={new Date(endYear, endMonth, endDate)}
