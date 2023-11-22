@@ -6,6 +6,7 @@ import { GET_ALL_BT } from "../../api/queryList";
 import { TableLogic } from "../TableLogic/TableLogic";
 import { TableLogicWOHeaders } from "../TableLogic/TableLogicWOHeader";
 import { columnBookings } from "../Resources/BookingsColumns";
+import { GET_ALL_BT_WITH_BOOKINGS_EQNAME } from "../../api/queryList";
 
 /**
  * gets all bladetasks from the database and renders them in a table
@@ -14,14 +15,14 @@ import { columnBookings } from "../Resources/BookingsColumns";
  */
 function BTPage() {
     // get data from the database
-    const { loading, error, data } = useQuery(GET_ALL_BT);
+    const { loading, error, data } = useQuery(GET_ALL_BT_WITH_BOOKINGS_EQNAME);
 
     //handle loading and error states for the used queries
     if (loading) return <p>Loading...</p>;
     if (error) return <p> Error {error.message}</p>;
 
     const bladeTasks = data["AllBladeTasks"];
-
+  
     if (!bladeTasks) return <p> No data for {"AllBladeTasks"} </p>;
 
     /**
@@ -43,7 +44,24 @@ function BTPage() {
                             duration: Number(booking.duration),
                             resourceType: String(booking.resourceType),
                             workHours: Number(booking.workHours),
+                            equipment: {
+                                id: Number(booking.equipment?.id),
+                                name: String(booking.equipment?.name)
+                            },
+                            engineer: {
+                                name: String(booking.engineer?.name)
+                            },
+                            technician: {
+                                type: String(booking.technician?.type),
+                            },
+                            combined: [
+                                booking.equipment?.name,
+                                booking.engineer?.name,
+                                booking.technician?.type
+                            ].filter(value => value !== undefined)
                         })) || [];
+
+                        console.log(bookingsDataForCurrentRow)
                 return (
                     <TableLogicWOHeaders
                         columns={columnBookings}
