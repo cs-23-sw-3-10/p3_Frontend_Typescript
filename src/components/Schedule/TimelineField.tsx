@@ -200,7 +200,6 @@ export function handleDragEnd(
             const draggedCard = updatedBladeTaskCards[
                 indexBT
             ] as React.ReactElement;
-            console.log("dragged card ", draggedCard.key);
 
             // Check for overlap before updating the cards
             const isOverlap = checkForOverlap(
@@ -209,7 +208,6 @@ export function handleDragEnd(
                 overDate,
                 overRig
             );
-            console.log("isOverlap:", isOverlap);
 
             if (!isOverlap) {
                 let newEndDate = new Date(overDate);
@@ -223,15 +221,12 @@ export function handleDragEnd(
                         id={draggedCard.props.id}
                         duration={draggedCard.props.duration}
                         projectColor={draggedCard.props.projectColor}
+                        customer={draggedCard.props.customer}
                         taskName={draggedCard.props.taskName}
                         startDate={new Date(overDate)}
                         endDate={newEndDate}
                         rig={overRig}
                     />
-                );
-                console.log(
-                    "blade task moved ",
-                    updatedBladeTaskCards[indexBT]
                 );
                 bladeTaskHolder.setBladeTasks(updatedBladeTaskCards);
             } else {
@@ -243,7 +238,7 @@ export function handleDragEnd(
             setDragging(false);
         }
     } else {
-        console.log("over er null");
+        console.log("over is null");
     }
 }
 

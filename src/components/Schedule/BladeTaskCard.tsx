@@ -11,6 +11,7 @@ interface BladeTaskCardProps {
     detachPeriod?: number;
     rig?: number;
     projectColor: string;
+    customer: string;
     taskName: string;
     id: number;
 }
@@ -19,9 +20,6 @@ interface BladeTaskDraggableProps {
     id: number;
     taskName: string;
 }
-
-
-
 
 function BladeTaskCard(props: BladeTaskCardProps) {
     //Dynamic styling based on props values
