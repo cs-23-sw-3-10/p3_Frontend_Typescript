@@ -17,7 +17,7 @@ function App() {
                 <NavBar />
                 <div className="content-container">
                     <Routes>
-                        <Route path="/" element={<BladeTaskMenu/>} />
+                        <Route path="/" element={<ScheduleComponent/>} />
                         <Route
                             path="/projects"
                             element={<BladeProjectPageWithSchedule />}
