@@ -221,7 +221,7 @@ export function handleDragEnd(
                         id={draggedCard.props.id}
                         duration={draggedCard.props.duration}
                         projectColor={draggedCard.props.projectColor}
-                        projectId={draggedCard.props.projecId}
+                        projectId={draggedCard.props.projectId}
                         customer={draggedCard.props.customer}
                         taskName={draggedCard.props.taskName}
                         startDate={new Date(overDate)}
