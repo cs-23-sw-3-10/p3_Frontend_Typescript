@@ -5,80 +5,103 @@ import React, { useState } from "react";
 
 //interface used to define the types of the props of BladeTaskCard
 interface BladeTaskCardProps {
-    startDate: Date;
-    endDate?: Date;
-    duration: number;
-    attachPeriod?: number;
-    detachPeriod?: number;
-    rig?: number;
-    projectColor: string;
-    customer: string;
-    taskName: string;
-    id: number;
-    disableDraggable?: boolean;
+  startDate: Date;
+  endDate?: Date;
+  duration: number;
+  attachPeriod?: number;
+  detachPeriod?: number;
+  rig?: number;
+  projectColor: string;
+  customer: string;
+  taskName: string;
+  id: number;
+  disableDraggable?: boolean;
 }
 interface BladeTaskDraggableProps {
-    style: any;
-    id: number;
-    taskName: string;
-    disableDraggable?: boolean;
+  style: any;
+  id: number;
+  taskName: string;
+  disableDraggable?: boolean;
 }
 
 function BladeTaskCard(props: BladeTaskCardProps) {
-    //Dynamic styling based on props values
-    const cardStyle = {
-        backgroundColor: props.projectColor,
-        gridColumn: `date-${props.startDate.getFullYear()}-${props.startDate.getMonth()}-${props.startDate.getDate()} / span ${
-            props.duration
-        }`,
-    };
+  //Dynamic styling based on props values
+  const cardStyle = {
+    backgroundColor: props.projectColor,
+    gridColumn: `date-${props.startDate.getFullYear()}-${props.startDate.getMonth()}-${props.startDate.getDate()} / span ${
+      props.duration
+    }`,
+  };
 
-    const droppableProps: BladeTaskDraggableProps = {
-        style: cardStyle,
-        id: props.id,
-        taskName: props.taskName,
-        disableDraggable: props.disableDraggable,
-    };
+  const droppableProps: BladeTaskDraggableProps = {
+    style: cardStyle,
+    id: props.id,
+    taskName: props.taskName,
+    disableDraggable: props.disableDraggable,
+  };
 
-    
-
-    return <DraggableBladeTask {...droppableProps} />;
+  return <DraggableBladeTask {...droppableProps} />;
 }
 export default BladeTaskCard;
 
 function DraggableBladeTask(props: BladeTaskDraggableProps) {
-    const { attributes, listeners, setNodeRef, transform } = useDraggable({
-        id: props.id,
-        disabled: props.disableDraggable,
-    });
-    const style = {
-        ...props.style,
-        transform: CSS.Translate.toString(transform),
-    };
-    const [contextMenu, setContextMenu] = useState({ visible: false, x: 0, y: 0 });
+  const { attributes, listeners, setNodeRef, transform } = useDraggable({
+    id: props.id,
+    disabled: props.disableDraggable,
+  });
+  const [showContextMenu, setShowContextMenu] = useState(false);
+  const [contextMenuPosition, setContextMenuPosition] = useState({
+    x: 0,
+    y: 0,
+  });
 
-    const handleRightClick = (event: React.MouseEvent<HTMLDivElement>) => {
-        event.preventDefault(); // Prevent default context menu
-        setContextMenu({
-            visible: true,
-            x: event.clientX,
-            y: event.clientY
-        });
-       
-        // Custom logic here
-        console.log('Right-clicked on', props.taskName);
-    };
+  const style = {
+    ...props.style,
+    transform: CSS.Transform.toString(transform),
+  };
 
-    return (
-        <div className="bladeTaskCard" style={style} id={`${props.id}`} ref={setNodeRef}
-        {...listeners}
-        {...attributes}
-        onContextMenu={handleRightClick}>
-            
-            <div>{props.taskName}</div>
-            
+  const handleRightClick = (event: React.MouseEvent<HTMLDivElement>) => {
+    event.preventDefault();
+    setShowContextMenu(true);
+    setContextMenuPosition({ x: event.clientX, y: event.clientY });
+  };
+
+  const handleCloseContextMenu = () => {
+    setShowContextMenu(false);
+  };
+
+  // Attach this handler to the window object to close the context menu
+  window.onclick = handleCloseContextMenu;
+
+  return (
+    <div
+      className="bladeTaskCard"
+      style={style}
+      id={`${props.id}`}
+      ref={setNodeRef}
+      {...listeners}
+      {...attributes}
+      onContextMenu={handleRightClick}
+    >
+      <div>{props.taskName}</div>
+
+      {showContextMenu && (
+        <div
+          className="context-menu"
+          style={{
+            left: `${contextMenuPosition.x}px`,
+            top: `${contextMenuPosition.y}px`,
+          }}
+        >
+          <ul className="context-menu-list">
+            <li className="context-menu-item">Edit BT</li>
+            <li className="context-menu-item">View Conflict</li>
+            {/* Add more items as needed */}
+          </ul>
         </div>
-    );
+      )}
+    </div>
+  );
 }
 
 // //dummy data
@@ -93,6 +116,7 @@ function DraggableBladeTask(props: BladeTaskDraggableProps) {
 //         id={`blue-BT-1`}
 //     />,
 //     <BladeTaskCard
+
 //         key={"BT-2Rig1"}
 //         duration={40}
 //         projectColor="blue"
