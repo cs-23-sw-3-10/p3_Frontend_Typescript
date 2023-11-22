@@ -119,6 +119,9 @@ function DisplayComponent(props: DisplayProps) {
         const endYear = parseInt(endDateSplit[0]);
         const endMonth = parseInt(endDateSplit[1]) - 1;
         const endDate = parseInt(endDateSplit[2]);
+        console.log(bt.taskName)
+        console.log("endDate :",endDate);
+        console.log(endDateSplit);
         btCards.push(
             <BladeTaskCard
                 key={bt.id} 
