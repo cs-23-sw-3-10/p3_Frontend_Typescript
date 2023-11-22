@@ -9,6 +9,7 @@ import { useQuery } from "@apollo/client";
 import { GET_BT_IN_RANGE } from "../../api/queryList";
 import { getMonthLength } from "./TimelineField";
 import { capitalizeFirstLetter } from "./TimelineField";
+import { useEffect, useRef } from "react";
 
 const currentDate = new Date(Date.now()); // Get the current date
 
@@ -48,6 +49,10 @@ function DisplayComponent(props: DisplayProps) {
             rigNumber: 6,
         },
     ]);
+
+
+   
+
 
     const [selectedDate, setSelectedDate] = useState(
         `${currentDate.getFullYear()}-${
@@ -137,7 +142,8 @@ function DisplayComponent(props: DisplayProps) {
                     rig={bt.testRig}
                     id={bt.id}
                     disableDraggable={!props.editMode}
-                />
+                    inConflict={bt.inConflict}
+                                    />
             );
         }
     });
@@ -190,6 +196,9 @@ function DisplayComponent(props: DisplayProps) {
                     btCards={btCards}
                 />
             </div>
+            
+            
+
             {props.editMode ? <CreateAdditionalContent /> : null}
         </div>
     );
