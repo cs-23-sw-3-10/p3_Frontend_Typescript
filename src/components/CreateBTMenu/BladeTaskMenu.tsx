@@ -29,9 +29,9 @@ function BladeTaskMenu() {
         if(ValidateForm(currentOrder)){
             addBT({variables:{
                 bladeTask:{
-                    bladeProjectId: project,
-                    taskName: BTName,
-                    testType: type,
+                    bladeProjectId: bladeProjectId,
+                    taskName: taskName,
+                    testType: testType,
                     startDate: startDate,
                     duration: duration,
                     attachPeriod: attachPeriod,
@@ -45,9 +45,9 @@ function BladeTaskMenu() {
 
     //Resets all field to their initial value
     const handleCancellation = () => {
-        setProject("");
-        setBTName("");
-        setType("");
+        setBladeProjectId("");
+        setTaskName("");
+        setTestType("");
         setStartDate(new Date().toISOString().split('T')[0]);
         setDuration(0);
         setAttachPeriod(0);
@@ -57,9 +57,9 @@ function BladeTaskMenu() {
     }
     
     //All the states for the form -> Inserted into the BT-order as the user fills the form out
-    const [project, setProject] = useState('');
-    const [BTName, setBTName] = useState('');
-    const [type, setType] = useState('');
+    const [bladeProjectId, setBladeProjectId] = useState('');
+    const [taskName, setTaskName] = useState('');
+    const [testType, setTestType] = useState('');
     const [startDate, setStartDate] = useState(new Date().toISOString().split('T')[0]); //Sets the date to be the current day as initial value;
     const [duration, setDuration] = useState(0);
     const [attachPeriod, setAttachPeriod] = useState(0);
@@ -73,29 +73,29 @@ function BladeTaskMenu() {
     //The BTOrder object sent to the server -> Is created as a new Blade Tasks instance in DB and displayed in schedule
     let currentOrder: BTOrder =
     {
-        Project: project,
-        BTName: BTName,
-        Type: type,
-        StartDate: startDate,
-        Duration: duration,
-        AttachPeriod: attachPeriod,
-        DetachPeriod: detachPeriod,
-        TestRig: testRig,
-        ResourceOrders: resourceOrders,
+        bladeProjectId: bladeProjectId,
+        taskName: taskName,
+        testType: testType,
+        startDate: startDate,
+        duration: duration,
+        attachPeriod: attachPeriod,
+        detachPeriod: detachPeriod,
+        testRig: testRig,
+        resourceOrders: resourceOrders,
     };
 
     //Tracks which input fields are currently in an error state(Incorrect input has been provided)
     const [inErrorChart, setInErrorChart] = useState({
-        Project: false,
-        BTName: false,
-        Type: false,
-        StartDate: false,
-        Duration: false,
-        AttachPeriod: false,
-        DetachPeriod: false,
-        TestRig: false,
-        Equipment: false,
-        Employees: false,
+        bladeProjectId: false,
+        taskName: false,
+        testType: false,
+        startDate: false,
+        duration: false,
+        attachPeriod: false,
+        detachPeriod: false,
+        testRig: false,
+        equipment: false,
+        employees: false,
     });
 
     return (
@@ -103,13 +103,13 @@ function BladeTaskMenu() {
             {/*ErrorMessageContainer is a menu next to the BT-Menu displaying error messages*/}
             <ErrorMessageContainer inErrorChart={inErrorChart}/>
 
-             {/*Each selector is provided the state it controls and */}
+             {/*Each selector is provided the state it controls*/}
             <div className='name_and_project_selection_wrapper'>
-                <TaskNameSelector BTName={BTName} setBTName={setBTName} inErrorChart={inErrorChart} setInErrorChart={setInErrorChart}/>
-                <ProjectSelector setProject={setProject}/>
+                <TaskNameSelector taskName={taskName} setTaskName={setTaskName} inErrorChart={inErrorChart} setInErrorChart={setInErrorChart}/>
+                <ProjectSelector setBladeProjectId={setBladeProjectId}/>
             </div>
 
-            <TestTypeSelector setTestType={setType}/>
+            <TestTypeSelector setTestType={setTestType}/>
 
             <div className='item date_selection_wrapper'>
                 <StartDateSelector 
@@ -186,13 +186,13 @@ function BladeTaskMenu() {
 function ErrorMessageContainer({inErrorChart}:{inErrorChart:InErrorChart}){
     return(
     <div className='error_message_wrapper'>
-        {inErrorChart.BTName ? <p className='error_message error_message_btname'>Invalid Name - Task name exists in system</p> : <div></div>}
-        {inErrorChart.StartDate ? <p className='error_message error_message_startdate'>Invalid Date - Date is before current date</p> : <div></div>}
-        {inErrorChart.Duration ? <p className='error_message error_message_duration'>Invalid Duration - Cannot Be Negative</p> : <div></div>}
-        {inErrorChart.AttachPeriod ? <p className='error_message error_message_attachPeriod'>Invalid Attach Period - Cannot Be Negative</p> : <div></div>}
-        {inErrorChart.DetachPeriod ?  <p className='error_message error_message_detachPeriod'>Invalid Detach Period - Cannot Be Negative</p> : <div></div>}
-        {inErrorChart.Equipment ? <p className='error_message error_message_equipment'>Invalid Equipment</p> : <div></div>}
-        {inErrorChart.Employees ? <p className='error_message error_message_employee'>Invalid Employee</p> : <div></div>}
+        {inErrorChart.taskName ? <p className='error_message error_message_btname'>Invalid Name - Task name exists in system</p> : <div></div>}
+        {inErrorChart.startDate ? <p className='error_message error_message_startdate'>Invalid Date - Date is before current date</p> : <div></div>}
+        {inErrorChart.duration ? <p className='error_message error_message_duration'>Invalid Duration - Cannot Be Negative</p> : <div></div>}
+        {inErrorChart.attachPeriod ? <p className='error_message error_message_attachPeriod'>Invalid Attach Period - Cannot Be Negative</p> : <div></div>}
+        {inErrorChart.detachPeriod ?  <p className='error_message error_message_detachPeriod'>Invalid Detach Period - Cannot Be Negative</p> : <div></div>}
+        {inErrorChart.equipment ? <p className='error_message error_message_equipment'>Invalid Equipment</p> : <div></div>}
+        {inErrorChart.employees ? <p className='error_message error_message_employee'>Invalid Employee</p> : <div></div>}
     </div>
     );
 }

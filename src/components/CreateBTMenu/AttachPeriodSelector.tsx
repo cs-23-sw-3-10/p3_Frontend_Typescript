@@ -16,7 +16,7 @@ function AttachPeriodSelector(
             {/*Changes the style based on user input - error is defined in BladeTaskMenu.css*/}
             <input
                 type="number"
-                className={inErrorChart.AttachPeriod ? "error" : "item attach_period_select"}
+                className={inErrorChart.attachPeriod ? "error" : "item attach_period_select"}
                 name="attach_period_select"
                 placeholder='Days'
                 value={attachPeriod}
@@ -35,12 +35,12 @@ function handleAttachPeriodValidation(e: React.FormEvent<HTMLInputElement>, dura
     const userInput = Number(e.currentTarget.value);
     if((userInput > 0) && (detachPeriod + userInput) <= duration){
         //Valid input
-        newInErrorChart.AttachPeriod = false;
+        newInErrorChart.attachPeriod = false;
         setInErrorChart(newInErrorChart);
         setAttachPeriod(userInput);
     }else{
         //Invalid input
-        newInErrorChart.AttachPeriod = true;
+        newInErrorChart.attachPeriod = true;
         setInErrorChart(newInErrorChart);
         //Reset input field to 0
         setAttachPeriod(0); 

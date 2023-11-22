@@ -7,7 +7,7 @@ function DurationSelector({duration, setDuration, inErrorChart, setInErrorChart}
             <h2 className="title">{"Duration(Days)"}</h2>
             <input
                 type="number"
-                className={inErrorChart.Duration ? "error" : "item duration_select"}
+                className={inErrorChart.duration ? "error" : "item duration_select"}
                 name="duration_select"
                 placeholder='Days'
                 value={duration}
@@ -23,11 +23,11 @@ function handleDurationValidation(e: React.FormEvent<HTMLInputElement>, setDurat
     const userInput = Number(e.currentTarget.value);
 
     if(userInput > 0){
-        newInErrorChart.Duration = false;
+        newInErrorChart.duration = false;
         setInErrorChart(newInErrorChart);
         setDuration(userInput);
     }else{
-        newInErrorChart.Duration = true;
+        newInErrorChart.duration = true;
         setInErrorChart(newInErrorChart);
         setDuration(0);
     }

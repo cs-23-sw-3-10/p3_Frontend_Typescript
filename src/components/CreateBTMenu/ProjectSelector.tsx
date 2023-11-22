@@ -2,11 +2,11 @@ import { GET_ALL_BLADE_PROJECTS} from '../../api/queryList';
 import { useQuery } from '@apollo/client';
 
 
-function ProjectSelector({setProject}:{setProject:Function}) {
+function ProjectSelector({setBladeProjectId}:{setBladeProjectId:Function}) {
     return (
         <div className='project_selection_wrapper'>
             <h2 className="title">Blade Project</h2>
-            <select id="blade_project" name="blade_project" onChange={(e) => setProject(e.currentTarget.value)}>;
+            <select id="blade_project" name="blade_project" onChange={(e) => setBladeProjectId(e.currentTarget.value)}>;
                 <BladeProjectOptions/>
             </select>
         </div>
@@ -28,7 +28,7 @@ function BladeProjectOptions() {
     }
     //Returns a dropdown of all the testrigs present in DB
     return data.AllBladeProjects.map(
-        ({__typename, id, projectName, customer}:{__typename:string, id:string, projectName:string, customer:string}) => 
+        ({id, projectName, customer}:{id:string, projectName:string, customer:string}) => 
         (<option value={id} key={id}>{projectName}{"("}{customer}{")"}</option>));
 }
 export default ProjectSelector;

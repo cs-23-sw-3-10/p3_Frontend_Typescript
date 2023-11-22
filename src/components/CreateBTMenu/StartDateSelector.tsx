@@ -9,7 +9,7 @@ function StartDateSelector({startDate,setStartDate, inErrorChart, setInErrorChar
             <h2 className='title'>Start Date</h2>
             <input
                 type="date"
-                className={inErrorChart.StartDate ? "error" : "startdate_select"}
+                className={inErrorChart.startDate ? "error" : "startdate_select"}
                 value={startDate}
                 onChange={(e) => setStartDate(e.currentTarget.value)}
                 onBlur={(e) => handleDateValidation(e, setStartDate, setInErrorChart, inErrorChart)}
@@ -32,11 +32,11 @@ function handleDateValidation(e: React.FormEvent<HTMLInputElement>, setDate: Fun
     const newErrorChart:InErrorChart = {...inErrorChart};
 
     if (inputDate >= currentDate) {
-        newErrorChart.StartDate = false;
+        newErrorChart.startDate = false;
         setInErrorChart(newErrorChart);
         setDate(inputFromForm);
     } else {
-        newErrorChart.StartDate = true;
+        newErrorChart.startDate = true;
         setInErrorChart(newErrorChart);
         setDate(currentDateString);
     }
