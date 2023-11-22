@@ -1,13 +1,12 @@
 import "./BladeTaskCard.css";
-import React from "react";
 import { useDraggable } from "@dnd-kit/core";
 import { CSS } from "@dnd-kit/utilities";
 
 //interface used to define the types of the props of BladeTaskCard
 interface BladeTaskCardProps {
     startDate: Date;
+    endDate?: Date;
     duration: number;
-    endDate?:Date;
     attachPeriod?: number;
     detachPeriod?: number;
     rig?: number;
@@ -53,13 +52,9 @@ function DraggableBladeTask(props: BladeTaskDraggableProps) {
     };
 
     return (
-        <div className="bladeTaskCard" style={style} id={`${props.id}`}>
-            <div
-                className="bladeTaskCardHandle"
-                ref={setNodeRef}
-                {...listeners}
-                {...attributes}
-            ></div>
+        <div className="bladeTaskCard" style={style} id={`${props.id}`} ref={setNodeRef}
+        {...listeners}
+        {...attributes}>
             <div>{props.taskName}</div>
         </div>
     );

@@ -88,6 +88,7 @@ function CreateTimelineField(props: TimelineFieldProps) {
                                 key={rig.rigName}
                                 rig={rig.rigName}
                                 rigNumber={rig.rigNumber}
+                                viewMonths={props.months}
                                 allDates={allDates}
                                 fieldWidth={fieldWidth}
                                 columns={columnsOfSchedule}
@@ -173,10 +174,8 @@ export function handleDragEnd(
     console.log("drag ended");
     const { active, over } = event;
     if (over !== null) {
-        console.log("over ", over.id);
         const overIdSlpit = over.id.split("-");
         const overRig = parseInt(overIdSlpit[0].split(" ")[1]);
-        console.log("over rig ", overRig);
         const overDate = new Date(
             overIdSlpit[1],
             overIdSlpit[2],
