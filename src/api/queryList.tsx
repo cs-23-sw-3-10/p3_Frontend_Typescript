@@ -47,6 +47,7 @@ query AllBladeTasksInRange($startDate: String!, $endDate: String!) {
         bladeProject {
             color
             customer
+            id
         }
     }
 }

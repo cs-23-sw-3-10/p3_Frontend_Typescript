@@ -77,8 +77,6 @@ function CreateTimelineField(props: TimelineFieldProps) {
                     onDragEnd={(event) => {
                         handleDragEnd(event, bladeTasks, setDragging);
                     }}
-                
-                    
                 >
                     <div
                         className="RigFieldContainer"
@@ -223,6 +221,7 @@ export function handleDragEnd(
                         id={draggedCard.props.id}
                         duration={draggedCard.props.duration}
                         projectColor={draggedCard.props.projectColor}
+                        projectId={draggedCard.props.projecId}
                         customer={draggedCard.props.customer}
                         taskName={draggedCard.props.taskName}
                         startDate={new Date(overDate)}
@@ -263,7 +262,11 @@ function checkForOverlap(
 
         if (i !== BTIndex) {
             //skip comparison with itself
-            if (bladeTaskCards[i].props.rig === overRig) {
+            if (
+                bladeTaskCards[i].props.rig === overRig ||
+                bladeTaskCards[i].props.projectId ===
+                    draggedCard.props.projectId
+            ) {
                 // skip comparison with cards on different rigs
                 //Overlaps are covered by two cases. A check is made for each case.
                 if (startDateA <= startDateB) {

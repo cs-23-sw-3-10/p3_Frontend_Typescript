@@ -135,6 +135,7 @@ function DisplayComponent(props: DisplayProps) {
                     key={bt.id}
                     duration={bt.duration}
                     projectColor={bt.bladeProject.color}
+                    projectId={bt.bladeProject.id}
                     customer={bt.bladeProject.customer}
                     taskName={bt.taskName}
                     startDate={new Date(year, month, day)}
