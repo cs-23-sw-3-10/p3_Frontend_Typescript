@@ -49,7 +49,7 @@ function EquipmentMenuItem({equipmentType}:{equipmentType:string}){
 }
 
 function EquipmentMenuItemLogic(prevResourceOrder:ResourceOrder[], equipmentType:string){
-    return [...prevResourceOrder, {resourceType:equipmentType, resourceName:"", equipmentAssignmentStatus:[false,false,false], workHours:0}];
+    return [...prevResourceOrder, {resourceType:equipmentType, resourceName:"", equipmentAssignmentStatus:[true,true,true], workHours:0}];
 }
 
 export default EquipmentSelectionMenu;

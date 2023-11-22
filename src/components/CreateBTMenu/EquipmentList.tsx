@@ -49,26 +49,46 @@ function CheckBox({name,resourceIndex, title}:{name:string,resourceIndex:number,
 
     const handleCheckInput = () => {
         setChecked(!checked);
-        changeResourceOrder((prevResourceOrder: ResourceOrder[]) => {
-            let newResourceOrder = [...prevResourceOrder];
-            let currentAssignmentStatus:Array<boolean> = newResourceOrder[resourceIndex].equipmentAssignmentStatus
+        changeResourceOrder((prevResourceOrders: ResourceOrder[]) => {
+            let newResourceOrders = [...prevResourceOrders];
+            let currentAssignmentStatus:Array<boolean> = newResourceOrders[resourceIndex].equipmentAssignmentStatus
             if (title === "Attach") {
-                currentAssignmentStatus[0] = !checked;
-            }
-            if (title === "Test") {
-                if((currentAssignmentStatus[0] == true) && (currentAssignmentStatus[2] == true)
-                ){
-                    setChecked(!checked)
+                if(((currentAssignmentStatus[1] === false) && (currentAssignmentStatus[2] === true)) ||
+                    ((currentAssignmentStatus[1] === false) && (currentAssignmentStatus[2] === false))
+                    ){
+                    setChecked(checked)
                 }else{
-                    newResourceOrder[resourceIndex].equipmentAssignmentStatus[1] = !checked;
+                    currentAssignmentStatus[0] = !checked;
                 }
             }
-            if (title === "Detach") {
-                newResourceOrder[resourceIndex].equipmentAssignmentStatus[2] = !checked;
+
+            if (title === "Test") {
+
+                if(((currentAssignmentStatus[0] === true) && (currentAssignmentStatus[2] === true)) ||
+                   ((currentAssignmentStatus[0] === false) && (currentAssignmentStatus[2] === false))
+                    ){
+                    setChecked(checked)
+                }else{
+                    currentAssignmentStatus[1] = !checked;
+                }
             }
-            newResourceOrder[resourceIndex].equipmentAssignmentStatus = currentAssignmentStatus;
-            //We canno
-            return newResourceOrder;
+
+            if (title === "Detach") {
+
+                if(((currentAssignmentStatus[0] === true) && (currentAssignmentStatus[1]) === false) ||
+                    ((currentAssignmentStatus[0] === false) && (currentAssignmentStatus[1] === false))
+                ){
+                    setChecked(checked);
+                }else{
+                    currentAssignmentStatus[2] = !checked;
+                }
+            }
+
+            console.log(currentAssignmentStatus);
+            newResourceOrders[resourceIndex].equipmentAssignmentStatus = currentAssignmentStatus;
+            
+            console.log(newResourceOrders);
+            return newResourceOrders;
         });
     };
 
