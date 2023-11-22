@@ -6,7 +6,7 @@ function ProjectSelector({setBladeProjectId}:{setBladeProjectId:Function}) {
     return (
         <div className='project_selection_wrapper'>
             <h2 className="title">Blade Project</h2>
-            <select id="blade_project" name="blade_project" onChange={(e) => setBladeProjectId(e.currentTarget.value)}>;
+            <select className="input_sideborders" id="blade_project" name="blade_project" onChange={(e) => setBladeProjectId(e.currentTarget.value)}>;
                 <BladeProjectOptions/>
             </select>
         </div>

@@ -5,6 +5,9 @@
     height: auto;
     border-style: solid;
     border-radius: 15px;
+    border-width: 3px;
+    border-style: solid;
+    border-color: black;
     padding: 12px;
     display: grid;
     background-color: lightcyan;
@@ -23,6 +26,8 @@
     grid-row: 1 / 2;
     grid-column: 1 / 2;
     border-style: solid;
+    border-width: 2px;
+    border-style: solid;
     border-color: black;
     border-radius: 15px 15px 0% 0%;
     text-align: center;
@@ -33,7 +38,7 @@
     grid-row: 2 / 3;
     grid-column: 1 / 2;
     display: grid;
-    grid-template-columns: 130px 540px;
+    grid-template-columns: 224px 448px;
     grid-template-rows: 60px;
 }
 
@@ -48,6 +53,10 @@
     border-top: 1px solid;
 }
 
+.testtype_select{
+    height: 50px;
+}
+
 .date_selection_wrapper{
     display: grid;
     grid-template-columns: 1fr 2fr;
@@ -55,6 +64,19 @@
     grid-column: 1 / 6;
     margin-top: 10px;
     border-top: 1px solid;
+}
+
+.input{
+    border-right: 2px solid;
+    border-left: 2px solid;
+    border-bottom: 2px solid;
+    border-color: black;
+}
+
+.input_sideborders{
+    border-right: 2px solid;
+    border-left: 2px solid;
+    border-color: black;
 }
 
 
@@ -90,6 +112,7 @@
     grid-column: 2 / 3;
     border-style: solid;
     border-width: 2px;
+    border-color: black;
 }
 
 .equipment_interaction{
@@ -141,6 +164,7 @@
     font-size: 15px;
     font-weight: bold;
     text-align: center;
+    margin-top: 10px;
 }
 
 .error{

@@ -40,12 +40,13 @@
 
 .remove_equipment_button{
     position: absolute;
-    transform: translate(425px, -32px);
+    transform: translate(420px, -23px);
     background-color: red;
-    width: 30px;
+    width: 27px;
+    height: 27px;
     border-radius: 10px;
     display: inline;
-    box-shadow: 0 9px #999;
+    box-shadow: 0 3px #999;
 }
 
 .remove_equipment_button:hover{
@@ -54,6 +55,6 @@
 
 .remove_equipment_button:active{
     background-color: red;
-    box-shadow: 0 5px #666;
-    transform: translate(425px, -30px);
+    box-shadow: 0 1px #666;
+    transform: translate(420px, -23px);
 }

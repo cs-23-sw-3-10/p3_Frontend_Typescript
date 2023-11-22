@@ -9,7 +9,7 @@ function StartDateSelector({startDate,setStartDate, inErrorChart, setInErrorChar
             <h2 className='title'>Start Date</h2>
             <input
                 type="date"
-                className={inErrorChart.startDate ? "error" : "startdate_select"}
+                className={inErrorChart.startDate ? "error" : "startdate_select input"}
                 value={startDate}
                 onChange={(e) => setStartDate(e.currentTarget.value)}
                 onBlur={(e) => handleDateValidation(e, setStartDate, setInErrorChart, inErrorChart)}

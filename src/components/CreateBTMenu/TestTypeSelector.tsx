@@ -7,7 +7,7 @@ function TestTypeSelector({ setTestType }: { setTestType: Function }) {
     return (
         <div className="item testtype_wrapper">
             <h2 className="title">Type</h2>
-            <select className="testtype_select" id="testtype" name="testtype" onChange={(e) => setTestType(e.currentTarget.value)}>
+            <select className="testtype_select input_sideborders" id="testtype" name="testtype" onChange={(e) => setTestType(e.currentTarget.value)}>
                 <TestTypeOptions />
             </select>
         </div>

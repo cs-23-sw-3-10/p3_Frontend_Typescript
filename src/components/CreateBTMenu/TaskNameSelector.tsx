@@ -43,7 +43,7 @@ function InputComponent({taskName, setTaskName, existingNames, inErrorChart, set
 
     return(
         <input 
-        className={inErrorChart.taskName ? "error id_select" : 'id_select'}
+        className={inErrorChart.taskName ? "error id_select input" : 'id_select input_sideborders'}
         type="text" 
         placeholder='Select Task Name'
         value={taskName}

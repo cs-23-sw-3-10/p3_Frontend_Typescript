@@ -8,6 +8,7 @@ import ScheduleComponent from "./components/Schedule/ScheduleComponent";
 import BladeProjectPage from "./components/Projects/BladeProjectPage";
 import BTPage from "./components/BladeTask/BladeTaskPage";
 import BladeProjectPageWithSchedule from "./components/Projects/BladeProjectPageSchedule";
+import BladeTaskMenu from "./components/CreateBTMenu/BladeTaskMenu";
 
 function App() {
     return (
@@ -16,7 +17,7 @@ function App() {
                 <NavBar />
                 <div className="content-container">
                     <Routes>
-                        <Route path="/" element={<ScheduleComponent />} />
+                        <Route path="/" element={<BladeTaskMenu/>} />
                         <Route
                             path="/projects"
                             element={<BladeProjectPageWithSchedule />}

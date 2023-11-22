@@ -16,7 +16,7 @@ function AttachPeriodSelector(
             {/*Changes the style based on user input - error is defined in BladeTaskMenu.css*/}
             <input
                 type="number"
-                className={inErrorChart.attachPeriod ? "error" : "item attach_period_select"}
+                className={inErrorChart.attachPeriod ? "error" : "item attach_period_select input"}
                 name="attach_period_select"
                 placeholder='Days'
                 value={attachPeriod}

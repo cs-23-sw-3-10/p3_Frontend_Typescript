@@ -7,7 +7,7 @@ function DurationSelector({duration, setDuration, inErrorChart, setInErrorChart}
             <h2 className="title">{"Duration(Days)"}</h2>
             <input
                 type="number"
-                className={inErrorChart.duration ? "error" : "item duration_select"}
+                className={inErrorChart.duration ? "error" : "item duration_select input"}
                 name="duration_select"
                 placeholder='Days'
                 value={duration}

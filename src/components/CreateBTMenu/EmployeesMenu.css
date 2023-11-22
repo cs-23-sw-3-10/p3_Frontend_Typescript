@@ -19,6 +19,7 @@
     grid-template-columns: 50px 150px 1fr;
     border-style: solid;
     border-width: 3px;
+    border-color: black;
 }
 
 .material-symbols-outlined.badge{
@@ -127,6 +128,9 @@
 
 .employee_entry_hours{
     grid-column: 4 / 5;
+    border-left: 2px solid;
+    border-bottom: 2px solid;
+    border-color: black;
 }
 
 .emoloyee_entry_hours_input{
@@ -156,7 +160,7 @@
     grid-column: 1 / 2;
     display: grid;
     grid-template-rows: 1fr;
-    grid-template-columns: 200px 50px;
+    grid-template-columns: 200px 46px;
     border-bottom: 3px solid;
 }
 
@@ -237,7 +241,7 @@
 .employee_selector_menu_entry{
     display: grid;
     height: 50px;
-    grid-template-columns: 60px 186px;
+    grid-template-columns: 60px 165px;
 }
 
 .employee_selector_menu_entry:hover{

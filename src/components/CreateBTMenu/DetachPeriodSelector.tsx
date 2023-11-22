@@ -8,7 +8,7 @@ function DetachPeriodSelector(
             <h2 className="title">{"Detach Period (Days)"}</h2>
             <input
                 type="number"
-                className={inErrorChart.detachPeriod ? "error" : "item detach_period_select"}
+                className={inErrorChart.detachPeriod ? "error" : "item detach_period_select input"}
                 name="detach_period_select"
                 placeholder='Days'
                 value={detachPeriod}
