@@ -170,13 +170,18 @@
 .error{
     border-style: solid;
     border-color: red;
+    border-width: 2px;
 }
 
 .error_message_wrapper{
     position: absolute;
     transform: translate(693px,-7px);
     display: grid;
-    grid-template-rows: 160px 50px 50px 50px 208px 364px 50px;
+    grid-template-rows: 184px 49px 46px 48px 208px 364px 50px;
+}
+
+.error_message_btname{
+    margin-top: 25px;
 }
 
 .error_message{
