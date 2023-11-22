@@ -1,41 +1,29 @@
 import React from "react";
 
-/**
- * 
- * @returns a table with all the equipment
- */
+import { columnEQ } from "./EquipmentColumns";
+import { useQuery } from "@apollo/client";
+import { GET_EQUIPMENT } from "../../api/queryList";
+import ScheduleComponent from "../Schedule/ScheduleComponent";
+import { TableLogic } from "../TableLogic/TableLogic";
+
 function EquipmentPage() {
-    //her skal der vel læses noget ind fra databasen og så vises i en tabel
-    const equipment = ["equipment1", "equipment2", "equipment3", "equipment4"];
+    const { loading, error, data } = useQuery(GET_EQUIPMENT);
+
+    if (loading) return <p>Loading...</p>;
+    if (error) return <p> Error {error.message}</p>;
+
+    const equipmentData = data["AllEquipment"];
+    if (!equipmentData) {
+        return <p> No data for {"ALLEquipment"} </p>;
+    }
 
     return (
-        <>
-                <h1>Equipment Page</h1>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Equipment</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>Type</td>
-                        <td>ID</td>
-                        <td>Availability</td>
-                        <td>Calibration date</td>
-                    </tr>
-                    {equipment.map((equipment) => (
-                        <tr key={equipment}>
-                            <td>{equipment}</td>
-                            <td>{equipment}-ID</td>
-                            <td>sure</td>
-                            <td>nej</td>
-                            <button>Calibrated</button>
-                        </tr>
-                    ))}
-                </tbody>
-            </table>
-        </>
+        <TableLogic
+            columns={columnEQ}
+            data={equipmentData}
+            renderExpandedComponent={() => <ScheduleComponent />}
+        />
     );
 }
+
 export default EquipmentPage;
