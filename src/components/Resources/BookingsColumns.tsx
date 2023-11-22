@@ -2,8 +2,6 @@
 import { ColumnDef } from "@tanstack/react-table";
 import { BookingDataQuery } from "./BookingData";
 
-
-let displayValue = "";
 export const columnBookings: ColumnDef<BookingDataQuery>[] = [
     {
         accessorKey:"combined",

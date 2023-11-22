@@ -11,6 +11,7 @@ import ScheduleComponent from "../Schedule/ScheduleComponent";
 import BladeTaskCard from "../Schedule/BladeTaskCard";
 import DisplayComponent from "../Schedule/Display";
 import CreateTimelineField from "../Schedule/TimelineField";
+import CreateTestRigDivs from "../Schedule/TestRigDivs";
 import { getMonthsInView } from "../Schedule/Display";
 import { getMonthLength } from "../Schedule/TimelineField";
 import { capitalizeFirstLetter } from "../Schedule/TimelineField";
@@ -30,7 +31,6 @@ const firstStartDate = new Date(
  */
 
 function countMonthsIncludingStartAndEnd(startDate: Date, endDate: Date) {
-
     // Calculate the month difference
     let months = (endDate.getFullYear() - startDate.getFullYear()) * 12;
     months -= startDate.getMonth();
@@ -41,7 +41,7 @@ function countMonthsIncludingStartAndEnd(startDate: Date, endDate: Date) {
 }
 
 
-function BladeProjectPageWSchedule() {
+function BladeProjectPageWithSchedule() {
     const [rigs, setRigs] = useState([
         // should be imported from database
         {
@@ -132,15 +132,18 @@ function BladeProjectPageWSchedule() {
                     
                 })}
                 return (
-                    console.log("btC",btCards),
-                    <CreateTimelineField rigs={rigs} months={dates} btCards={btCards} />
+                    <div className="flex flex rows">
+                        <CreateTestRigDivs rigs={rigs} />
+                        <CreateTimelineField rigs={rigs} months={dates} btCards={btCards} />
+                    </div>
+                    
                 )}}
                 
         />
     );
 }
 
-export default BladeProjectPageWSchedule;
+export default BladeProjectPageWithSchedule;
 
 /*
 const dataForCurrentRow = dataBP["AllBladeProjects"].find((project: any) => project.id === row.id)
