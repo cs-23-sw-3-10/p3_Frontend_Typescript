@@ -1,7 +1,7 @@
 import "./BladeTaskCard.css";
 import { useDraggable } from "@dnd-kit/core";
 import { CSS } from "@dnd-kit/utilities";
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 
 //interface used to define the types of the props of BladeTaskCard
 interface BladeTaskCardProps {
@@ -55,10 +55,39 @@ function DraggableBladeTask(props: BladeTaskDraggableProps) {
     y: 0,
   });
 
+  const contextMenuRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    // Function to check if click is outside the context menu
+    const handleClickOutside = (event: MouseEvent) => {
+        if (contextMenuRef.current && !contextMenuRef.current.contains(event.target as Node)) {
+            setShowContextMenu(false);
+        }
+    };
+
+    // Attach the event listener
+    document.addEventListener("mousedown", handleClickOutside);
+
+    // Clean up the event listener
+    return () => {
+        document.removeEventListener("mousedown", handleClickOutside);
+    };
+}, []);
+
   const style = {
     ...props.style,
-    transform: CSS.Transform.toString(transform),
+    transform: CSS.Translate.toString(transform),
+};
+
+  const handleEditClick = () => {
+    console.log("Edit");
+    setShowContextMenu(false);
   };
+
+  const handleConflictClick = () => {
+    console.log("Conflict");
+    setShowContextMenu(false);
+  }
 
   const handleRightClick = (event: React.MouseEvent<HTMLDivElement>) => {
     event.preventDefault();
@@ -71,35 +100,27 @@ function DraggableBladeTask(props: BladeTaskDraggableProps) {
   };
 
   // Attach this handler to the window object to close the context menu
-  window.onclick = handleCloseContextMenu;
+  
+  
 
   return (
-    <div
-      className="bladeTaskCard"
-      style={style}
-      id={`${props.id}`}
-      ref={setNodeRef}
-      {...listeners}
-      {...attributes}
-      onContextMenu={handleRightClick}
-    >
+    <div className="bladeTaskCard" style={style} id={`${props.id}`} ref={setNodeRef}
+        {...listeners}
+        {...attributes}
+        onContextMenu={handleRightClick}>
       <div>{props.taskName}</div>
 
       {showContextMenu && (
-        <div
-          className="context-menu"
-          style={{
-            left: `${contextMenuPosition.x}px`,
-            top: `${contextMenuPosition.y}px`,
-          }}
-        >
-          <ul className="context-menu-list">
-            <li className="context-menu-item">Edit BT</li>
-            <li className="context-menu-item">View Conflict</li>
+      <div ref={contextMenuRef} className="context-menu" style={{ left: `${contextMenuPosition.x}px`, top: `${contextMenuPosition.y}px` }}>
+        <ul className="context-menu-list">
+            <li className="context-menu-item" onClick={handleEditClick}>Edit</li>
+            <li className="context-menu-item" onClick={handleConflictClick}>Conflict details</li>
             {/* Add more items as needed */}
-          </ul>
-        </div>
-      )}
+        </ul>
+    </div>
+)}
+
+  
     </div>
   );
 }

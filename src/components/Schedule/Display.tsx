@@ -190,6 +190,8 @@ function DisplayComponent(props: DisplayProps) {
                     btCards={btCards}
                 />
             </div>
+            
+
             {props.editMode ? <CreateAdditionalContent /> : null}
         </div>
     );
