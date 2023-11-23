@@ -172,7 +172,9 @@ export function handleDragEnd(
     setDragging: React.Dispatch<React.SetStateAction<boolean>>
 ) {
     console.log("drag ended");
+    
     const { active, over } = event;
+    console.log(active);
     if (over !== null) {
         const overIdSlpit = over.id.split("-");
         const overRig = parseInt(overIdSlpit[0].split(" ")[1]);
@@ -211,9 +213,14 @@ export function handleDragEnd(
 
             if (!isOverlap) {
                 let newEndDate = new Date(overDate);
+                
                 newEndDate.setDate(
                     newEndDate.getDate() + draggedCard.props.duration - 1
                 );
+
+                console.log(overDate);
+                console.log(newEndDate);
+                console.log(draggedCard.props.duration);
 
                 updatedBladeTaskCards[indexBT] = (
                     <BladeTaskCard
