@@ -5,10 +5,11 @@ import CreateTimelineField from "./TimelineField";
 import React, { useState } from "react";
 import CreateAdditionalContent from "./AdditionalContent";
 import BladeTaskCard from "./BladeTaskCard";
-import { useQuery } from "@apollo/client";
+import { useMutation, useQuery } from "@apollo/client";
 import { GET_BT_IN_RANGE } from "../../api/queryList";
 import { getMonthLength } from "./TimelineField";
 import { capitalizeFirstLetter } from "./TimelineField";
+import { UPDATE_BT } from "../../api/mutationList";
 import { useEffect, useRef } from "react";
 
 const currentDate = new Date(Date.now()); // Get the current date
@@ -100,6 +101,7 @@ function DisplayComponent(props: DisplayProps) {
 
     const queryDates = getQueryDates(dates[0], dates[dates.length - 1]);
 
+    
     const { loading, error, data } = useQuery(GET_BT_IN_RANGE, {
         variables: {
             startDate: queryDates.startDate,

@@ -2,6 +2,7 @@ import "./BladeTaskCard.css";
 import { useDraggable } from "@dnd-kit/core";
 import { CSS } from "@dnd-kit/utilities";
 import React, { useState, useRef, useEffect } from "react";
+import MessageBox from "../ui/MessageBox";
 
 //interface used to define the types of the props of BladeTaskCard
 interface BladeTaskCardProps {
@@ -37,6 +38,7 @@ function BladeTaskCard(props: BladeTaskCardProps) {
     x: 0,
     y: 0,
   });
+  const [showMessageBox, setShowMessageBox] = useState(false); // Used to show the message box when the user clicks on a task card
   const contextMenuRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
     // Function to check if click is outside the context menu
@@ -57,6 +59,9 @@ function BladeTaskCard(props: BladeTaskCardProps) {
     };
 }, []);
 
+const handleMessageClose = () => {
+    setShowMessageBox(false);
+}
 
 const handleEditClick = () => {
     console.log("Edit " + props.taskName);
@@ -68,6 +73,7 @@ const handleEditClick = () => {
   const handleConflictClick = () => {
     console.log("Conflict " + props.taskName);
     setShowContextMenu(false);
+    setShowMessageBox(true)
   }
 
   const handleRightClick = (event: React.MouseEvent<HTMLDivElement>) => {
@@ -96,7 +102,8 @@ const handleEditClick = () => {
     setContextMenu: handleRightClick,
   };
 
-  return(<><DraggableBladeTask {...droppableProps} />
+  return(<>
+  <DraggableBladeTask {...droppableProps} />
   {showContextMenu && (
       <div ref={contextMenuRef} className="context-menu" style={{ left: `${contextMenuPosition.x}px`, top: `${contextMenuPosition.y}px` }}>
         <ul className="context-menu-list">
@@ -104,8 +111,9 @@ const handleEditClick = () => {
             {props.inConflict && <li className="context-menu-item" onClick={handleConflictClick}>Conflict details</li>}
             {/* Add more items as needed */}
         </ul>
-    </div>
+    </div>    
 )}
+{showMessageBox && ( <MessageBox message={"Insert conflict information here"} onClose={handleMessageClose} />) }   
   </>
   );
   
