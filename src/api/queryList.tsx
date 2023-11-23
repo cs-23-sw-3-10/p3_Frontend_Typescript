@@ -15,6 +15,7 @@ export const GET_ALL_BT = gql`
             detachPeriod
             taskName
             testRig
+            inConflict
             bladeProject {
                 id
             }
@@ -42,8 +43,11 @@ query AllBladeTasksInRange($startDate: String!, $endDate: String!) {
         detachPeriod
         taskName
         testRig
+        inConflict
         bladeProject {
             color
+            customer
+            id
         }
     }
 }
@@ -61,6 +65,7 @@ query AllBladeTasks {
         detachPeriod
         taskName
         testRig
+        inConflict
         bladeProject {
             id
         }
@@ -107,6 +112,7 @@ query AllBladeProjects {
             detachPeriod
             taskName
             testRig
+            inConflict
             bladeProject {
                 color
             }
