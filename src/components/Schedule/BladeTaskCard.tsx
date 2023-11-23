@@ -12,6 +12,7 @@ interface BladeTaskCardProps {
   detachPeriod?: number;
   rig?: number;
   projectColor: string;
+  projectId: number;
   customer: string;
   taskName: string;
   id: number;
