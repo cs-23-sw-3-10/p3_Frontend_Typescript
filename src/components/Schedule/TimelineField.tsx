@@ -17,9 +17,7 @@ type TimelineFieldProps = {
 export const dateDivLength = 25; // px length of the dates in the schedule
 
 function CreateTimelineField(props: TimelineFieldProps) {
-
-    const [updateBt, {error,data}] = useMutation(UPDATE_BT)
-
+    const [updateBt, { error, data }] = useMutation(UPDATE_BT);
 
     let fieldWidth: number = 0; // px width of the field dynamically calculated from the number of months displayed
     props.months.forEach((month) => {
@@ -177,11 +175,9 @@ export function handleDragEnd(
     bladeTaskHolder: BladeTaskHolder,
     setDragging: React.Dispatch<React.SetStateAction<boolean>>,
     updateBT: Function
-    
 ) {
-    
     console.log("drag ended");
-    
+
     const { active, over } = event;
     console.log(active);
     if (over !== null) {
@@ -222,7 +218,7 @@ export function handleDragEnd(
 
             if (!isOverlap) {
                 let newEndDate = new Date(overDate);
-                
+
                 newEndDate.setDate(
                     newEndDate.getDate() + draggedCard.props.duration - 1
                 );
@@ -232,13 +228,13 @@ export function handleDragEnd(
                 console.log(draggedCard.props.duration);
 
                 updateBT({
-                    variables:{
-                        id:draggedCard.props.id,
-                        startDate:formatDate(overDate),
-                        duration:draggedCard.props.duration,
-                        rig:overRig
-                    }
-                })
+                    variables: {
+                        id: draggedCard.props.id,
+                        startDate: formatDate(overDate),
+                        duration: draggedCard.props.duration,
+                        rig: overRig,
+                    },
+                });
 
                 updatedBladeTaskCards[indexBT] = (
                     <BladeTaskCard
@@ -252,6 +248,9 @@ export function handleDragEnd(
                         startDate={new Date(overDate)}
                         endDate={newEndDate}
                         rig={overRig}
+                        attachPeriod={draggedCard.props.attachPeriod}
+                        detachPeriod={draggedCard.props.detachPeriod}
+                        shown={draggedCard.props.shown}
                     />
                 );
                 bladeTaskHolder.setBladeTasks(updatedBladeTaskCards);
@@ -312,9 +311,9 @@ function checkForOverlap(
 function formatDate(date: Date) {
     const year = date.getFullYear();
     // getMonth() returns 0-11; add 1 to make it 1-12 and pad with '0' if needed
-    const month = (date.getMonth() + 1).toString().padStart(2, '0');
+    const month = (date.getMonth() + 1).toString().padStart(2, "0");
     // getDate() returns 1-31; pad with '0' if needed
-    const day = date.getDate().toString().padStart(2, '0');
+    const day = date.getDate().toString().padStart(2, "0");
 
     return `${year}-${month}-${day}`;
 }
