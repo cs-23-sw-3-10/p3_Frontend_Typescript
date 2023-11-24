@@ -51,10 +51,6 @@ function DisplayComponent(props: DisplayProps) {
         },
     ]);
 
-
-   
-
-
     const [selectedDate, setSelectedDate] = useState(
         `${currentDate.getFullYear()}-${
             currentDate.getMonth() + 1
@@ -101,7 +97,6 @@ function DisplayComponent(props: DisplayProps) {
 
     const queryDates = getQueryDates(dates[0], dates[dates.length - 1]);
 
-    
     const { loading, error, data } = useQuery(GET_BT_IN_RANGE, {
         variables: {
             startDate: queryDates.startDate,
@@ -127,31 +122,33 @@ function DisplayComponent(props: DisplayProps) {
             btShown = true;
         }
         let dateSplit = bt.startDate.split("-");
-            const year = parseInt(dateSplit[0]);
-            const month = parseInt(dateSplit[1]) - 1;
-            const day = parseInt(dateSplit[2]);
+        const year = parseInt(dateSplit[0]);
+        const month = parseInt(dateSplit[1]) - 1;
+        const day = parseInt(dateSplit[2]);
 
-            let endDateSplit = bt.endDate.split("-");
-            const endYear = parseInt(endDateSplit[0]);
-            const endMonth = parseInt(endDateSplit[1]) - 1;
-            const endDate = parseInt(endDateSplit[2]);
-            btCards.push(
-                <BladeTaskCard
-                    key={bt.id}
-                    duration={bt.duration}
-                    projectColor={bt.bladeProject.color}
-                    projectId={bt.bladeProject.id}
-                    customer={bt.bladeProject.customer}
-                    taskName={bt.taskName}
-                    startDate={new Date(year, month, day)}
-                    endDate={new Date(endYear, endMonth, endDate)}
-                    rig={bt.testRig}
-                    id={bt.id}
-                    shown={btShown}
-                    disableDraggable={!props.editMode}
-                    inConflict={bt.inConflict}
-                                    />
-            );
+        let endDateSplit = bt.endDate.split("-");
+        const endYear = parseInt(endDateSplit[0]);
+        const endMonth = parseInt(endDateSplit[1]) - 1;
+        const endDate = parseInt(endDateSplit[2]);
+        btCards.push(
+            <BladeTaskCard
+                key={bt.id}
+                duration={bt.duration}
+                projectColor={bt.bladeProject.color}
+                projectId={bt.bladeProject.id}
+                customer={bt.bladeProject.customer}
+                taskName={bt.taskName}
+                startDate={new Date(year, month, day)}
+                endDate={new Date(endYear, endMonth, endDate)}
+                attachPeriod={bt.attachPeriod}
+                detachPeriod={bt.detachPeriod}
+                rig={bt.testRig}
+                id={bt.id}
+                shown={btShown}
+                disableDraggable={!props.editMode}
+                inConflict={bt.inConflict}
+            />
+        );
     });
 
     return (
@@ -202,8 +199,6 @@ function DisplayComponent(props: DisplayProps) {
                     btCards={btCards}
                 />
             </div>
-            
-            
 
             {props.editMode ? <CreateAdditionalContent /> : null}
         </div>
