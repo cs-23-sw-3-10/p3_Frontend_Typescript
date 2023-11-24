@@ -5,10 +5,12 @@ import CreateTimelineField from "./TimelineField";
 import React, { useState } from "react";
 import CreateAdditionalContent from "./AdditionalContent";
 import BladeTaskCard from "./BladeTaskCard";
-import { useQuery } from "@apollo/client";
+import { useMutation, useQuery } from "@apollo/client";
 import { GET_BT_IN_RANGE } from "../../api/queryList";
 import { getMonthLength } from "./TimelineField";
 import { capitalizeFirstLetter } from "./TimelineField";
+import { UPDATE_BT } from "../../api/mutationList";
+import { useEffect, useRef } from "react";
 
 const currentDate = new Date(Date.now()); // Get the current date
 
@@ -16,6 +18,8 @@ type DisplayProps = {
     editMode: boolean;
     setEditMode: React.Dispatch<React.SetStateAction<boolean>>;
     setShowPasswordPrompt: React.Dispatch<React.SetStateAction<boolean>>;
+    filter: string;
+    setFilter: React.Dispatch<React.SetStateAction<string>>;
 };
 
 function DisplayComponent(props: DisplayProps) {
@@ -43,15 +47,19 @@ function DisplayComponent(props: DisplayProps) {
         },
         {
             rigName: "Rig 6",
-            rigNumber: 6
-        }
+            rigNumber: 6,
+        },
     ]);
+
+
+   
+
 
     const [selectedDate, setSelectedDate] = useState(
         `${currentDate.getFullYear()}-${
             currentDate.getMonth() + 1
         }-${currentDate.getDate()}`
-        ); // State to store the selected date
+    ); // State to store the selected date
     const [numberOfMonths, setNumberOfMonths] = useState(3); // State to store the number of months to display
 
     const [dates, setDates] = useState(
@@ -93,6 +101,7 @@ function DisplayComponent(props: DisplayProps) {
 
     const queryDates = getQueryDates(dates[0], dates[dates.length - 1]);
 
+    
     const { loading, error, data } = useQuery(GET_BT_IN_RANGE, {
         variables: {
             startDate: queryDates.startDate,
@@ -106,31 +115,40 @@ function DisplayComponent(props: DisplayProps) {
     if (error) {
         return <p>Error {error.message}</p>;
     }
-    let btCards: React.ReactNode[] = [];
-    
-    data["AllBladeTasksInRange"].forEach((bt: any) => {
-        
-        let dateSplit = bt.startDate.split("-");
-        const year = parseInt(dateSplit[0]);
-        const month = parseInt(dateSplit[1]) - 1;
-        const day = parseInt(dateSplit[2]);
 
-        let endDateSplit = bt.endDate.split("-");
-        const endYear = parseInt(endDateSplit[0]);
-        const endMonth = parseInt(endDateSplit[1]) - 1;
-        const endDate = parseInt(endDateSplit[2]);
-        btCards.push(
-            <BladeTaskCard
-                key={bt.id} 
-                duration={bt.duration} 
-                projectColor={bt.bladeProject.color} 
-                taskName={bt.taskName}
-                startDate={new Date(year, month, day)}
-                endDate={new Date(endYear, endMonth, endDate)}
-                rig={bt.testRig}
-                id={bt.id}
-            />
-        );
+    let btCards: React.ReactNode[] = [];
+
+    data["AllBladeTasksInRange"].forEach((bt: any) => {
+        if (
+            bt.bladeProject.customer === props.filter ||
+            props.filter === "None"
+        ) {
+            let dateSplit = bt.startDate.split("-");
+            const year = parseInt(dateSplit[0]);
+            const month = parseInt(dateSplit[1]) - 1;
+            const day = parseInt(dateSplit[2]);
+
+            let endDateSplit = bt.endDate.split("-");
+            const endYear = parseInt(endDateSplit[0]);
+            const endMonth = parseInt(endDateSplit[1]) - 1;
+            const endDate = parseInt(endDateSplit[2]);
+            btCards.push(
+                <BladeTaskCard
+                    key={bt.id}
+                    duration={bt.duration}
+                    projectColor={bt.bladeProject.color}
+                    projectId={bt.bladeProject.id}
+                    customer={bt.bladeProject.customer}
+                    taskName={bt.taskName}
+                    startDate={new Date(year, month, day)}
+                    endDate={new Date(endYear, endMonth, endDate)}
+                    rig={bt.testRig}
+                    id={bt.id}
+                    disableDraggable={!props.editMode}
+                    inConflict={bt.inConflict}
+                                    />
+            );
+        }
     });
 
     return (
@@ -148,30 +166,42 @@ function DisplayComponent(props: DisplayProps) {
                     <label htmlFor="numberInput" style={{ fontSize: "10px" }}>
                         Months shown:
                     </label>
-                    <input type="number" min="2" max="24"onChange={handleNumberChange} />
+                    <input
+                        type="number"
+                        min="2"
+                        max="24"
+                        onChange={handleNumberChange}
+                    />
                     <input type="button" onClick={goTo} value={"Go To"} />
                 </form>
             </div>
             <div className="ScheduleFilterAndMode">
                 <label>Filter:</label>
-                <select name="customerFilter" id="customerFilter">
+                <select
+                    name="customerFilter"
+                    id="customerFilter"
+                    onChange={(e) => {
+                        props.setFilter(e.target.value);
+                    }}
+                >
                     <option value="None">None</option>
-                    <option value="Customer 1">Customer 1</option>
-                    <option value="Customer 2">Customer 2</option>
+                    <option value="Goldwind">Goldwind</option>
+                    <option value="Suzlon">Suzlon</option>
                 </select>
                 <label className="switch"> Edit Mode</label>
                 <input type="checkbox" onChange={handleModeChange} />
             </div>
             <div className="ScheduleDisplay">
                 <CreateTestRigDivs rigs={rigs} />
-                <DndContext>
-                    <CreateTimelineField
-                        rigs={rigs}
-                        months={dates}
-                        btCards={btCards}
-                    />
-                </DndContext>
+                <CreateTimelineField
+                    rigs={rigs}
+                    months={dates}
+                    btCards={btCards}
+                />
             </div>
+            
+            
+
             {props.editMode ? <CreateAdditionalContent /> : null}
         </div>
     );
@@ -193,6 +223,7 @@ function convertToQueryDate(year: number, month: number, day: number) {
     }
     return queryDateSTR;
 }
+
 export function getMonthsInView(startDate: Date, numberOfMonths: number) {
     let year = startDate.getFullYear();
     let month = startDate.getMonth();
@@ -220,7 +251,6 @@ export function getMonthsInView(startDate: Date, numberOfMonths: number) {
 }
 
 function getQueryDates(startDate: Date, endDate: Date) {
-    console.log("start and end date ", startDate, endDate)
     let startDateSTR: String;
     let endDateSTR: String;
     let startDateDay = startDate.getDate();
