@@ -1,0 +1,7 @@
+.pendingTasksContainer{
+    display: flex;
+    height: 100px;
+    width: 90%;
+    background: blue;
+    justify-content: left;
+}

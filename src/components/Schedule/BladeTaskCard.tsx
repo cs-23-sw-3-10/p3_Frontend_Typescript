@@ -6,7 +6,7 @@ import MessageBox from "../ui/MessageBox";
 
 //interface used to define the types of the props of BladeTaskCard
 interface BladeTaskCardProps {
-  startDate: Date;
+  startDate?: Date;
   endDate?: Date;
   duration: number;
   attachPeriod?: number;
@@ -83,6 +83,7 @@ const handleEditClick = () => {
 
 
   //Dynamic styling based on props values
+  if(props.startDate){
   const cardStyle = {
     backgroundColor: props.shown ? props.projectColor : "grey",
     gridColumn: `date-${props.startDate.getFullYear()}-${props.startDate.getMonth()}-${props.startDate.getDate()} / span ${
@@ -90,7 +91,6 @@ const handleEditClick = () => {
     }`,
     border: props.inConflict ? '2px dashed red' : '', 
   };
-
   const droppableProps: BladeTaskDraggableProps = {
     style: cardStyle,
     id: props.id,
@@ -99,6 +99,9 @@ const handleEditClick = () => {
     setContextMenu: handleRightClick,
     shown: props.shown,
   };
+
+
+
 
   return(<>
   <DraggableBladeTask {...droppableProps} />
@@ -114,6 +117,10 @@ const handleEditClick = () => {
 {showMessageBox && ( <MessageBox message={"Insert conflict information here"} onClose={handleMessageClose} />) }   
   </>
   );
+
+}else{
+  throw new Error('startDate is null, and it was expected no be non-null');
+}
   
   
 }

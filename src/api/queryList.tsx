@@ -53,6 +53,29 @@ query AllBladeTasksInRange($startDate: String!, $endDate: String!) {
 }
 `;
 
+export const GET_BT_PENDING = gql`
+query AllBladeTasksPending{
+    AllBladeTasksInRange(startDate: null, endDate: null) {
+        id
+        startDate
+        endDate
+        duration
+        testType
+        attachPeriod
+        detachPeriod
+        taskName
+        testRig
+        inConflict
+        bladeProject {
+            color
+            customer
+            id
+        }
+    }
+}
+`;
+
+
 export const GET_ALL_BT_WITH_BOOKINGS_EQNAME = gql`
 query AllBladeTasks {
     AllBladeTasks {
