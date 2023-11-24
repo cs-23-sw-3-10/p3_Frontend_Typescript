@@ -98,6 +98,9 @@ function BladeTaskMenu() {
         employees: false,
     });
 
+    useEffect( () => {
+        console.log(currentOrder.resourceOrders);
+    },[resourceOrders]);
 
     return (
         <div className='btmenu-container'>
