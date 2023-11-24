@@ -44,7 +44,6 @@ function TechnicianTable(){
     }
 
     function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
-        //const value: number|string = e.target.name === 'count' || 'maxWorkHours' ? parseInt(e.target.value, 10) : e.target.value;
         setFormData({...formData, [e.target.name]: e.target.value});
     }
 
@@ -53,13 +52,13 @@ function TechnicianTable(){
         if(validateForm()) {
             console.log(formData);
             createTechnician({variables: {
-                type: formData.type,
-                count: formData.count,
-                maxWorkHours: parseInt(formData.maxWorkHours)
+                type: String (formData.type),
+                count: Number (formData.count),
+                maxWorkHours: Number (formData.maxWorkHours)
             }}).then(response => {
                 console.log('Technician created: ' + response);
             }).catch(error => {
-                console.log('Error creating Technician: ' + error); // TODO: IS THIS GOOD PRACTICE? WHY?
+                console.log('Error creating Technician: ' + error);
             });
         }
     }
@@ -75,7 +74,7 @@ function TechnicianTable(){
                 </div>
                 <div>
                     <label htmlFor="count">Count</label>
-                    <input type="number" name="count" id="count" value={formData.count} onChange={handleChange} />
+                    <input type="number" name="count" id="count"  value={formData.count} onChange={handleChange} />
                     {errors.count && <span style={{color: "red"}}>{errors.count}</span>}
                 </div>
                 <div>
