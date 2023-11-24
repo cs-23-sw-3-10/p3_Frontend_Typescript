@@ -1,5 +1,7 @@
 
+import { useMutation } from '@apollo/client';
 import React, { useState } from 'react';
+import { CREATE_TECHNICIAN_MUTATION } from '../../api/mutationList';
 
 
 interface TechnicianFormData {
@@ -18,6 +20,9 @@ interface TechnicianErrors {
 function TechnicianTable(){
     const [formData, setFormData] = useState<TechnicianFormData>({type:'', count:0, maxWorkHours:0});
     const [errors, setErros] = useState<TechnicianErrors>({type:'', count:'', maxWorkHours:''});
+    const [createTechnician, { loading, error }] = useMutation(CREATE_TECHNICIAN_MUTATION); 
+
+    
 
     function validateForm() : boolean { 
         let tempErros: TechnicianErrors = {type:'', count:'', maxWorkHours:''};
@@ -39,14 +44,23 @@ function TechnicianTable(){
     }
 
     function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
+        //const value: number|string = e.target.name === 'count' || 'maxWorkHours' ? parseInt(e.target.value, 10) : e.target.value;
         setFormData({...formData, [e.target.name]: e.target.value});
     }
 
     function handleSubmit(e: React.FormEvent) {
         e.preventDefault();
         if(validateForm()) {
-            console.log("OK: " + {...formData});
-            //send data to server
+            console.log(formData);
+            createTechnician({variables: {
+                type: formData.type,
+                count: formData.count,
+                maxWorkHours: parseInt(formData.maxWorkHours)
+            }}).then(response => {
+                console.log('Technician created: ' + response);
+            }).catch(error => {
+                console.log('Error creating Technician: ' + error); // TODO: IS THIS GOOD PRACTICE? WHY?
+            });
         }
     }
 
@@ -55,12 +69,12 @@ function TechnicianTable(){
 
             <form onSubmit={handleSubmit}>
                 <div>
-                    <label htmlFor="Type">type</label>
+                    <label htmlFor="Type">Type</label>
                     <input type="text" name="type" id="type" value={formData.type} onChange={handleChange} />
                     {errors.type && <span style={{color: "red"}}>{errors.type}</span>}
                 </div>
                 <div>
-                    <label htmlFor="count">count</label>
+                    <label htmlFor="count">Count</label>
                     <input type="number" name="count" id="count" value={formData.count} onChange={handleChange} />
                     {errors.count && <span style={{color: "red"}}>{errors.count}</span>}
                 </div>

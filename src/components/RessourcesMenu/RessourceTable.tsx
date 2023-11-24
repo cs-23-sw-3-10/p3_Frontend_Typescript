@@ -10,7 +10,7 @@ export default function ResourceTable() {
     <div>
       <select onChange={(e) => setSelectedForm(parseInt(e.target.value))} value={selectedForm}>
         <option value={1}>Engineer</option>
-        <option value={2}>Employee</option>
+        <option value={2}>Technician</option>
         <option value={3}>Equipment</option>
       </select>
 

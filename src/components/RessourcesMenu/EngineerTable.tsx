@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-
+import styles from './EngineerTable.module.css';
 
 interface EngineerFormData {
     name : string;
@@ -38,23 +38,23 @@ function EngineerTable(){
     function handleSubmit(e: React.FormEvent) {
         e.preventDefault();
         if(validateForm()) {
-            console.log("OK: " + {...formData});
-            //send data to server
+            
         }
     }
 
     return (
         <>
 
-            <form onSubmit={handleSubmit}>
+            <form onSubmit={handleSubmit} className={styles.form}>
+                <h2>Add Engineer to the system</h2>
                 <div>
-                    <label htmlFor="Name">Name</label>
-                    <input type="text" name="name" id="name" value={formData.name} onChange={handleChange} />
+                    <label htmlFor="Name" className={styles.label}>Name</label>
+                    <input type="text" name="name" id="name" value={formData.name} onChange={handleChange} className={styles.input}/>
                     {errors.name && <span style={{color: "red"}}>{errors.name}</span>}
                 </div>
                 <div>
-                    <label htmlFor="Type">maxWorkHours</label>
-                    <input type="number" name="maxWorkHours" id="maxWorkHours" value={formData.maxWorkHours} onChange={handleChange} />
+                    <label htmlFor="Type" className={styles.label}>maxWorkHours</label>
+                    <input type="number" name="maxWorkHours" id="maxWorkHours" value={formData.maxWorkHours} onChange={handleChange} className={styles.input} />
                     {errors.maxWorkHours && <span style={{color: "red"}}>{errors.maxWorkHours}</span>}
                 </div>
             <button type="submit">Submit</button>
