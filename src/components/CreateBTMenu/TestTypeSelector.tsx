@@ -1,5 +1,5 @@
 import { GET_TEST_TYPES } from '../../api/queryList';
-import { empty, useQuery } from '@apollo/client';
+import { useQuery } from '@apollo/client';
 import { useEffect, useState } from 'react';
 import Combobox from "react-widgets/Combobox";
 
