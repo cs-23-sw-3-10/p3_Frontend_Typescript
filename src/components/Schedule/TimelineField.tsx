@@ -7,6 +7,8 @@ import BladeTaskCard from "./BladeTaskCard";
 import { BladeTaskHolder } from "./BladeTaskHolder";
 import { useMutation } from "@apollo/client";
 import { UPDATE_BT } from "../../api/mutationList";
+import PendingTasks from "./PendingTasks"
+
 
 type TimelineFieldProps = {
     rigs: { rigName: string; rigNumber: number }[];
@@ -53,7 +55,7 @@ function CreateTimelineField(props: TimelineFieldProps) {
         // Style for the BladeTaskField
         width: `${fieldWidth}px`,
         gridTemplateColumns: columnsOfSchedule,
-        gridTemplateRows: "30px 30px auto",
+        gridTemplateRows: "30px 30px auto auto",
     };
 
     const rigFieldContainerStyle = {
@@ -109,7 +111,7 @@ function CreateTimelineField(props: TimelineFieldProps) {
                                             return (
                                                 (
                                                     bladeTask as React.ReactElement<any>
-                                                ).props.rig === rig.rigNumber
+                                                ).props.rig === rig.rigNumber && !isNotScheduled(bladeTask as React.ReactElement<any>)
                                             );
                                         }
                                         return false;
@@ -117,6 +119,21 @@ function CreateTimelineField(props: TimelineFieldProps) {
                             />
                         ))}
                     </div>
+                    <PendingTasks 
+                     bladeTaskHolder={bladeTasks}
+                     bladeTaskCards={bladeTasks
+                        .getBladeTasks()
+                        .filter((bladeTask: React.ReactNode) => {
+                            //Finds the blade tasks placed on the rig
+                            if (bladeTask) {
+                                return (
+                                    isNotScheduled(bladeTask as React.ReactElement<any>)
+                                );
+                            }
+                            return false
+                        })}
+
+                    />                
                 </DndContext>
             </div>
         </div>
@@ -319,4 +336,14 @@ function formatDate(date: Date) {
     const day = date.getDate().toString().padStart(2, '0');
 
     return `${year}-${month}-${day}`;
+}
+
+function isNotScheduled(bladeTask: React.ReactElement<any>){
+    console.log("bladeTask :", bladeTask)
+    console.log("value: ", !(
+        bladeTask.props.startDate && bladeTask.props.endDate && bladeTask.props.rig        
+    ))
+    return !(
+        bladeTask.props.startDate && bladeTask.props.endDate && bladeTask.props.rig        
+    )
 }

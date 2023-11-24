@@ -6,71 +6,26 @@ import BladeTaskCard from "./BladeTaskCard";
 import { DndContext } from "@dnd-kit/core";
 import { handleDragStart } from "./TimelineField";
 import { findBTIndex } from "./TimelineField";
+import { useDroppable } from "@dnd-kit/core";
 
 interface PendingTasksProps {
-    BladeTaskHolder: BladeTaskHolder;
-    BladeTaskCards: React.ReactNode[];
-    isDragging: boolean;
-    setDragging: React.Dispatch<React.SetStateAction<boolean>>;
-    filter: string;
+    bladeTaskHolder: BladeTaskHolder;
+    bladeTaskCards: React.ReactNode[];
 }
 
 function PendingTasks(props: PendingTasksProps) {
-    const { loading, error, data } = useQuery(GET_BT_PENDING);
-
-    if (loading) {
-        return <p>Loading...</p>;
-    }
-    if (error) {
-        return <p>Error {error.message}</p>;
-    }
-
-    let btCards: React.ReactNode[] = [];
-
-    data["AllBladeTasksInRange"].forEach((bt: any) => {
-        let btShown = false;
-        if (
-            bt.bladeProject.customer === props.filter ||
-            props.filter === "None"
-        ) {
-            btShown = true;
-        }
-
-        btCards.push(
-            <BladeTaskCard
-                key={bt.id}
-                duration={bt.duration}
-                projectColor={bt.bladeProject.color}
-                projectId={bt.bladeProject.id}
-                customer={bt.bladeProject.customer}
-                taskName={bt.taskName}
-                rig={bt.testRig}
-                id={bt.id}
-                shown={btShown}
-                disableDraggable={false}
-                inConflict={false}
-            />
-        );
+    const { setNodeRef } = useDroppable({
+        id: "droppablePendingTasksId",
     });
 
-    let bladeTasks = new BladeTaskHolder(btCards);
+    console.log("props.bladeTaskCards :", props.bladeTaskCards)
 
-    return (
-        <DndContext>
-            <div className="pendingTasksContainer">Pending Tasks</div>
-            onDragStart={(event) => {
-                        handleDragStart(event, setDragging);
-                    }}
-                    onDragEnd={(event) => {
-                        handleDragEndPending(event, bladeTasks, setDragging, updateBt);
-                    }}
-        </DndContext>
-    );
+    return <div className="pendingTasksContainer">{props.bladeTaskCards}</div>;
 }
 
 export default PendingTasks;
 
-
+/*
 function handleDragEndPending(
     event: any,
     bladeTaskHolder: BladeTaskHolder,
@@ -113,9 +68,9 @@ function handleDragEndPending(
                         projectId={draggedCard.props.projectId}
                         customer={draggedCard.props.customer}
                         taskName={draggedCard.props.taskName}
-                        startDate={new Date(overDate)}
-                        endDate={newEndDate}
-                        rig={overRig}
+                        startDate={undefined}
+                        endDate={undefined}
+                        rig={undefined}
                     />
                 );
                 bladeTaskHolder.setBladeTasks(updatedBladeTaskCards);
@@ -126,3 +81,4 @@ function handleDragEndPending(
         console.log("over is null");
     }
 }
+*/

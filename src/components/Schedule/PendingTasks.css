@@ -4,4 +4,10 @@
     width: 90%;
     background: blue;
     justify-content: left;
+    grid-column: 1/-1;
+    grid-row: 4;
+    position: absolute;
+    top: 450px;
+    left: 5px
+
 }

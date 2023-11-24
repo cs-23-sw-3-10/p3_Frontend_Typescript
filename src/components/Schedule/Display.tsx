@@ -6,7 +6,7 @@ import React, { useState } from "react";
 import CreateAdditionalContent from "./AdditionalContent";
 import BladeTaskCard from "./BladeTaskCard";
 import { useMutation, useQuery } from "@apollo/client";
-import { GET_BT_IN_RANGE } from "../../api/queryList";
+import { GET_BT_IN_RANGE, GET_BT_PENDING } from "../../api/queryList";
 import { getMonthLength } from "./TimelineField";
 import { capitalizeFirstLetter } from "./TimelineField";
 import { UPDATE_BT } from "../../api/mutationList";
@@ -110,11 +110,12 @@ function DisplayComponent(props: DisplayProps) {
     });
 
     if (loading) {
-        return <p>Loading...</p>;
+        return <p>Loading scheduled blade tasks</p>;
     }
     if (error) {
-        return <p>Error {error.message}</p>;
+        return <p>Error while loading scheduled tasks {error.message}</p>;
     }
+ 
 
     let btCards: React.ReactNode[] = [];
 
