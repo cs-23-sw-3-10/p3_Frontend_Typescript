@@ -66,6 +66,7 @@ function CreateRigFieldContainer(props: RigFieldContainerProps) {
                     (bladeTask as React.ReactElement<any>).props.customer
                 }
                 taskName={(bladeTask as React.ReactElement<any>).props.taskName}
+                
             />
         );
     });
