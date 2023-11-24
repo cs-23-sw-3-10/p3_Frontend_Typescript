@@ -2,6 +2,9 @@ import { GET_TEST_TYPES } from '../../api/queryList';
 import { useQuery } from '@apollo/client';
 import { useEffect, useState } from 'react';
 import Combobox from "react-widgets/Combobox";
+import "../../../node_modules/react-widgets/styles.css";
+import "./TestTypeSelector.css"
+
 
 
 //Queries test types and insert them into the BT-Menu
@@ -22,7 +25,7 @@ function TestTypeSelector({ testType, setTestType }: { testType: string, setTest
     return (
         <div className="item testtype_wrapper">
             <h2 className="title">Type</h2>
-            <Combobox className="testtype_select input_sideborders" onChange={value => setTestType(value)} value={testType} data={typesList} />
+            <Combobox  onChange={value => setTestType(value)} value={testType} data={typesList} />
         </div>
     );
 }

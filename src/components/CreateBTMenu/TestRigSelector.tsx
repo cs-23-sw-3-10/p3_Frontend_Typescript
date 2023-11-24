@@ -1,7 +1,6 @@
 import { GET_TEST_RIGS } from '../../api/queryList';
 import { useQuery } from '@apollo/client';
 
-
 function TestRigSelector({testRig, setTestRig}:{testRig: number, setTestRig:Function}) {
     return (
         <>
