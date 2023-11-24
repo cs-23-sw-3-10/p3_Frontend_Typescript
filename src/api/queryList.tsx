@@ -169,6 +169,7 @@ export const GET_ALL_BT_NAMES = gql`
 export const GET_TEST_TYPES = gql`
 query GetTestTypes{
   DictionaryAllByCategory(category:"testType"){
+    id
     label
   }
 }
