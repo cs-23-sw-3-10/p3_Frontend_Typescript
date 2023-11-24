@@ -59,7 +59,7 @@ function BladeTaskMenu() {
     //All the states for the form -> Inserted into the BT-order as the user fills the form out
     const [bladeProjectId, setBladeProjectId] = useState('');
     const [taskName, setTaskName] = useState('');
-    const [testType, setTestType] = useState('');
+    const [testType, setTestType] = useState('hello');
     const [startDate, setStartDate] = useState(new Date().toISOString().split('T')[0]); //Sets the date to be the current day as initial value;
     const [duration, setDuration] = useState(0);
     const [attachPeriod, setAttachPeriod] = useState(0);

@@ -1,41 +1,35 @@
 import { GET_TEST_TYPES } from '../../api/queryList';
 import { useQuery } from '@apollo/client';
+import { useState } from 'react';
+import Combobox from "react-widgets/Combobox";
 
 
 //Queries test types and insert them into the BT-Menu
 function TestTypeSelector({testType, setTestType}: {testType:string, setTestType: Function}) {
+    const { loading, error, data } = useQuery(GET_TEST_TYPES);
+    const [typesList, setTypesList] = useState([]);
+    if (loading) return (<Combobox className="testtype_select input_sideborders" data={typesList}/>);
+    if (error) return (<Combobox className="testtype_select input_sideborders" data={typesList}/>);
+
+
+    //When data arrives from backend server
+    console.log(testType);
+    if(testType === "hello"){
+        console.log(testType);
+        setTestType("SWITCH");
+        let listFromDB:any = data.DictionaryAllByCategory.map(({label}:{label:string}) => label);
+        setTypesList(listFromDB);
+    }
+   
+    console.log(typesList);
+
     return (
         <div className="item testtype_wrapper">
             <h2 className="title">Type</h2>
-            <select className="testtype_select input_sideborders" id="testtype" name="testtype" onChange={(e) => setTestType(e.currentTarget.value)} value={testType}>
-                <TestTypeOptions testType={testType} setTestType={setTestType}/>
-            </select>
+            <>{console.log(testType)}</>
+            <Combobox className="testtype_select input_sideborders" onChange={value => setTestType(value)} value={testType} data={typesList}/>
         </div>
     );
 }
 
-
-function TestTypeOptions({testType, setTestType}:{testType: string, setTestType:Function}) {
-    const { loading, error, data } = useQuery(GET_TEST_TYPES);
-
-    //Whilst list is loading, the only element in the list is "LOADING"
-    if (loading) return (<option value="LOADING">LOADING</option>);
-
-    //Error returns an empty list
-    if (error) {
-        console.log(error.message);
-        return (<option>Error</option>);
-    }
-
-    //Used to give keys to elements in the list
-    let key = 1;
-
-    //Defaults the value of Test Rig to the first option
-    if(testType === ""){
-        setTestType(data.DictionaryAllByCategory[0].label);
-    }
-
-    //Returns a dropdown of all the test types present in DB
-    return data.DictionaryAllByCategory.map(({ label }: { label: string }) => (<option value={label.toString()} key={key++}>{label}</option>));
-}
 export default TestTypeSelector;
