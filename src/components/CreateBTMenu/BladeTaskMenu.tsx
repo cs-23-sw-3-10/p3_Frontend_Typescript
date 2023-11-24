@@ -98,6 +98,7 @@ function BladeTaskMenu() {
         employees: false,
     });
 
+
     return (
         <div className='btmenu-container'>
             {/*ErrorMessageContainer is a menu next to the BT-Menu displaying error messages*/}

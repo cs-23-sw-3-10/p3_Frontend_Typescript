@@ -22,7 +22,7 @@ function EquipmentList({ resourceOrders }: { resourceOrders: ResourceOrder[] }) 
                 {( (order.resourceType !== "Engineer") && (order.resourceType !== "Technician")) ?
                 <div className='equipment_entry'>
                     <div className='type'>
-                        <h2 className='title'>{order.resourceType}</h2>
+                        <h2 className='title'>{order.resourceName}</h2>
                     </div>
                     <div className="period">
                         <fieldset className='period_selector'>
