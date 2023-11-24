@@ -119,11 +119,14 @@ function DisplayComponent(props: DisplayProps) {
     let btCards: React.ReactNode[] = [];
 
     data["AllBladeTasksInRange"].forEach((bt: any) => {
+        let btShown = false;
         if (
             bt.bladeProject.customer === props.filter ||
             props.filter === "None"
         ) {
-            let dateSplit = bt.startDate.split("-");
+            btShown = true;
+        }
+        let dateSplit = bt.startDate.split("-");
             const year = parseInt(dateSplit[0]);
             const month = parseInt(dateSplit[1]) - 1;
             const day = parseInt(dateSplit[2]);
@@ -144,11 +147,11 @@ function DisplayComponent(props: DisplayProps) {
                     endDate={new Date(endYear, endMonth, endDate)}
                     rig={bt.testRig}
                     id={bt.id}
+                    shown={btShown}
                     disableDraggable={!props.editMode}
                     inConflict={bt.inConflict}
                                     />
             );
-        }
     });
 
     return (

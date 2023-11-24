@@ -17,10 +17,10 @@ interface BladeTaskCardProps {
   customer: string;
   taskName: string;
   id: number;
+  shown?: boolean;
   inConflict?: boolean;
   disableDraggable?: boolean;
   setContextMenu?: (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => void;
-  
 
 }
 interface BladeTaskDraggableProps {
@@ -29,6 +29,7 @@ interface BladeTaskDraggableProps {
   taskName: string;
   disableDraggable?: boolean;
   inConflict?: boolean;
+  shown?: boolean;
   setContextMenu?: (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => void;
 }
 
@@ -47,8 +48,6 @@ function BladeTaskCard(props: BladeTaskCardProps) {
             setShowContextMenu(false);
         }
     };
-
-    
 
     // Attach the event listener
     document.addEventListener("mousedown", handleClickOutside);
@@ -83,11 +82,9 @@ const handleEditClick = () => {
   };
 
 
-
-  
   //Dynamic styling based on props values
   const cardStyle = {
-    backgroundColor: props.projectColor,
+    backgroundColor: props.shown ? props.projectColor : "grey",
     gridColumn: `date-${props.startDate.getFullYear()}-${props.startDate.getMonth()}-${props.startDate.getDate()} / span ${
       props.duration
     }`,
@@ -100,6 +97,7 @@ const handleEditClick = () => {
     taskName: props.taskName,
     disableDraggable: props.disableDraggable,
     setContextMenu: handleRightClick,
+    shown: props.shown,
   };
 
   return(<>
@@ -127,32 +125,18 @@ function DraggableBladeTask(props: BladeTaskDraggableProps) {
     disabled: props.disableDraggable,
   });
   
-
- 
-
   const style = {
     ...props.style,
     transform: CSS.Translate.toString(transform),
 };
 
- 
-
-
-
   // Attach this handler to the window object to close the context menu
-  
-  
-
   return (
     <div className="bladeTaskCard" style={style} id={`${props.id}`} ref={setNodeRef}
         {...listeners}
         {...attributes}
         onContextMenu={props.setContextMenu}>
-      <div>{props.taskName}</div>
-
-      
-
-  
+          {props.shown ? <div>{props.taskName}</div> : <div></div>}
     </div>
   );
 }
