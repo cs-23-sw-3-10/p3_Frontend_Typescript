@@ -1,6 +1,5 @@
 import "./PendingTasks.css";
 import { BladeTaskHolder } from "./BladeTaskHolder";
-import { GET_BT_PENDING } from "../../api/queryList";
 import { useQuery } from "@apollo/client";
 import BladeTaskCard from "./BladeTaskCard";
 import { DndContext } from "@dnd-kit/core";

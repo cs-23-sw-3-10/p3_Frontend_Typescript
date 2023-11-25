@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, { useState } from "react";
 
 import { columnBP } from "./BladeProjectColumns";
 import { columnBT } from "../BladeTask/BladeTaskColumns";
@@ -16,9 +16,8 @@ import { getMonthsInView } from "../Schedule/Display";
 import { getMonthLength } from "../Schedule/TimelineField";
 import { capitalizeFirstLetter } from "../Schedule/TimelineField";
 
-
 /**
- * Calculates the number of months between start and enddate of a bladeproject, 
+ * Calculates the number of months between start and enddate of a bladeproject,
  * which is used to regulate the number of months shown in the expanded table, when it is rendered
  * @param startDate: the start date of the bladeproject
  * @param endDate: the end date of the bladeproject
@@ -34,7 +33,6 @@ function countMonthsIncludingStartAndEnd(startDate: Date, endDate: Date) {
     return months + 1;
 }
 
-
 /**
  * gets all bladeprojects from the database and renders them in a table
  * if the bladeprojects contain bladeTasks, these are also rendered in a table when the bladeproject row is expanded
@@ -46,30 +44,29 @@ function BladeProjectPageWithSchedule() {
         // should be imported from database
         {
             rigName: "Rig 1",
-            rigNumber: 1
+            rigNumber: 1,
         },
         {
             rigName: "Rig 2",
-            rigNumber: 2
+            rigNumber: 2,
         },
         {
             rigName: "Rig 3",
-            rigNumber: 3
+            rigNumber: 3,
         },
         {
             rigName: "Rig 4",
-            rigNumber: 4
+            rigNumber: 4,
         },
         {
             rigName: "Rig 5",
-            rigNumber: 5
+            rigNumber: 5,
         },
         {
             rigName: "Rig 6",
-            rigNumber: 6
-        }
+            rigNumber: 6,
+        },
     ]);
-
 
     //get data from the database
     const {
@@ -86,9 +83,8 @@ function BladeProjectPageWithSchedule() {
         return <p> No data for {"AllBladeProjects"} </p>;
     }
 
-     
     /* renders the table. The renderExpandedComponent prop is used to render the bladeTasks table
-     * based on the current row.id which is equal to the bladeproject ID. 
+     * based on the current row.id which is equal to the bladeproject ID.
      * The data for the TableLogicWOHeaders is therefore only containing the bladeTasks for the expanded bladeproject
      */
     return (
@@ -97,49 +93,81 @@ function BladeProjectPageWithSchedule() {
             data={BPData}
             renderExpandedComponent={(row) => {
                 let btCards: React.ReactNode[] = [];
-                let bladeProjectIndex = dataBP["AllBladeProjects"].find((project: any) => project.id === row.id)
+                let btCardsPending: React.ReactNode[] = [];
+                let bladeProjectIndex = dataBP["AllBladeProjects"].find(
+                    (project: any) => project.id === row.id
+                );
 
-                const dates = getMonthsInView(new Date(bladeProjectIndex.startDate), countMonthsIncludingStartAndEnd(new Date(bladeProjectIndex.startDate), new Date(bladeProjectIndex.endDate))); 
-                    
-                if(bladeProjectIndex && bladeProjectIndex.bladeTasks){
+                const dates = getMonthsInView(
+                    new Date(bladeProjectIndex.startDate),
+                    countMonthsIncludingStartAndEnd(
+                        new Date(bladeProjectIndex.startDate),
+                        new Date(bladeProjectIndex.endDate)
+                    )
+                );
+
+                if (bladeProjectIndex && bladeProjectIndex.bladeTasks) {
                     bladeProjectIndex.bladeTasks.forEach((bladeTask: any) => {
-                    let dateSplit = bladeTask.startDate.split("-");
-                    const year = parseInt(dateSplit[0]);
-                    const month = parseInt(dateSplit[1]) - 1;
-                    const day = parseInt(dateSplit[2]);
-            
-                    let endDateSplit = bladeTask.endDate.split("-");
-                    const endYear = parseInt(endDateSplit[0]);
-                    const endMonth = parseInt(endDateSplit[1]) - 1;
-                    const endDate = parseInt(endDateSplit[2]);
+                        if (
+                            bladeTask.startDate &&
+                            bladeTask.endDate &&
+                            bladeTask.testRig
+                        ) {
+                            let dateSplit = bladeTask.startDate.split("-");
+                            const year = parseInt(dateSplit[0]);
+                            const month = parseInt(dateSplit[1]) - 1;
+                            const day = parseInt(dateSplit[2]);
 
-                    btCards.push(
-                        <BladeTaskCard
-                            key={bladeTask.id}
-                            duration={bladeTask.duration}
-                            projectColor={bladeTask.bladeProject.color}
-                            projectId={bladeTask.bladeProject.id}
-                            customer={bladeTask.bladeProject.customer}
-                            taskName={bladeTask.taskName}
-                            startDate={new Date(year, month, day)}
-                            endDate={new Date(endYear, endMonth, endDate)}
-                            rig={bladeTask.testRig}
-                            id={bladeTask.id}
-                            disableDraggable={true}
-                            
-                        />
-                    );           
-                    
+                            let endDateSplit = bladeTask.endDate.split("-");
+                            const endYear = parseInt(endDateSplit[0]);
+                            const endMonth = parseInt(endDateSplit[1]) - 1;
+                            const endDate = parseInt(endDateSplit[2]);
+
+                            btCards.push(
+                                <BladeTaskCard
+                                    key={bladeTask.id}
+                                    duration={bladeTask.duration}
+                                    projectColor={bladeTask.bladeProject.color}
+                                    projectId={bladeTask.bladeProject.id}
+                                    customer={bladeTask.bladeProject.customer}
+                                    taskName={bladeTask.taskName}
+                                    startDate={new Date(year, month, day)}
+                                    endDate={
+                                        new Date(endYear, endMonth, endDate)
+                                    }
+                                    rig={bladeTask.testRig}
+                                    id={bladeTask.id}
+                                    disableDraggable={true}
+                                />
+                            );
+                        } else {
+                            btCardsPending.push(
+                                <BladeTaskCard
+                                    key={bladeTask.id}
+                                    duration={bladeTask.duration}
+                                    projectColor={bladeTask.bladeProject.color}
+                                    projectId={bladeTask.bladeProject.id}
+                                    customer={bladeTask.bladeProject.customer}
+                                    taskName={bladeTask.taskName}
+                                    id={bladeTask.id}
+                                    disableDraggable={true}
+                                />
+                            );
+                        }
+                    });
                 }
-                )
-            }
                 return (
                     <div className="flex flex rows">
                         <CreateTestRigDivs rigs={rigs} />
-                        <CreateTimelineField rigs={rigs} months={dates} btCards={btCards} />
-                    </div>        
-                )
-            }} 
+                        <CreateTimelineField
+                            rigs={rigs}
+                            months={dates}
+                            btCards={btCards}
+                            btCardsPending={btCardsPending}
+                        />
+                    </div>
+                );
+            }}
         />
     );
 }

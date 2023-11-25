@@ -7,21 +7,19 @@ import BladeTaskCard from "./BladeTaskCard";
 import { BladeTaskHolder } from "./BladeTaskHolder";
 import { useMutation } from "@apollo/client";
 import { UPDATE_BT } from "../../api/mutationList";
-import PendingTasks from "./PendingTasks"
-
+import PendingTasks from "./PendingTasks";
 
 type TimelineFieldProps = {
     rigs: { rigName: string; rigNumber: number }[];
     months: Date[];
     btCards: React.ReactNode[];
+    btCardsPending: React.ReactNode[];
 };
 
 export const dateDivLength = 25; // px length of the dates in the schedule
 
 function CreateTimelineField(props: TimelineFieldProps) {
-
-    const [updateBt, {error,data}] = useMutation(UPDATE_BT)
-
+    const [updateBt, { error, data }] = useMutation(UPDATE_BT);
 
     let fieldWidth: number = 0; // px width of the field dynamically calculated from the number of months displayed
     props.months.forEach((month) => {
@@ -69,6 +67,8 @@ function CreateTimelineField(props: TimelineFieldProps) {
     const [isDragging, setDragging] = useState(false);
 
     let bladeTasks = new BladeTaskHolder(props.btCards);
+    let bladeTasksPending = new BladeTaskHolder(props.btCardsPending);
+
     return (
         <div className="TimelineFieldContainer">
             <div className="TimelineField" style={BTFieldStyle}>
@@ -111,7 +111,10 @@ function CreateTimelineField(props: TimelineFieldProps) {
                                             return (
                                                 (
                                                     bladeTask as React.ReactElement<any>
-                                                ).props.rig === rig.rigNumber && !isNotScheduled(bladeTask as React.ReactElement<any>)
+                                                ).props.rig === rig.rigNumber &&
+                                                !isNotScheduled(
+                                                    bladeTask as React.ReactElement<any>
+                                                )
                                             );
                                         }
                                         return false;
@@ -119,21 +122,10 @@ function CreateTimelineField(props: TimelineFieldProps) {
                             />
                         ))}
                     </div>
-                    <PendingTasks 
-                     bladeTaskHolder={bladeTasks}
-                     bladeTaskCards={bladeTasks
-                        .getBladeTasks()
-                        .filter((bladeTask: React.ReactNode) => {
-                            //Finds the blade tasks placed on the rig
-                            if (bladeTask) {
-                                return (
-                                    isNotScheduled(bladeTask as React.ReactElement<any>)
-                                );
-                            }
-                            return false
-                        })}
-
-                    />                
+                    <PendingTasks
+                        bladeTaskHolder={bladeTasksPending}
+                        bladeTaskCards={bladeTasksPending.getBladeTasks()}
+                    />
                 </DndContext>
             </div>
         </div>
@@ -194,11 +186,9 @@ export function handleDragEnd(
     bladeTaskHolder: BladeTaskHolder,
     setDragging: React.Dispatch<React.SetStateAction<boolean>>,
     updateBT: Function
-    
 ) {
-    
     console.log("drag ended");
-    
+
     const { active, over } = event;
     console.log(active);
     if (over !== null) {
@@ -210,7 +200,7 @@ export function handleDragEnd(
             overIdSlpit[3]
         );
 
-        const indexBT = findBTIndex(bladeTaskHolder.getBladeTasks(),active);
+        const indexBT = findBTIndex(bladeTaskHolder.getBladeTasks(), active);
 
         if (indexBT !== -1) {
             const updatedBladeTaskCards = bladeTaskHolder.getBladeTasks();
@@ -228,7 +218,7 @@ export function handleDragEnd(
 
             if (!isOverlap) {
                 let newEndDate = new Date(overDate);
-                
+
                 newEndDate.setDate(
                     newEndDate.getDate() + draggedCard.props.duration - 1
                 );
@@ -238,13 +228,13 @@ export function handleDragEnd(
                 console.log(draggedCard.props.duration);
 
                 updateBT({
-                    variables:{
-                        id:draggedCard.props.id,
-                        startDate:formatDate(overDate),
-                        duration:draggedCard.props.duration,
-                        rig:overRig
-                    }
-                })
+                    variables: {
+                        id: draggedCard.props.id,
+                        startDate: formatDate(overDate),
+                        duration: draggedCard.props.duration,
+                        rig: overRig,
+                    },
+                });
 
                 updatedBladeTaskCards[indexBT] = (
                     <BladeTaskCard
@@ -285,7 +275,7 @@ export function findBTIndex(bladeTaskCards: any, activeComponent: any) {
     }
     console.log("blade task not found");
     return -1;
-};
+}
 
 function checkForOverlap(
     bladeTaskCards: any,
@@ -311,13 +301,13 @@ function checkForOverlap(
                 bladeTaskCards[i].props.projectId ===
                     draggedCard.props.projectId
             ) {
-                // skip comparison with cards on different rigs
+                // skip comparison with cards on different rigs unless it is from same project
                 //Overlaps are covered by two cases. A check is made for each case.
                 if (startDateA <= startDateB) {
                     if (!(endDateA < startDateB)) {
                         return true;
                     }
-                } else if (startDateB <= startDateA) {
+                } else if (startDateB < startDateA) {
                     if (!(endDateB < startDateA)) {
                         return true;
                     }
@@ -331,19 +321,26 @@ function checkForOverlap(
 function formatDate(date: Date) {
     const year = date.getFullYear();
     // getMonth() returns 0-11; add 1 to make it 1-12 and pad with '0' if needed
-    const month = (date.getMonth() + 1).toString().padStart(2, '0');
+    const month = (date.getMonth() + 1).toString().padStart(2, "0");
     // getDate() returns 1-31; pad with '0' if needed
-    const day = date.getDate().toString().padStart(2, '0');
+    const day = date.getDate().toString().padStart(2, "0");
 
     return `${year}-${month}-${day}`;
 }
 
-function isNotScheduled(bladeTask: React.ReactElement<any>){
-    console.log("bladeTask :", bladeTask)
-    console.log("value: ", !(
-        bladeTask.props.startDate && bladeTask.props.endDate && bladeTask.props.rig        
-    ))
+function isNotScheduled(bladeTask: React.ReactElement<any>) {
+    console.log("bladeTask :", bladeTask);
+    console.log(
+        "value: ",
+        !(
+            bladeTask.props.startDate &&
+            bladeTask.props.endDate &&
+            bladeTask.props.rig
+        )
+    );
     return !(
-        bladeTask.props.startDate && bladeTask.props.endDate && bladeTask.props.rig        
-    )
+        bladeTask.props.startDate &&
+        bladeTask.props.endDate &&
+        bladeTask.props.rig
+    );
 }

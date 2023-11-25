@@ -82,6 +82,8 @@ const handleEditClick = () => {
   };
 
 
+
+
   //Dynamic styling based on props values
   if(props.startDate){
   const cardStyle = {
@@ -91,6 +93,7 @@ const handleEditClick = () => {
     }`,
     border: props.inConflict ? '2px dashed red' : '', 
   };
+
   const droppableProps: BladeTaskDraggableProps = {
     style: cardStyle,
     id: props.id,
@@ -99,6 +102,7 @@ const handleEditClick = () => {
     setContextMenu: handleRightClick,
     shown: props.shown,
   };
+
 
 
 
@@ -119,7 +123,34 @@ const handleEditClick = () => {
   );
 
 }else{
-  throw new Error('startDate is null, and it was expected no be non-null');
+  const cardStyle = {
+    backgroundColor: props.shown ? props.projectColor : "grey",
+    border: props.inConflict ? '2px dashed red' : '', 
+  };
+
+  const droppableProps: BladeTaskDraggableProps = {
+    style: cardStyle,
+    id: props.id,
+    taskName: props.taskName,
+    disableDraggable: props.disableDraggable,
+    setContextMenu: handleRightClick,
+    shown: props.shown,
+  };
+
+  return(<>
+    <DraggableBladeTask {...droppableProps} />
+    {showContextMenu && (
+        <div ref={contextMenuRef} className="context-menu" style={{ left: `${contextMenuPosition.x}px`, top: `${contextMenuPosition.y}px` }}>
+          <ul className="context-menu-list">
+              <li className="context-menu-item" onClick={handleEditClick}>Edit</li>
+              {props.inConflict && <li className="context-menu-item" onClick={handleConflictClick}>Conflict details</li>}
+              {/* Add more items as needed */}
+          </ul>
+      </div>    
+  )}
+  {showMessageBox && ( <MessageBox message={"Insert conflict information here"} onClose={handleMessageClose} />) }   
+    </>
+    );
 }
   
   

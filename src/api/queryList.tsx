@@ -53,9 +53,9 @@ query AllBladeTasksInRange($startDate: String!, $endDate: String!) {
 }
 `;
 
-export const GET_BT_PENDING = gql`
-query AllBladeTasksPending{
-    AllBladeTasksInRange(startDate: null, endDate: null) {
+export const GET_BT_IN_RANGE_AND_PENDING = gql`
+query AllBladeTasksInRangeAndPending($startDate: String!, $endDate: String!) {
+    AllBladeTasksInRange(startDate: $startDate, endDate: $endDate) {
         id
         startDate
         endDate
@@ -66,6 +66,19 @@ query AllBladeTasksPending{
         taskName
         testRig
         inConflict
+        bladeProject {
+            color
+            customer
+            id
+        }
+    }
+    AllBladeTasksPending{
+        id
+        duration
+        testType
+        attachPeriod
+        detachPeriod
+        taskName
         bladeProject {
             color
             customer
