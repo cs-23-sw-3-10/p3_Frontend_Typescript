@@ -83,7 +83,13 @@ function CreateTimelineField(props: TimelineFieldProps) {
                         handleDragStart(event, setDragging);
                     }}
                     onDragEnd={(event) => {
-                        handleDragEnd(event, bladeTasks, setDragging, updateBt);
+                        handleDragEnd(
+                            event,
+                            bladeTasks,
+                            bladeTasksPending,
+                            setDragging,
+                            updateBt
+                        );
                     }}
                 >
                     <div
@@ -111,10 +117,7 @@ function CreateTimelineField(props: TimelineFieldProps) {
                                             return (
                                                 (
                                                     bladeTask as React.ReactElement<any>
-                                                ).props.rig === rig.rigNumber &&
-                                                !isNotScheduled(
-                                                    bladeTask as React.ReactElement<any>
-                                                )
+                                                ).props.rig === rig.rigNumber
                                             );
                                         }
                                         return false;
@@ -184,29 +187,75 @@ export function handleDragStart(
 export function handleDragEnd(
     event: any,
     bladeTaskHolder: BladeTaskHolder,
+    bladeTaskHolderPending: BladeTaskHolder,
     setDragging: React.Dispatch<React.SetStateAction<boolean>>,
     updateBT: Function
 ) {
     console.log("drag ended");
 
     const { active, over } = event;
-    console.log(active);
-    if (over !== null) {
-        const overIdSlpit = over.id.split("-");
-        const overRig = parseInt(overIdSlpit[0].split(" ")[1]);
-        const overDate = new Date(
-            overIdSlpit[1],
-            overIdSlpit[2],
-            overIdSlpit[3]
-        );
+    console.log("active :", active);
 
-        const indexBT = findBTIndex(bladeTaskHolder.getBladeTasks(), active);
+    const updatedBladeTaskCards = bladeTaskHolder.getBladeTasks();
+    const updatedBladeTaskCardsPending = bladeTaskHolderPending.getBladeTasks();
 
-        if (indexBT !== -1) {
-            const updatedBladeTaskCards = bladeTaskHolder.getBladeTasks();
-            const draggedCard = updatedBladeTaskCards[
-                indexBT
-            ] as React.ReactElement;
+    const { statusBT, indexBT } = findBTIndex(
+        updatedBladeTaskCards,
+        updatedBladeTaskCardsPending,
+        active
+    );
+
+    let draggedCard: React.ReactElement;
+
+    if (over !== null && indexBT !== -1) {
+        if (statusBT === "scheduled") {
+            draggedCard = updatedBladeTaskCards[indexBT] as React.ReactElement;
+        } else {
+            draggedCard = updatedBladeTaskCardsPending[indexBT] as React.ReactElement;
+        }
+
+        if (over.id === "droppablePendingTasksId") {
+            console.log(
+                "over - should have id droppablePendingTasksId: ",
+                over
+            );
+
+            if (statusBT === "scheduled") {
+                updatedBladeTaskCards.splice(indexBT, 1);
+
+                updatedBladeTaskCardsPending.push(
+                    <BladeTaskCard
+                        key={draggedCard.key}
+                        id={draggedCard.props.id}
+                        duration={draggedCard.props.duration}
+                        projectColor={draggedCard.props.projectColor}
+                        projectId={draggedCard.props.projectId}
+                        customer={draggedCard.props.customer}
+                        taskName={draggedCard.props.taskName}
+                        shown={draggedCard.props.shown}
+                        startDate={undefined}
+                        endDate={undefined}
+                        rig={undefined}
+                    />
+                );
+
+                //Update database
+
+                bladeTaskHolder.setBladeTasks(updatedBladeTaskCards);
+                bladeTaskHolderPending.setBladeTasks(
+                    updatedBladeTaskCardsPending
+                );
+            } else {
+                console.log("a pending BT was moved to pending")
+            }
+        } else {
+            const overIdSlpit = over.id.split("-");
+            const overRig = parseInt(overIdSlpit[0].split(" ")[1]);
+            const overDate = new Date(
+                overIdSlpit[1],
+                overIdSlpit[2],
+                overIdSlpit[3]
+            );
 
             // Check for overlap before updating the cards
             const isOverlap = checkForOverlap(
@@ -223,9 +272,14 @@ export function handleDragEnd(
                     newEndDate.getDate() + draggedCard.props.duration - 1
                 );
 
-                console.log(overDate);
-                console.log(newEndDate);
-                console.log(draggedCard.props.duration);
+                console.log("dragged card new start :", overDate);
+                console.log("dragged card new end :", newEndDate);
+                console.log(
+                    "dragged card duration :",
+                    draggedCard.props.duration
+                );
+
+                if(statusBT==="scheduled"){
 
                 updateBT({
                     variables: {
@@ -248,14 +302,49 @@ export function handleDragEnd(
                         startDate={new Date(overDate)}
                         endDate={newEndDate}
                         rig={overRig}
+                        shown={draggedCard.props.shown}
                     />
                 );
+
                 bladeTaskHolder.setBladeTasks(updatedBladeTaskCards);
+                } else{
+                    updateBT({
+                        variables: {
+                            id: draggedCard.props.id,
+                            startDate: formatDate(overDate),
+                            duration: draggedCard.props.duration,
+                            rig: overRig,
+                        },
+                    });
+
+                    updatedBladeTaskCardsPending.splice(indexBT, 1);
+
+                    updatedBladeTaskCards.push(
+                        <BladeTaskCard
+                            key={draggedCard.key}
+                            id={draggedCard.props.id}
+                            duration={draggedCard.props.duration}
+                            projectColor={draggedCard.props.projectColor}
+                            projectId={draggedCard.props.projectId}
+                            customer={draggedCard.props.customer}
+                            taskName={draggedCard.props.taskName}
+                            shown={draggedCard.props.shown}
+                            startDate={new Date(overDate)}
+                            endDate={newEndDate}
+                            rig={overRig}
+                        />
+                    );
+    
+                    bladeTaskHolder.setBladeTasks(updatedBladeTaskCards);
+                    bladeTaskHolderPending.setBladeTasks(
+                        updatedBladeTaskCardsPending
+                    );
+
+
+
+                }
             } else {
                 console.log("Overlap detected. drag opreation cancelled");
-
-                updatedBladeTaskCards[indexBT] = draggedCard;
-                bladeTaskHolder.setBladeTasks(updatedBladeTaskCards);
             }
             setDragging(false);
         }
@@ -264,17 +353,29 @@ export function handleDragEnd(
     }
 }
 
-export function findBTIndex(bladeTaskCards: any, activeComponent: any) {
+export function findBTIndex(
+    bladeTaskCards: any,
+    bladeTaskCardsPending: any,
+    activeComponent: any
+) {
     for (let i: number = 0; i < bladeTaskCards.length; i++) {
         if (
             bladeTaskCards[i] &&
             activeComponent.id === bladeTaskCards[i].props.id
         ) {
-            return i;
+            return { statusBT: "scheduled", indexBT: i };
+        }
+    }
+    for (let i: number = 0; i < bladeTaskCardsPending.length; i++) {
+        if (
+            bladeTaskCardsPending[i] &&
+            activeComponent.id === bladeTaskCardsPending[i].props.id
+        ) {
+            return { statusBT: "pending", indexBT: i };
         }
     }
     console.log("blade task not found");
-    return -1;
+    return { statusBT: "not found", indexBT: -1 };
 }
 
 function checkForOverlap(
@@ -326,21 +427,4 @@ function formatDate(date: Date) {
     const day = date.getDate().toString().padStart(2, "0");
 
     return `${year}-${month}-${day}`;
-}
-
-function isNotScheduled(bladeTask: React.ReactElement<any>) {
-    console.log("bladeTask :", bladeTask);
-    console.log(
-        "value: ",
-        !(
-            bladeTask.props.startDate &&
-            bladeTask.props.endDate &&
-            bladeTask.props.rig
-        )
-    );
-    return !(
-        bladeTask.props.startDate &&
-        bladeTask.props.endDate &&
-        bladeTask.props.rig
-    );
 }

@@ -13,13 +13,11 @@ interface PendingTasksProps {
 }
 
 function PendingTasks(props: PendingTasksProps) {
-    const { setNodeRef } = useDroppable({
+    const {isOver, setNodeRef } = useDroppable({
         id: "droppablePendingTasksId",
     });
 
-    console.log("props.bladeTaskCards :", props.bladeTaskCards)
-
-    return <div className="pendingTasksContainer">{props.bladeTaskCards}</div>;
+    return <div className="pendingTasksContainer" ref={setNodeRef}>{props.bladeTaskCards}</div>;
 }
 
 export default PendingTasks;
