@@ -18,5 +18,4 @@ export type BladeTaskQuery = {
             name: string;
         }],
     }]
-    combinedName: string;
 };

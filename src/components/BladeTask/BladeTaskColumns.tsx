@@ -79,9 +79,7 @@ export const columnBTID: ColumnDef<BladeTaskQuery>[] = [
         },
         id:"bookings.engineer.name",
         accessorFn: (row) => {
-            const engineerNames = row.bookings.map((booking) => booking.engineer).filter(value => value !== null && value !== undefined);
-            console.log(engineerNames.map((engineerNames: any)=> engineerNames.name));
-             
+            const engineerNames = row.bookings.map((booking) => booking.engineer).filter(value => value !== null && value !== undefined);            
             return engineerNames.map((engineerNames: any) => engineerNames.name ? engineerNames.name : " ").join(", ")
         },
     },
