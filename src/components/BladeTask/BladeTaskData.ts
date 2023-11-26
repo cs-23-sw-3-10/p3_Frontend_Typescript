@@ -13,4 +13,10 @@ export type BladeTaskQuery = {
             id: number;
         }
     ];
+    bookings:[{
+        engineer: [{
+            name: string;
+        }],
+    }]
+    combinedName: string;
 };
