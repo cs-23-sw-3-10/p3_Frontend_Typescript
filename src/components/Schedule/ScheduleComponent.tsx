@@ -1,7 +1,5 @@
-import GetBladeTaskDateInfo from "./scheduleQueries";
 import DisplayComponent from "./Display";
 import { useState } from "react";
-import { DndContext } from "@dnd-kit/core";
 
 function ScheduleComponent() {
     const [editMode, setEditMode] = useState(false);
@@ -41,24 +39,22 @@ function ScheduleComponent() {
     };
 
     return (
-        
-            <div>
-                {editMode ? scheduleHeader[0] : scheduleHeader[1]}
-                {showPasswordPrompt && (
-                    <div className="PasswordPrompt">
-                        <label htmlFor="passwordInput">Enter Password:</label>
-                        <input
-                            type="password"
-                            id="passwordInput"
-                            value={password}
-                            onChange={(e) => setPassword(e.target.value)}
-                        />
-                        <button onClick={handlePasswordSubmit}>Submit</button>
-                    </div>
-                )}
-                {editMode ? editSchedule : viewSchedule}
-            </div>
-        
+        <div>
+            {editMode ? scheduleHeader[0] : scheduleHeader[1]}
+            {showPasswordPrompt && (
+                <div className="PasswordPrompt">
+                    <label htmlFor="passwordInput">Enter Password:</label>
+                    <input
+                        type="password"
+                        id="passwordInput"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                    />
+                    <button onClick={handlePasswordSubmit}>Submit</button>
+                </div>
+            )}
+            {editMode ? editSchedule : viewSchedule}
+        </div>
     );
 }
 export default ScheduleComponent;
