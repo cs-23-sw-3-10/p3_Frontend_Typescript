@@ -32,7 +32,7 @@ export const GET_ALL_BT = gql`
 `;
 
 export const GET_BT_IN_RANGE = gql`
-query AllBladeTasksInRange($startDate: String!, $endDate: String!, $isActive: Boolean) {
+query AllBladeTasksInRange($startDate: String!, $endDate: String!, $isActive: Boolean!) {
     AllBladeTasksInRange(startDate: $startDate, endDate: $endDate, isActive: $isActive) {
         id
         startDate
