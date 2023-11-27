@@ -1,8 +1,14 @@
+import { useState } from "react";
+import BladeTaskMenu from "../CreateBTMenu/BladeTaskMenu";
+
 function CreateAdditionalContent() {
+    const [isShown, setIsShown] = useState(false);
+
     return (
-        <div className="AdditionalContent">
-            <h3>AdditionalContent</h3>
-        </div>
+        <>
+        {isShown ? <BladeTaskMenu/> : <></>}
+        <button onClick={() => setIsShown(!isShown)}>BT-MENU</button>
+        </>
     );
 }
 export default CreateAdditionalContent;
