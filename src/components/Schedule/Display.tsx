@@ -19,6 +19,7 @@ type DisplayProps = {
     editMode: boolean;
     setEditMode: React.Dispatch<React.SetStateAction<boolean>>;
     setShowPasswordPrompt: React.Dispatch<React.SetStateAction<boolean>>;
+    showPasswordPrompt: boolean;
     filter: string;
     setFilter: React.Dispatch<React.SetStateAction<string>>;
 };
@@ -227,6 +228,8 @@ function DisplayComponent(props: DisplayProps) {
                     months={dates}
                     btCards={btCards}
                     btCardsPending={btCardsPending}
+                    showPasswordPrompt={props.showPasswordPrompt}
+                    isPendingTasksIncluded={true}
                 />
             </div>
 

@@ -3,6 +3,8 @@ import DisplayComponent from "./Display";
 import { useState } from "react";
 import { DndContext } from "@dnd-kit/core";
 
+export const passwordPromptHeight=30;
+
 function ScheduleComponent() {
     const [editMode, setEditMode] = useState(false);
     const [showPasswordPrompt, setShowPasswordPrompt] = useState(false);
@@ -14,6 +16,7 @@ function ScheduleComponent() {
             editMode={editMode}
             setEditMode={setEditMode}
             setShowPasswordPrompt={setShowPasswordPrompt}
+            showPasswordPrompt={showPasswordPrompt}
             filter={filter}
             setFilter={setFilter}
         />
@@ -23,6 +26,7 @@ function ScheduleComponent() {
             editMode={editMode}
             setEditMode={setEditMode}
             setShowPasswordPrompt={setShowPasswordPrompt}
+            showPasswordPrompt={showPasswordPrompt}
             filter={filter}
             setFilter={setFilter}
         />
@@ -45,7 +49,7 @@ function ScheduleComponent() {
             <div>
                 {editMode ? scheduleHeader[0] : scheduleHeader[1]}
                 {showPasswordPrompt && (
-                    <div className="PasswordPrompt">
+                    <div className="PasswordPrompt" style={{height: `${passwordPromptHeight}px`}}>
                         <label htmlFor="passwordInput">Enter Password:</label>
                         <input
                             type="password"

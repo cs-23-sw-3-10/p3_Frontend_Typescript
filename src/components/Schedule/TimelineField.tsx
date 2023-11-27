@@ -16,6 +16,8 @@ type TimelineFieldProps = {
     months: Date[];
     btCards: React.ReactNode[];
     btCardsPending: React.ReactNode[];
+    showPasswordPrompt?: boolean;
+    isPendingTasksIncluded: boolean
 };
 
 export const dateDivLength = 25; // px length of the dates in the schedule
@@ -130,10 +132,12 @@ function CreateTimelineField(props: TimelineFieldProps) {
                             />
                         ))}
                     </div>
-                    <PendingTasks
+                    {props.isPendingTasksIncluded &&<PendingTasks
                         bladeTaskHolder={bladeTasksPending}
                         bladeTaskCards={bladeTasksPending.getBladeTasks()}
-                    />
+                        numberOfRigs={props.rigs.length}
+                        showPasswordPrompt={props.showPasswordPrompt}
+                    />}
                 </DndContext>
             </div>
         </div>

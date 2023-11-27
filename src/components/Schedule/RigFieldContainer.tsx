@@ -3,6 +3,8 @@ import React from "react";
 import { BladeTaskHolder } from "./BladeTaskHolder";
 import BladeTaskCard from "./BladeTaskCard";
 
+export const rigFieldHeight=50
+
 type RigFieldContainerProps = {
     rig: string;
     rigNumber: number;
@@ -21,6 +23,9 @@ function CreateRigFieldContainer(props: RigFieldContainerProps) {
         width: `${props.fieldWidth}px`,
         gridTemplateColumns: props.columns, // The rig has columns corresponding to the schedule
         gridTemplateRows: "auto",
+        heigt: rigFieldHeight,
+        minHeight: `${rigFieldHeight}px`,
+        maxHeight: `${rigFieldHeight}px`
     };
     let BTsStartInView: React.ReactNode[] = []; // BladeTaskCards that start in the view
     let BTsEndInView: React.ReactNode[] = []; // BladeTaskCards that end in the view

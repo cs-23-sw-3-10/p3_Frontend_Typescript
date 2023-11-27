@@ -164,6 +164,7 @@ function BladeProjectPageWithSchedule() {
                             months={dates}
                             btCards={btCards}
                             btCardsPending={btCardsPending}
+                            isPendingTasksIncluded={false}
                         />
                     </div>
                 );

@@ -1,17 +1,18 @@
 import "./PendingTasks.css";
 import { BladeTaskHolder } from "./BladeTaskHolder";
-import { useQuery } from "@apollo/client";
-import BladeTaskCard from "./BladeTaskCard";
-import BladeTaskCardProps from "./BladeTaskCard";
-import { DndContext } from "@dnd-kit/core";
-import { handleDragStart } from "./TimelineField";
-import { findBTIndex } from "./TimelineField";
 import { useDroppable } from "@dnd-kit/core";
-import { useState } from "react";
+import { rigFieldHeight } from "./RigFieldContainer";
+import { monthHeaderHeight } from "./MonthHeader";
+import { dateElementHeight } from "./OverviewDate";
+import { passwordPromptHeight } from "./ScheduleComponent";
+
+const projectRowHeight=30;
 
 interface PendingTasksProps {
     bladeTaskHolder: BladeTaskHolder;
     bladeTaskCards: React.ReactNode[];
+    numberOfRigs: number
+    showPasswordPrompt?: boolean
 }
 
 function PendingTasks(props: PendingTasksProps) {
@@ -19,13 +20,11 @@ function PendingTasks(props: PendingTasksProps) {
         id: "droppablePendingTasksId",
     });
 
-
     //Array to hold names of projects with pending tasks:
     let projectsWithPendingTasks: String[] = [];
 
     //Populate proctsWithPendingTasks
     const cards = props.bladeTaskHolder.getBladeTasks();
-    console.log("cards :", cards);
 
     cards.forEach((card: any) => {
         let isInProctsWithPendingTasks = false;
@@ -40,7 +39,6 @@ function PendingTasks(props: PendingTasksProps) {
         }
     });
 
-
     let rowString: string = "";
     for (let i = 0; i < projectsWithPendingTasks.length; i++) {
         rowString += `[project-${projectsWithPendingTasks[i]}] auto`;
@@ -50,10 +48,20 @@ function PendingTasks(props: PendingTasksProps) {
         gridTemplateRows: rowString,
     };
 
+    let containerOffSetFromTop=70+monthHeaderHeight+dateElementHeight+props.numberOfRigs*rigFieldHeight;
+
+    let whiteSpaceHeight=40+projectsWithPendingTasks.length*projectRowHeight;
+    if(props.showPasswordPrompt){
+        containerOffSetFromTop+=passwordPromptHeight;
+    }
+
     return (
         <>
-            <div className="whiteSpace"></div>
-            <div className="pendingTasksContainer" ref={setNodeRef}>
+            <div className="whiteSpace" style={{height: `${whiteSpaceHeight}px`}}>
+
+
+            </div>
+            <div className="pendingTasksContainer" style={{top: `${containerOffSetFromTop}px`}}ref={setNodeRef}>
                 <h2>Pending Blade Tasks</h2>
                 <div
                     className="pendingTasksContainerInner"
@@ -62,46 +70,46 @@ function PendingTasks(props: PendingTasksProps) {
                     {projectsWithPendingTasks.map((projectName) => {
                         return (
                             <div
-                                key={String(projectName)+"pending"}
+                                key={String(projectName) + "pending"}
                                 className="projectLegend"
-                                style={{ gridRow: `project-${projectName}` }}
+                                style={{
+                                    gridRow: `project-${projectName}`,
+                                    height: `${projectRowHeight}px`,
+                                    maxHeight: `${projectRowHeight}px`,
+                                }}
                             >
-                                
                                 {projectName}
                             </div>
                         );
                     })}
 
-                    {
-                        projectsWithPendingTasks.map( (projectName: any)=>{
-                            return(
-                                <div className="pendingTasksColumn" style={{gridRow: `project-${projectName}`}}>
-                                    {props.bladeTaskCards.filter((card: any)=>{
-                                        if(card){
-                                            return (card.props.projectName===projectName)
-                                        }else{
-                                            return false
-                                        }
-                                        
-                                    })}
-                                </div>
-
-                            )
-                        }
-
-                        )
-
-                    }
-
-
-
+                    {projectsWithPendingTasks.map((projectName: any) => {
+                        return (
+                            <div
+                                className="pendingTasksColumn"
+                                style={{
+                                    gridRow: `project-${projectName}`,
+                                    height: `${projectRowHeight}px`,
+                                    maxHeight: `${projectRowHeight}px`,
+                                }}
+                            >
+                                {props.bladeTaskCards.filter((card: any) => {
+                                    if (card) {
+                                        return (
+                                            card.props.projectName ===
+                                            projectName
+                                        );
+                                    } else {
+                                        return false;
+                                    }
+                                })}
+                            </div>
+                        );
+                    })}
                 </div>
             </div>
-            ;
         </>
     );
 }
 
 export default PendingTasks;
-
-
