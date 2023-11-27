@@ -5,8 +5,8 @@ import TechnicianTable from './TechnicianTable';
 
 export default function ResourceTable() {
     //Sanitize string to remove any non-alphanumeric characters
-    const sanitizeStringInput = (e: React.ChangeEvent<HTMLInputElement>) => {
-        e.target.value = e.target.value.replace(/[^a-zA-Z0-9]/g, '');
+    const sanitizeInput = (e: React.ChangeEvent<HTMLInputElement>) => {
+        e.target.value = e.target.value.replace(/[^a-zA-Z0-9_ -]/g, '');
     }
     
     const [selectedForm, setSelectedForm] = useState<number>(1);
