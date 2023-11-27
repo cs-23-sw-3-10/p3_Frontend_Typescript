@@ -49,7 +49,7 @@ function EquipmentTable(){
         e.preventDefault();
         if(validateForm()) {
             createEquipment({variables: {
-                type: formData.type,
+                type: String (formData.type.toLowerCase().trim),
                 calibrationExpirationDate: formData.calibrationExpirationDate,
                 name: formData.name
             }}).then(response => {

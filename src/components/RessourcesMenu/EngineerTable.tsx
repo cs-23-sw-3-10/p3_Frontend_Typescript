@@ -1,5 +1,8 @@
 import React, { useState } from 'react';
-import styles from './EngineerTable.module.css';
+import styles from './Ressource.module.css';
+import { create } from 'domain';
+import { useMutation } from '@apollo/client';
+import { CREATE_ENGINEER_MUTATION } from '../../api/mutationList';
 
 interface EngineerFormData {
     name : string;
@@ -14,6 +17,7 @@ interface EngineerErrors {
 function EngineerTable(){
     const [formData, setFormData] = useState<EngineerFormData>({name:'', maxWorkHours:0});
     const [errors, setErros] = useState<EngineerErrors>({name:'', maxWorkHours:''});
+    const [createEngineer, { loading, error }] = useMutation(CREATE_ENGINEER_MUTATION);
 
     function validateForm() : boolean { 
         let tempErros: EngineerErrors = {name:'', maxWorkHours:''};
@@ -38,7 +42,14 @@ function EngineerTable(){
     function handleSubmit(e: React.FormEvent) {
         e.preventDefault();
         if(validateForm()) {
-            
+            createEngineer({variables: { 
+                name: String (formData.name),
+                maxWorkHours: Number (formData.maxWorkHours)
+            }}).then(response => {
+                console.log('Engineer created: ' + response);
+            }).catch(error => {
+                console.log('Error creating Engineer: ' + error);
+            })
         }
     }
 

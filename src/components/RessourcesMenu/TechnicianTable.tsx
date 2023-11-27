@@ -2,6 +2,8 @@
 import { useMutation } from '@apollo/client';
 import React, { useState } from 'react';
 import { CREATE_TECHNICIAN_MUTATION } from '../../api/mutationList';
+import SanitizeString from "./RessourceTable"
+
 
 
 interface TechnicianFormData {
@@ -17,7 +19,7 @@ interface TechnicianErrors {
 }
 
 
-function TechnicianTable(){
+function TechnicianTable() {
     const [formData, setFormData] = useState<TechnicianFormData>({type:'', count:0, maxWorkHours:0});
     const [errors, setErros] = useState<TechnicianErrors>({type:'', count:'', maxWorkHours:''});
     const [createTechnician, { loading, error }] = useMutation(CREATE_TECHNICIAN_MUTATION); 
@@ -52,7 +54,7 @@ function TechnicianTable(){
         if(validateForm()) {
             console.log(formData);
             createTechnician({variables: {
-                type: String (formData.type),
+                type: String (formData.type.toLowerCase().trim()),
                 count: Number (formData.count),
                 maxWorkHours: Number (formData.maxWorkHours)
             }}).then(response => {
@@ -69,17 +71,17 @@ function TechnicianTable(){
             <form onSubmit={handleSubmit}>
                 <div>
                     <label htmlFor="Type">Type</label>
-                    <input type="text" name="type" id="type" value={formData.type} onChange={handleChange} />
+                    <input type="text" name="type" id="type" value={SanitizeString(formData.type)} onChange={handleChange} />
                     {errors.type && <span style={{color: "red"}}>{errors.type}</span>}
                 </div>
                 <div>
                     <label htmlFor="count">Count</label>
-                    <input type="number" name="count" id="count"  value={formData.count} onChange={handleChange} />
+                    <input type="number" name="count" id="count"  value={SanitizeString(formData.count)} onChange={handleChange} />
                     {errors.count && <span style={{color: "red"}}>{errors.count}</span>}
                 </div>
                 <div>
                     <label htmlFor="Type">maxWorkHours</label>
-                    <input type="number" name="maxWorkHours" id="maxWorkHours" value={formData.maxWorkHours} onChange={handleChange} />
+                    <input type="number" name="maxWorkHours" id="maxWorkHours" value={SanitizeString(formData.maxWorkHours)} onChange={handleChange} />
                     {errors.maxWorkHours && <span style={{color: "red"}}>{errors.maxWorkHours}</span>}
                 </div>
             <button type="submit">Submit</button>
