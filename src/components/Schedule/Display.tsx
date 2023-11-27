@@ -151,7 +151,7 @@ function DisplayComponent(props: DisplayProps) {
     return (
         <div className="ScheduleContentContainer">
             <div className="ScheduleViewControl">
-                <form onSubmit={(e) => e.preventDefault()}>
+                <form onSubmit={(e) => {e.preventDefault(); goTo()}}>
                     <label htmlFor="dateInput" style={{ fontSize: "10px" }}>
                         Date:
                     </label>
@@ -169,7 +169,7 @@ function DisplayComponent(props: DisplayProps) {
                         max="24"
                         onChange={handleNumberChange}
                     />
-                    <input type="button" onClick={goTo} value={"Go To"} />
+                    <input type="submit" onClick={goTo} value={"Go To"} />
                 </form>
             </div>
             {editMode.isEditMode ? (

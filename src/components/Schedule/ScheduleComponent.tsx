@@ -41,6 +41,7 @@ function ScheduleComponent() {
             {editMode.isEditMode ? scheduleHeader[0] : scheduleHeader[1]}
             {showPasswordPrompt && (
                 <div className="PasswordPrompt">
+                    <form onSubmit={(e) => {e.preventDefault(); handlePasswordSubmit()}}>
                     <label htmlFor="passwordInput">Enter Password:</label>
                     <input
                         type="password"
@@ -48,7 +49,8 @@ function ScheduleComponent() {
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
                     />
-                    <button onClick={handlePasswordSubmit}>Submit</button>
+                    <input type="submit" value={"Enter"}></input>
+                    </form>
                 </div>
             )}
             {editMode.isEditMode ? editSchedule : viewSchedule}
