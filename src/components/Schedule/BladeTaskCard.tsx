@@ -94,7 +94,7 @@ function BladeTaskCard(props: BladeTaskCardProps) {
     const cardStyle = {
         backgroundColor: props.shown ? props.projectColor : "grey",
         gridColumn: `date-${props.startDate.getFullYear()}-${props.startDate.getMonth()}-${props.startDate.getDate()} / span ${
-            props.duration + props.attachPeriod + props.detachPeriod //kan tilføjes/fjernes hvis duraation kun er for testen
+            props.duration //+ props.attachPeriod + props.detachPeriod //kan tilføjes/fjernes hvis duraation kun er for testen
         }`,
         border: props.inConflict ? "2px dashed red" : "",
     };
