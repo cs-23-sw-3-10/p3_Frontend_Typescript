@@ -1,11 +1,31 @@
-import { createContext, useContext } from 'react';
+import { createContext, useContext, useState, ReactNode, Dispatch, SetStateAction } from 'react';
 
-export const EditModeContext = createContext<Boolean>(false);
+type EditModeContextType = {
+  isEditMode: boolean;
+  setEditMode: Dispatch<SetStateAction<boolean>>;
+};
 
-export function useResourceOrderContext() {
-  const ChangeEditMode= useContext(EditModeContext);
-  if (ChangeEditMode === undefined) {
-    throw new Error('useResourceOrderContext must be used with a ResourceContext');
+const EditModeContext = createContext<EditModeContextType | undefined>(undefined);
+
+export const useEditModeContext = () => {
+  const context = useContext(EditModeContext);
+  if (!context) {
+    throw new Error('useEditModeContext must be used within an EditModeProvider');
   }
-  return ChangeEditMode;
-}
+  return context;
+};
+
+type EditModeProviderProps = {
+  children: ReactNode;
+};
+
+export const EditModeProvider: React.FC<EditModeProviderProps> = ({ children }) => {
+  const [isEditMode, setEditMode] = useState(false);
+
+  const contextValue: EditModeContextType = {
+    isEditMode,
+    setEditMode,
+  };
+
+  return <EditModeContext.Provider value={contextValue}>{children}</EditModeContext.Provider>;
+};

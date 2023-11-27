@@ -19,7 +19,7 @@ interface BladeTaskCardProps {
     id: number;
     shown?: boolean;
     inConflict?: boolean;
-    disableDraggable?: boolean;
+    enableDraggable?: boolean;
     setContextMenu?: (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => void;
 }
 interface BladeTaskDraggableProps {
@@ -28,7 +28,7 @@ interface BladeTaskDraggableProps {
     taskName: string;
     attachPeriod: number;
     detachPeriod: number;
-    disableDraggable?: boolean;
+    enableDraggable?: boolean;
     inConflict?: boolean;
     shown?: boolean;
     setContextMenu?: (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => void;
@@ -103,7 +103,7 @@ function BladeTaskCard(props: BladeTaskCardProps) {
         style: cardStyle,
         id: props.id,
         taskName: props.taskName,
-        disableDraggable: props.disableDraggable,
+        enableDraggable: props.enableDraggable,
         setContextMenu: handleRightClick,
         shown: props.shown,
         attachPeriod: props.attachPeriod ? props.attachPeriod : 0,
@@ -157,7 +157,7 @@ export default BladeTaskCard;
 function DraggableBladeTask(props: BladeTaskDraggableProps) {
     const { attributes, listeners, setNodeRef, transform } = useDraggable({
         id: props.id,
-        disabled: props.disableDraggable,
+        disabled: !props.enableDraggable,
     });
 
     const style = {
