@@ -1,28 +1,25 @@
-import { DndContext } from "@dnd-kit/core";
 import "./Display.css";
 import CreateTestRigDivs from "./TestRigDivs";
 import CreateTimelineField from "./TimelineField";
 import React, { useState} from "react";
 import CreateAdditionalContent from "./AdditionalContent";
 import BladeTaskCard from "./BladeTaskCard";
-import { useMutation, useQuery } from "@apollo/client";
+import { useQuery } from "@apollo/client";
 import { GET_BT_IN_RANGE } from "../../api/queryList";
 import { getMonthLength } from "./TimelineField";
 import { capitalizeFirstLetter } from "./TimelineField";
-import { UPDATE_BT } from "../../api/mutationList";
-import { useEffect, useRef } from "react";
+import { useEditModeContext } from "../../EditModeContext";
 
 const currentDate = new Date(Date.now()); // Get the current date
 
 type DisplayProps = {
-    editMode: boolean;
-    setEditMode: React.Dispatch<React.SetStateAction<boolean>>;
     setShowPasswordPrompt: React.Dispatch<React.SetStateAction<boolean>>;
     filter: string;
     setFilter: React.Dispatch<React.SetStateAction<string>>;
 };
 
 function DisplayComponent(props: DisplayProps) {
+    const editMode = useEditModeContext();
     const [rigs, setRigs] = useState([
         // should be imported from database
         {
@@ -78,12 +75,12 @@ function DisplayComponent(props: DisplayProps) {
     };
 
     const handleModeChange = () => {
-        if (!props.editMode) {
+        if (!editMode.isEditMode) {
             // If switching to edit mode, show password prompt
             props.setShowPasswordPrompt(true);
         } else {
             // If switching from edit mode, just toggle the edit mode
-            props.setEditMode(!props.editMode);
+            editMode.setEditMode(!editMode.isEditMode);
         }
     };
 
@@ -146,8 +143,8 @@ function DisplayComponent(props: DisplayProps) {
                 rig={bt.testRig}
                 id={bt.id}
                 shown={btShown}
-                disableDraggable={!props.editMode}
                 inConflict={bt.inConflict}
+                enableDraggable={editMode.isEditMode}
             />
         );
     });
@@ -155,7 +152,7 @@ function DisplayComponent(props: DisplayProps) {
     return (
         <div className="ScheduleContentContainer">
             <div className="ScheduleViewControl">
-                <form onSubmit={(e) => e.preventDefault()}>
+                <form onSubmit={(e) => {e.preventDefault(); goTo()}}>
                     <label htmlFor="dateInput" style={{ fontSize: "10px" }}>
                         Date:
                     </label>
@@ -173,15 +170,15 @@ function DisplayComponent(props: DisplayProps) {
                         max="24"
                         onChange={handleNumberChange}
                     />
-                    <input type="button" onClick={goTo} value={"Go To"} />
+                    <input type="submit" onClick={goTo} value={"Go To"} />
                 </form>
             </div>
-            {props.editMode ? (
+            {editMode.isEditMode ? (
             <div className="ScheduleFilterAndMode">
                 <label className="switch"> Edit Mode</label>
                 <input type="checkbox" checked={true} onChange={handleModeChange} />
             </div>
-            ) :  (
+            ) : (
             <div className="ScheduleFilterAndMode">
                 <label>Filter:</label>
                 <select
@@ -208,7 +205,10 @@ function DisplayComponent(props: DisplayProps) {
                     btCards={btCards}
                 />
             </div>
-            {props.editMode ? <CreateAdditionalContent /> : null}
+
+
+            {editMode.isEditMode ? <CreateAdditionalContent /> : null}
+
         </div>
     );
 }
