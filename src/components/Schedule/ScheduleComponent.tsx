@@ -1,3 +1,4 @@
+import { EditModeContext } from "../../EditModeContext";
 import DisplayComponent from "./Display";
 import { useState } from "react";
 
@@ -6,6 +7,8 @@ function ScheduleComponent() {
     const [showPasswordPrompt, setShowPasswordPrompt] = useState(false);
     const [password, setPassword] = useState(""); // State to store the entered password
     const [filter, setFilter] = useState("None"); // State to store the filter
+
+    let hello = EditModeContext.Provider;
 
     const viewSchedule = (
         <DisplayComponent

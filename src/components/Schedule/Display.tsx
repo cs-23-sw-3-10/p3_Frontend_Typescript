@@ -1,16 +1,13 @@
-import { DndContext } from "@dnd-kit/core";
 import "./Display.css";
 import CreateTestRigDivs from "./TestRigDivs";
 import CreateTimelineField from "./TimelineField";
 import React, { useState } from "react";
 import CreateAdditionalContent from "./AdditionalContent";
 import BladeTaskCard from "./BladeTaskCard";
-import { useMutation, useQuery } from "@apollo/client";
+import { useQuery } from "@apollo/client";
 import { GET_BT_IN_RANGE } from "../../api/queryList";
 import { getMonthLength } from "./TimelineField";
 import { capitalizeFirstLetter } from "./TimelineField";
-import { UPDATE_BT } from "../../api/mutationList";
-import { useEffect, useRef } from "react";
 
 const currentDate = new Date(Date.now()); // Get the current date
 

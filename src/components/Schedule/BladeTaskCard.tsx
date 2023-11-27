@@ -4,7 +4,6 @@ import { CSS } from "@dnd-kit/utilities";
 import React, { useState, useRef, useEffect } from "react";
 import MessageBox from "../ui/MessageBox";
 import EditBTPopup from "./EditBTPopup";
-
 //interface used to define the types of the props of BladeTaskCard
 interface BladeTaskCardProps {
     startDate: Date;

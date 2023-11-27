@@ -8,6 +8,7 @@ import ScheduleComponent from "./components/Schedule/ScheduleComponent";
 import BladeProjectPage from "./components/Projects/BladeProjectPage";
 import BTPage from "./components/BladeTask/BladeTaskPage";
 import BladeProjectPageWithSchedule from "./components/Projects/BladeProjectPageSchedule";
+import { EditModeContext } from "./EditModeContext";
 
 function App() {
     return (
@@ -15,6 +16,7 @@ function App() {
             <div className="app-container">
                 <NavBar />
                 <div className="content-container">
+                    <EditModeContext.Provider value={false}>
                     <Routes>
                         <Route path="/" element={<ScheduleComponent />} />
                         <Route
@@ -25,6 +27,7 @@ function App() {
                         <Route path="/resources" element={<EquipmentPage />} />
                         <Route path="*" element={<Navigate to="/" />} />
                     </Routes>
+                    </EditModeContext.Provider>
                 </div>
             </div>
         </>
