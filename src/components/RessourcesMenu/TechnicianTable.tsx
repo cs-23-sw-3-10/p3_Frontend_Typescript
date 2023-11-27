@@ -2,7 +2,9 @@
 import { useMutation } from '@apollo/client';
 import React, { useState } from 'react';
 import { CREATE_TECHNICIAN_MUTATION } from '../../api/mutationList';
-import SanitizeString from "./RessourceTable"
+//import sanitizeStringInput from same folder
+import ResourceTable from './RessourceTable';
+
 
 
 
@@ -63,6 +65,7 @@ function TechnicianTable() {
                 console.log('Error creating Technician: ' + error);
             });
         }
+        
     }
 
     return (
@@ -71,7 +74,7 @@ function TechnicianTable() {
             <form onSubmit={handleSubmit}>
                 <div>
                     <label htmlFor="Type">Type</label>
-                    <input type="text" name="type" id="type" value={SanitizeString(formData.type)} onChange={handleChange} />
+                    <input type="text" name="type" id="type" value={(formData.type)} onChange={handleChange} />
                     {errors.type && <span style={{color: "red"}}>{errors.type}</span>}
                 </div>
                 <div>
