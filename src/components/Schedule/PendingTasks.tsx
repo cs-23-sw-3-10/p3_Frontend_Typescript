@@ -2,10 +2,12 @@ import "./PendingTasks.css";
 import { BladeTaskHolder } from "./BladeTaskHolder";
 import { useQuery } from "@apollo/client";
 import BladeTaskCard from "./BladeTaskCard";
+import BladeTaskCardProps from "./BladeTaskCard";
 import { DndContext } from "@dnd-kit/core";
 import { handleDragStart } from "./TimelineField";
 import { findBTIndex } from "./TimelineField";
 import { useDroppable } from "@dnd-kit/core";
+import { useState } from "react";
 
 interface PendingTasksProps {
     bladeTaskHolder: BladeTaskHolder;
@@ -13,69 +15,93 @@ interface PendingTasksProps {
 }
 
 function PendingTasks(props: PendingTasksProps) {
-    const {isOver, setNodeRef } = useDroppable({
+    const { setNodeRef } = useDroppable({
         id: "droppablePendingTasksId",
     });
 
-    return <div className="pendingTasksContainer" ref={setNodeRef}>{props.bladeTaskCards}</div>;
+
+    //Array to hold names of projects with pending tasks:
+    let projectsWithPendingTasks: String[] = [];
+
+    //Populate proctsWithPendingTasks
+    const cards = props.bladeTaskHolder.getBladeTasks();
+    console.log("cards :", cards);
+
+    cards.forEach((card: any) => {
+        let isInProctsWithPendingTasks = false;
+
+        for (let i = 0; i < projectsWithPendingTasks.length; i++) {
+            if (projectsWithPendingTasks[i] === card.props.projectName)
+                isInProctsWithPendingTasks = true;
+        }
+
+        if (!isInProctsWithPendingTasks) {
+            projectsWithPendingTasks.push(card.props.projectName);
+        }
+    });
+
+
+    let rowString: string = "";
+    for (let i = 0; i < projectsWithPendingTasks.length; i++) {
+        rowString += `[project-${projectsWithPendingTasks[i]}] auto`;
+    }
+
+    const pendingTasksStyle = {
+        gridTemplateRows: rowString,
+    };
+
+    return (
+        <>
+            <div className="whiteSpace"></div>
+            <div className="pendingTasksContainer" ref={setNodeRef}>
+                <h2>Pending Blade Tasks</h2>
+                <div
+                    className="pendingTasksContainerInner"
+                    style={pendingTasksStyle}
+                >
+                    {projectsWithPendingTasks.map((projectName) => {
+                        return (
+                            <div
+                                key={String(projectName)+"pending"}
+                                className="projectLegend"
+                                style={{ gridRow: `project-${projectName}` }}
+                            >
+                                
+                                {projectName}
+                            </div>
+                        );
+                    })}
+
+                    {
+                        projectsWithPendingTasks.map( (projectName: any)=>{
+                            return(
+                                <div className="pendingTasksColumn" style={{gridRow: `project-${projectName}`}}>
+                                    {props.bladeTaskCards.filter((card: any)=>{
+                                        if(card){
+                                            return (card.props.projectName===projectName)
+                                        }else{
+                                            return false
+                                        }
+                                        
+                                    })}
+                                </div>
+
+                            )
+                        }
+
+                        )
+
+                    }
+
+
+
+                </div>
+            </div>
+            ;
+        </>
+    );
 }
 
 export default PendingTasks;
 
-/*
-function handleDragEndPending(
-    event: any,
-    bladeTaskHolder: BladeTaskHolder,
-    setDragging: React.Dispatch<React.SetStateAction<boolean>>,
-    updateBT: Function
-    
-) {
-    
-    console.log("drag ended over pending container");
-    
-    const { active, over } = event;
-    console.log(active);
-    if (over !== null) {
 
- 
-        const indexBT = findBTIndex(bladeTaskHolder.getBladeTasks(),active);
-
-        if (indexBT !== -1) {
-            const updatedBladeTaskCards = bladeTaskHolder.getBladeTasks();
-            const draggedCard = updatedBladeTaskCards[
-                indexBT
-            ] as React.ReactElement;
-
-                updateBT({
-                    variables:{
-                        id:draggedCard.props.id,
-                        startDate: null,
-                        endDate: null,
-                        duration:draggedCard.props.duration,
-                        rig:null
-                    }
-                })
-
-                updatedBladeTaskCards[indexBT] = (
-                    <BladeTaskCard
-                        key={draggedCard.key}
-                        id={draggedCard.props.id}
-                        duration={draggedCard.props.duration}
-                        projectColor={draggedCard.props.projectColor}
-                        projectId={draggedCard.props.projectId}
-                        customer={draggedCard.props.customer}
-                        taskName={draggedCard.props.taskName}
-                        startDate={undefined}
-                        endDate={undefined}
-                        rig={undefined}
-                    />
-                );
-                bladeTaskHolder.setBladeTasks(updatedBladeTaskCards);
-
-            setDragging(false);
-        }
-    } else {
-        console.log("over is null");
-    }
-}
-*/

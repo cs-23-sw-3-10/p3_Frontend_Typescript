@@ -138,6 +138,7 @@ function DisplayComponent(props: DisplayProps) {
                 duration={bt.duration}
                 projectColor={bt.bladeProject.color}
                 projectId={bt.bladeProject.id}
+                projectName={bt.bladeProject.projectName}
                 customer={bt.bladeProject.customer}
                 taskName={bt.taskName}
                 startDate={new Date(year, month, day)}
@@ -168,6 +169,7 @@ function DisplayComponent(props: DisplayProps) {
                 duration={bt.duration}
                 projectColor={bt.bladeProject.color}
                 projectId={bt.bladeProject.id}
+                projectName={bt.bladeProject.projectName}
                 customer={bt.bladeProject.customer}
                 taskName={bt.taskName}
                 id={bt.id}
@@ -177,7 +179,6 @@ function DisplayComponent(props: DisplayProps) {
             />
         );
     });
-
 
     return (
         <div className="ScheduleContentContainer">

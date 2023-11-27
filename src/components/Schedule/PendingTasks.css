@@ -1,13 +1,42 @@
+
+
 .pendingTasksContainer{
     display: flex;
-    height: 100px;
-    width: 90%;
-    background: blue;
-    justify-content: left;
-    grid-column: 1/-1;
-    grid-row: 4;
+    flex-direction: column;
+    height: fit-content;
+    min-width: 1500px;
+    width: max-content;
+    grid-row: 4;   
+    border: 2px solid rgba(0,0,0, 1);
+    margin: 10px;
+    position: fixed;
+    top: 445px;
+}
 
-    
-    
+.whiteSpace{
+    display: flex;
+    height: 120px;
+    width: 1500px;
+    grid-row: 4; 
+    margin: 10px;
+}
 
+.pendingTasksContainerInner{
+    display: grid;
+    grid-template-columns: min-content auto;
+    column-gap: 10px;
+    row-gap: 3px;
+}
+
+.projetLegend{
+    grid-column: 1;
+    border: 1px solid rgba(0,0,0, 1);
+}
+
+.pendingTasksColumn{
+    display: flex;
+    flex-direction: row;
+    grid-column: 2;
+    flex-wrap: wrap;
+    gap: 5px;
 }

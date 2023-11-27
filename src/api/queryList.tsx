@@ -70,6 +70,7 @@ query AllBladeTasksInRangeAndPending($startDate: String!, $endDate: String!) {
             color
             customer
             id
+            projectName
         }
     }
     AllBladeTasksPending{
@@ -83,6 +84,7 @@ query AllBladeTasksInRangeAndPending($startDate: String!, $endDate: String!) {
             color
             customer
             id
+            projectName
         }
     }
 }

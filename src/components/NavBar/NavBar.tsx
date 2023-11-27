@@ -31,7 +31,7 @@ export const NavBar = () => {
                                 className="navLogo"
                             />
                         ) : (
-                            <h2>BLAEST</h2>
+                            <h2 className="navBarh2">BLAEST</h2>
                         )}
                     </span>
                     <Link to="/">

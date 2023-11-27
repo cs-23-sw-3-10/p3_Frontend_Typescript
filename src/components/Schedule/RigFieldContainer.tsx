@@ -72,7 +72,7 @@ function CreateRigFieldContainer(props: RigFieldContainerProps) {
     });
 
     return (
-        <div key={props.rig} className="RigField" style={rigStyle}>
+        <div key={props.rig} className="RigField" style={rigStyle} id="rigFieldContainerId">
             {props.allDates.map(
                 (date) => (
                     <CreateRigFieldDate

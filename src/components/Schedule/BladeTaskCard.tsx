@@ -3,6 +3,7 @@ import { useDraggable } from "@dnd-kit/core";
 import { CSS } from "@dnd-kit/utilities";
 import React, { useState, useRef, useEffect } from "react";
 import MessageBox from "../ui/MessageBox";
+import { dateDivLength } from "./TimelineField";
 
 //interface used to define the types of the props of BladeTaskCard
 interface BladeTaskCardProps {
@@ -14,6 +15,7 @@ interface BladeTaskCardProps {
   rig?: number;
   projectColor: string;
   projectId: number;
+  projectName?: string;
   customer: string;
   taskName: string;
   id: number;
@@ -125,7 +127,11 @@ const handleEditClick = () => {
 }else{
   const cardStyle = {
     backgroundColor: props.shown ? props.projectColor : "grey",
+    width: `${props.duration*dateDivLength}px`,
     border: props.inConflict ? '2px dashed red' : '', 
+    gridRow: `project-${props.projectName}`,
+    gridColumn: "2",
+    justifyContent: "left"
   };
 
   const droppableProps: BladeTaskDraggableProps = {
