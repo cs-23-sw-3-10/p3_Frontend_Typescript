@@ -32,9 +32,29 @@ span {
     color: red;
     margin-bottom: 10px;
 }
+h1 {
+    text-align: left;
+    margin-bottom: 15px;
+}
 h2 { 
     text-align: left;
+    margin-bottom: 10px;
     
+}
+.loading-message {
+    color : rgb(76, 130, 175);
+    margin-bottom : 10px;
+    font-style: italic;
+}
+.error-message {
+    color : red;
+    margin-bottom : 10px;
+    font-style: italic;
+}
+.success-message {
+    color : green;
+    margin-bottom : 10px;
+    font-style: italic;
 }
 
 /* Submit button styling */
@@ -57,4 +77,10 @@ button[type="submit"]:hover {
     form {
         width: 90%;
     }
+}
+.dropdown-container {
+    margin: 10px;
+    padding: 10px;
+    font-size: 15px;
+    text-align: center;
 }

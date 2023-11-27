@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import styles from './Ressource.module.css';
-import { create } from 'domain';
 import { useMutation } from '@apollo/client';
 import { CREATE_ENGINEER_MUTATION } from '../../api/mutationList';
+import { SanitizeString } from './RessourceUtils';
 
 interface EngineerFormData {
     name : string;
@@ -17,7 +17,7 @@ interface EngineerErrors {
 function EngineerTable(){
     const [formData, setFormData] = useState<EngineerFormData>({name:'', maxWorkHours:0});
     const [errors, setErros] = useState<EngineerErrors>({name:'', maxWorkHours:''});
-    const [createEngineer, { loading, error }] = useMutation(CREATE_ENGINEER_MUTATION);
+    const [createEngineer, { data, loading, error }] = useMutation(CREATE_ENGINEER_MUTATION);
 
     function validateForm() : boolean { 
         let tempErros: EngineerErrors = {name:'', maxWorkHours:''};
@@ -29,6 +29,14 @@ function EngineerTable(){
         
         if (!formData.maxWorkHours || formData.maxWorkHours < 0 || formData.maxWorkHours > 100){
             tempErros.maxWorkHours = "Work hours a week must be between 0 and 100";
+            isValid = false;
+        }
+        if (SanitizeString(formData.name) !== formData.name) {
+            tempErros.name = "Name must be alphanumeric";
+            isValid = false;
+        }
+        if (SanitizeString(formData.maxWorkHours.toString()) !== formData.maxWorkHours.toString()) {
+            tempErros.maxWorkHours = "Work hours a week must be numeric";
             isValid = false;
         }
         setErros(tempErros);
@@ -57,7 +65,7 @@ function EngineerTable(){
         <>
 
             <form onSubmit={handleSubmit} className={styles.form}>
-                <h2>Add Engineer to the system</h2>
+                <h2>Add Engineer</h2>
                 <div>
                     <label htmlFor="Name" className={styles.label}>Name</label>
                     <input type="text" name="name" id="name" value={formData.name} onChange={handleChange} className={styles.input}/>
@@ -69,6 +77,11 @@ function EngineerTable(){
                     {errors.maxWorkHours && <span style={{color: "red"}}>{errors.maxWorkHours}</span>}
                 </div>
             <button type="submit">Submit</button>
+            <div>
+                {loading && <p className={styles['loading-message']}>Loading...</p>}
+                {error && <p className={styles['error-message']}>Error: {error.message}</p>}
+                {data && <p className={styles['success-message']}>{formData.name} created successfully!</p>}
+            </div>
             </form> 
 
         </>

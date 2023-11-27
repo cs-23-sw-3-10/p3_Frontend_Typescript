@@ -2,10 +2,8 @@
 import { useMutation } from '@apollo/client';
 import React, { useState } from 'react';
 import { CREATE_TECHNICIAN_MUTATION } from '../../api/mutationList';
-//import sanitizeStringInput from same folder
-import ResourceTable from './RessourceTable';
-
-
+import { SanitizeString } from './RessourceUtils';
+import styles from './Ressource.module.css';
 
 
 interface TechnicianFormData {
@@ -24,7 +22,7 @@ interface TechnicianErrors {
 function TechnicianTable() {
     const [formData, setFormData] = useState<TechnicianFormData>({type:'', count:0, maxWorkHours:0});
     const [errors, setErros] = useState<TechnicianErrors>({type:'', count:'', maxWorkHours:''});
-    const [createTechnician, { loading, error }] = useMutation(CREATE_TECHNICIAN_MUTATION); 
+    const [createTechnician, { data, loading, error }] = useMutation(CREATE_TECHNICIAN_MUTATION); 
 
     
 
@@ -43,8 +41,23 @@ function TechnicianTable() {
             tempErros.maxWorkHours = "Work hours a week must be between 0 and 100";
             isValid = false;
         }
+         //Use SanitizeString function
+        if (SanitizeString(formData.type) !== formData.type) {
+            tempErros.type = "Type must be alphanumeric";
+            isValid = false;
+        }
+        if (SanitizeString(formData.count.toString()) !== formData.count.toString()) {
+            tempErros.count = "Count must be numeric";
+            isValid = false;
+        }
+        if (SanitizeString(formData.maxWorkHours.toString()) !== formData.maxWorkHours.toString()) {
+            tempErros.maxWorkHours = "Work hours a week must be numeric";
+            isValid = false;
+        }
+
         setErros(tempErros);
         return isValid;
+
     }
 
     function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
@@ -65,29 +78,48 @@ function TechnicianTable() {
                 console.log('Error creating Technician: ' + error);
             });
         }
-        
     }
 
     return (
-        <>
-
+        <> 
             <form onSubmit={handleSubmit}>
+                <h2>Add Technician</h2>
                 <div>
                     <label htmlFor="Type">Type</label>
-                    <input type="text" name="type" id="type" value={(formData.type)} onChange={handleChange} />
-                    {errors.type && <span style={{color: "red"}}>{errors.type}</span>}
+                    <input 
+                        type="text" 
+                        name="type" 
+                        id="type" 
+                        value={(formData.type)} 
+                        onChange={handleChange}
+                        />
+                    {errors.type && <span>{errors.type}</span>}
                 </div>
                 <div>
                     <label htmlFor="count">Count</label>
-                    <input type="number" name="count" id="count"  value={SanitizeString(formData.count)} onChange={handleChange} />
-                    {errors.count && <span style={{color: "red"}}>{errors.count}</span>}
+                    <input 
+                        type="number" 
+                        name="count" id="count"  
+                        value={formData.count} 
+                        onChange={handleChange}/>
+                    {errors.count && <span>{errors.count}</span>}
                 </div>
                 <div>
-                    <label htmlFor="Type">maxWorkHours</label>
-                    <input type="number" name="maxWorkHours" id="maxWorkHours" value={SanitizeString(formData.maxWorkHours)} onChange={handleChange} />
-                    {errors.maxWorkHours && <span style={{color: "red"}}>{errors.maxWorkHours}</span>}
+                    <label htmlFor="Tnype">maxWorkHours</label>
+                    <input 
+                        type="number" 
+                        name="maxWorkHours" 
+                        id="maxWorkHours" 
+                        value={formData.maxWorkHours} 
+                        onChange={handleChange}/>
+                    {errors.maxWorkHours && <span>{errors.maxWorkHours}</span>}
                 </div>
             <button type="submit">Submit</button>
+            <div>
+                {loading && <p className={styles['loading-message']}>Loading...</p>}
+                {error && <p className={styles['error-message']}>Error: {error.message}</p>}
+                {data && <p className={styles['success-message']}>{formData.type} created successfully!</p>}
+            </div>
             </form> 
 
         </>

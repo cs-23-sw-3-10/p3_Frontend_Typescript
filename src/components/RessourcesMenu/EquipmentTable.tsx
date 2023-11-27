@@ -1,6 +1,8 @@
 import { useMutation } from '@apollo/client';
 import React, {useState} from 'react';
 import { CREATE_EQUIPMENT_MUTATION } from '../../api/mutationList';
+import { SanitizeString } from './RessourceUtils';
+import styles from './Ressource.module.css';
 
 interface EquipmentFormData {
     type : string;
@@ -18,7 +20,7 @@ function EquipmentTable(){
     const [formData, setFormData] = useState<EquipmentFormData>({
         type : "", calibrationExpirationDate: "", name : ""});
     const [errors, setErros] = useState<EquipmentErrors>({type:'', calibrationExpirationDate:'', name:''});
-    const [createEquipment, { loading, error }] = useMutation(CREATE_EQUIPMENT_MUTATION);
+    const [createEquipment, { data, loading, error }] = useMutation(CREATE_EQUIPMENT_MUTATION);
 
 
     function validateForm() : boolean{ 
@@ -37,6 +39,14 @@ function EquipmentTable(){
             tempErros.calibrationExpirationDate = "Calibration Expiration Date is invalid";
             isValid = false;
         }
+        if (SanitizeString(formData.type) !== formData.type) {
+            tempErros.type = "Type must be alphanumeric";
+            isValid = false;
+        }
+        if (SanitizeString(formData.name) !== formData.name) {
+            tempErros.name = "Name must be alphanumeric";
+            isValid = false;
+        }
         setErros(tempErros);
         return isValid;
     }
@@ -50,8 +60,8 @@ function EquipmentTable(){
         if(validateForm()) {
             createEquipment({variables: {
                 type: String (formData.type.toLowerCase().trim),
-                calibrationExpirationDate: formData.calibrationExpirationDate,
-                name: formData.name
+                calibrationExpirationDate: String (formData.calibrationExpirationDate),
+                name: String (formData.name)
             }}).then(response => {
                 console.log('Equipment created: ' + response);
             }).catch(error => {
@@ -64,6 +74,7 @@ function EquipmentTable(){
         <>
 
             <form onSubmit={handleSubmit}>
+                <h2>Add Equipment</h2>
                 <div>
                     <label htmlFor="Type">Type</label>
                     <input type="text" name="type" id="type" value={formData.type} onChange={handleChange} />
@@ -80,6 +91,11 @@ function EquipmentTable(){
                     {errors.calibrationExpirationDate && <span style={{color: "red"}}>{errors.calibrationExpirationDate}</span>}
                 </div>
             <button type="submit">Submit</button>
+                <div>
+                {loading && <p className={styles['loading-message']}>Loading...</p>}
+                {error && <p className={styles['error-message']}>Error: {error.message}</p>}
+                {data && <p className={styles['success-message']}>{formData.name} with type {formData.type} created successfully!</p>}
+            </div>
             </form> 
 
         </>
