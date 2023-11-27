@@ -172,12 +172,12 @@ function DisplayComponent(props: DisplayProps) {
                     <input type="button" onClick={goTo} value={"Go To"} />
                 </form>
             </div>
-            {props.editMode ? (
+            {editMode.isEditMode ? (
             <div className="ScheduleFilterAndMode">
                 <label className="switch"> Edit Mode</label>
                 <input type="checkbox" checked={true} onChange={handleModeChange} />
             </div>
-            ) :  (
+            ) : (
             <div className="ScheduleFilterAndMode">
                 <label>Filter:</label>
                 <select
