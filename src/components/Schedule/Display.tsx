@@ -4,8 +4,8 @@ import CreateTimelineField from "./TimelineField";
 import React, { useState} from "react";
 import CreateAdditionalContent from "./AdditionalContent";
 import BladeTaskCard from "./BladeTaskCard";
-import { useQuery } from "@apollo/client";
-import { GET_BT_IN_RANGE, GET_TEST_RIGS } from "../../api/queryList";
+import { useQuery, useSubscription } from "@apollo/client";
+import { GET_BT_IN_RANGE, GET_BT_IN_RANGE_SUB, GET_TEST_RIGS } from "../../api/queryList";
 import { getMonthLength } from "./TimelineField";
 import { capitalizeFirstLetter } from "./TimelineField";
 import { useEditModeContext } from "../../EditModeContext";
@@ -76,13 +76,18 @@ function DisplayComponent(props: DisplayProps) {
     } = useQuery(GET_TEST_RIGS);
     
 
-    const { loading: loadingBT, error: errorBT, data: dataBT } = useQuery(GET_BT_IN_RANGE, {
-        variables: {
-            startDate: queryDates.startDate,
-            endDate: queryDates.endDate,
-            isActive: !editMode.isEditMode,
-        },
-    });
+    const {
+        loading: loadingBT,
+        error: errorBT,
+        data: dataBT,
+    } = useSubscription(GET_BT_IN_RANGE_SUB, {variables: {
+        
+        startDate: queryDates.startDate,
+        endDate: queryDates.endDate,
+        isActive:  !editMode.isEditMode,
+    },});
+
+    console.log(dataBT);
 
     if (loadingRigs) {
         return <p>Loading...</p>;
@@ -105,7 +110,7 @@ function DisplayComponent(props: DisplayProps) {
 
     let btCards: React.ReactNode[] = [];
 
-    dataBT["AllBladeTasksInRange"].forEach((bt: any) => {
+    dataBT["AllBladeTasksInRangeSub"].forEach((bt: any) => {
         let btShown = false;
         if (
             bt.bladeProject.customer === props.filter ||

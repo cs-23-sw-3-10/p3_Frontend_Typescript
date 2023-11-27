@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { columnBP } from "./BladeProjectColumns";
 import { columnBT } from "../BladeTask/BladeTaskColumns";
 import { useQuery, useSubscription } from "@apollo/client";
-import { GET_ALL_BP } from "../../api/queryList";
+import { GET_ALL_BP, GET_BT_IN_RANGE_SUB } from "../../api/queryList";
 import { GET_ALL_BT } from "../../api/queryList";
 import { TableLogicWOHeaders } from "../TableLogic/TableLogicWOHeader";
 import { TableLogic } from "../TableLogic/TableLogic";
@@ -70,11 +70,26 @@ function BladeProjectPageWithSchedule() {
     ]);
 
     //get data from the database
+    
+    
     const {
         loading: loadingBP,
         error: errorBP,
         data: dataBP,
-    } = useSubscription(ALL_BT_SUB);
+    } = useQuery(GET_ALL_BP);
+
+    const {
+        loading: loadingBT,
+        error: errorBT,
+        data: dataBT,
+    } = useSubscription(GET_BT_IN_RANGE_SUB, {variables: {
+        
+        startDate: "2021-01-01",
+        endDate: "2026-12-31",
+        isActive:  false
+    },});
+
+    console.log(dataBT);
 
 
     //handle loading and error states for the used queries
@@ -85,6 +100,8 @@ function BladeProjectPageWithSchedule() {
         return <p> No data for {"SpeedReading"} </p>;
     }
 
+    
+  
     console.log(BPData);
 
     /* renders the table. The renderExpandedComponent prop is used to render the bladeTasks table
