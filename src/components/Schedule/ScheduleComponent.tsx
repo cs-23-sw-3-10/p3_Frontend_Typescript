@@ -1,6 +1,5 @@
 import DisplayComponent from "./Display";
 import { useState } from "react";
-import { useContext } from "react";
 import {useEditModeContext} from "../../EditModeContext";
 
 function ScheduleComponent() {
