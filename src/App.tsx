@@ -1,14 +1,14 @@
 import React from "react";
 //Ville nok være en god ide bare at importere alt fra components
 import NavBar from "./components/NavBar/NavBar";
-import BPOverviewPage from "./components/Projects/BPOverviewPage";
-import EquipmentPage from './components/Resources/EquipmentPage';
-import BladeTaskMenu from "./components/CreateBTMenu/BladeTaskMenu";
-import { Routes, Route, Navigate } from 'react-router-dom';
-import ResourceTable from "./components/RessourcesMenu/RessourceTable";
-import './App.css';
 
-import AddResourceTable from "./components/RessourcesMenu/TechnicianTable";
+import ResourceTable from "./components/RessourcesMenu/RessourceTable";
+import { Routes, Route, Navigate } from "react-router-dom";
+import "./App.css";
+import ScheduleComponent from "./components/Schedule/ScheduleComponent";
+import BTPage from "./components/BladeTask/BladeTaskPage";
+import BladeProjectPageWithSchedule from "./components/Projects/BladeProjectPageSchedule";
+
 
 function App() {
     return (
@@ -17,8 +17,13 @@ function App() {
                 <NavBar />
                 <div className="content-container">
                     <Routes>
-                        <Route path="/" element={<BladeTaskMenu/>} />
-                        <Route path="/projects" element={<BPOverviewPage />} />
+
+                        <Route path="/" element={<ScheduleComponent/>} />
+                        <Route
+                            path="/projects"
+                            element={<BladeProjectPageWithSchedule />}
+                        />
+                        <Route path="/bladetask" element={<BTPage />} />
                         <Route path="/resources" element={<ResourceTable/>} />
 
                         <Route path="*" element={<Navigate to="/" />} />

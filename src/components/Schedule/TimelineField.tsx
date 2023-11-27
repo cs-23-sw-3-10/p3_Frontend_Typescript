@@ -1,22 +1,26 @@
-enum MonthLengths { // Non-leap year for easy acces of number of days in a month
-    Januar = 31,
-    Februar = 28, // Default non-leap year
-    Marts = 31,
-    April = 30,
-    May = 31,
-    Juni = 30,
-    Juli = 31,
-    August = 31,
-    September = 30,
-    Oktober = 31,
-    November = 30,
-    December = 31,
-}
-const dateDivLength = 25; // px length of the dates in the schedule
+import { DndContext } from "@dnd-kit/core";
+import CreateMonthDateContainer from "./MonthDateContainer";
+import CreateRigFieldContainer from "./RigFieldContainer";
+import MonthLengths from "./MonthLengthsEnum";
+import React, { useState } from "react";
+import BladeTaskCard from "./BladeTaskCard";
+import { BladeTaskHolder } from "./BladeTaskHolder";
+import { useMutation } from "@apollo/client";
+import { UPDATE_BT } from "../../api/mutationList";
 
-function CreateTimelineField(rigs: string[], months: Date[], allBladeTaskCards: React.ReactNode[]) {
+type TimelineFieldProps = {
+    rigs: { rigName: string; rigNumber: number }[];
+    months: Date[];
+    btCards: React.ReactNode[];
+};
+
+export const dateDivLength = 25; // px length of the dates in the schedule
+
+function CreateTimelineField(props: TimelineFieldProps) {
+    const [updateBt, { error, data }] = useMutation(UPDATE_BT);
+
     let fieldWidth: number = 0; // px width of the field dynamically calculated from the number of months displayed
-    months.forEach((month) => {
+    props.months.forEach((month) => {
         fieldWidth += getTotalWidth(
             capitalizeFirstLetter(
                 month.toLocaleString("default", { month: "long" }) // Get the month name
@@ -26,13 +30,14 @@ function CreateTimelineField(rigs: string[], months: Date[], allBladeTaskCards: 
     });
 
     let allDates: Date[] = []; // All dates to be displayed in the schedule
-    months.forEach((month) => {
+    props.months.forEach((month) => {
         let monthName = capitalizeFirstLetter(
             month.toLocaleString("default", { month: "long" }) // Get the month name
         );
-        for ( // Create a date for each day in the month
+        for (
+            // Create a date for each day in the month
             let i = 1;
-            i <= MonthLengths[monthName as keyof typeof MonthLengths];
+            i <= getMonthLength(monthName, month.getFullYear());
             i++
         ) {
             let date = new Date(month.getFullYear(), month.getMonth(), i);
@@ -50,225 +55,265 @@ function CreateTimelineField(rigs: string[], months: Date[], allBladeTaskCards: 
     };
 
     const rigFieldContainerStyle = {
-        gridColumn: "1/-1", 
+        gridColumn: "1/-1",
         gridRow: "3",
-        height: rigs.length * 50 + "px", // The height of the container is the number of rigs times the height of each rig
-        maxHeight: rigs.length * 50 + "px",
-        minHeight: rigs.length * 50 + "px",
+        height: props.rigs.length * 50 + "px", // The height of the container is the number of rigs times the height of each rig
+        maxHeight: props.rigs.length * 50 + "px",
+        minHeight: props.rigs.length * 50 + "px",
     };
 
+    const [isDragging, setDragging] = useState(false);
+
+    let bladeTasks = new BladeTaskHolder(props.btCards);
     return (
         <div className="TimelineFieldContainer">
             <div className="TimelineField" style={BTFieldStyle}>
-                {months.map((month) => CreateMonthDateContainer(month))}
-                <div className="RigFieldContainer" style={rigFieldContainerStyle}>
-                    {rigs.map((rig) =>
-                        CreateRigFieldContainer(
-                            rig,
-                            allDates,
-                            fieldWidth,
-                            columnsOfSchedule,
-                            allBladeTaskCards.filter((bladeTask: React.ReactNode) => { //Finds the blade tasks placed on the rig
-                                if (bladeTask) {
-                                    return (bladeTask as React.ReactElement<any>).props.rig === rig;
-                                }
-                            })
-                        )
-                    )}
-                </div>
+                {props.months.map((month) => (
+                    <CreateMonthDateContainer
+                        key={getMonthContainerKey(month)}
+                        currentMonth={month}
+                    />
+                ))}
+                <DndContext
+                    onDragStart={(event) => {
+                        handleDragStart(event, setDragging);
+                    }}
+                    onDragEnd={(event) => {
+                        handleDragEnd(event, bladeTasks, setDragging, updateBt);
+                    }}
+                >
+                    <div
+                        className="RigFieldContainer"
+                        style={rigFieldContainerStyle}
+                    >
+                        {props.rigs.map((rig) => (
+                            // Create a rig field for each rig
+                            <CreateRigFieldContainer
+                                key={rig.rigName}
+                                rig={rig.rigName}
+                                rigNumber={rig.rigNumber}
+                                viewMonths={props.months}
+                                allDates={allDates}
+                                fieldWidth={fieldWidth}
+                                columns={columnsOfSchedule}
+                                isDragging={isDragging}
+                                setDragging={setDragging}
+                                BladeTaskHolder={bladeTasks}
+                                BladeTaskCards={bladeTasks
+                                    .getBladeTasks()
+                                    .filter((bladeTask: React.ReactNode) => {
+                                        //Finds the blade tasks placed on the rig
+                                        if (bladeTask) {
+                                            return (
+                                                (
+                                                    bladeTask as React.ReactElement<any>
+                                                ).props.rig === rig.rigNumber
+                                            );
+                                        }
+                                        return false;
+                                    })}
+                            />
+                        ))}
+                    </div>
+                </DndContext>
             </div>
         </div>
     );
 }
 export default CreateTimelineField;
 
-function CreateMonthDateContainer(currentMonth: Date) {
-    let year = currentMonth.getFullYear();
-    let monthNumber = currentMonth.getMonth();
-    let month = capitalizeFirstLetter(
-        currentMonth.toLocaleString("default", { month: "long" })
-    );
-    let idSTR = `${year}-${month}Container`; // id for the container div
-
-    let monthDates: Date[] = []; // All dates in the month
-
-    for (
-        let i = 1;
-        i <= MonthLengths[month as keyof typeof MonthLengths];
-        i++
-    ) {
-        let date = new Date(
-            currentMonth.getFullYear(),
-            currentMonth.getMonth(),
-            i
-        );
-        monthDates.push(date);
-    }
-    const columnTemplate = monthDates // Create the grid columns for the month
-        .map(
-            (date) => // Create a labeled column for each date
-                `[date-${date.getFullYear()}-${date.getMonth()}-${date.getDate()}] ${dateDivLength}px`
-        )
-        .join(" "); // Join the columns into a string
-
-    let firstDay = `date-${year}-${monthNumber}-1`; // Get the first day of the month
-
-    let lastDay = `date-${year}-${monthNumber}-${getMonthLength(month, year)}`; // Get the last day of the month
-
-    const MonthDateContainerStyle = {// Style for the MonthDateContainer
-        width: `${getTotalWidth(month, year)}px`, // Width of the container is the total width of the month
-        gridTemplateColumns: columnTemplate,
-        gridTemplateRow: "30px 30px",
-        gridColumn: `${firstDay}/${lastDay}`, // The container spans from the first day to the last day of the month
-        gridRow: "1/2",
-    };
-
-    return (
-        <div className="MonthDateContainer" id={idSTR} style={MonthDateContainerStyle}>
-            {CreateMonthHeader(currentMonth)}
-            {CreateDatesContainer(currentMonth, monthDates, columnTemplate)}
-        </div>
-    );
-}
-
-function CreateMonthHeader(currentMonth: Date) {
-    let year = currentMonth.getFullYear();
-    let monthNumber = currentMonth.getMonth();
-    let month = capitalizeFirstLetter(
-        currentMonth.toLocaleString("default", { month: "long" }) // Get the month name
-    );
-    let idSTR = `${year}-${monthNumber}`; // id for the header div
-
-    return (
-        <div
-            className="MonthHeader"
-            id={idSTR}
-            style={{
-                gridColumn: `1/-1`, // The header spans from the first day to the last day of the month
-                gridRow: "1",
-            }}
-        >
-            <p>{`${month}(${year})`}</p>
-        </div>
-    );
-}
-
-function CreateDatesContainer(
-    currentMonth: Date,
-    monthDates: Date[],
-    columnTemplate: string
-) {
-    let year = currentMonth.getFullYear();
-    let monthNumber = currentMonth.getMonth();
-    let containerID = `${year}-${monthNumber}-DateContainer`; // id for the container div
-
-    return (
-        <div
-            className="DateContainer"
-            id={containerID}
-            style={{
-                gridTemplateColumns: columnTemplate, // The container contains a column for each date
-                gridTemplateRows: "30px",
-            }}
-        >
-            {monthDates.map((date) => CreateDate(date)) /* Create a date for each day in the month */}
-        </div>
-    );
-}
-
-function CreateDate(currentDate: Date) {
-    let year = currentDate.getFullYear();
-    let monthNumber = currentDate.getMonth();
-    let date = currentDate.getDate();
-    let idSTR = `${year}-${monthNumber}-${date}`; // id for the date div
-    return (
-        <div
-            className="DateElement"
-            id={idSTR}
-            style={{
-                gridColumn: `date-${year}-${monthNumber}-${date}`, // The date is placed in the column corresponding to its date
-                gridRow: "1",
-            }}
-        >
-            <p>{date}</p>
-        </div>
-    );
-}
-
-function CreateRigFieldContainer(
-    rig: string,
-    allDates: Date[],
-    fieldWidth: number,
-    columns: string, // The columns of the schedule
-    BladeTaskCards: React.ReactNode[]
-) {
-    const rigStyle = {
-        width: `${fieldWidth}px`,
-        gridTemplateColumns: columns, // The righas columns corresponding to the schedule
-        gridTemplateRows: "auto",
-    };
-    return (
-        <div className="RigField" style={rigStyle}>
-            {allDates.map((date) => CreateRigFieldDates(rig, date))}
-            {BladeTaskCards} {/*automatically spreads out the entries of BladeTaskCards */}
-        </div>
-    );
-}
-
-function CreateRigFieldDates(rig: string, date: Date) {
-    let year = date.getFullYear();
-    let monthNumber = date.getMonth();
-    let dateNumber = date.getDate();
-    let weekDay = date.getDay(); // 0 = Sunday, 6 = Saturday to gray out weekends
-    let idSTR = `${rig}-${year}-${monthNumber}-${dateNumber}}`; // id for the date div
-
-    let RigFieldDatesStyle = { // Style for the RigFieldDate
-        gridColumn: `date-${year}-${monthNumber}-${dateNumber}`,
-        gridRow: "1",
-        backgroundColor: "white", // Default color
-    };
-    if (weekDay === 0 || weekDay === 6) {
-        RigFieldDatesStyle.backgroundColor = "lightgrey"; // Gray out weekends
-    }
-
-    return (
-        <div
-            className="RigFieldDate"
-            id={idSTR}
-            style={RigFieldDatesStyle}
-        ></div>
-    );
-}
-
-function getTotalWidth(month: string, year: number) {
+export function getTotalWidth(month: string, year: number) {
     let totalWidth = dateDivLength * getMonthLength(month, year); // Get the total width of the month // The total width is the number of days in the month times the width of each date
     return totalWidth;
 }
 
-function getMonthLength(month: string, year: number) {
-    return month === "February" // Check if the month is February
+export function getMonthLength(month: string, year: number) {
+    return month === "February" || month === "Februar" // Check if the month is February
         ? getDaysInFebruary(year) // If it is, get the number of days in February
         : MonthLengths[month as keyof typeof MonthLengths]; // Else, get the number of days in the month
 }
 
-function capitalizeFirstLetter(str: string) {
+export function capitalizeFirstLetter(str: string) {
     return str.charAt(0).toUpperCase() + str.slice(1); // Capitalize the first letter of a string
 }
 
-function getDaysInFebruary(year: number): number {
+export function getDaysInFebruary(year: number): number {
     return isLeapYear(year) ? 29 : 28; // Return 29 if the year is a leap year, else return 28
 }
 
-function isLeapYear(year: number): boolean {
+export function isLeapYear(year: number): boolean {
     // Leap years are divisible by 4, but not divisible by 100 unless also divisible by 400
     return (year % 4 === 0 && year % 100 !== 0) || year % 400 === 0;
 }
 
-function createGridColumns(allDates: Date[]) {
+export function createGridColumns(allDates: Date[]) {
     let gridSTR = ""; // String to be used as grid-template-columns
     allDates.forEach((date) => {
         // Create a labeled column for each date
         gridSTR += `[date-${date.getFullYear()}-${date.getMonth()}-${date.getDate()}]${dateDivLength}px `;
     });
     return gridSTR;
+}
+
+function getMonthContainerKey(month: Date) {
+    return `month-${month.getFullYear()}-${month.getMonth()}-Container`;
+}
+
+export function handleDragStart(
+    event: any,
+    setDragging: React.Dispatch<React.SetStateAction<boolean>>
+) {
+    const { active } = event;
+    console.log("drag started");
+    if (active !== null) {
+        setDragging(true);
+    }
+}
+
+export function handleDragEnd(
+    event: any,
+    bladeTaskHolder: BladeTaskHolder,
+    setDragging: React.Dispatch<React.SetStateAction<boolean>>,
+    updateBT: Function
+) {
+    console.log("drag ended");
+
+    const { active, over } = event;
+    console.log(active);
+    if (over !== null) {
+        const overIdSlpit = over.id.split("-");
+        const overRig = parseInt(overIdSlpit[0].split(" ")[1]);
+        const overDate = new Date(
+            overIdSlpit[1],
+            overIdSlpit[2],
+            overIdSlpit[3]
+        );
+        const findBTIndex = (bladeTaskCards: any) => {
+            for (let i: number = 0; i < bladeTaskCards.length; i++) {
+                if (
+                    bladeTaskCards[i] &&
+                    active.id === bladeTaskCards[i].props.id
+                ) {
+                    return i;
+                }
+            }
+            console.log("blade task not found");
+            return -1;
+        };
+        const indexBT = findBTIndex(bladeTaskHolder.getBladeTasks());
+
+        if (indexBT !== -1) {
+            const updatedBladeTaskCards = bladeTaskHolder.getBladeTasks();
+            const draggedCard = updatedBladeTaskCards[
+                indexBT
+            ] as React.ReactElement;
+
+            // Check for overlap before updating the cards
+            const isOverlap = checkForOverlap(
+                updatedBladeTaskCards,
+                indexBT,
+                overDate,
+                overRig
+            );
+
+            if (!isOverlap) {
+                let newEndDate = new Date(overDate);
+
+                newEndDate.setDate(
+                    newEndDate.getDate() + draggedCard.props.duration - 1
+                );
+
+                console.log(overDate);
+                console.log(newEndDate);
+                console.log(draggedCard.props.duration);
+
+                updateBT({
+                    variables: {
+                        id: draggedCard.props.id,
+                        startDate: formatDate(overDate),
+                        duration: draggedCard.props.duration,
+                        rig: overRig,
+                    },
+                });
+
+                updatedBladeTaskCards[indexBT] = (
+                    <BladeTaskCard
+                        key={draggedCard.key}
+                        id={draggedCard.props.id}
+                        duration={draggedCard.props.duration}
+                        projectColor={draggedCard.props.projectColor}
+                        projectId={draggedCard.props.projectId}
+                        customer={draggedCard.props.customer}
+                        taskName={draggedCard.props.taskName}
+                        startDate={new Date(overDate)}
+                        endDate={newEndDate}
+                        rig={overRig}
+                        attachPeriod={draggedCard.props.attachPeriod}
+                        detachPeriod={draggedCard.props.detachPeriod}
+                        shown={draggedCard.props.shown}
+                    />
+                );
+                bladeTaskHolder.setBladeTasks(updatedBladeTaskCards);
+            } else {
+                console.log("Overlap detected. drag opreation cancelled");
+
+                updatedBladeTaskCards[indexBT] = draggedCard;
+                bladeTaskHolder.setBladeTasks(updatedBladeTaskCards);
+            }
+            setDragging(false);
+        }
+    } else {
+        console.log("over is null");
+    }
+}
+
+function checkForOverlap(
+    bladeTaskCards: any,
+    BTIndex: number,
+    newStartDate: Date,
+    overRig: number
+) {
+    const draggedCard = bladeTaskCards[BTIndex];
+    //start-/end date for dragged card
+    const startDateA = newStartDate;
+    let endDateA = new Date(newStartDate);
+    endDateA.setDate(endDateA.getDate() + draggedCard.props.duration - 1);
+
+    for (let i: number = 0; i < bladeTaskCards.length; i++) {
+        //start-/end date for i'th card
+        const startDateB = bladeTaskCards[i].props.startDate;
+        const endDateB = bladeTaskCards[i].props.endDate;
+
+        if (i !== BTIndex) {
+            //skip comparison with itself
+            if (
+                bladeTaskCards[i].props.rig === overRig ||
+                bladeTaskCards[i].props.projectId ===
+                    draggedCard.props.projectId
+            ) {
+                // skip comparison with cards on different rigs
+                //Overlaps are covered by two cases. A check is made for each case.
+                if (startDateA <= startDateB) {
+                    if (!(endDateA < startDateB)) {
+                        return true;
+                    }
+                } else if (startDateB <= startDateA) {
+                    if (!(endDateB < startDateA)) {
+                        return true;
+                    }
+                }
+            }
+        }
+    }
+    return false;
+}
+
+function formatDate(date: Date) {
+    const year = date.getFullYear();
+    // getMonth() returns 0-11; add 1 to make it 1-12 and pad with '0' if needed
+    const month = (date.getMonth() + 1).toString().padStart(2, "0");
+    // getDate() returns 1-31; pad with '0' if needed
+    const day = date.getDate().toString().padStart(2, "0");
+
+    return `${year}-${month}-${day}`;
 }

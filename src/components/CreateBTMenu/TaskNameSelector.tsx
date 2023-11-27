@@ -1,60 +1,60 @@
-import {GET_ALL_BT_NAMES} from '../../api/queryList';
-import { useLazyQuery} from '@apollo/client';
-import  {client} from '../../index';
+import { useQuery } from "@apollo/client";
+import { GET_ALL_BT_NAMES } from "../../api/queryList";
+import { InErrorChart } from "./BTMenuTypes";
 
 
-function HandleBTNameValidation(e:React.FormEvent<HTMLInputElement>){
-    client.query({query: GET_ALL_BT_NAMES}).then((result) => console.log(result))
+function TaskNameSelector({taskName, setTaskName, inErrorChart, setInErrorChart}:{taskName:string, setTaskName:Function, setInErrorChart:Function, inErrorChart:InErrorChart}){
+    const {loading,error,data} = useQuery(GET_ALL_BT_NAMES);
+    if(loading){
+        return <div>Loading</div>
+    };
+    if(error){
+        return <div>Error</div>
+    };
+    
+    const taskNamesArray:string[] = data.AllBladeTasks.map(({taskName}:{taskName:string}) => taskName);
+    return <InputComponent taskName={taskName} setTaskName={setTaskName} existingNames={taskNamesArray} inErrorChart={inErrorChart} setInErrorChart={setInErrorChart}/>
 }
 
-function TaskNameSelector(){
-    return(
-        <input 
-                    className='item id_select' 
-                    type="text" 
-                    placeholder='Select Task Name'
-                    onBlur={(e) => {HandleBTNameValidation(e)}}
-                />
-    );
-}
+function InputComponent({taskName, setTaskName, existingNames, inErrorChart, setInErrorChart}:{taskName:string, setTaskName:Function, existingNames:string[], inErrorChart:InErrorChart, setInErrorChart:Function}){
 
-
-/*
-function TaskNameSelector(){
-    const [getBTNames, {loading, error, data}] = useLazyQuery(GET_ALL_BT_NAMES, {
-        onCompleted: () => {
-            console.log(data?.variables);
+    const handleNameInput = (e: React.FormEvent<HTMLInputElement>) =>{
+        let userInput = e.currentTarget.value;
+        if(!existingNames.includes(userInput)){
+            setTaskName(sanitize(userInput));
+            setInErrorChart((inErrorChart:InErrorChart) => {
+                let newInErrorChart = {...inErrorChart};
+                newInErrorChart.taskName = false;
+                return newInErrorChart;
+            });
+        }else{
+            setTaskName(" ");
+            setInErrorChart((inErrorChart:InErrorChart) => {
+                let newInErrorChart = {...inErrorChart};
+                newInErrorChart.taskName = true;
+                return newInErrorChart;
+            });
         }
-    });
+    }
 
-    if(loading) return(<div>LOADING</div>);
-    if(error) return(<div>ERROR</div>);
-
-    if(data?.AllBladeTasks !== undefined){
-        console.log(data?.AllBladeTasks);
+    const handleChange = (e: React.FormEvent<HTMLInputElement>) => {
+        setTaskName(e.currentTarget.value);
     }
 
     return(
         <input 
-                    className='item id_select' 
-                    type="text" 
-                    placeholder='Select Task Name'
-                    onBlur={(e) => {
-                        getBTNames({variables:{e}});
-                    }}
-                />
-    );
+        className={inErrorChart.taskName ? "error id_select input" : 'id_select input_sideborders'}
+        type="text" 
+        placeholder='Select Task Name'
+        value={taskName}
+        onChange={handleChange}
+        onBlur={handleNameInput}
+        /> )
 }
-*/
 
-/*
-                    <input 
-                    className='item id_select' 
-                    type="text" 
-                    placeholder='Select Task Name'
-                    onBlur={(e) => HandleBTNameValidation()}
-                    />
-                */
-
+function sanitize(input:string){
+    const sanitizedString = input.replace(/[^a-zA-Z0-9_ -]/g, '');
+    return sanitizedString;
+};
 
 export default TaskNameSelector;

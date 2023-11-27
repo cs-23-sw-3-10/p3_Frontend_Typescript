@@ -1,24 +1,33 @@
-import {GET_TEST_TYPES} from '../../api/queryList';
-import { useQuery} from '@apollo/client';
+import { GET_TEST_TYPES } from '../../api/queryList';
+import { useQuery } from '@apollo/client';
+import { useEffect, useState } from 'react';
+import Combobox from "react-widgets/Combobox";
+import "../../../node_modules/react-widgets/styles.css";
+import "./TestTypeSelector.css"
+
 
 
 //Queries test types and insert them into the BT-Menu
-function TestTypeOptions(){
-    const { loading, error, data} = useQuery(GET_TEST_TYPES);
-
-    //Whilst list is loading, the only element in the list is "LOADING"
-    if(loading) return(<option value="LOADING">LOADING</option>);
-
-    //Error returns an empty list
-    if(error){
-        console.log(error.message);
-        return (<option>Error</option>);
-    }
+function TestTypeSelector({ testType, setTestType }: { testType: string, setTestType: Function }) {
+    const { loading, error, data } = useQuery(GET_TEST_TYPES);
+    const [typesList, setTypesList] = useState<string[]>([]);
     
-    //Used to give keys to elements in the list
-    let key = 1;
+    useEffect(() => {
+        if (data && data.DictionaryAllByCategory) {
+            let listFromDB: Array<string> = data.DictionaryAllByCategory.map(({ label }: { label: string }) => label);
+            setTypesList(listFromDB);
+        }
+    }, [data]);
+    
+    if (loading) return (<Combobox className="testtype_select input_sideborders" data={typesList} />);
+    if (error) return (<Combobox className="testtype_select input_sideborders" data={typesList} />);
 
-    //Returns a dropdown of all the test types present in DB
-    return data.DictionaryAllByCategory.map(({label}:{label:string}) => ( <option value={label.toString()} key={key++}>{label}</option> ));
+    return (
+        <div className="item testtype_wrapper">
+            <h2 className="title">Type</h2>
+            <Combobox  onChange={value => setTestType(value)} value={testType} data={typesList} />
+        </div>
+    );
 }
-export default TestTypeOptions;
+
+export default TestTypeSelector;
