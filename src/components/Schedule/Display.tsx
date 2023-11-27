@@ -99,6 +99,7 @@ function DisplayComponent(props: DisplayProps) {
         variables: {
             startDate: queryDates.startDate,
             endDate: queryDates.endDate,
+            isActive: !editMode.isEditMode,
         },
     });
 
