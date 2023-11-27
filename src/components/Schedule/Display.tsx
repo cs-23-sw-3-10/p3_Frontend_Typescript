@@ -1,7 +1,7 @@
 import "./Display.css";
 import CreateTestRigDivs from "./TestRigDivs";
 import CreateTimelineField from "./TimelineField";
-import React, { useState } from "react";
+import React, { useState} from "react";
 import CreateAdditionalContent from "./AdditionalContent";
 import BladeTaskCard from "./BladeTaskCard";
 import { useQuery } from "@apollo/client";
@@ -58,6 +58,7 @@ function DisplayComponent(props: DisplayProps) {
     const [dates, setDates] = useState(
         getMonthsInView(currentDate, numberOfMonths)
     ); // should be imported from database
+    
 
     const handleDateChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setSelectedDate(event.target.value);
@@ -205,7 +206,9 @@ function DisplayComponent(props: DisplayProps) {
                 />
             </div>
 
+
             {editMode.isEditMode ? <CreateAdditionalContent /> : null}
+
         </div>
     );
 }
