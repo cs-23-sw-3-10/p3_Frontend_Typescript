@@ -250,6 +250,7 @@ export function handleDragEnd(
                         rig={overRig}
                         attachPeriod={draggedCard.props.attachPeriod}
                         detachPeriod={draggedCard.props.detachPeriod}
+                        enableDraggable={draggedCard.props.enableDraggable}
                         shown={draggedCard.props.shown}
                     />
                 );

@@ -16,6 +16,7 @@ import BladeTaskMenu from "./components/CreateBTMenu/BladeTaskMenu";
 import { TableModeContext } from "./components/TableLogic/TableContext";
 
 
+
 function App() {
     const [contextViewMode, setViewMode] = useState(true);
 
@@ -38,7 +39,6 @@ function App() {
                         <Route path="*" element={<Navigate to="/" />} />
                     </Routes>
                     </TableModeContext.Provider>
-
                     </EditModeProvider>
                 </div>
             </div>
