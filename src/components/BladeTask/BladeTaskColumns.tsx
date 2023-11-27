@@ -1,9 +1,6 @@
 "use client";
 import { ColumnDef } from "@tanstack/react-table";
 import { BladeTaskQuery } from "./BladeTaskData";
-import {BookingDataQuery} from "../Resources/BookingData"
-
-type CombinedData = BladeTaskQuery & BookingDataQuery;
 
 export const columnBTID: ColumnDef<BladeTaskQuery>[] = [
     {
