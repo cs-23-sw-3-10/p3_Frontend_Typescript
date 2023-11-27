@@ -3,6 +3,37 @@ import { gql } from "@apollo/client";
 /**
  * This file contains all the queries used in the application
  */
+
+export const GET_ALL_BP_IN_DIFF_SCHEDULE = gql`
+    query AllSchedules {
+        AllSchedules {
+            id
+            isActive
+            bladeProject {
+                id
+                startDate
+                endDate
+                customer
+                projectLeader
+                projectName
+                color
+                bladeTasks {
+                    id
+                    startDate
+                    endDate
+                    duration
+                    testType
+                    attachPeriod
+                    detachPeriod
+                    taskName
+                    testRig
+                    inConflict
+                }
+            }
+    }
+}
+    `;
+
 export const GET_ALL_BT = gql`
     query AllBladeTasks {
         AllBladeTasks {
@@ -158,6 +189,40 @@ export const GET_BOOKINGS = gql`
     }
 `;
 
+export const GET_ALL_BT_NAMES = gql`
+  query GetAllBTNames{
+    AllBladeTasks{
+      taskName
+   }
+  }
+`;
+
+export const GET_TEST_TYPES = gql`
+query GetTestTypes{
+  DictionaryAllByCategory(category:"testType"){
+    id
+    label
+  }
+}
+`;
+
+export const GET_TEST_RIGS = gql`
+query GetTestRigs{
+  DictionaryAllByCategory(category:"testRigs"){
+    label
+  }
+}
+`;
+
+export const GET_ALL_EQUIPMENT_TYPES = gql`
+query GetAllEquipmentTypes{
+    DictionaryAllByCategory(category:"equipmentType"){
+      id
+    	label
+    }
+}
+`;
+
 export const GET_BT_DATE_INFO = gql`
   query GetBTDateInfo{
     AllBladeTasks{
@@ -173,4 +238,46 @@ export const GET_BT_DATE_INFO = gql`
   }
 }
 `;
+
+export const GET_ALL_ENGINEERS = gql`
+query AllEngineers{
+  AllEngineers{
+    __typename
+    id
+    name
+    workHours
+    maxWorkHours
+  }
+}
+`;
+
+export const GET_ALL_TECHNICIANS = gql`
+query AllTechnicians{
+  AllTechnicians{
+    __typename
+    id
+    type
+    workHours
+    maxWorkHours
+    count
+  }
+}
+`;
+
+export const GET_ALL_BLADE_PROJECTS = gql`
+query GetAllBladeProjects{
+  AllBladeProjects{
+    __typename
+    id
+    projectName
+    customer
+  }
+}
+`;
+
+
+
+
+
+
 

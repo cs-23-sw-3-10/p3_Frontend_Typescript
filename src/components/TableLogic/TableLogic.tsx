@@ -3,6 +3,8 @@ import React from "react";
 import StyledButton from "../ui/styledButton";
 import { useCollapse } from "react-collapsed";
 import { Input } from "../ui/input";
+import { TableModeContext } from "./TableContext";
+import { useContext } from "react";
 
 import {
     ColumnDef,
@@ -28,6 +30,8 @@ import {
     TableHeader,
     TableRow,
 } from "../ui/table";
+
+import SwitchComponent from "./SwitchComponent";
 
 /**
  * Represents the props for the DataTable component.
@@ -58,7 +62,6 @@ const defaultPagination: PaginationState = {
     pageIndex: 0,
     pageSize: 10,
 };
-
 
 export function TableLogic<TData, TValue>({
     columns,
@@ -120,7 +123,6 @@ export function TableLogic<TData, TValue>({
         }
     };
 
-
     return (
         <div>
             {/* global filtering textfield*/}
@@ -175,7 +177,7 @@ export function TableLogic<TData, TValue>({
                                                                 column.getToggleVisibilityHandler(), //get the handler function to toggle the visibility of the current column.
                                                         }}
                                                     />{" "}
-                                                    {column.id}
+                                                    {column.id.replace(/([A-Z])/g, " $1").replace(/([_.])/g," ").replace(/^./, function (str) {return str.toUpperCase();})}
                                                 </label>
                                             </div>
                                         );
@@ -190,6 +192,9 @@ export function TableLogic<TData, TValue>({
                     <StyledButton>
                         Create {window.location.pathname.split("/")[1]}
                     </StyledButton>
+                </div>
+                <div>
+                    <SwitchComponent viewMode={true}/>
                 </div>
             </div>
 
