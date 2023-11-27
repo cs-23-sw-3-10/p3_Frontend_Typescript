@@ -2,7 +2,7 @@ import React, { useState } from "react";
 
 import { columnBP } from "./BladeProjectColumns";
 import { columnBT } from "../BladeTask/BladeTaskColumns";
-import { useQuery } from "@apollo/client";
+import { useQuery, useSubscription } from "@apollo/client";
 import { GET_ALL_BP } from "../../api/queryList";
 import { GET_ALL_BT } from "../../api/queryList";
 import { TableLogicWOHeaders } from "../TableLogic/TableLogicWOHeader";
@@ -15,6 +15,7 @@ import CreateTestRigDivs from "../Schedule/TestRigDivs";
 import { getMonthsInView } from "../Schedule/Display";
 import { getMonthLength } from "../Schedule/TimelineField";
 import { capitalizeFirstLetter } from "../Schedule/TimelineField";
+import { ALL_BT_SUB, } from "../../api/queryList";
 
 /**
  * Calculates the number of months between start and enddate of a bladeproject,
@@ -73,15 +74,18 @@ function BladeProjectPageWithSchedule() {
         loading: loadingBP,
         error: errorBP,
         data: dataBP,
-    } = useQuery(GET_ALL_BP);
+    } = useSubscription(ALL_BT_SUB);
+
 
     //handle loading and error states for the used queries
     if (loadingBP) return <p>Loading...</p>;
     if (errorBP) return <p> Error {errorBP.message}</p>;
-    const BPData = dataBP["AllBladeProjects"];
+    const BPData = dataBP["SpeedReading"];
     if (!BPData) {
-        return <p> No data for {"AllBladeProjects"} </p>;
+        return <p> No data for {"SpeedReading"} </p>;
     }
+
+    console.log(BPData);
 
     /* renders the table. The renderExpandedComponent prop is used to render the bladeTasks table
      * based on the current row.id which is equal to the bladeproject ID.
@@ -93,7 +97,7 @@ function BladeProjectPageWithSchedule() {
             data={BPData}
             renderExpandedComponent={(row) => {
                 let btCards: React.ReactNode[] = [];
-                let bladeProjectIndex = dataBP["AllBladeProjects"].find(
+                let bladeProjectIndex = dataBP["SpeedReading"].find(
                     (project: any) => project.id === row.id
                 );
 

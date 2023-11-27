@@ -244,6 +244,19 @@ query GetAllBladeProjects{
 }
 `;
 
+export const ALL_BT_SUB = gql`
+subscription SpeedReading {
+  SpeedReading {
+      id
+      startDate
+      endDate
+      customer
+      projectLeader
+      projectName
+      color
+  }
+}
+`;
 
 
 

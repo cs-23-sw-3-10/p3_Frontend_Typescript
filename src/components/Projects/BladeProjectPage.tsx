@@ -2,11 +2,12 @@ import React from "react";
 
 import { columnBP } from "./BladeProjectColumns";
 import { columnBT } from "../BladeTask/BladeTaskColumns";
-import { useQuery } from "@apollo/client";
+import { useQuery, useSubscription } from "@apollo/client";
 import { GET_ALL_BP } from "../../api/queryList";
 import { GET_ALL_BT } from "../../api/queryList";
 import { TableLogicWOHeaders } from "../TableLogic/TableLogicWOHeader";
 import { TableLogic } from "../TableLogic/TableLogic";
+import { ALL_BT_SUB } from "../../api/queryList";
 
 /**
  * gets all bladeprojects from the database and renders them in a table
@@ -20,7 +21,7 @@ function BladeProjectPage() {
         loading: loadingBP,
         error: errorBP,
         data: dataBP,
-    } = useQuery(GET_ALL_BP);
+    } = useSubscription(ALL_BT_SUB);
     const {
         loading: loadingBT,
         error: errorBT,
@@ -31,7 +32,7 @@ function BladeProjectPage() {
     //handle loading and error states for the used queries
     if (loadingBP) return <p>Loading...</p>;
     if (errorBP) return <p> Error {errorBP.message}</p>;
-    const BPData = dataBP["AllBladeProjects"];
+    const BPData = dataBP["SpeedReading"];
     if (!BPData) {
         return <p> No data for {"AllBladeProjects"} </p>;
     }
@@ -55,7 +56,7 @@ function BladeProjectPage() {
             renderExpandedComponent={(row) => {
                 // Filter bladeTasksData based on the current row.id
                 const bladeTasksDataForCurrentRow =
-                    dataBP["AllBladeProjects"]
+                    dataBP["SpeedReading"]
                         .find((project: any) => project.id === row.id)
                         ?.bladeTasks.map((bladeTask: any) => ({
                             id: Number(bladeTask.id),

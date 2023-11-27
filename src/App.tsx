@@ -12,8 +12,12 @@ import BladeProjectPageWithSchedule from "./components/Projects/BladeProjectPage
 import { EditModeProvider } from "./EditModeContext";
 import BladeTaskMenu from "./components/CreateBTMenu/BladeTaskMenu";
 
+import { ALL_BT_SUB } from "./api/queryList";
+import { useSubscription } from "@apollo/client";
+
 
 function App() {
+
     return (
         <>
             <div className="app-container">
