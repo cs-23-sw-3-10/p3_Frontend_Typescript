@@ -1,5 +1,5 @@
 /* General form styling */
-form {
+.form-style {
     max-width: 300px;
     margin: 20px;
     padding: 20px;
@@ -9,15 +9,14 @@ form {
 }
 
 /* Label styling */
-label {
+.label-style {
     display: block;
     margin-bottom: 5px;
     font-weight: bold;
 }
 
 /* Input field styling */
-input[type="text"],
-input[type="number"] {
+.text-input{
     width: 100%;
     padding: 8px;
     margin-bottom: 20px;
@@ -26,39 +25,35 @@ input[type="number"] {
     box-sizing: border-box;
 }
 
-/* Error message styling */
-span {
-    display: block;
-    color: red;
-    margin-bottom: 10px;
-}
-h1 {
+/* Heading styling */
+.h1-style {
     text-align: left;
     margin-bottom: 15px;
 }
-h2 { 
+.h2-style { 
     text-align: left;
     margin-bottom: 10px;
-    
 }
+
+/* Error, Loading, Success message styling */
 .loading-message {
-    color : rgb(76, 130, 175);
-    margin-bottom : 10px;
+    color: rgb(76, 130, 175);
+    margin-bottom: 10px;
     font-style: italic;
 }
 .error-message {
-    color : red;
-    margin-bottom : 10px;
+    color: red;
+    margin-bottom: 10px;
     font-style: italic;
 }
 .success-message {
-    color : green;
-    margin-bottom : 10px;
+    color: green;
+    margin-bottom: 10px;
     font-style: italic;
 }
 
 /* Submit button styling */
-button[type="submit"] {
+.submit-button {
     background-color: #4CAF50;
     color: white;
     padding: 10px 15px;
@@ -68,16 +63,18 @@ button[type="submit"] {
     transition: background-color 0.1s ease;
 }
 
-button[type="submit"]:hover {
+.submit-button:hover {
     background-color: #0f6313;
 }
 
 /* Responsive design */
 @media (max-width: 600px) {
-    form {
+    .form-style {
         width: 90%;
     }
 }
+
+/* Dropdown container styling */
 .dropdown-container {
     margin: 10px;
     padding: 10px;

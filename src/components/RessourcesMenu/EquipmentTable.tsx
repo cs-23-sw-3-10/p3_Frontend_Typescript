@@ -2,7 +2,7 @@ import { useMutation } from '@apollo/client';
 import React, {useState} from 'react';
 import { CREATE_EQUIPMENT_MUTATION } from '../../api/mutationList';
 import { SanitizeString } from './RessourceUtils';
-import styles from './Ressource.module.css';
+import './Ressource.css';
 
 interface EquipmentFormData {
     type : string;
@@ -72,34 +72,54 @@ function EquipmentTable(){
 
     return (
         <>
-
-            <form onSubmit={handleSubmit}>
-                <h2>Add Equipment</h2>
+            <form onSubmit={handleSubmit} className='form-style'>
+                <h2 className='h1-style'>Add Equipment</h2>
                 <div>
-                    <label htmlFor="Type">Type</label>
-                    <input type="text" name="type" id="type" value={formData.type} onChange={handleChange} />
-                    {errors.type && <span style={{color: "red"}}>{errors.type}</span>}
+                    <label htmlFor="type" className='label-style'>Type</label>
+                    <input 
+                        type="text" 
+                        name="type" 
+                        id="type" 
+                        value={formData.type} 
+                        onChange={handleChange} 
+                        className='text-input' 
+                    />
+                    {errors.type && <span className='error-message'>{errors.type}</span>}
                 </div>
                 <div>
-                    <label htmlFor="Name">Name</label>
-                    <input type="text" name="name" id="name" value={formData.name} onChange={handleChange} />
-                    {errors.name && <span style={{color: "red"}}>{errors.name}</span>}
+                    <label htmlFor="name" className='label-style'>Name</label>
+                    <input 
+                        type="text" 
+                        name="name" 
+                        id="name" 
+                        value={formData.name} 
+                        onChange={handleChange} 
+                        className='text-input' 
+                    />
+                    {errors.name && <span className='error-message'>{errors.name}</span>}
                 </div>
                 <div>
-                    <label htmlFor="CalibrationExpirationDate">Calibration Expiration Date</label>
-                    <input type="date" name="calibrationExpirationDate" id="calibrationExpirationDate" value={formData.calibrationExpirationDate} onChange={handleChange} />
-                    {errors.calibrationExpirationDate && <span style={{color: "red"}}>{errors.calibrationExpirationDate}</span>}
+                    <label htmlFor="calibrationExpirationDate" className='label-style'>Calibration Expiration Date</label>
+                    <input 
+                        type="date" 
+                        name="calibrationExpirationDate" 
+                        id="calibrationExpirationDate" 
+                        value={formData.calibrationExpirationDate} 
+                        onChange={handleChange} 
+                        className='text-input' 
+                    />
+                    {errors.calibrationExpirationDate && <span className='error-message'>{errors.calibrationExpirationDate}</span>}
                 </div>
-            <button type="submit">Submit</button>
+                <button type="submit" className='submit-button'>Submit</button>
                 <div>
-                {loading && <p className={styles['loading-message']}>Loading...</p>}
-                {error && <p className={styles['error-message']}>Error: {error.message}</p>}
-                {data && <p className={styles['success-message']}>{formData.name} with type {formData.type} created successfully!</p>}
-            </div>
+                    {loading && <p className='loading-message'>Loading...</p>}
+                    {error && <p className='error-message'>Error: {error.message}</p>}
+                    {data && <p className='success-message'>{formData.name} with type {formData.type} created successfully!</p>}
+                </div>
             </form> 
-
         </>
     );
+
 };
 
 export default EquipmentTable;

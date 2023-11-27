@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import styles from './Ressource.module.css';
+import './Ressource.css';
 import { useMutation } from '@apollo/client';
 import { CREATE_ENGINEER_MUTATION } from '../../api/mutationList';
 import { SanitizeString } from './RessourceUtils';
@@ -63,29 +63,42 @@ function EngineerTable(){
 
     return (
         <>
-
-            <form onSubmit={handleSubmit} className={styles.form}>
-                <h2>Add Engineer</h2>
+            <form onSubmit={handleSubmit} className='form-style'>
+                <h2 className='h1-style'>Add Engineer</h2>
                 <div>
-                    <label htmlFor="Name" className={styles.label}>Name</label>
-                    <input type="text" name="name" id="name" value={formData.name} onChange={handleChange} className={styles.input}/>
-                    {errors.name && <span style={{color: "red"}}>{errors.name}</span>}
+                    <label htmlFor="name" className='label-style'>Name</label>
+                    <input 
+                        type="text" 
+                        name="name" 
+                        id="name" 
+                        value={formData.name} 
+                        onChange={handleChange} 
+                        className='text-input' 
+                    />
+                    {errors.name && <span className='error-message'>{errors.name}</span>}
                 </div>
                 <div>
-                    <label htmlFor="Type" className={styles.label}>maxWorkHours</label>
-                    <input type="number" name="maxWorkHours" id="maxWorkHours" value={formData.maxWorkHours} onChange={handleChange} className={styles.input} />
-                    {errors.maxWorkHours && <span style={{color: "red"}}>{errors.maxWorkHours}</span>}
+                    <label htmlFor="maxWorkHours" className='label-style'>maxWorkHours</label>
+                    <input 
+                        type="number" 
+                        name="maxWorkHours" 
+                        id="maxWorkHours" 
+                        value={formData.maxWorkHours} 
+                        onChange={handleChange} 
+                        className='text-input' 
+                    />
+                    {errors.maxWorkHours && <span className='error-message'>{errors.maxWorkHours}</span>}
                 </div>
-            <button type="submit">Submit</button>
-            <div>
-                {loading && <p className={styles['loading-message']}>Loading...</p>}
-                {error && <p className={styles['error-message']}>Error: {error.message}</p>}
-                {data && <p className={styles['success-message']}>{formData.name} created successfully!</p>}
-            </div>
-            </form> 
-
+                <button type="submit" className='submit-button'>Submit</button>
+                <div>
+                    {loading && <p className='loading-message'>Loading...</p>}
+                    {error && <p className='error-message'>{error.message}</p>}
+                    {data && <p className='success-message'>{formData.name} created successfully!</p>}
+                </div>
+            </form>
         </>
     );
+
 };
 
 export default EngineerTable;

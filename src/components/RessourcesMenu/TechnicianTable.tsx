@@ -3,7 +3,7 @@ import { useMutation } from '@apollo/client';
 import React, { useState } from 'react';
 import { CREATE_TECHNICIAN_MUTATION } from '../../api/mutationList';
 import { SanitizeString } from './RessourceUtils';
-import styles from './Ressource.module.css';
+import './Ressource.css';
 
 
 interface TechnicianFormData {
@@ -82,48 +82,53 @@ function TechnicianTable() {
 
     return (
         <> 
-            <form onSubmit={handleSubmit}>
-                <h2>Add Technician</h2>
+            <form onSubmit={handleSubmit} className='form-style'>
+                <h2 className='h1-style'>Add Technician</h2>
                 <div>
-                    <label htmlFor="Type">Type</label>
+                    <label htmlFor="type" className='label-style'>Type</label>
                     <input 
                         type="text" 
                         name="type" 
                         id="type" 
                         value={(formData.type)} 
                         onChange={handleChange}
-                        />
-                    {errors.type && <span>{errors.type}</span>}
+                        className='text-input'
+                    />
+                    {errors.type && <span className='error-message'>{errors.type}</span>}
                 </div>
                 <div>
-                    <label htmlFor="count">Count</label>
+                    <label htmlFor="count" className='label-style'>Count</label>
                     <input 
                         type="number" 
-                        name="count" id="count"  
+                        name="count" 
+                        id="count"  
                         value={formData.count} 
-                        onChange={handleChange}/>
-                    {errors.count && <span>{errors.count}</span>}
+                        onChange={handleChange}
+                        className='text-input'
+                    />
+                    {errors.count && <span className='error-message'>{errors.count}</span>}
                 </div>
                 <div>
-                    <label htmlFor="Tnype">maxWorkHours</label>
+                    <label htmlFor="maxWorkHours" className='label-style'>maxWorkHours</label>
                     <input 
                         type="number" 
                         name="maxWorkHours" 
                         id="maxWorkHours" 
                         value={formData.maxWorkHours} 
-                        onChange={handleChange}/>
-                    {errors.maxWorkHours && <span>{errors.maxWorkHours}</span>}
+                        onChange={handleChange}
+                        className='text-input'
+                    />
+                    {errors.maxWorkHours && <span className='error-message'>{errors.maxWorkHours}</span>}
                 </div>
-            <button type="submit">Submit</button>
-            <div>
-                {loading && <p className={styles['loading-message']}>Loading...</p>}
-                {error && <p className={styles['error-message']}>Error: {error.message}</p>}
-                {data && <p className={styles['success-message']}>{formData.type} created successfully!</p>}
-            </div>
+                <button type="submit" className='submit-button'>Submit</button>
+                <div>
+                    {loading && <p className='loading-message'>Loading...</p>}
+                    {error && <p className='error-message'>Error: {error.message}</p>}
+                    {data && <p className='success-message'>{formData.type} created successfully!</p>}
+                </div>
             </form> 
-
         </>
     );
-};
+}
 
 export default TechnicianTable;
