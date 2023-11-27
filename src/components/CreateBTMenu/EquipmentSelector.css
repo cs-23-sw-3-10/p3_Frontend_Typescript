@@ -1,6 +1,6 @@
 /* EQUIPMENT MENU */
 .equipment_menu{
-    position: absolute;
+    position: fixed;
     width: 300px;
     background-color: white;
     border: solid;
