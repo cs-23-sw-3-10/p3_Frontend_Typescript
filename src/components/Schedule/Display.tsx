@@ -5,7 +5,7 @@ import React, { useState} from "react";
 import CreateAdditionalContent from "./AdditionalContent";
 import BladeTaskCard from "./BladeTaskCard";
 import { useQuery } from "@apollo/client";
-import { GET_BT_IN_RANGE } from "../../api/queryList";
+import { GET_BT_IN_RANGE, GET_TEST_RIGS } from "../../api/queryList";
 import { getMonthLength } from "./TimelineField";
 import { capitalizeFirstLetter } from "./TimelineField";
 import { useEditModeContext } from "../../EditModeContext";
@@ -20,33 +20,7 @@ type DisplayProps = {
 
 function DisplayComponent(props: DisplayProps) {
     const editMode = useEditModeContext();
-    const [rigs, setRigs] = useState([
-        // should be imported from database
-        {
-            rigName: "Rig 1",
-            rigNumber: 1,
-        },
-        {
-            rigName: "Rig 2",
-            rigNumber: 2,
-        },
-        {
-            rigName: "Rig 3",
-            rigNumber: 3,
-        },
-        {
-            rigName: "Rig 4",
-            rigNumber: 4,
-        },
-        {
-            rigName: "Rig 5",
-            rigNumber: 5,
-        },
-        {
-            rigName: "Rig 6",
-            rigNumber: 6,
-        },
-    ]);
+    const [rigs, setRigs] = useState<{rigName: string, rigNumber: number}[]>([{rigName: "No Rigs", rigNumber: 0}]);
 
     const [selectedDate, setSelectedDate] = useState(
         `${currentDate.getFullYear()}-${
@@ -95,23 +69,43 @@ function DisplayComponent(props: DisplayProps) {
 
     const queryDates = getQueryDates(dates[0], dates[dates.length - 1]);
 
-    const { loading, error, data } = useQuery(GET_BT_IN_RANGE, {
+    const {
+        loading: loadingRigs,
+        error: errorRigs,
+        data: dataRigs,
+    } = useQuery(GET_TEST_RIGS);
+    
+
+    const { loading: loadingBT, error: errorBT, data: dataBT } = useQuery(GET_BT_IN_RANGE, {
         variables: {
             startDate: queryDates.startDate,
             endDate: queryDates.endDate,
+            isActive: true,
         },
     });
 
-    if (loading) {
+    if (loadingRigs) {
         return <p>Loading...</p>;
     }
-    if (error) {
-        return <p>Error {error.message}</p>;
+    if (errorRigs) {
+        return <p>Error {errorRigs.message}</p>;
+    }
+
+    if (loadingBT) {
+        return <p>Loading...</p>;
+    }
+    if (errorBT) {
+        return <p>Error {errorBT.message}</p>;
+    }
+
+    const numberOfRigs = parseInt(dataRigs.DictionaryAllByCategory[0].label);
+    if (rigs.length !== numberOfRigs){
+        setRigs(createRigs(numberOfRigs));
     }
 
     let btCards: React.ReactNode[] = [];
 
-    data["AllBladeTasksInRange"].forEach((bt: any) => {
+    dataBT["AllBladeTasksInRange"].forEach((bt: any) => {
         let btShown = false;
         if (
             bt.bladeProject.customer === props.filter ||
@@ -283,4 +277,15 @@ function getQueryDates(startDate: Date, endDate: Date) {
         endDateDay
     );
     return { startDate: startDateSTR, endDate: endDateSTR };
+}
+
+function createRigs(numberOfRigs: number) {
+    let rigs: {rigName: string, rigNumber: number}[]= [];
+    for (let i = 1; i <= numberOfRigs; i++) {
+        rigs.push({
+            rigName: "Rig " + (i).toString(),
+            rigNumber: i,
+        });
+    }
+    return rigs;
 }
