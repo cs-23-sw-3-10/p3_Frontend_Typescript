@@ -72,7 +72,7 @@ function EquipmentMenuItem({resourceName}: {resourceName: string }) {
 }
 
 function EquipmentMenuItemLogic(prevResourceOrder: ResourceOrder[], resourceName: string) {
-    return [...prevResourceOrder, { resourceType: "Equipment", resourceName: resourceName, equipmentAssignmentStatus: [true, true, true], workHours: 0 }];
+    return [...prevResourceOrder, { resourceType: "Equipment", resourceName: resourceName, equipmentAssignmentStatus: [true, true], workHours: 0 }];
 }
 
 function sanitize(input:string){

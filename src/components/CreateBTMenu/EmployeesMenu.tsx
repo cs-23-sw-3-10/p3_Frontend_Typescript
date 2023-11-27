@@ -71,7 +71,7 @@ function EmployeeEntrySelectorMenu({ name, typeName, activeEmployeesList}: {name
 
     const handleResourceCreation = () => {
         changeResourceOrders((prevResourceOrders: ResourceOrder[]) => {
-            let newResourceOrders = [...prevResourceOrders, {resourceType:typeName, resourceName:name, equipmentAssignmentStatus:[true,true,true], workHours:0}];
+            let newResourceOrders = [...prevResourceOrders, {resourceType:typeName, resourceName:name, equipmentAssignmentStatus:[true,true], workHours:0}];
             return newResourceOrders;
         });
         changeActiveEmployees((currentList:{name:string, active:boolean}[]) => {

@@ -51,7 +51,7 @@ function CheckBox({name,resourceIndex, title}:{name:string,resourceIndex:number,
             let newResourceOrders = [...prevResourceOrders];
             let currentAssignmentStatus:Array<boolean> = newResourceOrders[resourceIndex].equipmentAssignmentStatus
             if (title === "Attach") { currentAssignmentStatus[0] = !checked}
-            if (title === "Detach") { currentAssignmentStatus[2] = !checked}
+            if (title === "Detach") { currentAssignmentStatus[1] = !checked}
             newResourceOrders[resourceIndex].equipmentAssignmentStatus = currentAssignmentStatus;
             return newResourceOrders;
         });
