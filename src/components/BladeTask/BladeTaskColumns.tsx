@@ -70,6 +70,25 @@ export const columnBTID: ColumnDef<BladeTaskQuery>[] = [
                         column.toggleSorting(column.getIsSorted() === "asc")
                     }
                 >
+                Engineer
+                </button>
+            );
+        },
+        id:"bookings.engineer.name",
+        accessorFn: (row) => {
+            const engineerNames = row.bookings.map((booking) => booking.engineer).filter(value => value !== null && value !== undefined);            
+            return engineerNames.map((engineerNames: any) => engineerNames.name ? engineerNames.name : " ").join(", ")
+        },
+    },
+
+    {
+        header: ({ column }) => {
+            return (
+                <button
+                    onClick={() =>
+                        column.toggleSorting(column.getIsSorted() === "asc")
+                    }
+                >
                     Start Date
                 </button>
             );

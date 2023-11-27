@@ -166,7 +166,7 @@ function DraggableBladeTask(props: BladeTaskDraggableProps) {
     };
 
     // Attach this handler to the window object to close the context menu
-    return (
+    return props.shown ? (
         <div
             className="bladeTaskCard"
             style={style}
@@ -184,11 +184,7 @@ function DraggableBladeTask(props: BladeTaskDraggableProps) {
                     minWidth: `${props.attachPeriod * 25}px`,
                 }}
             ></div>
-            {props.shown ? (
-                <div className="BT-Name">{props.taskName}</div>
-            ) : (
-                <div className="BT-Name"></div>
-            )}
+            <div className="BT-Name">{props.taskName}</div>
             {/* {used to visualize the detach period} */}
             <div
                 className="detachPeriod"
@@ -197,6 +193,18 @@ function DraggableBladeTask(props: BladeTaskDraggableProps) {
                     minWidth: `${props.detachPeriod * 25}px`,
                 }}
             ></div>
+        </div>
+    ) : (
+        <div
+            className="bladeTaskCard"
+            style={style}
+            id={`${props.id}`}
+            ref={setNodeRef}
+            {...listeners}
+            {...attributes}
+            onContextMenu={props.setContextMenu}
+        >
+            <div className="BT-Name"></div>
         </div>
     );
 }

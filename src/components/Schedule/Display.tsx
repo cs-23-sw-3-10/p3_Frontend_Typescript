@@ -172,6 +172,12 @@ function DisplayComponent(props: DisplayProps) {
                     <input type="button" onClick={goTo} value={"Go To"} />
                 </form>
             </div>
+            {props.editMode ? (
+            <div className="ScheduleFilterAndMode">
+                <label className="switch"> Edit Mode</label>
+                <input type="checkbox" checked={true} onChange={handleModeChange} />
+            </div>
+            ) :  (
             <div className="ScheduleFilterAndMode">
                 <label>Filter:</label>
                 <select
@@ -186,8 +192,10 @@ function DisplayComponent(props: DisplayProps) {
                     <option value="Suzlon">Suzlon</option>
                 </select>
                 <label className="switch"> Edit Mode</label>
-                <input type="checkbox" onChange={handleModeChange} />
+                <input type="checkbox" checked={false} onChange={handleModeChange} />
             </div>
+            )}
+            
             <div className="ScheduleDisplay">
                 <CreateTestRigDivs rigs={rigs} />
                 <CreateTimelineField
