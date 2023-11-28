@@ -25,7 +25,6 @@ function ScheduleComponent() {
             showPasswordPrompt={showPasswordPrompt}
             filter={filter}
             setFilter={setFilter}
-            isEditMode
         />
     );
 

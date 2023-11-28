@@ -17,7 +17,6 @@ type DisplayProps = {
     showPasswordPrompt: boolean;
     filter: string;
     setFilter: React.Dispatch<React.SetStateAction<string>>;
-    isEditMode: boolean
 };
 
 function DisplayComponent(props: DisplayProps) {
@@ -141,7 +140,7 @@ function DisplayComponent(props: DisplayProps) {
                     rig={bt.testRig}
                     id={bt.id}
                     shown={btShown}
-                    enableDraggable={!props.isEditMode}
+                    enableDraggable={!editMode.isEditMode}
                     inConflict={bt.inConflict}
                                     />
             );
@@ -173,7 +172,7 @@ function DisplayComponent(props: DisplayProps) {
                 taskName={bt.taskName}
                 id={bt.id}
                 shown={btShown}
-                enableDraggable={!props.isEditMode}
+                enableDraggable={!editMode.isEditMode}
                 inConflict={false}
             />
         );

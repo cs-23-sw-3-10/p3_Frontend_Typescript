@@ -245,6 +245,8 @@ export function handleDragEnd(
                         key={draggedCard.key}
                         id={draggedCard.props.id}
                         duration={draggedCard.props.duration}
+                        attachPeriod={draggedCard.props.attachPeriod}
+                        detachPeriod={draggedCard.props.detachPeriod}
                         projectColor={draggedCard.props.projectColor}
                         projectId={draggedCard.props.projectId}
                         customer={draggedCard.props.customer}
