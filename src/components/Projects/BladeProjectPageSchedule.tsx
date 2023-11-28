@@ -114,7 +114,8 @@ function BladeProjectPageWithSchedule() {
             data={BPData}
             renderExpandedComponent={(row) => {
                 let btCards: React.ReactNode[] = [];
-                let bladeProjectIndex = dataBP["SpeedReading"].find(
+                let btCardsPending: React.ReactNode[] = [];
+                let bladeProjectIndex = dataBP["AllBladeProjects"].find(
                     (project: any) => project.id === row.id
                 );
 
@@ -128,33 +129,56 @@ function BladeProjectPageWithSchedule() {
 
                 if (bladeProjectIndex && bladeProjectIndex.bladeTasks) {
                     bladeProjectIndex.bladeTasks.forEach((bladeTask: any) => {
-                        let dateSplit = bladeTask.startDate.split("-");
-                        const year = parseInt(dateSplit[0]);
-                        const month = parseInt(dateSplit[1]) - 1;
-                        const day = parseInt(dateSplit[2]);
+                        if (
+                            bladeTask.startDate &&
+                            bladeTask.endDate &&
+                            bladeTask.testRig
+                        ) {
+                            let dateSplit = bladeTask.startDate.split("-");
+                            const year = parseInt(dateSplit[0]);
+                            const month = parseInt(dateSplit[1]) - 1;
+                            const day = parseInt(dateSplit[2]);
 
-                        let endDateSplit = bladeTask.endDate.split("-");
-                        const endYear = parseInt(endDateSplit[0]);
-                        const endMonth = parseInt(endDateSplit[1]) - 1;
-                        const endDate = parseInt(endDateSplit[2]);
+                            let endDateSplit = bladeTask.endDate.split("-");
+                            const endYear = parseInt(endDateSplit[0]);
+                            const endMonth = parseInt(endDateSplit[1]) - 1;
+                            const endDate = parseInt(endDateSplit[2]);
 
-                        btCards.push(
-                            <BladeTaskCard
-                                key={bladeTask.id}
-                                duration={bladeTask.duration}
-                                projectColor={bladeTask.bladeProject.color}
-                                projectId={bladeTask.bladeProject.id}
-                                customer={bladeTask.bladeProject.customer}
-                                taskName={bladeTask.taskName}
-                                startDate={new Date(year, month, day)}
-                                endDate={new Date(endYear, endMonth, endDate)}
-                                rig={bladeTask.testRig}
-                                id={bladeTask.id}
-                                enableDraggable={false}
-                                attachPeriod={bladeTask.attachPeriod}
-                                detachPeriod={bladeTask.detachPeriod}
-                            />
-                        );
+                            btCards.push(
+                                <BladeTaskCard
+                                    key={bladeTask.id}
+                                    duration={bladeTask.duration}
+                                    projectColor={bladeTask.bladeProject.color}
+                                    projectId={bladeTask.bladeProject.id}
+                                    customer={bladeTask.bladeProject.customer}
+                                    taskName={bladeTask.taskName}
+                                    startDate={new Date(year, month, day)}
+                                    endDate={
+                                        new Date(endYear, endMonth, endDate)
+                                    }
+                                    rig={bladeTask.testRig}
+                                    id={bladeTask.id}
+                                    enableDraggable={false}
+                                    attachPeriod={bladeTask.attachPeriod}
+                                    detachPeriod={bladeTask.detachPeriod}
+                                />
+                            );
+                        } else {
+                            btCardsPending.push(
+                                <BladeTaskCard
+                                    key={bladeTask.id}
+                                    duration={bladeTask.duration}
+                                    attachPeriod={bladeTask.attachPeriod}
+                                    detachPeriod={bladeTask.detachPeriod}
+                                    projectColor={bladeTask.bladeProject.color}
+                                    projectId={bladeTask.bladeProject.id}
+                                    customer={bladeTask.bladeProject.customer}
+                                    taskName={bladeTask.taskName}
+                                    id={bladeTask.id}
+                                    enableDraggable={false}
+                                />
+                            );
+                        }
                     });
                 }
                 return (
@@ -164,6 +188,8 @@ function BladeProjectPageWithSchedule() {
                             rigs={rigs}
                             months={dates}
                             btCards={btCards}
+                            btCardsPending={btCardsPending}
+                            isPendingTasksIncluded={false}
                         />
                     </div>
                 );

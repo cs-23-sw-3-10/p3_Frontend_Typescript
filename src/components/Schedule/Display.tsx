@@ -14,6 +14,7 @@ const currentDate = new Date(Date.now()); // Get the current date
 
 type DisplayProps = {
     setShowPasswordPrompt: React.Dispatch<React.SetStateAction<boolean>>;
+    showPasswordPrompt: boolean;
     filter: string;
     setFilter: React.Dispatch<React.SetStateAction<string>>;
 };
@@ -34,18 +35,26 @@ function DisplayComponent(props: DisplayProps) {
     ); // should be imported from database
     
 
-    const handleDateChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setSelectedDate(event.target.value);
+    const handleDateChange = (date: string) => {
+        setSelectedDate(date);
     };
 
-    const handleNumberChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        let number = parseInt(event.target.value);
-        if (number < 2) {
-            number = 2;
-        } else if (number > 24) {
-            number = 24;
-        }
-        setNumberOfMonths(number);
+    const handleNumberChange = (numberOfMonthsInView: number) => {
+        setNumberOfMonths(numberOfMonthsInView);
+    };
+
+    const handleViewChange = (event: React.FormEvent<HTMLFormElement>) => {
+        event.preventDefault();
+        // Get the form element from the event   
+        const form = event.target as HTMLFormElement;
+
+        // Explicitly assert the type to HTMLInputElement and acces value
+        const dateInput = (form.elements.namedItem("dateInput") as HTMLInputElement)?.value;
+        const numberInput = (form.elements.namedItem("numberInput") as HTMLInputElement)?.value;
+
+        handleDateChange(dateInput);
+        handleNumberChange(parseInt(numberInput));
+        goTo(parseInt(numberInput));
     };
 
     const handleModeChange = () => {
@@ -58,16 +67,17 @@ function DisplayComponent(props: DisplayProps) {
         }
     };
 
-    const goTo = () => {
+    const goTo = (number: number) => {
         const newDate = new Date(selectedDate);
         if (!isNaN(newDate.valueOf())) {
-            setDates(getMonthsInView(newDate, numberOfMonths));
+            setDates(getMonthsInView(newDate, number));
         } else {
             setDates(getMonthsInView(currentDate, numberOfMonths));
         }
     };
 
     const queryDates = getQueryDates(dates[0], dates[dates.length - 1]);
+
 
     const {
         loading: loadingRigs,
@@ -87,7 +97,6 @@ function DisplayComponent(props: DisplayProps) {
         isActive:  !editMode.isEditMode,
     },});
 
-    console.log(dataBT);
 
     if (loadingRigs) {
         return <p>Loading...</p>;
@@ -108,6 +117,7 @@ function DisplayComponent(props: DisplayProps) {
         setRigs(createRigs(numberOfRigs));
     }
 
+    //Makeing schedulet BladeTaskCards
     let btCards: React.ReactNode[] = [];
 
     dataBT["AllBladeTasksInRangeSub"].forEach((bt: any) => {
@@ -123,27 +133,60 @@ function DisplayComponent(props: DisplayProps) {
         const month = parseInt(dateSplit[1]) - 1;
         const day = parseInt(dateSplit[2]);
 
-        let endDateSplit = bt.endDate.split("-");
-        const endYear = parseInt(endDateSplit[0]);
-        const endMonth = parseInt(endDateSplit[1]) - 1;
-        const endDate = parseInt(endDateSplit[2]);
-        btCards.push(
+            let endDateSplit = bt.endDate.split("-");
+            const endYear = parseInt(endDateSplit[0]);
+            const endMonth = parseInt(endDateSplit[1]) - 1;
+            const endDate = parseInt(endDateSplit[2]);
+            btCards.push(
+                <BladeTaskCard
+                    key={bt.id}
+                    duration={bt.duration}
+                    projectColor={bt.bladeProject.color}
+                    projectId={bt.bladeProject.id}
+                    projectName={bt.bladeProject.projectName}
+                    customer={bt.bladeProject.customer}
+                    taskName={bt.taskName}
+                    startDate={new Date(year, month, day)}
+                    endDate={new Date(endYear, endMonth, endDate)}
+                    attachPeriod={bt.attachPeriod}
+                    detachPeriod={bt.detachPeriod}
+                    rig={bt.testRig}
+                    id={bt.id}
+                    shown={btShown}
+                    enableDraggable={editMode.isEditMode}
+                    inConflict={bt.inConflict}
+                                    />
+            );
+    });
+
+
+
+    //Making pending BladeTaskCards
+    let btCardsPending: React.ReactNode[] = [];
+    dataBT["AllBladeTasksPending"].forEach((bt: any) => {
+        let btShown = false;
+        if (
+            bt.bladeProject.customer === props.filter ||
+            props.filter === "None"
+        ) {
+            btShown = true;
+        }
+
+        btCardsPending.push(
             <BladeTaskCard
                 key={bt.id}
                 duration={bt.duration}
-                projectColor={bt.bladeProject.color}
-                projectId={bt.bladeProject.id}
-                customer={bt.bladeProject.customer}
-                taskName={bt.taskName}
-                startDate={new Date(year, month, day)}
-                endDate={new Date(endYear, endMonth, endDate)}
                 attachPeriod={bt.attachPeriod}
                 detachPeriod={bt.detachPeriod}
-                rig={bt.testRig}
+                projectColor={bt.bladeProject.color}
+                projectId={bt.bladeProject.id}
+                projectName={bt.bladeProject.projectName}
+                customer={bt.bladeProject.customer}
+                taskName={bt.taskName}
                 id={bt.id}
                 shown={btShown}
-                inConflict={bt.inConflict}
                 enableDraggable={editMode.isEditMode}
+                inConflict={false}
             />
         );
     });
@@ -151,25 +194,25 @@ function DisplayComponent(props: DisplayProps) {
     return (
         <div className="ScheduleContentContainer">
             <div className="ScheduleViewControl">
-                <form onSubmit={(e) => {e.preventDefault(); goTo()}}>
+                <form onSubmit={(e) => {handleViewChange(e)}}>
                     <label htmlFor="dateInput" style={{ fontSize: "10px" }}>
                         Date:
                     </label>
                     <input
+                        name="dateInput"
                         type="date"
-                        value={selectedDate}
-                        onChange={handleDateChange}
+                        defaultValue={selectedDate}
                     />
                     <label htmlFor="numberInput" style={{ fontSize: "10px" }}>
                         Months shown:
                     </label>
                     <input
+                        name="numberInput"
                         type="number"
                         min="2"
                         max="24"
-                        onChange={handleNumberChange}
                     />
-                    <input type="submit" onClick={goTo} value={"Go To"} />
+                    <input type="submit" value={"Go To"} />
                 </form>
             </div>
             {editMode.isEditMode ? (
@@ -202,6 +245,9 @@ function DisplayComponent(props: DisplayProps) {
                     rigs={rigs}
                     months={dates}
                     btCards={btCards}
+                    btCardsPending={btCardsPending}
+                    showPasswordPrompt={props.showPasswordPrompt}
+                    isPendingTasksIncluded={true}
                 />
             </div>
 

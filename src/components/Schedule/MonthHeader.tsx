@@ -1,5 +1,6 @@
-import { type } from "os";
 import { capitalizeFirstLetter } from "./TimelineField";
+
+export const monthHeaderHeight=30;
 
 type MonthHeaderProps = {
     currentMonth: Date;
@@ -21,6 +22,8 @@ function CreateMonthHeader(props: MonthHeaderProps) {
             style={{
                 gridColumn: `1/-1`, // The header spans from the first day to the last day of the month
                 gridRow: "1",
+                height: `${monthHeaderHeight}px`,
+                maxHeight:`${monthHeaderHeight}px`,
             }}
         >
             <p>{`${month}(${year})`}</p>
