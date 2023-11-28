@@ -9,6 +9,8 @@ import { GET_BT_IN_RANGE, GET_TEST_RIGS } from "../../api/queryList";
 import { getMonthLength } from "./TimelineField";
 import { capitalizeFirstLetter } from "./TimelineField";
 import { useEditModeContext } from "../../EditModeContext";
+import { Switch } from "@mui/base";
+import SwitchComponent from "../TableLogic/SwitchComponent";
 
 const currentDate = new Date(Date.now()); // Get the current date
 
@@ -54,16 +56,6 @@ function DisplayComponent(props: DisplayProps) {
         handleDateChange(dateInput);
         handleNumberChange(parseInt(numberInput));
         goTo(parseInt(numberInput));
-    };
-
-    const handleModeChange = () => {
-        if (!editMode.isEditMode) {
-            // If switching to edit mode, show password prompt
-            props.setShowPasswordPrompt(true);
-        } else {
-            // If switching from edit mode, just toggle the edit mode
-            editMode.setEditMode(!editMode.isEditMode);
-        }
     };
 
     const goTo = (number: number) => {
@@ -155,7 +147,7 @@ function DisplayComponent(props: DisplayProps) {
         <div className="ScheduleContentContainer">
             <div className="ScheduleViewControl">
                 <form onSubmit={(e) => {handleViewChange(e)}}>
-                    <label htmlFor="dateInput" style={{ fontSize: "10px" }}>
+                    <label htmlFor="dateInput" className="text-sm">
                         Date:
                     </label>
                     <input
@@ -163,7 +155,7 @@ function DisplayComponent(props: DisplayProps) {
                         type="date"
                         defaultValue={selectedDate}
                     />
-                    <label htmlFor="numberInput" style={{ fontSize: "10px" }}>
+                    <label htmlFor="numberInput" className="text-sm">
                         Months shown:
                     </label>
                     <input
@@ -177,8 +169,7 @@ function DisplayComponent(props: DisplayProps) {
             </div>
             {editMode.isEditMode ? (
             <div className="ScheduleFilterAndMode">
-                <label className="switch"> Edit Mode</label>
-                <input type="checkbox" checked={true} onChange={handleModeChange} />
+                <SwitchComponent setShowPasswordPrompt={props.setShowPasswordPrompt} />
             </div>
             ) : (
             <div className="ScheduleFilterAndMode">
@@ -194,9 +185,8 @@ function DisplayComponent(props: DisplayProps) {
                     <option value="Goldwind">Goldwind</option>
                     <option value="Suzlon">Suzlon</option>
                 </select>
-                <label className="switch"> Edit Mode</label>
-                <input type="checkbox" checked={false} onChange={handleModeChange} />
-            </div>
+               <SwitchComponent setShowPasswordPrompt={props.setShowPasswordPrompt} />
+            </div>           
             )}
             
             <div className="ScheduleDisplay">

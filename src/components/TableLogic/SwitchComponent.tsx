@@ -4,26 +4,62 @@ import { useQuery } from "@apollo/client";
 import { GET_ALL_BP } from "../../api/queryList";
 import { GET_ALL_BP_IN_DIFF_SCHEDULE } from "../../api/queryList";
 import { useEditModeContext } from "../../EditModeContext";
+import ScheduleComponent from "../Schedule/ScheduleComponent";
 
-const SwitchComponent = () => {
-   const editMode = useEditModeContext();
-   const [checked, setChecked] = useState(editMode.isEditMode)
+type SwitchProps = {
+  setShowPasswordPrompt: React.Dispatch<React.SetStateAction<boolean>>;
+};
 
+const SwitchComponent = (props: SwitchProps) => {
+  const editMode = useEditModeContext();
+  const [checked, setChecked] = useState(editMode.isEditMode)
+  const [password, setPassword] = useState(""); // State to store the entered password
+  const [showPasswordPrompt, setShowPasswordPrompt] = useState(false);
 
-    const handleSwitch = () => {
-        editMode.setEditMode(!editMode.isEditMode)
-        setChecked(!checked)
+  const handleSwitch = () => {
+      setChecked(!checked)  
+
+     if(!editMode.isEditMode){
+        setShowPasswordPrompt(true);
+                  setPassword("");
+        if(checked === true){
+          setShowPasswordPrompt(false)
+        }
+        }
+      else{
+        setShowPasswordPrompt(false)
+          editMode.setEditMode(false)
+            }
         }
   
+  const handlePasswordSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+       event.preventDefault();
+       // Get the form element from the event   
+       const form = event.target as HTMLFormElement;
+       // Explicitly assert the type to HTMLInputElement
+       const passwordSubmit = (form.elements.namedItem("passwordInput") as HTMLInputElement)?.value;  
+      
+       setPassword(passwordSubmit);
+       // Check the entered password (you can replace "your_password" with the actual password)
+       if (passwordSubmit === "123") {
+        setShowPasswordPrompt(false);
+           editMode.setEditMode(!editMode.isEditMode);
+        } else {
+          alert("Incorrect password. Please try again.");
+          }
+      };
+
     return (
       <>
-       <div className='themeSwitcherTwo relative inline-flex cursor-pointer select-none items-center'>
-      <span className='label flex items-center text-sm font-medium text-black cursor-auto'>
+       <div className='inline-flex items-center h-full'>
+        <div className="themeSwitcherTwo relative inline-flex cursor-pointer select-none items-center mx-4">
+        <span className='label flex items-center text-sm font-medium text-black cursor-auto'>
         View Mode
       </span>
       <label>
         <input
           type='checkbox'
+          checked={checked}
           onChange={handleSwitch}
           className='sr-only'
         />
@@ -42,7 +78,31 @@ const SwitchComponent = () => {
       <span className='label flex items-center text-sm font-medium text-black cursor-auto'>
         Edit Mode
       </span>
+        </div>
+
+
+      <div>
     </div>
+    <div className="mx-4">
+    {showPasswordPrompt && (
+                <div className="PasswordPrompt inline-block">
+                    <form onSubmit={(e) => {e.preventDefault(); handlePasswordSubmit(e)}}>
+                        <label className="text-sm" htmlFor="passwordInput">Enter Password:</label>
+        
+                        <input
+                        className="w-20 inline-block border rounded h-4 border-black"
+                            type="password"
+                            id="passwordInput"
+                            name="passwordInput"
+                            defaultValue={password}
+                        />
+                    </form>
+                </div>
+            )}
+    </div>
+   
+    </div>
+    
       </>
     )
   }
