@@ -31,6 +31,29 @@ export const GET_ALL_BT = gql`
     }
 `;
 
+export const GET_BT_WITH_ID = gql`
+    query BladeTaskById($id: ID!) {
+        BladeTaskById(id: $id) {
+            id
+            startDate
+            endDate
+            duration
+            testType
+            attachPeriod
+            detachPeriod
+            taskName
+            testRig
+            inConflict
+            bladeProject {
+                id
+            }
+            resourceOrders {
+                id
+            }
+        }
+    }
+`;
+
 export const GET_BT_IN_RANGE = gql`
 query AllBladeTasksInRange($startDate: String!, $endDate: String!, $isActive: Boolean!) {
     AllBladeTasksInRange(startDate: $startDate, endDate: $endDate, isActive: $isActive) {

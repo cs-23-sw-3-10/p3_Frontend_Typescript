@@ -6,7 +6,7 @@ function CreateAdditionalContent() {
 
     return (
         <>
-        {isShown ? <BladeTaskMenu/> : <></>}
+        {isShown ? <BladeTaskMenu creator={true}/> : <></>}
         <button onClick={() => setIsShown(!isShown)}>BT-MENU</button>
         </>
     );

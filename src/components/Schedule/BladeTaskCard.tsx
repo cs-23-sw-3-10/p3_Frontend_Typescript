@@ -3,9 +3,10 @@ import { useDraggable } from "@dnd-kit/core";
 import { CSS } from "@dnd-kit/utilities";
 import React, { useState, useRef, useEffect } from "react";
 import MessageBox from "../ui/MessageBox";
-import EditBTPopup from "./EditBTPopup";
+import PopupWindow from "../ui/PopupWindow";
+import { ResourceOrder } from "../CreateBTMenu/BTMenuTypes";
 //interface used to define the types of the props of BladeTaskCard
-interface BladeTaskCardProps {
+export interface BladeTaskCardProps {
     startDate: Date;
     endDate?: Date;
     duration: number;
@@ -21,6 +22,8 @@ interface BladeTaskCardProps {
     inConflict?: boolean;
     enableDraggable?: boolean;
     setContextMenu?: (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => void;
+    resourceOrders?: Array<ResourceOrder>;
+    testType?: string;
 }
 interface BladeTaskDraggableProps {
     style: any;
@@ -147,7 +150,7 @@ function BladeTaskCard(props: BladeTaskCardProps) {
                     onClose={handleMessageClose}
                 />
             )}
-            {showPopup && <EditBTPopup onClose={togglePopup}/>}
+            {showPopup && <PopupWindow onClose={togglePopup} bladeTaskID={props.id}/>}
 
         </>
     );
