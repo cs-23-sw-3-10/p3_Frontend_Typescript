@@ -1,22 +1,24 @@
 import { useState } from "react";
+import BladeTaskMenu from "../CreateBTMenu/BladeTaskMenu";
 import StyledButton from "../ui/styledButton";
 
-function CreateAdditionalContent() {
-    const [createTasksAndProjects, setCreateTasksAndProjects] = useState("showButtons");
+function CreateAdditionalContent(){
+    const [creationMenu, setCreationMenu] = useState("");
 
     const handleCreateProjectClick=()=>{
-        console.log("button was clicked")
-        setCreateTasksAndProjects("createProject")
+        if(creationMenu !== "createProject"){
+            setCreationMenu("createProject")
+        }else setCreationMenu("");
     }
 
     const handleCreateTaskClick=()=>{
-        console.log("button was clicked")
-        setCreateTasksAndProjects("createTask")
+        if(creationMenu !== "createTask"){
+            setCreationMenu("createTask")
+        }else setCreationMenu("");
     }
 
-    return (
+    return(
         <div className="AdditionalContent">
-            {createTasksAndProjects==="showButtons" &&
             <div className="buttonContainer">
                 <StyledButton
                     style={{ marginRight: "10px" }}
@@ -28,21 +30,13 @@ function CreateAdditionalContent() {
                     Create Blade Task
                 </StyledButton>
             </div>
-            }
-            {createTasksAndProjects==="createTask" && <DummyCreateTask />}
-            {createTasksAndProjects==="createProject" && <DummyCreateProject />}
+            {creationMenu === "createTask" && <BladeTaskMenu/>}
+            {creationMenu ==="createProject" && <DummyCreateProject />}
         </div>
     );
 }
-export default CreateAdditionalContent;
 
-function DummyCreateTask() {
-    return (
-        <div style={{ height: "1000px", width: "600px", background: "blue" }}>
-            Dummy create BT componenent
-        </div>
-    );
-}
+export default CreateAdditionalContent;
 
 function DummyCreateProject() {
     return (

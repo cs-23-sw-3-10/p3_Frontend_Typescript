@@ -1,91 +1,75 @@
-import { DndContext } from "@dnd-kit/core";
 import "./Display.css";
 import CreateTestRigDivs from "./TestRigDivs";
 import CreateTimelineField from "./TimelineField";
-import React, { useState } from "react";
+import React, { useState} from "react";
 import CreateAdditionalContent from "./AdditionalContent";
 import BladeTaskCard from "./BladeTaskCard";
 import { useQuery } from "@apollo/client";
-import { GET_BT_IN_RANGE } from "../../api/queryList";
+import { GET_BT_IN_RANGE, GET_TEST_RIGS } from "../../api/queryList";
 import { getMonthLength } from "./TimelineField";
 import { capitalizeFirstLetter } from "./TimelineField";
+import { useEditModeContext } from "../../EditModeContext";
 
 const currentDate = new Date(Date.now()); // Get the current date
 
 type DisplayProps = {
-    editMode: boolean;
-    setEditMode: React.Dispatch<React.SetStateAction<boolean>>;
     setShowPasswordPrompt: React.Dispatch<React.SetStateAction<boolean>>;
+    filter: string;
+    setFilter: React.Dispatch<React.SetStateAction<string>>;
 };
 
 function DisplayComponent(props: DisplayProps) {
-    const [rigs, setRigs] = useState([
-        // should be imported from database
-        {
-            rigName: "Rig 1",
-            rigNumber: 1,
-        },
-        {
-            rigName: "Rig 2",
-            rigNumber: 2,
-        },
-        {
-            rigName: "Rig 3",
-            rigNumber: 3,
-        },
-        {
-            rigName: "Rig 4",
-            rigNumber: 4,
-        },
-        {
-            rigName: "Rig 5",
-            rigNumber: 5,
-        },
-        {
-            rigName: "Rig 6",
-            rigNumber: 6
-        }
-    ]);
+    const editMode = useEditModeContext();
+    const [rigs, setRigs] = useState<{rigName: string, rigNumber: number}[]>([{rigName: "No Rigs", rigNumber: 0}]);
 
     const [selectedDate, setSelectedDate] = useState(
         `${currentDate.getFullYear()}-${
             currentDate.getMonth() + 1
         }-${currentDate.getDate()}`
-        ); // State to store the selected date
+    ); // State to store the selected date
     const [numberOfMonths, setNumberOfMonths] = useState(3); // State to store the number of months to display
 
     const [dates, setDates] = useState(
         getMonthsInView(currentDate, numberOfMonths)
     ); // should be imported from database
+    
 
-    const handleDateChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setSelectedDate(event.target.value);
+    const handleDateChange = (date: string) => {
+        setSelectedDate(date);
     };
 
-    const handleNumberChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        let number = parseInt(event.target.value);
-        if (number < 2) {
-            number = 2;
-        } else if (number > 24) {
-            number = 24;
-        }
-        setNumberOfMonths(number);
+    const handleNumberChange = (numberOfMonthsInView: number) => {
+        setNumberOfMonths(numberOfMonthsInView);
+    };
+
+    const handleViewChange = (event: React.FormEvent<HTMLFormElement>) => {
+        event.preventDefault();
+        // Get the form element from the event   
+        const form = event.target as HTMLFormElement;
+
+        // Explicitly assert the type to HTMLInputElement and acces value
+        const dateInput = (form.elements.namedItem("dateInput") as HTMLInputElement)?.value;
+        const numberInput = (form.elements.namedItem("numberInput") as HTMLInputElement)?.value;
+
+        handleDateChange(dateInput);
+        handleNumberChange(parseInt(numberInput));
+        goTo(parseInt(numberInput));
     };
 
     const handleModeChange = () => {
-        if (!props.editMode) {
+        if (!editMode.isEditMode) {
             // If switching to edit mode, show password prompt
             props.setShowPasswordPrompt(true);
         } else {
             // If switching from edit mode, just toggle the edit mode
-            props.setEditMode(!props.editMode);
+            editMode.setEditMode(!editMode.isEditMode);
         }
     };
 
-    const goTo = () => {
+    const goTo = (number: number) => {
         const newDate = new Date(selectedDate);
         if (!isNaN(newDate.valueOf())) {
-            setDates(getMonthsInView(newDate, numberOfMonths));
+            setDates(getMonthsInView(newDate, number));
         } else {
             setDates(getMonthsInView(currentDate, numberOfMonths));
         }
@@ -93,23 +77,50 @@ function DisplayComponent(props: DisplayProps) {
 
     const queryDates = getQueryDates(dates[0], dates[dates.length - 1]);
 
-    const { loading, error, data } = useQuery(GET_BT_IN_RANGE, {
+    const {
+        loading: loadingRigs,
+        error: errorRigs,
+        data: dataRigs,
+    } = useQuery(GET_TEST_RIGS);
+    
+
+    const { loading: loadingBT, error: errorBT, data: dataBT } = useQuery(GET_BT_IN_RANGE, {
         variables: {
             startDate: queryDates.startDate,
             endDate: queryDates.endDate,
+            isActive: !editMode.isEditMode,
         },
     });
 
-    if (loading) {
+    if (loadingRigs) {
         return <p>Loading...</p>;
     }
-    if (error) {
-        return <p>Error {error.message}</p>;
+    if (errorRigs) {
+        return <p>Error {errorRigs.message}</p>;
     }
+
+    if (loadingBT) {
+        return <p>Loading...</p>;
+    }
+    if (errorBT) {
+        return <p>Error {errorBT.message}</p>;
+    }
+
+    const numberOfRigs = parseInt(dataRigs.DictionaryAllByCategory[0].label);
+    if (rigs.length !== numberOfRigs){
+        setRigs(createRigs(numberOfRigs));
+    }
+
     let btCards: React.ReactNode[] = [];
-    
-    data["AllBladeTasksInRange"].forEach((bt: any) => {
-        
+
+    dataBT["AllBladeTasksInRange"].forEach((bt: any) => {
+        let btShown = false;
+        if (
+            bt.bladeProject.customer === props.filter ||
+            props.filter === "None"
+        ) {
+            btShown = true;
+        }
         let dateSplit = bt.startDate.split("-");
         const year = parseInt(dateSplit[0]);
         const month = parseInt(dateSplit[1]) - 1;
@@ -124,14 +135,21 @@ function DisplayComponent(props: DisplayProps) {
         console.log(endDateSplit);
         btCards.push(
             <BladeTaskCard
-                key={bt.id} 
-                duration={bt.duration} 
-                projectColor={bt.bladeProject.color} 
+                key={bt.id}
+                duration={bt.duration}
+                projectColor={bt.bladeProject.color}
+                projectId={bt.bladeProject.id}
+                customer={bt.bladeProject.customer}
                 taskName={bt.taskName}
                 startDate={new Date(year, month, day)}
                 endDate={new Date(endYear, endMonth, endDate)}
+                attachPeriod={bt.attachPeriod}
+                detachPeriod={bt.detachPeriod}
                 rig={bt.testRig}
                 id={bt.id}
+                shown={btShown}
+                inConflict={bt.inConflict}
+                enableDraggable={editMode.isEditMode}
             />
         );
     });
@@ -139,43 +157,63 @@ function DisplayComponent(props: DisplayProps) {
     return (
         <div className="ScheduleContentContainer">
             <div className="ScheduleViewControl">
-                <form onSubmit={(e) => e.preventDefault()}>
+                <form onSubmit={(e) => {handleViewChange(e)}}>
                     <label htmlFor="dateInput" style={{ fontSize: "10px" }}>
                         Date:
                     </label>
                     <input
+                        name="dateInput"
                         type="date"
-                        value={selectedDate}
-                        onChange={handleDateChange}
+                        defaultValue={selectedDate}
                     />
                     <label htmlFor="numberInput" style={{ fontSize: "10px" }}>
                         Months shown:
                     </label>
-                    <input type="number" min="2" max="24"onChange={handleNumberChange} />
-                    <input type="button" onClick={goTo} value={"Go To"} />
+                    <input
+                        name="numberInput"
+                        type="number"
+                        min="2"
+                        max="24"
+                    />
+                    <input type="submit" value={"Go To"} />
                 </form>
             </div>
+            {editMode.isEditMode ? (
+            <div className="ScheduleFilterAndMode">
+                <label className="switch"> Edit Mode</label>
+                <input type="checkbox" checked={true} onChange={handleModeChange} />
+            </div>
+            ) : (
             <div className="ScheduleFilterAndMode">
                 <label>Filter:</label>
-                <select name="customerFilter" id="customerFilter">
+                <select
+                    name="customerFilter"
+                    id="customerFilter"
+                    onChange={(e) => {
+                        props.setFilter(e.target.value);
+                    }}
+                >
                     <option value="None">None</option>
-                    <option value="Customer 1">Customer 1</option>
-                    <option value="Customer 2">Customer 2</option>
+                    <option value="Goldwind">Goldwind</option>
+                    <option value="Suzlon">Suzlon</option>
                 </select>
                 <label className="switch"> Edit Mode</label>
-                <input type="checkbox" onChange={handleModeChange} />
+                <input type="checkbox" checked={false} onChange={handleModeChange} />
             </div>
+            )}
+            
             <div className="ScheduleDisplay">
                 <CreateTestRigDivs rigs={rigs} />
-                <DndContext>
-                    <CreateTimelineField
-                        rigs={rigs}
-                        months={dates}
-                        btCards={btCards}
-                    />
-                </DndContext>
+                <CreateTimelineField
+                    rigs={rigs}
+                    months={dates}
+                    btCards={btCards}
+                />
             </div>
-            {props.editMode ? <CreateAdditionalContent /> : null}
+
+
+            {editMode.isEditMode ? <CreateAdditionalContent /> : null}
+
         </div>
     );
 }
@@ -197,7 +235,7 @@ function convertToQueryDate(year: number, month: number, day: number) {
     return queryDateSTR;
 }
 
-function getMonthsInView(startDate: Date, numberOfMonths: number) {
+export function getMonthsInView(startDate: Date, numberOfMonths: number) {
     let year = startDate.getFullYear();
     let month = startDate.getMonth();
     let viewMonths: Date[] = [new Date(year, month, 1)];
@@ -224,7 +262,6 @@ function getMonthsInView(startDate: Date, numberOfMonths: number) {
 }
 
 function getQueryDates(startDate: Date, endDate: Date) {
-    console.log("start and end date ", startDate, endDate)
     let startDateSTR: String;
     let endDateSTR: String;
     let startDateDay = startDate.getDate();
@@ -251,4 +288,15 @@ function getQueryDates(startDate: Date, endDate: Date) {
         endDateDay
     );
     return { startDate: startDateSTR, endDate: endDateSTR };
+}
+
+function createRigs(numberOfRigs: number) {
+    let rigs: {rigName: string, rigNumber: number}[]= [];
+    for (let i = 1; i <= numberOfRigs; i++) {
+        rigs.push({
+            rigName: "Rig " + (i).toString(),
+            rigNumber: i,
+        });
+    }
+    return rigs;
 }

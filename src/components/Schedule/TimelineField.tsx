@@ -5,6 +5,8 @@ import MonthLengths from "./MonthLengthsEnum";
 import React, { useState } from "react";
 import BladeTaskCard from "./BladeTaskCard";
 import { BladeTaskHolder } from "./BladeTaskHolder";
+import { useMutation } from "@apollo/client";
+import { UPDATE_BT } from "../../api/mutationList";
 
 type TimelineFieldProps = {
     rigs: { rigName: string; rigNumber: number }[];
@@ -15,6 +17,8 @@ type TimelineFieldProps = {
 export const dateDivLength = 25; // px length of the dates in the schedule
 
 function CreateTimelineField(props: TimelineFieldProps) {
+    const [updateBt, { error, data }] = useMutation(UPDATE_BT);
+
     let fieldWidth: number = 0; // px width of the field dynamically calculated from the number of months displayed
     props.months.forEach((month) => {
         fieldWidth += getTotalWidth(
@@ -75,7 +79,7 @@ function CreateTimelineField(props: TimelineFieldProps) {
                         handleDragStart(event, setDragging);
                     }}
                     onDragEnd={(event) => {
-                        handleDragEnd(event, bladeTasks, setDragging);
+                        handleDragEnd(event, bladeTasks, setDragging, updateBt);
                     }}
                 >
                     <div
@@ -169,10 +173,13 @@ export function handleDragStart(
 export function handleDragEnd(
     event: any,
     bladeTaskHolder: BladeTaskHolder,
-    setDragging: React.Dispatch<React.SetStateAction<boolean>>
+    setDragging: React.Dispatch<React.SetStateAction<boolean>>,
+    updateBT: Function
 ) {
     console.log("drag ended");
+
     const { active, over } = event;
+    console.log(active);
     if (over !== null) {
         const overIdSlpit = over.id.split("-");
         const overRig = parseInt(overIdSlpit[0].split(" ")[1]);
@@ -200,7 +207,6 @@ export function handleDragEnd(
             const draggedCard = updatedBladeTaskCards[
                 indexBT
             ] as React.ReactElement;
-            console.log("dragged card ", draggedCard.key);
 
             // Check for overlap before updating the cards
             const isOverlap = checkForOverlap(
@@ -209,13 +215,26 @@ export function handleDragEnd(
                 overDate,
                 overRig
             );
-            console.log("isOverlap:", isOverlap);
 
             if (!isOverlap) {
                 let newEndDate = new Date(overDate);
+
                 newEndDate.setDate(
                     newEndDate.getDate() + draggedCard.props.duration - 1
                 );
+
+                console.log(overDate);
+                console.log(newEndDate);
+                console.log(draggedCard.props.duration);
+
+                updateBT({
+                    variables: {
+                        id: draggedCard.props.id,
+                        startDate: formatDate(overDate),
+                        duration: draggedCard.props.duration,
+                        rig: overRig,
+                    },
+                });
 
                 updatedBladeTaskCards[indexBT] = (
                     <BladeTaskCard
@@ -223,15 +242,17 @@ export function handleDragEnd(
                         id={draggedCard.props.id}
                         duration={draggedCard.props.duration}
                         projectColor={draggedCard.props.projectColor}
+                        projectId={draggedCard.props.projectId}
+                        customer={draggedCard.props.customer}
                         taskName={draggedCard.props.taskName}
                         startDate={new Date(overDate)}
                         endDate={newEndDate}
                         rig={overRig}
+                        attachPeriod={draggedCard.props.attachPeriod}
+                        detachPeriod={draggedCard.props.detachPeriod}
+                        enableDraggable={draggedCard.props.enableDraggable}
+                        shown={draggedCard.props.shown}
                     />
-                );
-                console.log(
-                    "blade task moved ",
-                    updatedBladeTaskCards[indexBT]
                 );
                 bladeTaskHolder.setBladeTasks(updatedBladeTaskCards);
             } else {
@@ -243,7 +264,7 @@ export function handleDragEnd(
             setDragging(false);
         }
     } else {
-        console.log("over er null");
+        console.log("over is null");
     }
 }
 
@@ -266,7 +287,11 @@ function checkForOverlap(
 
         if (i !== BTIndex) {
             //skip comparison with itself
-            if (bladeTaskCards[i].props.rig === overRig) {
+            if (
+                bladeTaskCards[i].props.rig === overRig ||
+                bladeTaskCards[i].props.projectId ===
+                    draggedCard.props.projectId
+            ) {
                 // skip comparison with cards on different rigs
                 //Overlaps are covered by two cases. A check is made for each case.
                 if (startDateA <= startDateB) {
@@ -282,4 +307,14 @@ function checkForOverlap(
         }
     }
     return false;
+}
+
+function formatDate(date: Date) {
+    const year = date.getFullYear();
+    // getMonth() returns 0-11; add 1 to make it 1-12 and pad with '0' if needed
+    const month = (date.getMonth() + 1).toString().padStart(2, "0");
+    // getDate() returns 1-31; pad with '0' if needed
+    const day = date.getDate().toString().padStart(2, "0");
+
+    return `${year}-${month}-${day}`;
 }

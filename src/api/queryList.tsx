@@ -15,6 +15,7 @@ export const GET_ALL_BT = gql`
             detachPeriod
             taskName
             testRig
+            inConflict
             bladeProject {
                 id
             }
@@ -31,8 +32,8 @@ export const GET_ALL_BT = gql`
 `;
 
 export const GET_BT_IN_RANGE = gql`
-query AllBladeTasksInRange($startDate: String!, $endDate: String!) {
-    AllBladeTasksInRange(startDate: $startDate, endDate: $endDate) {
+query AllBladeTasksInRange($startDate: String!, $endDate: String!, $isActive: Boolean!) {
+    AllBladeTasksInRange(startDate: $startDate, endDate: $endDate, isActive: $isActive) {
         id
         startDate
         endDate
@@ -42,12 +43,55 @@ query AllBladeTasksInRange($startDate: String!, $endDate: String!) {
         detachPeriod
         taskName
         testRig
+        inConflict
         bladeProject {
             color
+            customer
+            id
         }
     }
 }
 `;
+
+export const GET_ALL_BT_WITH_BOOKINGS_EQNAME = gql`
+query AllBladeTasks {
+    AllBladeTasks {
+        id
+        startDate
+        endDate
+        duration
+        testType
+        attachPeriod
+        detachPeriod
+        taskName
+        testRig
+        inConflict
+        bladeProject {
+            id
+        }
+        bookings {
+            id
+            startDate
+            endDate
+            duration
+            resourceType
+            workHours
+            equipment {
+                id
+                name
+            }
+            engineer {
+                name
+            }
+            technician {
+                type
+            }
+        }
+    }
+}
+`;
+
+
 
 export const GET_ALL_BP = gql`
 query AllBladeProjects {
@@ -68,6 +112,10 @@ query AllBladeProjects {
             detachPeriod
             taskName
             testRig
+            inConflict
+            bladeProject {
+                color
+            }
             bookings {
                 id
                 startDate
@@ -110,6 +158,40 @@ export const GET_BOOKINGS = gql`
     }
 `;
 
+export const GET_ALL_BT_NAMES = gql`
+  query GetAllBTNames{
+    AllBladeTasks{
+      taskName
+   }
+  }
+`;
+
+export const GET_TEST_TYPES = gql`
+query GetTestTypes{
+  DictionaryAllByCategory(category:"testType"){
+    id
+    label
+  }
+}
+`;
+
+export const GET_TEST_RIGS = gql`
+query GetTestRigs{
+  DictionaryAllByCategory(category:"testRigs"){
+    label
+  }
+}
+`;
+
+export const GET_ALL_EQUIPMENT_TYPES = gql`
+query GetAllEquipmentTypes{
+    DictionaryAllByCategory(category:"equipmentType"){
+      id
+    	label
+    }
+}
+`;
+
 export const GET_BT_DATE_INFO = gql`
   query GetBTDateInfo{
     AllBladeTasks{
@@ -125,4 +207,46 @@ export const GET_BT_DATE_INFO = gql`
   }
 }
 `;
+
+export const GET_ALL_ENGINEERS = gql`
+query AllEngineers{
+  AllEngineers{
+    __typename
+    id
+    name
+    workHours
+    maxWorkHours
+  }
+}
+`;
+
+export const GET_ALL_TECHNICIANS = gql`
+query AllTechnicians{
+  AllTechnicians{
+    __typename
+    id
+    type
+    workHours
+    maxWorkHours
+    count
+  }
+}
+`;
+
+export const GET_ALL_BLADE_PROJECTS = gql`
+query GetAllBladeProjects{
+  AllBladeProjects{
+    __typename
+    id
+    projectName
+    customer
+  }
+}
+`;
+
+
+
+
+
+
 
