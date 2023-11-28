@@ -11,18 +11,9 @@ import { getMonthsInView } from "../Schedule/Display";
 import { getMonthLength } from "../Schedule/TimelineField";
 import { capitalizeFirstLetter } from "../Schedule/TimelineField";
 import { useEditModeContext } from "../../EditModeContext";
+import { createRigs } from "../Schedule/Display";
 
 
-function createRigs(numberOfRigs: number) {
-    let rigs: {rigName: string, rigNumber: number}[]= [];
-    for (let i = 1; i <= numberOfRigs; i++) {
-        rigs.push({
-            rigName: "Rig " + (i).toString(),
-            rigNumber: i,
-        });
-    }
-    return rigs;
-}
 /**
  * Calculates the number of months between start and enddate of a bladeproject,
  * which is used to regulate the number of months shown in the expanded table, when it is rendered
@@ -100,14 +91,14 @@ function BladeProjectPage() {
     let DataForScreen;
     if(editMode.isEditMode === false){
         DataForScreen = ScheduleData.filter((scheduleIsActiveCheck: any) => scheduleIsActiveCheck.id === "1")
-           DataForScreen = DataForScreen[0].bladeProject
+        DataForScreen = DataForScreen[0].bladeProject
     }
     else {
         DataForScreen = ScheduleData.filter((scheduleIsActiveCheck: any) => scheduleIsActiveCheck.id === "2")
-              DataForScreen = DataForScreen[0].bladeProject
+        DataForScreen = DataForScreen[0].bladeProject
     }
 
-
+    
     /* renders the table. The renderExpandedComponent prop is used to render the bladeTasks table
      * based on the current row.id which is equal to the bladeproject ID.
      * The data for the TableLogicWOHeaders is therefore only containing the bladeTasks for the expanded bladeproject

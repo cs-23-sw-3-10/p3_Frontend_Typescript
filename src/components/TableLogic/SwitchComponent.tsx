@@ -1,10 +1,6 @@
 import React from "react";
 import { useState, useContext } from "react";
-import { useQuery } from "@apollo/client";
-import { GET_ALL_BP } from "../../api/queryList";
-import { GET_ALL_BP_IN_DIFF_SCHEDULE } from "../../api/queryList";
 import { useEditModeContext } from "../../EditModeContext";
-import ScheduleComponent from "../Schedule/ScheduleComponent";
 
 type SwitchProps = {
   setShowPasswordPrompt: React.Dispatch<React.SetStateAction<boolean>>;
@@ -17,21 +13,21 @@ const SwitchComponent = (props: SwitchProps) => {
   const [showPasswordPrompt, setShowPasswordPrompt] = useState(false);
 
   const handleSwitch = () => {
-      setChecked(!checked)  
-
+    setChecked(!checked)  
      if(!editMode.isEditMode){
-        setShowPasswordPrompt(true);
-                  setPassword("");
-        if(checked === true){
-          setShowPasswordPrompt(false)
+        setShowPasswordPrompt(true); // Show the password prompt
+        setPassword(""); //reset password
+         if(checked === true){
+          setShowPasswordPrompt(false) // Hide the password prompt if the user clicks the switch again before entering the password
         }
-        }
+      }
       else{
         setShowPasswordPrompt(false)
-          editMode.setEditMode(false)
-            }
+        editMode.setEditMode(false)
         }
+   }
   
+   // Handle the password submit
   const handlePasswordSubmit = (event: React.FormEvent<HTMLFormElement>) => {
        event.preventDefault();
        // Get the form element from the event   
@@ -49,38 +45,38 @@ const SwitchComponent = (props: SwitchProps) => {
           }
       };
 
+      
     return (
       <>
-       <div className='inline-flex items-center h-full'>
+       <div className="inline-flex items-center h-full">
         <div className="themeSwitcherTwo relative inline-flex cursor-pointer select-none items-center mx-4">
-        <span className='label flex items-center text-sm font-medium text-black cursor-auto'>
+        <span className="label flex items-center text-sm font-medium text-black cursor-auto">
         View Mode
       </span>
       <label>
         <input
-          type='checkbox'
+          type="checkbox"
           checked={checked}
           onChange={handleSwitch}
-          className='sr-only'
+          className="sr-only"
         />
         <span
           className={`slider mx-4 flex h-8 w-[60px] items-center rounded-full p-1 duration-200 cursor-pointer ${
-            checked ? 'bg-[#212b36]' : 'bg-[#CCCCCE]'
+            checked ? "bg-[#212b36]" : "bg-[#CCCCCE]"
           }`}
         >
           <span
             className={`dot h-6 w-6 rounded-full bg-white duration-200 ${
-              checked ? 'translate-x-[28px]' : ''
+              checked ? "translate-x-[28px]" : ""
             }`}
           ></span>
         </span>
       </label>
-      <span className='label flex items-center text-sm font-medium text-black cursor-auto'>
+      <span className="label flex items-center text-sm font-medium text-black cursor-auto">
         Edit Mode
       </span>
         </div>
-
-
+        
       <div>
     </div>
     <div className="mx-4">

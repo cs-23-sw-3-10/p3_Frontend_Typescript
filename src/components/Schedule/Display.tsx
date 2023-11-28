@@ -277,7 +277,7 @@ function getQueryDates(startDate: Date, endDate: Date) {
     return { startDate: startDateSTR, endDate: endDateSTR };
 }
 
-function createRigs(numberOfRigs: number) {
+export function createRigs(numberOfRigs: number) {
     let rigs: {rigName: string, rigNumber: number}[]= [];
     for (let i = 1; i <= numberOfRigs; i++) {
         rigs.push({

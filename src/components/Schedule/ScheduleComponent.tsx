@@ -4,7 +4,6 @@ import {useEditModeContext} from "../../EditModeContext";
 
 function ScheduleComponent() {
     const [showPasswordPrompt, setShowPasswordPrompt] = useState(false);
-    const [password, setPassword] = useState(""); // State to store the entered password
     const [filter, setFilter] = useState("None"); // State to store the filter
 
     const editMode = useEditModeContext();
