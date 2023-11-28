@@ -53,7 +53,7 @@ function ScheduleComponent() {
             {editMode.isEditMode ? scheduleHeader[0] : scheduleHeader[1]}
             {showPasswordPrompt && (
                 <div className="PasswordPrompt" style={{height: `${passwordPromptHeight}px`}}>
-                    <form onSubmit={(e) => {e.preventDefault(); handlePasswordSubmit()}}>
+                    <form onSubmit={(e) => {e.preventDefault(); handlePasswordSubmit(e)}}>
                     <label htmlFor="passwordInput">Enter Password:</label>
                     <input
                         type="password"
