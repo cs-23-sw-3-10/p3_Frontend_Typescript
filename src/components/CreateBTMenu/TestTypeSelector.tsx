@@ -8,10 +8,10 @@ import "./TestTypeSelector.css"
 
 
 //Queries test types and insert them into the BT-Menu
-function TestTypeSelector({ testType, setTestType }: { testType: string, setTestType: Function }) {
+function TestTypeSelector({ testType, setTestType, className}: { testType: string, setTestType: Function, className?: string }) {
     const { loading, error, data } = useQuery(GET_TEST_TYPES);
     const [typesList, setTypesList] = useState<string[]>([]);
-    
+
     useEffect(() => {
         if (data && data.DictionaryAllByCategory) {
             let listFromDB: Array<string> = data.DictionaryAllByCategory.map(({ label }: { label: string }) => label);
@@ -19,14 +19,13 @@ function TestTypeSelector({ testType, setTestType }: { testType: string, setTest
         }
     }, [data]);
     
-    if (loading) return (<Combobox className="testtype_select input_sideborders" data={typesList} />);
-    if (error) return (<Combobox className="testtype_select input_sideborders" data={typesList} />);
+    if (loading) return (<Combobox className={`${className}`} data={typesList} />);
+    if (error) return (<Combobox className={`${className}`} data={typesList} />);
 
     return (
-        <div className="item testtype_wrapper">
-            <h2 className="title">Type</h2>
-            <Combobox  onChange={value => setTestType(value)} value={testType} data={typesList} />
-        </div>
+        <>
+            <Combobox className={className} onChange={value => setTestType(value)} value={testType} data={typesList} />
+        </>
     );
 }
 

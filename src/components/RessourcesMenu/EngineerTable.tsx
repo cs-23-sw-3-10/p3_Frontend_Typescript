@@ -64,7 +64,7 @@ function EngineerTable(){
     return (
         <>
             <form onSubmit={handleSubmit} className='form-style'>
-                <h2 className='h1-style'>Add Engineer</h2>
+                <h2 className='h2-style'>Add Engineer</h2>
                 <div>
                     <label htmlFor="name" className='label-style'>Name</label>
                     <input 

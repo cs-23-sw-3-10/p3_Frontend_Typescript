@@ -112,9 +112,14 @@ function BladeTaskMenu() {
                 <TaskNameSelector taskName={taskName} setTaskName={setTaskName} inErrorChart={inErrorChart} setInErrorChart={setInErrorChart}/>
                 <ProjectSelector bladeProjectId={bladeProjectId} setBladeProjectId={setBladeProjectId}/>
             </div>
-
-            <TestTypeSelector testType={testType} setTestType={setTestType}/>
-
+                <div className="item testtype_wrapper">
+                    <h2 className="title">Type</h2>
+                    <TestTypeSelector 
+                    testType={testType}
+                    setTestType={setTestType}
+                    className='testtype_select input_sideborders'
+                    />
+                </div>
             <div className='item date_selection_wrapper'>
                 <StartDateSelector 
                     startDate={startDate} 

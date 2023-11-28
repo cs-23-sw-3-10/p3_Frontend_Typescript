@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import { CREATE_TECHNICIAN_MUTATION } from '../../api/mutationList';
 import { SanitizeString } from './RessourceUtils';
 import './Ressource.css';
+import TestTypeSelector from '../CreateBTMenu/TestTypeSelector';
 
 
 interface TechnicianFormData {
@@ -83,15 +84,12 @@ function TechnicianTable() {
     return (
         <> 
             <form onSubmit={handleSubmit} className='form-style'>
-                <h2 className='h1-style'>Add Technician</h2>
+                <h2 className='h2-style'>Add Technician</h2>
                 <div>
                     <label htmlFor="type" className='label-style'>Type</label>
-                    <input 
-                        type="text" 
-                        name="type" 
-                        id="type" 
-                        value={(formData.type)} 
-                        onChange={handleChange}
+                    <TestTypeSelector
+                        testType={formData.type}
+                        setTestType={(value: string) => setFormData({ ...formData, type: value })}
                         className='text-input'
                     />
                     {errors.type && <span className='error-message'>{errors.type}</span>}

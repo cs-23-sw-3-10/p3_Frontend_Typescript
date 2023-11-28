@@ -1,6 +1,7 @@
 /* General form styling */
 .form-style {
-    max-width: 300px;
+    width: 80%;
+    max-width: 30%;
     margin: 20px;
     padding: 20px;
     background-color: #f9f9f9;
@@ -11,7 +12,7 @@
 /* Label styling */
 .label-style {
     display: block;
-    margin-bottom: 5px;
+    margin-top: 10px;
     font-weight: bold;
 }
 
@@ -24,15 +25,24 @@
     border-radius: 4px;
     box-sizing: border-box;
 }
-
+.combobox .rw-widget-container {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 20px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
 /* Heading styling */
 .h1-style {
     text-align: left;
     margin-bottom: 15px;
+    font-size: 25px;
 }
 .h2-style { 
-    text-align: left;
+    text-align: center;
     margin-bottom: 10px;
+    font-size: 20px;
 }
 
 /* Error, Loading, Success message styling */
@@ -67,17 +77,12 @@
     background-color: #0f6313;
 }
 
-/* Responsive design */
-@media (max-width: 600px) {
-    .form-style {
-        width: 90%;
-    }
-}
-
 /* Dropdown container styling */
 .dropdown-container {
     margin: 10px;
     padding: 10px;
     font-size: 15px;
     text-align: center;
+    border-width: 1px;
+    border-color: gray;
 }

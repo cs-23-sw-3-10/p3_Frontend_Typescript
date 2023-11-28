@@ -5,7 +5,8 @@
 
 
 export function SanitizeString(str: string) : string {
-    let output : string = str.replace(/[^a-zA-Z0-9]/g, '');
+    //Accept only alphanumeric and space and - and _
+    let output : string = str.replace(/[^a-zA-Z0-9-_ ]/g, "")
     return output;
 }
 
