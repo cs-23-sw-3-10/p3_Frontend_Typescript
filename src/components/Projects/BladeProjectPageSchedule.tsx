@@ -147,12 +147,14 @@ function BladeProjectPageWithSchedule() {
                                 <BladeTaskCard
                                     key={bladeTask.id}
                                     duration={bladeTask.duration}
+                                    attachPeriod={bladeTask.attachPeriod}
+                                    detachPeriod={bladeTask.detachPeriod}
                                     projectColor={bladeTask.bladeProject.color}
                                     projectId={bladeTask.bladeProject.id}
                                     customer={bladeTask.bladeProject.customer}
                                     taskName={bladeTask.taskName}
                                     id={bladeTask.id}
-                                    disableDraggable={true}
+                                    enableDraggable={false}
                                 />
                             );
                         }

@@ -17,6 +17,7 @@ type DisplayProps = {
     showPasswordPrompt: boolean;
     filter: string;
     setFilter: React.Dispatch<React.SetStateAction<string>>;
+    isEditMode: boolean
 };
 
 function DisplayComponent(props: DisplayProps) {
@@ -163,6 +164,8 @@ function DisplayComponent(props: DisplayProps) {
             <BladeTaskCard
                 key={bt.id}
                 duration={bt.duration}
+                attachPeriod={bt.attachPeriod}
+                detachPeriod={bt.detachPeriod}
                 projectColor={bt.bladeProject.color}
                 projectId={bt.bladeProject.id}
                 projectName={bt.bladeProject.projectName}
