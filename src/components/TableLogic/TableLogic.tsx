@@ -194,7 +194,7 @@ export function TableLogic<TData, TValue>({
                     </StyledButton>
                 </div>
                 <div>
-                    <SwitchComponent viewMode={true}/>
+                    <SwitchComponent/>
                 </div>
             </div>
 

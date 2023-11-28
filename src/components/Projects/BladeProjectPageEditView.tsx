@@ -1,22 +1,16 @@
 import React, { useState, useContext } from "react";
 
 import { columnBP } from "./BladeProjectColumns";
-import { columnBT } from "../BladeTask/BladeTaskColumns";
 import { useQuery } from "@apollo/client";
 import { GET_ALL_BP } from "../../api/queryList";
-import { GET_ALL_BT } from "../../api/queryList";
 import { GET_ALL_BP_IN_DIFF_SCHEDULE } from "../../api/queryList";
-import { TableLogicWOHeaders } from "../TableLogic/TableLogicWOHeader";
 import { TableLogic } from "../TableLogic/TableLogic";
-import ScheduleComponent from "../Schedule/ScheduleComponent";
 import BladeTaskCard from "../Schedule/BladeTaskCard";
-import DisplayComponent from "../Schedule/Display";
 import CreateTimelineField from "../Schedule/TimelineField";
 import CreateTestRigDivs from "../Schedule/TestRigDivs";
 import { getMonthsInView } from "../Schedule/Display";
 import { getMonthLength } from "../Schedule/TimelineField";
 import { capitalizeFirstLetter } from "../Schedule/TimelineField";
-import SwitchComponent from "../TableLogic/SwitchComponent";
 import { TableModeContext } from "../TableLogic/TableContext";
 /**
  * Calculates the number of months between start and enddate of a bladeproject,
@@ -88,14 +82,14 @@ function BladeProjectPageWithScheduleViewEdit() {
 
 
     //handle loading and error states for the used queries
-    /*
+    
     if (loadingBP) return <p>Loading...</p>;
     if (errorBP) return <p> Error {errorBP.message}</p>;
     const BPData = dataBP["AllBladeProjects"];
     if (!BPData) {
         return <p> No data for {"AllBladeProjects"} </p>;
     }
-*/
+
     //
     if (loadingSchedule) return <p>Loading...</p>;
     if (errorSchedule) return <p> Error {errorSchedule.message}</p>;
@@ -160,7 +154,6 @@ function BladeProjectPageWithScheduleViewEdit() {
                                 customer={bladeTask.bladeProject.customer}
                                 taskName={bladeTask.taskName}
                                 startDate={new Date(year, month, day)}
-                                endDate={new Date(endYear, endMonth, endDate)}
                                 rig={bladeTask.testRig}
                                 id={bladeTask.id}
                                 enableDraggable={true}

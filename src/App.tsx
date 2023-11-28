@@ -25,8 +25,9 @@ function App() {
             <div className="app-container">
                 <NavBar />
                 <div className="content-container">
+                <TableModeContext.Provider value={{contextViewMode, setViewMode}}>
+
                     <EditModeProvider>
-                    <TableModeContext.Provider value={{contextViewMode, setViewMode}}>
                     <Routes>
                         <Route path="/" element={<ScheduleComponent/>} />
                         <Route
@@ -38,8 +39,9 @@ function App() {
                        
                         <Route path="*" element={<Navigate to="/" />} />
                     </Routes>
-                    </TableModeContext.Provider>
                     </EditModeProvider>
+                    </TableModeContext.Provider>
+
                 </div>
             </div>
         </>

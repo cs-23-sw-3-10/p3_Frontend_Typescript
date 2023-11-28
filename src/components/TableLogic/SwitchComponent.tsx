@@ -5,7 +5,7 @@ import { GET_ALL_BP } from "../../api/queryList";
 import { GET_ALL_BP_IN_DIFF_SCHEDULE } from "../../api/queryList";
 import { TableModeContext } from "./TableContext";
 
-const SwitchComponent = ({viewMode} : {viewMode: boolean}) => {
+const SwitchComponent = () => {
    const [checked, isChecked] = useState(false)
    const {contextViewMode, setViewMode} = useContext(TableModeContext)
 
