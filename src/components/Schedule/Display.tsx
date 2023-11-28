@@ -38,8 +38,8 @@ function DisplayComponent(props: DisplayProps) {
         setSelectedDate(date);
     };
 
-    const handleNumberChange = (number: number) => {
-        setNumberOfMonths(number);
+    const handleNumberChange = (numberOfMonthsInView: number) => {
+        setNumberOfMonths(numberOfMonthsInView);
     };
 
     const handleViewChange = (event: React.FormEvent<HTMLFormElement>) => {
@@ -47,17 +47,13 @@ function DisplayComponent(props: DisplayProps) {
         // Get the form element from the event   
         const form = event.target as HTMLFormElement;
 
-        // Explicitly assert the type to HTMLInputElement
-        const dateInputElement = form.elements.namedItem("dateInput") as HTMLInputElement;
-        const numberInputElement = form.elements.namedItem("numberInput") as HTMLInputElement;
+        // Explicitly assert the type to HTMLInputElement and acces value
+        const dateInput = (form.elements.namedItem("dateInput") as HTMLInputElement)?.value;
+        const numberInput = (form.elements.namedItem("numberInput") as HTMLInputElement)?.value;
 
-        // Access the value property safely
-        const dateInputValue = dateInputElement?.value;
-        const numberInputValue = numberInputElement?.value;
-
-        handleDateChange(dateInputValue);
-        handleNumberChange(parseInt(numberInputValue));
-        goTo(parseInt(numberInputValue));
+        handleDateChange(dateInput);
+        handleNumberChange(parseInt(numberInput));
+        goTo(parseInt(numberInput));
     };
 
     const handleModeChange = () => {
