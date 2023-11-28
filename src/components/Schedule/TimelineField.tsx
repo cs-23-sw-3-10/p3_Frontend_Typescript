@@ -24,7 +24,6 @@ export const dateDivLength = 25; // px length of the dates in the schedule
 
 function CreateTimelineField(props: TimelineFieldProps) {
     const [updateBt, { error, data }] = useMutation(UPDATE_BT);
-    const [forceUpdate, setForceUpdate] = useState(false);
 
     let fieldWidth: number = 0; // px width of the field dynamically calculated from the number of months displayed
     props.months.forEach((month) => {
@@ -95,7 +94,6 @@ function CreateTimelineField(props: TimelineFieldProps) {
                             bladeTasksPending,
                             setDragging,
                             updateBt,
-                            setForceUpdate
                         );
                     }}
                 >
@@ -198,8 +196,7 @@ export function handleDragEnd(
     bladeTaskHolder: BladeTaskHolder,
     bladeTaskHolderPending: BladeTaskHolder,
     setDragging: React.Dispatch<React.SetStateAction<boolean>>,
-    updateBT: Function,
-    setForceUpdate: Function
+    updateBT: Function
 ) {
     console.log("drag ended");
 
@@ -325,6 +322,9 @@ export function handleDragEnd(
                             startDate={new Date(overDate)}
                             endDate={newEndDate}
                             rig={overRig}
+                            attachPeriod={draggedCard.props.attachPeriod}
+                            detachPeriod={draggedCard.props.detachPeriod}
+                            enableDraggable={draggedCard.props.enableDraggable}
                             shown={draggedCard.props.shown}
                         />
                     );
@@ -346,6 +346,9 @@ export function handleDragEnd(
                             shown={draggedCard.props.shown}
                             startDate={new Date(overDate)}
                             endDate={newEndDate}
+                            attachPeriod={draggedCard.props.attachPeriod}
+                            detachPeriod={draggedCard.props.detachPeriod}
+                            enableDraggable={draggedCard.props.enableDraggable}
                             rig={overRig}
                         />
                     );

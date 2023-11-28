@@ -1,23 +1,18 @@
-import { DndContext } from "@dnd-kit/core";
 import "./Display.css";
 import CreateTestRigDivs from "./TestRigDivs";
 import CreateTimelineField from "./TimelineField";
-import React, { useState } from "react";
+import React, { useState} from "react";
 import CreateAdditionalContent from "./AdditionalContent";
 import BladeTaskCard from "./BladeTaskCard";
-import { useMutation, useQuery } from "@apollo/client";
-import { GET_BT_IN_RANGE_AND_PENDING } from "../../api/queryList";
+import { useQuery } from "@apollo/client";
+import { GET_BT_IN_RANGE_AND_PENDING, GET_TEST_RIGS } from "../../api/queryList";
 import { getMonthLength } from "./TimelineField";
 import { capitalizeFirstLetter } from "./TimelineField";
-import { UPDATE_BT } from "../../api/mutationList";
-import { useEffect, useRef } from "react";
-import { cornersOfRectangle } from "@dnd-kit/core/dist/utilities/algorithms/helpers";
+import { useEditModeContext } from "../../EditModeContext";
 
 const currentDate = new Date(Date.now()); // Get the current date
 
 type DisplayProps = {
-    editMode: boolean;
-    setEditMode: React.Dispatch<React.SetStateAction<boolean>>;
     setShowPasswordPrompt: React.Dispatch<React.SetStateAction<boolean>>;
     showPasswordPrompt: boolean;
     filter: string;
@@ -25,33 +20,8 @@ type DisplayProps = {
 };
 
 function DisplayComponent(props: DisplayProps) {
-    const [rigs, setRigs] = useState([
-        // should be imported from database
-        {
-            rigName: "Rig 1",
-            rigNumber: 1,
-        },
-        {
-            rigName: "Rig 2",
-            rigNumber: 2,
-        },
-        {
-            rigName: "Rig 3",
-            rigNumber: 3,
-        },
-        {
-            rigName: "Rig 4",
-            rigNumber: 4,
-        },
-        {
-            rigName: "Rig 5",
-            rigNumber: 5,
-        },
-        {
-            rigName: "Rig 6",
-            rigNumber: 6,
-        },
-    ]);
+    const editMode = useEditModeContext();
+    const [rigs, setRigs] = useState<{rigName: string, rigNumber: number}[]>([{rigName: "No Rigs", rigNumber: 0}]);
 
     const [selectedDate, setSelectedDate] = useState(
         `${currentDate.getFullYear()}-${
@@ -63,6 +33,7 @@ function DisplayComponent(props: DisplayProps) {
     const [dates, setDates] = useState(
         getMonthsInView(currentDate, numberOfMonths)
     ); // should be imported from database
+    
 
     const handleDateChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setSelectedDate(event.target.value);
@@ -79,12 +50,12 @@ function DisplayComponent(props: DisplayProps) {
     };
 
     const handleModeChange = () => {
-        if (!props.editMode) {
+        if (!editMode.isEditMode) {
             // If switching to edit mode, show password prompt
             props.setShowPasswordPrompt(true);
         } else {
             // If switching from edit mode, just toggle the edit mode
-            props.setEditMode(!props.editMode);
+            editMode.setEditMode(!editMode.isEditMode);
         }
     };
 
@@ -99,24 +70,44 @@ function DisplayComponent(props: DisplayProps) {
 
     const queryDates = getQueryDates(dates[0], dates[dates.length - 1]);
 
-    const { loading, error, data } = useQuery(GET_BT_IN_RANGE_AND_PENDING, {
+    const {
+        loading: loadingRigs,
+        error: errorRigs,
+        data: dataRigs,
+    } = useQuery(GET_TEST_RIGS);
+    
+
+    const { loading: loadingBT, error: errorBT, data: dataBT } = useQuery(GET_BT_IN_RANGE_AND_PENDING, {
         variables: {
             startDate: queryDates.startDate,
             endDate: queryDates.endDate,
+            isActive: true,
         },
     });
 
-    if (loading) {
-        return <p>Loading scheduled blade tasks</p>;
+    if (loadingRigs) {
+        return <p>Loading...</p>;
     }
-    if (error) {
-        return <p>Error while loading scheduled tasks {error.message}</p>;
+    if (errorRigs) {
+        return <p>Error {errorRigs.message}</p>;
+    }
+
+    if (loadingBT) {
+        return <p>Loading...</p>;
+    }
+    if (errorBT) {
+        return <p>Error {errorBT.message}</p>;
+    }
+
+    const numberOfRigs = parseInt(dataRigs.DictionaryAllByCategory[0].label);
+    if (rigs.length !== numberOfRigs){
+        setRigs(createRigs(numberOfRigs));
     }
 
     //Makeing schedulet BladeTaskCards
     let btCards: React.ReactNode[] = [];
 
-    data["AllBladeTasksInRange"].forEach((bt: any) => {
+    dataBT["AllBladeTasksInRange"].forEach((bt: any) => {
         let btShown = false;
         if (
             bt.bladeProject.customer === props.filter ||
@@ -129,33 +120,37 @@ function DisplayComponent(props: DisplayProps) {
         const month = parseInt(dateSplit[1]) - 1;
         const day = parseInt(dateSplit[2]);
 
-        let endDateSplit = bt.endDate.split("-");
-        const endYear = parseInt(endDateSplit[0]);
-        const endMonth = parseInt(endDateSplit[1]) - 1;
-        const endDate = parseInt(endDateSplit[2]);
-        btCards.push(
-            <BladeTaskCard
-                key={bt.id}
-                duration={bt.duration}
-                projectColor={bt.bladeProject.color}
-                projectId={bt.bladeProject.id}
-                projectName={bt.bladeProject.projectName}
-                customer={bt.bladeProject.customer}
-                taskName={bt.taskName}
-                startDate={new Date(year, month, day)}
-                endDate={new Date(endYear, endMonth, endDate)}
-                rig={bt.testRig}
-                id={bt.id}
-                shown={btShown}
-                disableDraggable={!props.editMode}
-                inConflict={bt.inConflict}
-            />
-        );
+            let endDateSplit = bt.endDate.split("-");
+            const endYear = parseInt(endDateSplit[0]);
+            const endMonth = parseInt(endDateSplit[1]) - 1;
+            const endDate = parseInt(endDateSplit[2]);
+            btCards.push(
+                <BladeTaskCard
+                    key={bt.id}
+                    duration={bt.duration}
+                    projectColor={bt.bladeProject.color}
+                    projectId={bt.bladeProject.id}
+                    projectName={bt.bladeProject.projectName}
+                    customer={bt.bladeProject.customer}
+                    taskName={bt.taskName}
+                    startDate={new Date(year, month, day)}
+                    endDate={new Date(endYear, endMonth, endDate)}
+                    attachPeriod={bt.attachPeriod}
+                    detachPeriod={bt.detachPeriod}
+                    rig={bt.testRig}
+                    id={bt.id}
+                    shown={btShown}
+                    enableDraggable={!props.isEditMode}
+                    inConflict={bt.inConflict}
+                                    />
+            );
     });
+
+
 
     //Making pending BladeTaskCards
     let btCardsPending: React.ReactNode[] = [];
-    data["AllBladeTasksPending"].forEach((bt: any) => {
+    dataBT["AllBladeTasksPending"].forEach((bt: any) => {
         let btShown = false;
         if (
             bt.bladeProject.customer === props.filter ||
@@ -175,7 +170,7 @@ function DisplayComponent(props: DisplayProps) {
                 taskName={bt.taskName}
                 id={bt.id}
                 shown={btShown}
-                disableDraggable={!props.editMode}
+                enableDraggable={!props.isEditMode}
                 inConflict={false}
             />
         );
@@ -184,7 +179,7 @@ function DisplayComponent(props: DisplayProps) {
     return (
         <div className="ScheduleContentContainer">
             <div className="ScheduleViewControl">
-                <form onSubmit={(e) => e.preventDefault()}>
+                <form onSubmit={(e) => {e.preventDefault(); goTo()}}>
                     <label htmlFor="dateInput" style={{ fontSize: "10px" }}>
                         Date:
                     </label>
@@ -202,9 +197,15 @@ function DisplayComponent(props: DisplayProps) {
                         max="24"
                         onChange={handleNumberChange}
                     />
-                    <input type="button" onClick={goTo} value={"Go To"} />
+                    <input type="submit" onClick={goTo} value={"Go To"} />
                 </form>
             </div>
+            {editMode.isEditMode ? (
+            <div className="ScheduleFilterAndMode">
+                <label className="switch"> Edit Mode</label>
+                <input type="checkbox" checked={true} onChange={handleModeChange} />
+            </div>
+            ) : (
             <div className="ScheduleFilterAndMode">
                 <label>Filter:</label>
                 <select
@@ -219,8 +220,10 @@ function DisplayComponent(props: DisplayProps) {
                     <option value="Suzlon">Suzlon</option>
                 </select>
                 <label className="switch"> Edit Mode</label>
-                <input type="checkbox" onChange={handleModeChange} />
+                <input type="checkbox" checked={false} onChange={handleModeChange} />
             </div>
+            )}
+            
             <div className="ScheduleDisplay">
                 <CreateTestRigDivs rigs={rigs} />
                 <CreateTimelineField
@@ -233,7 +236,9 @@ function DisplayComponent(props: DisplayProps) {
                 />
             </div>
 
-            {props.editMode ? <CreateAdditionalContent /> : null}
+
+            {editMode.isEditMode ? <CreateAdditionalContent /> : null}
+
         </div>
     );
 }
@@ -308,4 +313,15 @@ function getQueryDates(startDate: Date, endDate: Date) {
         endDateDay
     );
     return { startDate: startDateSTR, endDate: endDateSTR };
+}
+
+function createRigs(numberOfRigs: number) {
+    let rigs: {rigName: string, rigNumber: number}[]= [];
+    for (let i = 1; i <= numberOfRigs; i++) {
+        rigs.push({
+            rigName: "Rig " + (i).toString(),
+            rigNumber: i,
+        });
+    }
+    return rigs;
 }

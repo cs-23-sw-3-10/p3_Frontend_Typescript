@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useState, useMemo, SetStateAction, Dispatch}from "react";
 //Ville nok være en god ide bare at importere alt fra components
 import NavBar from "./components/NavBar/NavBar";
 import EquipmentPage from "./components/Resources/EquipmentPage";
@@ -9,14 +9,19 @@ import BladeProjectPage from "./components/Projects/BladeProjectPage";
 import BTPage from "./components/BladeTask/BladeTaskPage";
 import BladeProjectPageWithSchedule from "./components/Projects/BladeProjectPageSchedule";
 
+import { EditModeProvider } from "./EditModeContext";
+import BladeTaskMenu from "./components/CreateBTMenu/BladeTaskMenu";
+
+
 function App() {
     return (
         <>
             <div className="app-container">
                 <NavBar />
                 <div className="content-container">
+                    <EditModeProvider>
                     <Routes>
-                        <Route path="/" element={<ScheduleComponent />} />
+                        <Route path="/" element={<ScheduleComponent/>} />
                         <Route
                             path="/projects"
                             element={<BladeProjectPageWithSchedule />}
@@ -25,6 +30,7 @@ function App() {
                         <Route path="/resources" element={<EquipmentPage />} />
                         <Route path="*" element={<Navigate to="/" />} />
                     </Routes>
+                    </EditModeProvider>
                 </div>
             </div>
         </>

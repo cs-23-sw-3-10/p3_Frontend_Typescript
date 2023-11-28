@@ -1,20 +1,18 @@
-import GetBladeTaskDateInfo from "./scheduleQueries";
 import DisplayComponent from "./Display";
 import { useState } from "react";
-import { DndContext } from "@dnd-kit/core";
+import {useEditModeContext} from "../../EditModeContext";
 
 export const passwordPromptHeight=30;
 
 function ScheduleComponent() {
-    const [editMode, setEditMode] = useState(false);
     const [showPasswordPrompt, setShowPasswordPrompt] = useState(false);
     const [password, setPassword] = useState(""); // State to store the entered password
     const [filter, setFilter] = useState("None"); // State to store the filter
 
+    const editMode = useEditModeContext();
+
     const viewSchedule = (
         <DisplayComponent
-            editMode={editMode}
-            setEditMode={setEditMode}
             setShowPasswordPrompt={setShowPasswordPrompt}
             showPasswordPrompt={showPasswordPrompt}
             filter={filter}
@@ -23,8 +21,6 @@ function ScheduleComponent() {
     );
     const editSchedule = (
         <DisplayComponent
-            editMode={editMode}
-            setEditMode={setEditMode}
             setShowPasswordPrompt={setShowPasswordPrompt}
             showPasswordPrompt={showPasswordPrompt}
             filter={filter}
@@ -38,31 +34,31 @@ function ScheduleComponent() {
         // Check the entered password (you can replace "your_password" with the actual password)
         if (password === "123") {
             setShowPasswordPrompt(false);
-            setEditMode(!editMode);
+            editMode.setEditMode(!editMode.isEditMode);
         } else {
             alert("Incorrect password. Please try again.");
         }
     };
 
     return (
-        
-            <div>
-                {editMode ? scheduleHeader[0] : scheduleHeader[1]}
-                {showPasswordPrompt && (
-                    <div className="PasswordPrompt" style={{height: `${passwordPromptHeight}px`}}>
-                        <label htmlFor="passwordInput">Enter Password:</label>
-                        <input
-                            type="password"
-                            id="passwordInput"
-                            value={password}
-                            onChange={(e) => setPassword(e.target.value)}
-                        />
-                        <button onClick={handlePasswordSubmit}>Submit</button>
-                    </div>
-                )}
-                {editMode ? editSchedule : viewSchedule}
-            </div>
-        
+        <div>
+            {editMode.isEditMode ? scheduleHeader[0] : scheduleHeader[1]}
+            {showPasswordPrompt && (
+                <div className="PasswordPrompt" style={{height: `${passwordPromptHeight}px`}}>
+                    <form onSubmit={(e) => {e.preventDefault(); handlePasswordSubmit()}}>
+                    <label htmlFor="passwordInput">Enter Password:</label>
+                    <input
+                        type="password"
+                        id="passwordInput"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                    />
+                    <input type="submit" value={"Enter"}></input>
+                    </form>
+                </div>
+            )}
+            {editMode.isEditMode ? editSchedule : viewSchedule}
+        </div>
     );
 }
 export default ScheduleComponent;

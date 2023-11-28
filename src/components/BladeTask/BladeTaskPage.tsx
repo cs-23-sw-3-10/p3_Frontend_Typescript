@@ -7,6 +7,7 @@ import { TableLogic } from "../TableLogic/TableLogic";
 import { TableLogicWOHeaders } from "../TableLogic/TableLogicWOHeader";
 import { columnBookings } from "../Resources/BookingsColumns";
 import { GET_ALL_BT_WITH_BOOKINGS_EQNAME } from "../../api/queryList";
+import { BladeTaskQuery } from "./BladeTaskData";
 
 /**
  * gets all bladetasks from the database and renders them in a table

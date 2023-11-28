@@ -175,7 +175,7 @@ export function TableLogic<TData, TValue>({
                                                                 column.getToggleVisibilityHandler(), //get the handler function to toggle the visibility of the current column.
                                                         }}
                                                     />{" "}
-                                                    {column.id}
+                                                    {column.id.replace(/([A-Z])/g, " $1").replace(/([_.])/g," ").replace(/^./, function (str) {return str.toUpperCase();})}
                                                 </label>
                                             </div>
                                         );

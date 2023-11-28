@@ -137,7 +137,9 @@ function BladeProjectPageWithSchedule() {
                                     }
                                     rig={bladeTask.testRig}
                                     id={bladeTask.id}
-                                    disableDraggable={true}
+                                    enableDraggable={false}
+                                    attachPeriod={bladeTask.attachPeriod}
+                                    detachPeriod={bladeTask.detachPeriod}
                                 />
                             );
                         } else {
