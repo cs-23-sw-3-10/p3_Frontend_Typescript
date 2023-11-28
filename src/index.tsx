@@ -13,7 +13,10 @@ import { getMainDefinition } from '@apollo/client/utilities';
 
 
 const httpLink = new HttpLink({
-  uri: 'http://localhost:8080/graphql'
+  uri: 'http://localhost:8080/graphql',
+  headers: {
+    Authorization: `Basic ${btoa('admin:password')}` // Adds a header for authorization
+  }
 });
 export const wsLink = new GraphQLWsLink(createClient({
   url: 'ws://localhost:8080/graphql',
