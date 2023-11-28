@@ -5,7 +5,7 @@ import React, { useState} from "react";
 import CreateAdditionalContent from "./AdditionalContent";
 import BladeTaskCard from "./BladeTaskCard";
 import { useQuery } from "@apollo/client";
-import { GET_BT_IN_RANGE, GET_TEST_RIGS } from "../../api/queryList";
+import { GET_BT_IN_RANGE_AND_PENDING, GET_TEST_RIGS } from "../../api/queryList";
 import { getMonthLength } from "./TimelineField";
 import { capitalizeFirstLetter } from "./TimelineField";
 import { useEditModeContext } from "../../EditModeContext";
@@ -14,6 +14,7 @@ const currentDate = new Date(Date.now()); // Get the current date
 
 type DisplayProps = {
     setShowPasswordPrompt: React.Dispatch<React.SetStateAction<boolean>>;
+    showPasswordPrompt: boolean;
     filter: string;
     setFilter: React.Dispatch<React.SetStateAction<string>>;
 };
@@ -84,7 +85,7 @@ function DisplayComponent(props: DisplayProps) {
     } = useQuery(GET_TEST_RIGS);
     
 
-    const { loading: loadingBT, error: errorBT, data: dataBT } = useQuery(GET_BT_IN_RANGE, {
+    const { loading: loadingBT, error: errorBT, data: dataBT } = useQuery(GET_BT_IN_RANGE_AND_PENDING, {
         variables: {
             startDate: queryDates.startDate,
             endDate: queryDates.endDate,
@@ -111,6 +112,7 @@ function DisplayComponent(props: DisplayProps) {
         setRigs(createRigs(numberOfRigs));
     }
 
+    //Makeing schedulet BladeTaskCards
     let btCards: React.ReactNode[] = [];
 
     dataBT["AllBladeTasksInRange"].forEach((bt: any) => {
@@ -126,30 +128,60 @@ function DisplayComponent(props: DisplayProps) {
         const month = parseInt(dateSplit[1]) - 1;
         const day = parseInt(dateSplit[2]);
 
-        let endDateSplit = bt.endDate.split("-");
-        const endYear = parseInt(endDateSplit[0]);
-        const endMonth = parseInt(endDateSplit[1]) - 1;
-        const endDate = parseInt(endDateSplit[2]);
-        console.log(bt.taskName)
-        console.log("endDate :",endDate);
-        console.log(endDateSplit);
-        btCards.push(
+            let endDateSplit = bt.endDate.split("-");
+            const endYear = parseInt(endDateSplit[0]);
+            const endMonth = parseInt(endDateSplit[1]) - 1;
+            const endDate = parseInt(endDateSplit[2]);
+            btCards.push(
+                <BladeTaskCard
+                    key={bt.id}
+                    duration={bt.duration}
+                    projectColor={bt.bladeProject.color}
+                    projectId={bt.bladeProject.id}
+                    projectName={bt.bladeProject.projectName}
+                    customer={bt.bladeProject.customer}
+                    taskName={bt.taskName}
+                    startDate={new Date(year, month, day)}
+                    endDate={new Date(endYear, endMonth, endDate)}
+                    attachPeriod={bt.attachPeriod}
+                    detachPeriod={bt.detachPeriod}
+                    rig={bt.testRig}
+                    id={bt.id}
+                    shown={btShown}
+                    enableDraggable={editMode.isEditMode}
+                    inConflict={bt.inConflict}
+                                    />
+            );
+    });
+
+
+
+    //Making pending BladeTaskCards
+    let btCardsPending: React.ReactNode[] = [];
+    dataBT["AllBladeTasksPending"].forEach((bt: any) => {
+        let btShown = false;
+        if (
+            bt.bladeProject.customer === props.filter ||
+            props.filter === "None"
+        ) {
+            btShown = true;
+        }
+
+        btCardsPending.push(
             <BladeTaskCard
                 key={bt.id}
                 duration={bt.duration}
-                projectColor={bt.bladeProject.color}
-                projectId={bt.bladeProject.id}
-                customer={bt.bladeProject.customer}
-                taskName={bt.taskName}
-                startDate={new Date(year, month, day)}
-                endDate={new Date(endYear, endMonth, endDate)}
                 attachPeriod={bt.attachPeriod}
                 detachPeriod={bt.detachPeriod}
-                rig={bt.testRig}
+                projectColor={bt.bladeProject.color}
+                projectId={bt.bladeProject.id}
+                projectName={bt.bladeProject.projectName}
+                customer={bt.bladeProject.customer}
+                taskName={bt.taskName}
                 id={bt.id}
                 shown={btShown}
-                inConflict={bt.inConflict}
                 enableDraggable={editMode.isEditMode}
+                inConflict={false}
             />
         );
     });
@@ -208,6 +240,9 @@ function DisplayComponent(props: DisplayProps) {
                     rigs={rigs}
                     months={dates}
                     btCards={btCards}
+                    btCardsPending={btCardsPending}
+                    showPasswordPrompt={props.showPasswordPrompt}
+                    isPendingTasksIncluded={true}
                 />
             </div>
 
