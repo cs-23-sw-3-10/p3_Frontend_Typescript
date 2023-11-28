@@ -95,9 +95,9 @@ function BladeProjectPageWithSchedule() {
     //handle loading and error states for the used queries
     if (loadingBP) return <p>Loading...</p>;
     if (errorBP) return <p> Error {errorBP.message}</p>;
-    const BPData = dataBP["SpeedReading"];
+    const BPData = dataBP["AllBladeProjects"];
     if (!BPData) {
-        return <p> No data for {"SpeedReading"} </p>;
+        return <p> No data for {"AllBladeProjects"} </p>;
     }
 
     

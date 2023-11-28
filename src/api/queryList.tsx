@@ -56,22 +56,23 @@ query AllBladeTasksInRange($startDate: String!, $endDate: String!, $isActive: Bo
 export const GET_BT_IN_RANGE_SUB = gql`
 subscription AllBladeTasksInRangeSub($startDate: String!, $endDate: String!, $isActive: Boolean!) {
   AllBladeTasksInRangeSub(startDate: $startDate, endDate: $endDate, isActive: $isActive) {
+    id
+    startDate
+    endDate
+    duration
+    testType
+    attachPeriod
+    detachPeriod
+    taskName
+    testRig
+    inConflict
+    bladeProject {
+        color
+        customer
         id
-        startDate
-        endDate
-        duration
-        testType
-        attachPeriod
-        detachPeriod
-        taskName
-        testRig
-        inConflict
-        bladeProject {
-            color
-            customer
-            id
-        }
+        projectName
     }
+}
 }
 `;
 
