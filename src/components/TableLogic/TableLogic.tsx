@@ -3,7 +3,6 @@ import React from "react";
 import StyledButton from "../ui/styledButton";
 import { useCollapse } from "react-collapsed";
 import { Input } from "../ui/input";
-import { TableModeContext } from "./TableContext";
 import { useContext } from "react";
 
 import {

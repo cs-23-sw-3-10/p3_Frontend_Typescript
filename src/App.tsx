@@ -13,20 +13,14 @@ import BladeProjectPageWithScheduleViewEdit from "./components/Projects/BladePro
 
 import { EditModeProvider } from "./EditModeContext";
 import BladeTaskMenu from "./components/CreateBTMenu/BladeTaskMenu";
-import { TableModeContext } from "./components/TableLogic/TableContext";
-
 
 
 function App() {
-    const [contextViewMode, setViewMode] = useState(true);
-
     return (
         <>
             <div className="app-container">
                 <NavBar />
                 <div className="content-container">
-                <TableModeContext.Provider value={{contextViewMode, setViewMode}}>
-
                     <EditModeProvider>
                     <Routes>
                         <Route path="/" element={<ScheduleComponent/>} />
@@ -40,7 +34,6 @@ function App() {
                         <Route path="*" element={<Navigate to="/" />} />
                     </Routes>
                     </EditModeProvider>
-                    </TableModeContext.Provider>
 
                 </div>
             </div>

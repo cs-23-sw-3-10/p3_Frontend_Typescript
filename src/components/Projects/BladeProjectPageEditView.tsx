@@ -2,8 +2,7 @@ import React, { useState, useContext } from "react";
 
 import { columnBP } from "./BladeProjectColumns";
 import { useQuery } from "@apollo/client";
-import { GET_ALL_BP } from "../../api/queryList";
-import { GET_ALL_BP_IN_DIFF_SCHEDULE } from "../../api/queryList";
+import { GET_ALL_BP, GET_ALL_BP_IN_DIFF_SCHEDULE, GET_TEST_RIGS } from "../../api/queryList";
 import { TableLogic } from "../TableLogic/TableLogic";
 import BladeTaskCard from "../Schedule/BladeTaskCard";
 import CreateTimelineField from "../Schedule/TimelineField";
@@ -11,7 +10,19 @@ import CreateTestRigDivs from "../Schedule/TestRigDivs";
 import { getMonthsInView } from "../Schedule/Display";
 import { getMonthLength } from "../Schedule/TimelineField";
 import { capitalizeFirstLetter } from "../Schedule/TimelineField";
-import { TableModeContext } from "../TableLogic/TableContext";
+import { useEditModeContext } from "../../EditModeContext";
+
+
+function createRigs(numberOfRigs: number) {
+    let rigs: {rigName: string, rigNumber: number}[]= [];
+    for (let i = 1; i <= numberOfRigs; i++) {
+        rigs.push({
+            rigName: "Rig " + (i).toString(),
+            rigNumber: i,
+        });
+    }
+    return rigs;
+}
 /**
  * Calculates the number of months between start and enddate of a bladeproject,
  * which is used to regulate the number of months shown in the expanded table, when it is rendered
@@ -36,35 +47,8 @@ function countMonthsIncludingStartAndEnd(startDate: Date, endDate: Date) {
  */
 
 function BladeProjectPageWithScheduleViewEdit() {
-    const {contextViewMode, setViewMode} = useContext(TableModeContext)
-    
-    const [rigs, setRigs] = useState([
-        // should be imported from database
-        {
-            rigName: "Rig 1",
-            rigNumber: 1,
-        },
-        {
-            rigName: "Rig 2",
-            rigNumber: 2,
-        },
-        {
-            rigName: "Rig 3",
-            rigNumber: 3,
-        },
-        {
-            rigName: "Rig 4",
-            rigNumber: 4,
-        },
-        {
-            rigName: "Rig 5",
-            rigNumber: 5,
-        },
-        {
-            rigName: "Rig 6",
-            rigNumber: 6,
-        },
-    ]);
+    const editMode = useEditModeContext();
+    const [rigs, setRigs] = useState <{rigName: string, rigNumber: number}[]>([{rigName: "No Rigs", rigNumber: 0}])
 
     //get data from the database
     const {
@@ -79,6 +63,12 @@ function BladeProjectPageWithScheduleViewEdit() {
         error: errorSchedule, 
         data: dataSchedule,
      } = useQuery(GET_ALL_BP_IN_DIFF_SCHEDULE);
+
+     const {
+        loading: loadingRigs,
+        error: errorRigs,
+        data: dataRigs,
+     } = useQuery(GET_TEST_RIGS);
 
 
     //handle loading and error states for the used queries
@@ -99,12 +89,20 @@ function BladeProjectPageWithScheduleViewEdit() {
     }
 
 
-    let DataForScreen
-    if(contextViewMode === true){
+    if(loadingRigs) return <p>Loading...</p>;
+    if(errorRigs) return <p> Error {errorRigs.message}</p>;
+    const numberOfRigs = parseInt(dataRigs.DictionaryAllByCategory[0].label)
+    if(rigs.length !== numberOfRigs){
+        setRigs(createRigs(numberOfRigs))
+    }
+
+
+    let DataForScreen;
+    if(editMode.isEditMode === false){
         DataForScreen = ScheduleData.filter((scheduleIsActiveCheck: any) => scheduleIsActiveCheck.id === "1")
            DataForScreen = DataForScreen[0].bladeProject
     }
-    else if (contextViewMode === false){
+    else {
         DataForScreen = ScheduleData.filter((scheduleIsActiveCheck: any) => scheduleIsActiveCheck.id === "2")
               DataForScreen = DataForScreen[0].bladeProject
     }

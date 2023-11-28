@@ -8,7 +8,6 @@ import { TableLogicWOHeaders } from "../TableLogic/TableLogicWOHeader";
 import { columnBookings } from "../Resources/BookingsColumns";
 import { GET_ALL_BT_WITH_BOOKINGS_EQNAME } from "../../api/queryList";
 import { BladeTaskQuery } from "./BladeTaskData";
-import { TableModeContext } from "../TableLogic/TableContext";
 import { useContext } from "react";
 
 /**
@@ -17,7 +16,6 @@ import { useContext } from "react";
  * @returns the BTPage component
  */
 function BTPage() {
-    const {contextViewMode, setViewMode} = useContext(TableModeContext)
 
     // get data from the database
     const { loading, error, data } = useQuery(GET_ALL_BT_WITH_BOOKINGS_EQNAME);
