@@ -54,8 +54,8 @@ query AllBladeTasksInRange($startDate: String!, $endDate: String!, $isActive: Bo
 `;
 
 export const GET_BT_IN_RANGE_AND_PENDING = gql`
-query AllBladeTasksInRangeAndPending($startDate: String!, $endDate: String!) {
-    AllBladeTasksInRange(startDate: $startDate, endDate: $endDate) {
+query AllBladeTasksInRangeAndPending($startDate: String!, $endDate: String!, $isActive: Boolean!) {
+    AllBladeTasksInRange(startDate: $startDate, endDate: $endDate, isActive: $isActive ) {
         id
         startDate
         endDate
