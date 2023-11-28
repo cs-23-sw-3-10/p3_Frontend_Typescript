@@ -35,9 +35,7 @@ function CreateRigFieldDate(props: RigFieldDateProps) {
     const dateStyle: RigFieldDateStyle = {
         gridColumn: `date-${year}-${monthNumber}-${dateNumber}`,
         gridRow: "1",
-        //create random background color for each date using math.random and hex color codes
-        backgroundColor: `#${Math.floor(Math.random() * 16777215).toString(16)}`,
-        //backgroundColor: weekDay === 0 || weekDay === 6 ? "lightgrey" : "white", // Default color
+        backgroundColor: weekDay === 0 || weekDay === 6 ? "lightgrey" : "white", // Default color
     };
 
     const dateProps: RigFieldDateDroppableProps = {
