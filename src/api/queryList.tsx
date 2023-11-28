@@ -310,44 +310,6 @@ query GetAllBladeProjects{
 
 
 
-export const ALL_BT_SUB = gql`
-subscription SpeedReading {
-  SpeedReading {
-        id
-        startDate
-        endDate
-        customer
-        projectLeader
-        projectName
-        bladeTasks {
-            id
-            startDate
-            endDate
-            duration
-            testType
-            attachPeriod
-            detachPeriod
-            taskName
-            testRig
-            inConflict
-            bladeProject {
-                color
-            }
-            bookings {
-                id
-                startDate
-                endDate
-                duration
-                resourceType
-                workHours
-            }
-        }
-    }
-}
-`;
-
-
-
 
 
 

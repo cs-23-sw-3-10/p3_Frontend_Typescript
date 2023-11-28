@@ -7,7 +7,7 @@ import { GET_ALL_BP } from "../../api/queryList";
 import { GET_ALL_BT } from "../../api/queryList";
 import { TableLogicWOHeaders } from "../TableLogic/TableLogicWOHeader";
 import { TableLogic } from "../TableLogic/TableLogic";
-import { ALL_BT_SUB } from "../../api/queryList";
+
 
 /**
  * gets all bladeprojects from the database and renders them in a table
@@ -21,7 +21,7 @@ function BladeProjectPage() {
         loading: loadingBP,
         error: errorBP,
         data: dataBP,
-    } = useSubscription(ALL_BT_SUB);
+    } = useQuery(GET_ALL_BP);
     const {
         loading: loadingBT,
         error: errorBT,

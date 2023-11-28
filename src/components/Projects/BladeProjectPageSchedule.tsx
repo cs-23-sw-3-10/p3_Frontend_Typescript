@@ -15,7 +15,7 @@ import CreateTestRigDivs from "../Schedule/TestRigDivs";
 import { getMonthsInView } from "../Schedule/Display";
 import { getMonthLength } from "../Schedule/TimelineField";
 import { capitalizeFirstLetter } from "../Schedule/TimelineField";
-import { ALL_BT_SUB, } from "../../api/queryList";
+
 
 /**
  * Calculates the number of months between start and enddate of a bladeproject,
