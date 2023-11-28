@@ -30,9 +30,17 @@ function ScheduleComponent() {
 
     const scheduleHeader = [<h1>Edit Mode</h1>, <h1>View Mode</h1>];
 
-    const handlePasswordSubmit = () => {
+    const handlePasswordSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+        event.preventDefault();
+        // Get the form element from the event   
+        const form = event.target as HTMLFormElement;
+
+        // Explicitly assert the type to HTMLInputElement
+        const passwordSubmit = (form.elements.namedItem("passwordInput") as HTMLInputElement)?.value;
+       
+        setPassword(passwordSubmit);
         // Check the entered password (you can replace "your_password" with the actual password)
-        if (password === "123") {
+        if (passwordSubmit === "123") {
             setShowPasswordPrompt(false);
             editMode.setEditMode(!editMode.isEditMode);
         } else {
@@ -50,8 +58,8 @@ function ScheduleComponent() {
                     <input
                         type="password"
                         id="passwordInput"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
+                        name="passwordInput"
+                        defaultValue={password}
                     />
                     <input type="submit" value={"Enter"}></input>
                     </form>
