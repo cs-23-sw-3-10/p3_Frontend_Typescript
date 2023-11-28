@@ -140,7 +140,7 @@ function DisplayComponent(props: DisplayProps) {
                     rig={bt.testRig}
                     id={bt.id}
                     shown={btShown}
-                    enableDraggable={!editMode.isEditMode}
+                    enableDraggable={editMode.isEditMode}
                     inConflict={bt.inConflict}
                                     />
             );
@@ -172,7 +172,7 @@ function DisplayComponent(props: DisplayProps) {
                 taskName={bt.taskName}
                 id={bt.id}
                 shown={btShown}
-                enableDraggable={!editMode.isEditMode}
+                enableDraggable={editMode.isEditMode}
                 inConflict={false}
             />
         );
