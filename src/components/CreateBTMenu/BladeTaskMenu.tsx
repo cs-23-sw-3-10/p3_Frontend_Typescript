@@ -25,6 +25,7 @@ export interface BladeTaskMenuProps {
 }
 
 function BladeTaskMenu(props: BladeTaskMenuProps) {
+    const creator = props.creator;
     //Apollo mutation setup:
     const [addBT, {loading: addLoading, error: addError}] = useMutation(ADD_BT);
     const [updateBT, {loading: updateLoading, error: updateError }] = useMutation(UPDATE_BT_INFO);
@@ -84,15 +85,15 @@ function BladeTaskMenu(props: BladeTaskMenuProps) {
     }
     
     //All the states for the form -> Inserted into the BT-order as the user fills the form out
-    const [bladeProjectId, setBladeProjectId] = useState(props.inputs!.bladeProjectId ? props.inputs!.bladeProjectId : '');
-    const [taskName, setTaskName] = useState(props.inputs!.taskName ? props.inputs!.taskName : '');
-    const [testType, setTestType] = useState(props.inputs!.testType ? props.inputs!.testType : '');
-    const [startDate, setStartDate] = useState(props.inputs!.startDate ? props.inputs!.startDate : new Date().toISOString().split('T')[0]); //Sets the date to be the current day as initial value;
-    const [duration, setDuration] = useState(props.inputs!.duration ? props.inputs!.duration : 0);
-    const [attachPeriod, setAttachPeriod] = useState(props.inputs!.attachPeriod ? props.inputs!.attachPeriod : 0);
-    const [detachPeriod, setDetachPeriod] = useState(props.inputs!.detachPeriod ? props.inputs!.detachPeriod : 0);
-    const [testRig, setTestRig] = useState(props.inputs!.testRig ? props.inputs!.testRig : 0);
-    const [resourceOrders, setResourceOrder] = useState(props.inputs!.resourceOrders ? props.inputs!.resourceOrders : []);
+    const [bladeProjectId, setBladeProjectId] = useState(creator ? '' : props.inputs!.bladeProjectId);
+    const [taskName, setTaskName] = useState(creator ? '' : props.inputs!.taskName);
+    const [testType, setTestType] = useState(creator ? '' : props.inputs!.testType);
+    const [startDate, setStartDate] = useState(creator ? new Date().toISOString().split('T')[0] : props.inputs!.startDate); //Sets the date to be the current day as initial value;
+    const [duration, setDuration] = useState(creator ? 0 : props.inputs!.duration);
+    const [attachPeriod, setAttachPeriod] = useState(creator ? 0 : props.inputs!.attachPeriod);
+    const [detachPeriod, setDetachPeriod] = useState(creator ? 0 : props.inputs!.detachPeriod);
+    const [testRig, setTestRig] = useState(creator ? 0 : props.inputs!.testRig);
+    const [resourceOrders, setResourceOrder] = useState(creator ? [] : props.inputs!.resourceOrders);
 
     //State for the equipment selection menu
     const [equipmentActive, setEquipmentActive] = useState(false);
@@ -124,10 +125,6 @@ function BladeTaskMenu(props: BladeTaskMenuProps) {
         equipment: false,
         employees: false,
     });
-
-    // useEffect( () => {
-    //     console.log(currentOrder);
-    // },[currentOrder]);
 
     return (
         <div className='btmenu-container'>
@@ -207,7 +204,7 @@ function BladeTaskMenu(props: BladeTaskMenuProps) {
                 <EmployeesMenu resourceOrders={resourceOrders} />
             </ResourceOrderContext.Provider>
         <div className='submit_cancel_wrapper'>
-            <button className="cancel_BT" onClick={() => {handleCancellation(props.creator)}}>Cancel</button>
+            <button className="cancel_BT" onClick={() => {handleCancellation(creator)}}>Cancel</button>
             <button className="submit_BT" onClick={handleSubmit}>Submit</button>
         </div>
         </div>
