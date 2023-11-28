@@ -86,12 +86,14 @@ function PendingTasks(props: PendingTasksProps) {
                     {projectsWithPendingTasks.map((projectName: any) => {
                         return (
                             <div
+                                key={`${projectName}-pending-list`}
                                 className="pendingTasksColumn"
                                 style={{
                                     gridRow: `project-${projectName}`,
                                     height: `${projectRowHeight}px`,
                                     maxHeight: `${projectRowHeight}px`,
-                                }}
+                                }
+                            }
                             >
                                 {props.bladeTaskCards.filter((card: any) => {
                                     if (card) {
