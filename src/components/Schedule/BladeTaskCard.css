@@ -85,14 +85,7 @@
     
     min-height: 500px;
 }
-.dragField{
-    grid-column: left/span 2;
-    grid-row: top;
-    border: 1px solid black;
-    border-radius: 4px;
-    width: 100%;
-    height: 100%;
-}
+
 
 
 .EditBTPopupContent{
