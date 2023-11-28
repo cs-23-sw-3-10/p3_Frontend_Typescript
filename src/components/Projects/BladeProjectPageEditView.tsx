@@ -154,7 +154,7 @@ function BladeProjectPageWithScheduleViewEdit() {
                                 startDate={new Date(year, month, day)}
                                 rig={bladeTask.testRig}
                                 id={bladeTask.id}
-                                enableDraggable={true}
+                                enableDraggable={false}
                                 attachPeriod={bladeTask.attachPeriod}
                                 detachPeriod={bladeTask.detachPeriod}
                             />
