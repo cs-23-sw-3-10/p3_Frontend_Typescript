@@ -34,18 +34,26 @@ function DisplayComponent(props: DisplayProps) {
     ); // should be imported from database
     
 
-    const handleDateChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setSelectedDate(event.target.value);
+    const handleDateChange = (date: string) => {
+        setSelectedDate(date);
     };
 
-    const handleNumberChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        let number = parseInt(event.target.value);
-        if (number < 2) {
-            number = 2;
-        } else if (number > 24) {
-            number = 24;
-        }
-        setNumberOfMonths(number);
+    const handleNumberChange = (numberOfMonthsInView: number) => {
+        setNumberOfMonths(numberOfMonthsInView);
+    };
+
+    const handleViewChange = (event: React.FormEvent<HTMLFormElement>) => {
+        event.preventDefault();
+        // Get the form element from the event   
+        const form = event.target as HTMLFormElement;
+
+        // Explicitly assert the type to HTMLInputElement and acces value
+        const dateInput = (form.elements.namedItem("dateInput") as HTMLInputElement)?.value;
+        const numberInput = (form.elements.namedItem("numberInput") as HTMLInputElement)?.value;
+
+        handleDateChange(dateInput);
+        handleNumberChange(parseInt(numberInput));
+        goTo(parseInt(numberInput));
     };
 
     const handleModeChange = () => {
@@ -58,10 +66,10 @@ function DisplayComponent(props: DisplayProps) {
         }
     };
 
-    const goTo = () => {
+    const goTo = (number: number) => {
         const newDate = new Date(selectedDate);
         if (!isNaN(newDate.valueOf())) {
-            setDates(getMonthsInView(newDate, numberOfMonths));
+            setDates(getMonthsInView(newDate, number));
         } else {
             setDates(getMonthsInView(currentDate, numberOfMonths));
         }
@@ -146,25 +154,25 @@ function DisplayComponent(props: DisplayProps) {
     return (
         <div className="ScheduleContentContainer">
             <div className="ScheduleViewControl">
-                <form onSubmit={(e) => {e.preventDefault(); goTo()}}>
+                <form onSubmit={(e) => {handleViewChange(e)}}>
                     <label htmlFor="dateInput" style={{ fontSize: "10px" }}>
                         Date:
                     </label>
                     <input
+                        name="dateInput"
                         type="date"
-                        value={selectedDate}
-                        onChange={handleDateChange}
+                        defaultValue={selectedDate}
                     />
                     <label htmlFor="numberInput" style={{ fontSize: "10px" }}>
                         Months shown:
                     </label>
                     <input
+                        name="numberInput"
                         type="number"
                         min="2"
                         max="24"
-                        onChange={handleNumberChange}
                     />
-                    <input type="submit" onClick={goTo} value={"Go To"} />
+                    <input type="submit" value={"Go To"} />
                 </form>
             </div>
             {editMode.isEditMode ? (
