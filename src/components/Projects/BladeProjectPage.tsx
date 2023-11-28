@@ -32,7 +32,7 @@ function BladeProjectPage() {
     //handle loading and error states for the used queries
     if (loadingBP) return <p>Loading...</p>;
     if (errorBP) return <p> Error {errorBP.message}</p>;
-    const BPData = dataBP["SpeedReading"];
+    const BPData = dataBP["AllBladeProjects"];
     if (!BPData) {
         return <p> No data for {"AllBladeProjects"} </p>;
     }
@@ -56,7 +56,7 @@ function BladeProjectPage() {
             renderExpandedComponent={(row) => {
                 // Filter bladeTasksData based on the current row.id
                 const bladeTasksDataForCurrentRow =
-                    dataBP["SpeedReading"]
+                    dataBP["AllBladeProjects"]
                         .find((project: any) => project.id === row.id)
                         ?.bladeTasks.map((bladeTask: any) => ({
                             id: Number(bladeTask.id),
