@@ -1,7 +1,7 @@
 import "./Display.css";
 import CreateTestRigDivs from "./TestRigDivs";
 import CreateTimelineField from "./TimelineField";
-import React, { useState} from "react";
+import React, { useMemo, useState} from "react";
 import CreateAdditionalContent from "./AdditionalContent";
 import BladeTaskCard from "./BladeTaskCard";
 import { useQuery, useSubscription } from "@apollo/client";
@@ -98,18 +98,15 @@ function DisplayComponent(props: DisplayProps) {
         isActive:  !editMode.isEditMode,
     },});
 
+
     
     const {
         loading: loadingPendingBT,
         error: errorPendingBT,
         data: dataPendingBT,
     } =useSubscription(GET_BT_PENDING_SUB); 
-    //useQuery(GET_BT_PENDING);
+   
     
-
-
-    
-
     if (loadingRigs) {
         return <p>Loading...</p>;
     }
@@ -181,7 +178,7 @@ function DisplayComponent(props: DisplayProps) {
     });
 
 
-
+    
     //Making pending BladeTaskCards
     let btCardsPending: React.ReactNode[] = [];
     dataPendingBT["AllBladeTasksPendingSub"].forEach((bt: any) => {
@@ -211,6 +208,7 @@ function DisplayComponent(props: DisplayProps) {
             />
         );
     });
+  
 
     return (
         <div className="ScheduleContentContainer">
