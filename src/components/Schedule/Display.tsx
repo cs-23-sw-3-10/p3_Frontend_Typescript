@@ -34,15 +34,6 @@ function DisplayComponent(props: DisplayProps) {
         getMonthsInView(currentDate, numberOfMonths)
     ); // should be imported from database
     
-
-    const handleDateChange = (date: string) => {
-        setSelectedDate(date);
-    };
-
-    const handleNumberChange = (numberOfMonthsInView: number) => {
-        setNumberOfMonths(numberOfMonthsInView);
-    };
-
     const handleViewChange = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         // Get the form element from the event   
@@ -52,9 +43,11 @@ function DisplayComponent(props: DisplayProps) {
         const dateInput = (form.elements.namedItem("dateInput") as HTMLInputElement)?.value;
         const numberInput = (form.elements.namedItem("numberInput") as HTMLInputElement)?.value;
 
-        handleDateChange(dateInput);
-        handleNumberChange(parseInt(numberInput));
-        goTo(parseInt(numberInput));
+        console.log("her er number ", numberInput);
+
+        setSelectedDate(dateInput);
+        setNumberOfMonths(parseInt(numberInput));
+        goTo(dateInput, parseInt(numberInput));
     };
 
     const handleModeChange = () => {
@@ -67,10 +60,15 @@ function DisplayComponent(props: DisplayProps) {
         }
     };
 
-    const goTo = (number: number) => {
-        const newDate = new Date(selectedDate);
+    const goTo = (viewDate: string, number: number) => {
+        const newDate = new Date(viewDate);
         if (!isNaN(newDate.valueOf())) {
+            if (!isNaN(number)) {
             setDates(getMonthsInView(newDate, number));
+            }
+            else {
+                setDates(getMonthsInView(newDate, 3));
+            }
         } else {
             setDates(getMonthsInView(currentDate, numberOfMonths));
         }
@@ -228,6 +226,7 @@ function DisplayComponent(props: DisplayProps) {
                     <input
                         name="numberInput"
                         type="number"
+                        defaultValue={numberOfMonths}
                         min="2"
                         max="24"
                     />
