@@ -17,7 +17,6 @@ import { useMutation } from '@apollo/client';
 import { ADD_BT, UPDATE_BT_INFO } from '../../api/mutationList';
 import { ValidateForm } from './ValidateForm';
 
-
 export interface BladeTaskMenuProps {
     creator: boolean;
     inputs?: BTOrder;

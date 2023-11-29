@@ -60,7 +60,6 @@ function DisplayComponent(props: DisplayProps) {
     };
 
     const goTo = (viewDate: string, number: number) => {
-        console.log("going to date ", viewDate, " for ", number, " months");
         const newDate = new Date(viewDate);
         if (!isNaN(newDate.valueOf())) {
             if (!isNaN(number)) {

@@ -20,15 +20,6 @@ function EditBTComponent(BT: EditBTComponentProps) {
     if (error) return <p> Error {error.message}</p>;
 
     const bladeTask = data["BladeTaskById"];
-    // console.log("bladeProjectId ", bladeTask.bladeProject.id);
-    // console.log("taskName ", bladeTask.taskName);
-    // console.log("testType ", bladeTask.testType);
-    // console.log("startDate ", bladeTask.startDate);
-    // console.log("duration ", bladeTask.duration);
-    // console.log("attachPeriod ", bladeTask.attachPeriod);
-    // console.log("detachPeriod ", bladeTask.detachPeriod);
-    // console.log("testRig ", bladeTask.testRig);
-    // console.log("resourceOrders ", bladeTask.resourceOrders);
 
     const inputs: BTOrder = {
         bladeProjectId: bladeTask.bladeProject.id,

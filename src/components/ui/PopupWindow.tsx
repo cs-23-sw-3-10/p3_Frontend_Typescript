@@ -1,7 +1,4 @@
 import "./PopupWindow.css"
-import EditBTComponent from "./EditBTComponent";
-import { BladeTaskCardProps } from "../Schedule/BladeTaskCard";
-import { Component } from "lucide-react";
 
 type PopupProps = {
     onClose: () => void;

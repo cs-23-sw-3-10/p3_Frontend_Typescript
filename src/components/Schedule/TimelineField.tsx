@@ -188,19 +188,8 @@ export function handleDragEnd(
             overIdSlpit[2],
             overIdSlpit[3]
         );
-        const findBTIndex = (bladeTaskCards: any) => {
-            for (let i: number = 0; i < bladeTaskCards.length; i++) {
-                if (
-                    bladeTaskCards[i] &&
-                    active.id === bladeTaskCards[i].props.id
-                ) {
-                    return i;
-                }
-            }
-            console.log("blade task not found");
-            return -1;
-        };
-        const indexBT = findBTIndex(bladeTaskHolder.getBladeTasks());
+        
+        const indexBT = findBTIndex(bladeTaskHolder.getBladeTasks(), active.id);
 
         if (indexBT !== -1) {
             const updatedBladeTaskCards = bladeTaskHolder.getBladeTasks();
@@ -267,6 +256,19 @@ export function handleDragEnd(
         console.log("over is null");
     }
 }
+
+export function findBTIndex(bladeTaskCards: any, activeId: number) {
+    for (let i: number = 0; i < bladeTaskCards.length; i++) {
+        if (
+            bladeTaskCards[i] &&
+            activeId === bladeTaskCards[i].props.id
+        ) {
+            return i;
+        }
+    }
+    console.log("blade task not found");
+    return -1;
+};
 
 function checkForOverlap(
     bladeTaskCards: any,
