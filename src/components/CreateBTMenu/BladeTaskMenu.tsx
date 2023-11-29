@@ -87,11 +87,7 @@ function BladeTaskMenu(props: BladeTaskMenuProps) {
         return <p>Loading...</p>;
     }
     if (updateError) {
-        return (
-            <p style={{ backgroundColor: "rgb(255, 0, 0, 100" }}>
-                Error {updateError.message}
-            </p>
-        );
+        return <p> Error {updateError.message}</p>
     }
     if (addLoading) {
         return <p>Loading...</p>;
