@@ -5,7 +5,7 @@ function TestRigSelector({testRig, setTestRig}:{testRig: number, setTestRig:Func
     return (
         <>
             <h2 className="title">Test Rig</h2>
-            <select className="input_sideborders" id="testrig" name="testrig" onChange={(e) => setTestRig(Number(e.currentTarget.value))}>
+            <select className="input_sideborders" id="testrig" name="testrig" value={testRig} onChange={(e) => setTestRig(Number(e.currentTarget.value))}>
                 <TestRigOptions testRig={testRig} setTestRig={setTestRig} />
             </select>
         </>

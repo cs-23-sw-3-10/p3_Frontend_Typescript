@@ -5,6 +5,7 @@ import React, { useState, useRef, useEffect } from "react";
 import MessageBox from "../ui/MessageBox";
 import PopupWindow from "../ui/PopupWindow";
 import { ResourceOrder } from "../CreateBTMenu/BTMenuTypes";
+import EditBTComponent from "../ui/EditBTComponent";
 //interface used to define the types of the props of BladeTaskCard
 export interface BladeTaskCardProps {
     startDate: Date;
@@ -150,7 +151,7 @@ function BladeTaskCard(props: BladeTaskCardProps) {
                     onClose={handleMessageClose}
                 />
             )}
-            {showPopup && <PopupWindow onClose={togglePopup} bladeTaskID={props.id}/>}
+            {showPopup && <PopupWindow onClose={togglePopup} component={<EditBTComponent bladeTaskID={props.id}/>}/>}
 
         </>
     );

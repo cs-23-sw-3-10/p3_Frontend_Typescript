@@ -10,7 +10,7 @@ import DetachPeriodSelector from './DetachPeriodSelector';
 import EquipmentSelectionMenu from './EquipmentSelector';
 import EmployeesMenu from './EmployeesMenu';
 import { ResourceOrderContext } from './BladeTaskOrderContext';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { BTOrder, InErrorChart } from './BTMenuTypes'
 import EquipmentList from './EquipmentList';
 import { useMutation } from '@apollo/client';
@@ -29,61 +29,7 @@ function BladeTaskMenu(props: BladeTaskMenuProps) {
     //Apollo mutation setup:
     const [addBT, {loading: addLoading, error: addError}] = useMutation(ADD_BT);
     const [updateBT, {loading: updateLoading, error: updateError }] = useMutation(UPDATE_BT_INFO);
-
-    //Creates mutation based on the provided input
-    //Only triggers when following fields are provided: duration, attachPeriod, detachPeriod, bladeProjectId, taskName, testType
-    //Other fields are optional
-    const handleSubmit = () => {
-        if (props.creator){
-            if(ValidateForm(currentOrder)){
-                addBT({variables:{
-                    bladeTask:{
-                        bladeProjectId: bladeProjectId,
-                        taskName: taskName,
-                        testType: testType,
-                        startDate: startDate,
-                        duration: duration,
-                        attachPeriod: attachPeriod,
-                        detachPeriod: detachPeriod,
-                        testRig: testRig,
-                        resourceOrders: resourceOrders,
-                    }
-                }}).then((response) => console.log(response));
-            }else console.log("Required fields have not been filled out");
-        }
-        else{
-            if(ValidateForm(currentOrder)){
-                updateBT({variables:{
-                    bladeTask:{
-                        bladeProjectId: bladeProjectId,
-                        taskName: taskName,
-                        testType: testType,
-                        startDate: startDate,
-                        duration: duration,
-                        attachPeriod: attachPeriod,
-                        detachPeriod: detachPeriod,
-                        testRig: testRig,
-                        resourceOrders: resourceOrders,
-                    },
-                    id: parseInt(props.btId ? props.btId.toString() : "0") //der skal ændres noget her?
-                }}).then((response) => console.log(response));
-            }else console.log("Required fields have not been filled out");
-        }
-    }
-
-    //Resets all field to their initial value
-    const handleCancellation = (creator: boolean) => {
-        setBladeProjectId(creator ? "" : props.inputs!.bladeProjectId);
-        setTaskName(creator ? "" : props.inputs!.taskName);
-        setTestType(creator ? "" : props.inputs!.testType);
-        setStartDate(creator ? new Date().toISOString().split('T')[0] : props.inputs!.startDate);
-        setDuration(creator ? 0 : props.inputs!.duration);
-        setAttachPeriod(creator ? 0 : props.inputs!.attachPeriod);
-        setDetachPeriod(creator ? 0 : props.inputs!.detachPeriod);
-        setTestRig(creator ? 0 : props.inputs!.testRig);
-        setResourceOrder(creator ? [] : props.inputs!.resourceOrders);
-    }
-    
+   
     //All the states for the form -> Inserted into the BT-order as the user fills the form out
     const [bladeProjectId, setBladeProjectId] = useState(creator ? '' : props.inputs!.bladeProjectId);
     const [taskName, setTaskName] = useState(creator ? '' : props.inputs!.taskName);
@@ -94,23 +40,6 @@ function BladeTaskMenu(props: BladeTaskMenuProps) {
     const [detachPeriod, setDetachPeriod] = useState(creator ? 0 : props.inputs!.detachPeriod);
     const [testRig, setTestRig] = useState(creator ? 0 : props.inputs!.testRig);
     const [resourceOrders, setResourceOrder] = useState(creator ? [] : props.inputs!.resourceOrders);
-
-    //State for the equipment selection menu
-    const [equipmentActive, setEquipmentActive] = useState(false);
-
-    //The BTOrder object sent to the server -> Is created as a new Blade Tasks instance in DB and displayed in schedule
-    let currentOrder: BTOrder =
-    {
-        bladeProjectId: bladeProjectId!,
-        taskName: taskName,
-        testType: testType,
-        startDate: startDate,
-        duration: duration,
-        attachPeriod: attachPeriod,
-        detachPeriod: detachPeriod,
-        testRig: testRig,
-        resourceOrders: resourceOrders,
-    };
 
     //Tracks which input fields are currently in an error state(Incorrect input has been provided)
     const [inErrorChart, setInErrorChart] = useState({
@@ -126,6 +55,105 @@ function BladeTaskMenu(props: BladeTaskMenuProps) {
         employees: false,
     });
 
+    //State for the equipment selection menu
+    const [equipmentActive, setEquipmentActive] = useState(false);
+
+    if (updateLoading) {
+        return <p>Loading...</p>;
+    }
+    if (updateError) {
+        return <p style={{backgroundColor: "rgb(255, 0, 0, 100"}}>Error {updateError.message}</p>;
+    }
+    if (addLoading) {
+        return <p>Loading...</p>;
+    }
+    if (addError) {
+        return <p>Error {addError.message}</p>;
+    }
+
+
+    //Creates mutation based on the provided input
+    //Only triggers when following fields are provided: duration, attachPeriod, detachPeriod, bladeProjectId, taskName, testType
+    //Other fields are optional
+    const handleSubmit = async () => {
+        try {
+            if (props.creator){
+                if (ValidateForm(currentOrder)) {
+                    const response = await addBT({
+                        variables: {
+                            bladeTask: {
+                                bladeProjectId: bladeProjectId,
+                                taskName: taskName,
+                                testType: testType,
+                                startDate: startDate,
+                                duration: duration,
+                                attachPeriod: attachPeriod,
+                                detachPeriod: detachPeriod,
+                                testRig: testRig,
+                                resourceOrders: resourceOrders,
+                            },
+                        },
+                    });
+                    console.log(response);
+                } else {
+                    console.log("Required fields have not been filled out");
+                }
+            }
+            else{
+                if(ValidateForm(currentOrder)){
+                    const response = await updateBT({
+                        variables: {
+                            updates: {
+                                bladeProjectId: bladeProjectId,
+                                taskName: taskName,
+                                testType: testType,
+                                startDate: startDate,
+                                duration: duration,
+                                attachPeriod: attachPeriod,
+                                detachPeriod: detachPeriod,
+                                testRig: testRig,
+                                resourceOrders: resourceOrders,
+                            },
+                            id: parseInt(props.btId ? props.btId.toString() : "NaN"),
+                        },
+                    });
+                    console.log(response);
+                } else {
+                    console.log("Required fields have not been filled out");
+                }
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    //Resets all field to their initial value
+    const handleCancellation = (creator: boolean) => {
+        setBladeProjectId(creator ? "" : props.inputs!.bladeProjectId);
+        setTaskName(creator ? "" : props.inputs!.taskName);
+        setTestType(creator ? "" : props.inputs!.testType);
+        setStartDate(creator ? new Date().toISOString().split('T')[0] : props.inputs!.startDate);
+        setDuration(creator ? 0 : props.inputs!.duration);
+        setAttachPeriod(creator ? 0 : props.inputs!.attachPeriod);
+        setDetachPeriod(creator ? 0 : props.inputs!.detachPeriod);
+        setTestRig(creator ? 0 : props.inputs!.testRig);
+        setResourceOrder(creator ? [] : props.inputs!.resourceOrders);
+    }
+
+    //The BTOrder object sent to the server -> Is created as a new Blade Tasks instance in DB and displayed in schedule
+    let currentOrder: BTOrder =
+    {
+        bladeProjectId: bladeProjectId!,
+        taskName: taskName,
+        testType: testType,
+        startDate: startDate,
+        duration: duration,
+        attachPeriod: attachPeriod,
+        detachPeriod: detachPeriod,
+        testRig: testRig,
+        resourceOrders: resourceOrders,
+    };
+  
     return (
         <div className='btmenu-container'>
             {/*ErrorMessageContainer is a menu next to the BT-Menu displaying error messages*/}

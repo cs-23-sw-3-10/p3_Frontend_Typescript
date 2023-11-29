@@ -14,8 +14,8 @@ export const UPDATE_BT = gql`
 `;
 
 export const UPDATE_BT_INFO = gql`
-  mutation updateBTInfo($bladeTask: BladeTaskInput!, $id: Int!) {
-      updateBTInfo(updates: $bladeTask, btId: $id) {
+  mutation updateBTInfo($updates: BladeTaskInput!, $id: Int!) {
+      updateBTInfo(updates: $updates, btId: $id) {
         id
         startDate
         endDate
