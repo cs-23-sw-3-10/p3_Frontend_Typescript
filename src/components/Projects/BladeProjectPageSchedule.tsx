@@ -132,6 +132,7 @@ function BladeProjectPageWithSchedule() {
                                 enableDraggable={false}
                                 attachPeriod={bladeTask.attachPeriod}
                                 detachPeriod={bladeTask.detachPeriod}
+                                shown={true}
                             />
                         );
                     });
