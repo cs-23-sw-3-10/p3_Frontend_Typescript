@@ -32,6 +32,8 @@ function handleLogin(e : React.MouseEvent<HTMLButtonElement, MouseEvent>) {
     }).then(response => {
       if (!response.ok) {
           // Handle HTTP errors
+          setUsername('');
+          setPassword('');
           throw new Error('Network response was not ok: ' + response.statusText);
       }
       return response.text(); // or response.json() if your server responds with JSON
@@ -40,11 +42,15 @@ function handleLogin(e : React.MouseEvent<HTMLButtonElement, MouseEvent>) {
       // Handle the response data
       console.log("login success"); 
       localStorage.setItem('auth_token', data);
+      setUsername('');
+      setPassword('');
       // You might want to store the token in localStorage or sessionStorage
   })
   .catch(error => {
       // Handle any errors
       console.error('There has been a problem with your fetch operation:', error);
+      setUsername('');
+      setPassword('');
   });
 }
   
@@ -52,7 +58,7 @@ function handleLogin(e : React.MouseEvent<HTMLButtonElement, MouseEvent>) {
 function handleLogout(e : React.MouseEvent<HTMLButtonElement, MouseEvent>) {
   e.preventDefault();
   console.log(localStorage.getItem('auth_token'));
-  console.log("Logout success");
+  localStorage.removeItem('auth_token');
   //Handle successful logout here (e.g., redirect to login)
 }
 
