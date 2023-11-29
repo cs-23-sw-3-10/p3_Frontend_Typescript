@@ -53,19 +53,38 @@ query AllBladeTasksInRange($startDate: String!, $endDate: String!, $isActive: Bo
 }
 `;
 
-export const GET_BT_IN_RANGE_AND_PENDING = gql`
-query AllBladeTasksInRangeAndPending($startDate: String!, $endDate: String!, $isActive: Boolean!) {
-    AllBladeTasksInRange(startDate: $startDate, endDate: $endDate, isActive: $isActive ) {
+export const GET_BT_IN_RANGE_SUB = gql`
+subscription AllBladeTasksInRangeSub($startDate: String!, $endDate: String!, $isActive: Boolean!) {
+  AllBladeTasksInRangeSub(startDate: $startDate, endDate: $endDate, isActive: $isActive) {
+    id
+    startDate
+    endDate
+    duration
+    testType
+    attachPeriod
+    detachPeriod
+    taskName
+    testRig
+    inConflict
+    bladeProject {
+        color
+        customer
         id
-        startDate
-        endDate
+        projectName
+    }
+}
+}
+`;
+
+export const GET_BT_PENDING_SUB = gql`
+subscription AllBladeTasksPendingSub{
+    AllBladeTasksPendingSub{
+        id
         duration
         testType
         attachPeriod
         detachPeriod
         taskName
-        testRig
-        inConflict
         bladeProject {
             color
             customer
@@ -73,6 +92,13 @@ query AllBladeTasksInRangeAndPending($startDate: String!, $endDate: String!, $is
             projectName
         }
     }
+}
+`;
+
+
+
+export const GET_BT_PENDING = gql`
+query AllBladeTasksPending {
     AllBladeTasksPending{
         id
         duration
@@ -281,7 +307,6 @@ query GetAllBladeProjects{
   }
 }
 `;
-
 
 
 

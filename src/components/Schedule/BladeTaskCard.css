@@ -81,10 +81,12 @@
     z-index: 10000; /* Ensure it's above other elements */
     left: 10%;
     top: 10%;
-    width: 90vw;
     max-width: 1250px;
+    
     min-height: 500px;
 }
+
+
 
 .EditBTPopupContent{
     grid-column: left/span 3;

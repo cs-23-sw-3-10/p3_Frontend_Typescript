@@ -2,8 +2,8 @@ import React, { useState } from "react";
 
 import { columnBP } from "./BladeProjectColumns";
 import { columnBT } from "../BladeTask/BladeTaskColumns";
-import { useQuery } from "@apollo/client";
-import { GET_ALL_BP } from "../../api/queryList";
+import { useQuery, useSubscription } from "@apollo/client";
+import { GET_ALL_BP, GET_BT_IN_RANGE } from "../../api/queryList";
 import { GET_ALL_BT } from "../../api/queryList";
 import { TableLogicWOHeaders } from "../TableLogic/TableLogicWOHeader";
 import { TableLogic } from "../TableLogic/TableLogic";
@@ -15,6 +15,8 @@ import CreateTestRigDivs from "../Schedule/TestRigDivs";
 import { getMonthsInView } from "../Schedule/Display";
 import { getMonthLength } from "../Schedule/TimelineField";
 import { capitalizeFirstLetter } from "../Schedule/TimelineField";
+import { start } from "repl";
+
 
 /**
  * Calculates the number of months between start and enddate of a bladeproject,
@@ -69,11 +71,16 @@ function BladeProjectPageWithSchedule() {
     ]);
 
     //get data from the database
+    
+    
     const {
         loading: loadingBP,
         error: errorBP,
         data: dataBP,
     } = useQuery(GET_ALL_BP);
+
+
+
 
     //handle loading and error states for the used queries
     if (loadingBP) return <p>Loading...</p>;
@@ -82,6 +89,10 @@ function BladeProjectPageWithSchedule() {
     if (!BPData) {
         return <p> No data for {"AllBladeProjects"} </p>;
     }
+
+    
+  
+    console.log(BPData);
 
     /* renders the table. The renderExpandedComponent prop is used to render the bladeTasks table
      * based on the current row.id which is equal to the bladeproject ID.
