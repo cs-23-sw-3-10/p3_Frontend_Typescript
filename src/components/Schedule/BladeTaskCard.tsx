@@ -6,9 +6,10 @@ import MessageBox from "../ui/MessageBox";
 import PopupWindow from "../ui/PopupWindow";
 import { ResourceOrder } from "../CreateBTMenu/BTMenuTypes";
 import EditBTComponent from "../ui/EditBTComponent";
+import { dateDivLength } from "./TimelineField";
 //interface used to define the types of the props of BladeTaskCard
 export interface BladeTaskCardProps {
-    startDate: Date;
+    startDate?: Date;
     endDate?: Date;
     duration: number;
     attachPeriod: number;
@@ -16,6 +17,7 @@ export interface BladeTaskCardProps {
     rig?: number;
     projectColor: string;
     projectId: number;
+    projectName?: string;
     customer: string;
     taskName: string;
     id: number;
@@ -26,6 +28,7 @@ export interface BladeTaskCardProps {
     resourceOrders?: Array<ResourceOrder>;
     testType?: string;
 }
+
 interface BladeTaskDraggableProps {
     style: any;
     id: number;
@@ -94,14 +97,15 @@ function BladeTaskCard(props: BladeTaskCardProps) {
         setContextMenuPosition({ x: event.clientX, y: event.clientY });
     };
 
-    //Dynamic styling based on props values
-    const cardStyle = {
-        backgroundColor: props.shown ? props.projectColor : "grey",
-        gridColumn: `date-${props.startDate.getFullYear()}-${props.startDate.getMonth()}-${props.startDate.getDate()} / span ${
-            props.duration //+ props.attachPeriod + props.detachPeriod //kan tilføjes/fjernes hvis duraation kun er for testen
-        }`,
-        border: props.inConflict ? "2px dashed red" : "",
-    };
+  //Dynamic styling based on props values
+  if(props.startDate){
+  const cardStyle = {
+    backgroundColor: props.shown ? props.projectColor : "grey",
+    gridColumn: `date-${props.startDate.getFullYear()}-${props.startDate.getMonth()}-${props.startDate.getDate()} / span ${
+      props.duration
+    }`,
+    border: props.inConflict ? "2px dashed red" : "", 
+  };
 
     const droppableProps: BladeTaskDraggableProps = {
         style: cardStyle,
@@ -155,6 +159,42 @@ function BladeTaskCard(props: BladeTaskCardProps) {
 
         </>
     );
+}else{
+    const cardStyle = {
+      backgroundColor: props.shown ? props.projectColor : "grey",
+      width: `${props.duration*dateDivLength}px`,
+      border: props.inConflict ? '2px dashed red' : '', 
+      gridRow: `project-${props.projectName}`,
+      gridColumn: "2",
+      justifyContent: "left"
+    };
+  
+    const droppableProps: BladeTaskDraggableProps = {
+      style: cardStyle,
+      id: props.id,
+      taskName: props.taskName,
+      enableDraggable: props.enableDraggable,
+      setContextMenu: handleRightClick,
+      shown: props.shown,
+      attachPeriod: props.attachPeriod ? props.attachPeriod : 0,
+      detachPeriod: props.detachPeriod ? props.detachPeriod : 0,
+    };
+  
+    return(<>
+      <DraggableBladeTask {...droppableProps} />
+      {showContextMenu && (
+          <div ref={contextMenuRef} className="context-menu" style={{ left: `${contextMenuPosition.x}px`, top: `${contextMenuPosition.y}px` }}>
+            <ul className="context-menu-list">
+                <li className="context-menu-item" onClick={handleEditClick}>Edit</li>
+                {props.inConflict && <li className="context-menu-item" onClick={handleConflictClick}>Conflict details</li>}
+                {/* Add more items as needed */}
+            </ul>
+        </div>    
+    )}
+    {showMessageBox && ( <MessageBox message={"Insert conflict information here"} onClose={handleMessageClose} />) }   
+      </>
+      );
+  }
 }
 export default BladeTaskCard;
 

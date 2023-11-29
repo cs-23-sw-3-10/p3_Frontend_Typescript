@@ -2,8 +2,8 @@ import React, { useState } from "react";
 
 import { columnBP } from "./BladeProjectColumns";
 import { columnBT } from "../BladeTask/BladeTaskColumns";
-import { useQuery } from "@apollo/client";
-import { GET_ALL_BP } from "../../api/queryList";
+import { useQuery, useSubscription } from "@apollo/client";
+import { GET_ALL_BP, GET_BT_IN_RANGE } from "../../api/queryList";
 import { GET_ALL_BT } from "../../api/queryList";
 import { TableLogicWOHeaders } from "../TableLogic/TableLogicWOHeader";
 import { TableLogic } from "../TableLogic/TableLogic";
@@ -15,6 +15,9 @@ import CreateTestRigDivs from "../Schedule/TestRigDivs";
 import { getMonthsInView } from "../Schedule/Display";
 import { getMonthLength } from "../Schedule/TimelineField";
 import { capitalizeFirstLetter } from "../Schedule/TimelineField";
+import { start } from "repl";
+import { shouldAutoRemoveFilter } from "@tanstack/table-core";
+
 
 /**
  * Calculates the number of months between start and enddate of a bladeproject,
@@ -69,11 +72,16 @@ function BladeProjectPageWithSchedule() {
     ]);
 
     //get data from the database
+    
+    
     const {
         loading: loadingBP,
         error: errorBP,
         data: dataBP,
     } = useQuery(GET_ALL_BP);
+
+
+
 
     //handle loading and error states for the used queries
     if (loadingBP) return <p>Loading...</p>;
@@ -82,6 +90,10 @@ function BladeProjectPageWithSchedule() {
     if (!BPData) {
         return <p> No data for {"AllBladeProjects"} </p>;
     }
+
+    
+  
+    console.log(BPData);
 
     /* renders the table. The renderExpandedComponent prop is used to render the bladeTasks table
      * based on the current row.id which is equal to the bladeproject ID.
@@ -93,6 +105,7 @@ function BladeProjectPageWithSchedule() {
             data={BPData}
             renderExpandedComponent={(row) => {
                 let btCards: React.ReactNode[] = [];
+                let btCardsPending: React.ReactNode[] = [];
                 let bladeProjectIndex = dataBP["AllBladeProjects"].find(
                     (project: any) => project.id === row.id
                 );
@@ -107,34 +120,58 @@ function BladeProjectPageWithSchedule() {
 
                 if (bladeProjectIndex && bladeProjectIndex.bladeTasks) {
                     bladeProjectIndex.bladeTasks.forEach((bladeTask: any) => {
-                        let dateSplit = bladeTask.startDate.split("-");
-                        const year = parseInt(dateSplit[0]);
-                        const month = parseInt(dateSplit[1]) - 1;
-                        const day = parseInt(dateSplit[2]);
+                        if (
+                            bladeTask.startDate &&
+                            bladeTask.endDate &&
+                            bladeTask.testRig
+                        ) {
+                            let dateSplit = bladeTask.startDate.split("-");
+                            const year = parseInt(dateSplit[0]);
+                            const month = parseInt(dateSplit[1]) - 1;
+                            const day = parseInt(dateSplit[2]);
 
-                        let endDateSplit = bladeTask.endDate.split("-");
-                        const endYear = parseInt(endDateSplit[0]);
-                        const endMonth = parseInt(endDateSplit[1]) - 1;
-                        const endDate = parseInt(endDateSplit[2]);
+                            let endDateSplit = bladeTask.endDate.split("-");
+                            const endYear = parseInt(endDateSplit[0]);
+                            const endMonth = parseInt(endDateSplit[1]) - 1;
+                            const endDate = parseInt(endDateSplit[2]);
 
-                        btCards.push(
-                            <BladeTaskCard
-                                key={bladeTask.id}
-                                duration={bladeTask.duration}
-                                projectColor={bladeTask.bladeProject.color}
-                                projectId={bladeTask.bladeProject.id}
-                                customer={bladeTask.bladeProject.customer}
-                                taskName={bladeTask.taskName}
-                                startDate={new Date(year, month, day)}
-                                endDate={new Date(endYear, endMonth, endDate)}
-                                rig={bladeTask.testRig}
-                                id={bladeTask.id}
-                                enableDraggable={false}
-                                attachPeriod={bladeTask.attachPeriod}
-                                detachPeriod={bladeTask.detachPeriod}
-                                shown={true}
-                            />
-                        );
+                            btCards.push(
+                                <BladeTaskCard
+                                    key={bladeTask.id}
+                                    duration={bladeTask.duration}
+                                    projectColor={bladeTask.bladeProject.color}
+                                    projectId={bladeTask.bladeProject.id}
+                                    customer={bladeTask.bladeProject.customer}
+                                    taskName={bladeTask.taskName}
+                                    startDate={new Date(year, month, day)}
+                                    endDate={
+                                        new Date(endYear, endMonth, endDate)
+                                    }
+                                    rig={bladeTask.testRig}
+                                    id={bladeTask.id}
+                                    enableDraggable={false}
+                                    attachPeriod={bladeTask.attachPeriod}
+                                    detachPeriod={bladeTask.detachPeriod}
+                                    shown={true}
+                                />
+                            );
+                        } else {
+                            btCardsPending.push(
+                                <BladeTaskCard
+                                    key={bladeTask.id}
+                                    duration={bladeTask.duration}
+                                    attachPeriod={bladeTask.attachPeriod}
+                                    detachPeriod={bladeTask.detachPeriod}
+                                    projectColor={bladeTask.bladeProject.color}
+                                    projectId={bladeTask.bladeProject.id}
+                                    customer={bladeTask.bladeProject.customer}
+                                    taskName={bladeTask.taskName}
+                                    id={bladeTask.id}
+                                    enableDraggable={false}
+                                    shown={true}
+                                />
+                            );
+                        }
                     });
                 }
                 return (
@@ -144,6 +181,8 @@ function BladeProjectPageWithSchedule() {
                             rigs={rigs}
                             months={dates}
                             btCards={btCards}
+                            btCardsPending={btCardsPending}
+                            isPendingTasksIncluded={false}
                         />
                     </div>
                 );

@@ -1,4 +1,5 @@
 import { DndContext } from "@dnd-kit/core";
+import { DragOverlay } from "@dnd-kit/core";
 import CreateMonthDateContainer from "./MonthDateContainer";
 import CreateRigFieldContainer from "./RigFieldContainer";
 import MonthLengths from "./MonthLengthsEnum";
@@ -7,11 +8,16 @@ import BladeTaskCard from "./BladeTaskCard";
 import { BladeTaskHolder } from "./BladeTaskHolder";
 import { useMutation } from "@apollo/client";
 import { UPDATE_BT } from "../../api/mutationList";
+import PendingTasks from "./PendingTasks";
+import ReactDOM from "react-dom";
 
 type TimelineFieldProps = {
     rigs: { rigName: string; rigNumber: number }[];
     months: Date[];
     btCards: React.ReactNode[];
+    btCardsPending: React.ReactNode[];
+    showPasswordPrompt?: boolean;
+    isPendingTasksIncluded: boolean
 };
 
 export const dateDivLength = 25; // px length of the dates in the schedule
@@ -51,7 +57,7 @@ function CreateTimelineField(props: TimelineFieldProps) {
         // Style for the BladeTaskField
         width: `${fieldWidth}px`,
         gridTemplateColumns: columnsOfSchedule,
-        gridTemplateRows: "30px 30px auto",
+        gridTemplateRows: "30px 30px auto auto",
     };
 
     const rigFieldContainerStyle = {
@@ -65,6 +71,8 @@ function CreateTimelineField(props: TimelineFieldProps) {
     const [isDragging, setDragging] = useState(false);
 
     let bladeTasks = new BladeTaskHolder(props.btCards);
+    let bladeTasksPending = new BladeTaskHolder(props.btCardsPending);
+
     return (
         <div className="TimelineFieldContainer">
             <div className="TimelineField" style={BTFieldStyle}>
@@ -74,12 +82,19 @@ function CreateTimelineField(props: TimelineFieldProps) {
                         currentMonth={month}
                     />
                 ))}
+
                 <DndContext
                     onDragStart={(event) => {
                         handleDragStart(event, setDragging);
                     }}
                     onDragEnd={(event) => {
-                        handleDragEnd(event, bladeTasks, setDragging, updateBt);
+                        handleDragEnd(
+                            event,
+                            bladeTasks,
+                            bladeTasksPending,
+                            setDragging,
+                            updateBt,
+                        );
                     }}
                 >
                     <div
@@ -115,6 +130,12 @@ function CreateTimelineField(props: TimelineFieldProps) {
                             />
                         ))}
                     </div>
+                    {props.isPendingTasksIncluded &&<PendingTasks
+                        bladeTaskHolder={bladeTasksPending}
+                        bladeTaskCards={bladeTasksPending.getBladeTasks()}
+                        numberOfRigs={props.rigs.length}
+                        showPasswordPrompt={props.showPasswordPrompt}
+                    />}
                 </DndContext>
             </div>
         </div>
@@ -173,32 +194,92 @@ export function handleDragStart(
 export function handleDragEnd(
     event: any,
     bladeTaskHolder: BladeTaskHolder,
+    bladeTaskHolderPending: BladeTaskHolder,
     setDragging: React.Dispatch<React.SetStateAction<boolean>>,
     updateBT: Function
 ) {
     console.log("drag ended");
 
     const { active, over } = event;
-    console.log(active);
-    if (over !== null) {
-        const overIdSlpit = over.id.split("-");
-        const overRig = parseInt(overIdSlpit[0].split(" ")[1]);
-        const overDate = new Date(
-            overIdSlpit[1],
-            overIdSlpit[2],
-            overIdSlpit[3]
-        );
-        
-        const indexBT = findBTIndex(bladeTaskHolder.getBladeTasks(), active.id);
 
-        if (indexBT !== -1) {
-            const updatedBladeTaskCards = bladeTaskHolder.getBladeTasks();
-            const draggedCard = updatedBladeTaskCards[
+    const updatedBladeTaskCards = bladeTaskHolder.getBladeTasks();
+    const updatedBladeTaskCardsPending = bladeTaskHolderPending.getBladeTasks();
+
+    const { statusBT, indexBT } = findBTIndex(
+        updatedBladeTaskCards,
+        updatedBladeTaskCardsPending,
+        active
+    );
+
+    let draggedCard: React.ReactElement;
+
+    if (over !== null && indexBT !== -1) {
+        //get dragged card
+        if (statusBT === "scheduled") {
+            draggedCard = updatedBladeTaskCards[indexBT] as React.ReactElement;
+        } else {
+            draggedCard = updatedBladeTaskCardsPending[
                 indexBT
             ] as React.ReactElement;
+        }
+
+        //Moving to pending tasks
+        if (over.id === "droppablePendingTasksId") {
+
+            if (statusBT === "scheduled") {
+
+                updateBT({
+                    variables: {
+                        id: draggedCard.props.id,
+                        startDate: "undefined",
+                        duration: draggedCard.props.duration,
+                        rig: 0,
+                    },
+                });
+
+                updatedBladeTaskCards.splice(indexBT, 1);
+
+                updatedBladeTaskCardsPending.push(
+                    <BladeTaskCard
+                        key={draggedCard.key}
+                        id={draggedCard.props.id}
+                        duration={draggedCard.props.duration}
+                        attachPeriod={draggedCard.props.attachPeriod}
+                        detachPeriod={draggedCard.props.detachPeriod}
+                        projectColor={draggedCard.props.projectColor}
+                        projectId={draggedCard.props.projectId}
+                        customer={draggedCard.props.customer}
+                        taskName={draggedCard.props.taskName}
+                        shown={draggedCard.props.shown}
+                        startDate={undefined}
+                        endDate={undefined}
+                        rig={undefined}
+                    />
+                );
+
+            
+
+
+                bladeTaskHolder.setBladeTasks(updatedBladeTaskCards);
+                bladeTaskHolderPending.setBladeTasks(
+                    updatedBladeTaskCardsPending
+                );
+
+            } else {
+                console.log("a pending BT was moved to pending");
+            }
+        } else {
+            const overIdSlpit = over.id.split("-");
+            const overRig = parseInt(overIdSlpit[0].split(" ")[1]);
+            const overDate = new Date(
+                overIdSlpit[1],
+                overIdSlpit[2],
+                overIdSlpit[3]
+            );
 
             // Check for overlap before updating the cards
             const isOverlap = checkForOverlap(
+                draggedCard,
                 updatedBladeTaskCards,
                 indexBT,
                 overDate,
@@ -212,9 +293,12 @@ export function handleDragEnd(
                     newEndDate.getDate() + draggedCard.props.duration - 1
                 );
 
-                console.log(overDate);
-                console.log(newEndDate);
-                console.log(draggedCard.props.duration);
+                console.log("dragged card new start :", overDate);
+                console.log("dragged card new end :", newEndDate);
+                console.log(
+                    "dragged card duration :",
+                    draggedCard.props.duration
+                );
 
                 updateBT({
                     variables: {
@@ -225,30 +309,58 @@ export function handleDragEnd(
                     },
                 });
 
-                updatedBladeTaskCards[indexBT] = (
-                    <BladeTaskCard
-                        key={draggedCard.key}
-                        id={draggedCard.props.id}
-                        duration={draggedCard.props.duration}
-                        projectColor={draggedCard.props.projectColor}
-                        projectId={draggedCard.props.projectId}
-                        customer={draggedCard.props.customer}
-                        taskName={draggedCard.props.taskName}
-                        startDate={new Date(overDate)}
-                        endDate={newEndDate}
-                        rig={overRig}
-                        attachPeriod={draggedCard.props.attachPeriod}
-                        detachPeriod={draggedCard.props.detachPeriod}
-                        enableDraggable={draggedCard.props.enableDraggable}
-                        shown={draggedCard.props.shown}
-                    />
-                );
-                bladeTaskHolder.setBladeTasks(updatedBladeTaskCards);
+                if (statusBT === "scheduled") {
+
+                    updatedBladeTaskCards[indexBT] = (
+                        <BladeTaskCard
+                            key={draggedCard.key}
+                            id={draggedCard.props.id}
+                            duration={draggedCard.props.duration}
+                            projectColor={draggedCard.props.projectColor}
+                            projectId={draggedCard.props.projectId}
+                            customer={draggedCard.props.customer}
+                            taskName={draggedCard.props.taskName}
+                            startDate={new Date(overDate)}
+                            endDate={newEndDate}
+                            rig={overRig}
+                            attachPeriod={draggedCard.props.attachPeriod}
+                            detachPeriod={draggedCard.props.detachPeriod}
+                            enableDraggable={draggedCard.props.enableDraggable}
+                            shown={draggedCard.props.shown}
+                        />
+                    );
+
+                    bladeTaskHolder.setBladeTasks(updatedBladeTaskCards);
+                } else {
+
+                    updatedBladeTaskCardsPending.splice(indexBT, 1);
+
+                    updatedBladeTaskCards.push(
+                        <BladeTaskCard
+                            key={draggedCard.key}
+                            id={draggedCard.props.id}
+                            duration={draggedCard.props.duration}
+                            projectColor={draggedCard.props.projectColor}
+                            projectId={draggedCard.props.projectId}
+                            customer={draggedCard.props.customer}
+                            taskName={draggedCard.props.taskName}
+                            shown={draggedCard.props.shown}
+                            startDate={new Date(overDate)}
+                            endDate={newEndDate}
+                            attachPeriod={draggedCard.props.attachPeriod}
+                            detachPeriod={draggedCard.props.detachPeriod}
+                            enableDraggable={draggedCard.props.enableDraggable}
+                            rig={overRig}
+                        />
+                    );
+
+                    bladeTaskHolder.setBladeTasks(updatedBladeTaskCards);
+                    bladeTaskHolderPending.setBladeTasks(
+                        updatedBladeTaskCardsPending
+                    );
+                }
             } else {
                 console.log("Overlap detected. drag opreation cancelled");
-
-                updatedBladeTaskCards[indexBT] = draggedCard;
-                bladeTaskHolder.setBladeTasks(updatedBladeTaskCards);
             }
             setDragging(false);
         }
@@ -257,26 +369,39 @@ export function handleDragEnd(
     }
 }
 
-export function findBTIndex(bladeTaskCards: any, activeId: number) {
+
+export function findBTIndex(
+    bladeTaskCards: any,
+    bladeTaskCardsPending: any,
+    activeComponent: any
+) {
     for (let i: number = 0; i < bladeTaskCards.length; i++) {
         if (
             bladeTaskCards[i] &&
-            activeId === bladeTaskCards[i].props.id
+            activeComponent.id === bladeTaskCards[i].props.id
         ) {
-            return i;
+            return { statusBT: "scheduled", indexBT: i };
+        }
+    }
+    for (let i: number = 0; i < bladeTaskCardsPending.length; i++) {
+        if (
+            bladeTaskCardsPending[i] &&
+            activeComponent.id === bladeTaskCardsPending[i].props.id
+        ) {
+            return { statusBT: "pending", indexBT: i };
         }
     }
     console.log("blade task not found");
-    return -1;
-};
+    return { statusBT: "not found", indexBT: -1 };
+}
 
 function checkForOverlap(
+    draggedCard: any,
     bladeTaskCards: any,
     BTIndex: number,
     newStartDate: Date,
     overRig: number
 ) {
-    const draggedCard = bladeTaskCards[BTIndex];
     //start-/end date for dragged card
     const startDateA = newStartDate;
     let endDateA = new Date(newStartDate);
@@ -294,13 +419,13 @@ function checkForOverlap(
                 bladeTaskCards[i].props.projectId ===
                     draggedCard.props.projectId
             ) {
-                // skip comparison with cards on different rigs
+                // skip comparison with cards on different rigs unless it is from same project
                 //Overlaps are covered by two cases. A check is made for each case.
                 if (startDateA <= startDateB) {
                     if (!(endDateA < startDateB)) {
                         return true;
                     }
-                } else if (startDateB <= startDateA) {
+                } else if (startDateB < startDateA) {
                     if (!(endDateB < startDateA)) {
                         return true;
                     }

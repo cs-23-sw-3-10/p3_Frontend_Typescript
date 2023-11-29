@@ -2,6 +2,8 @@ import DisplayComponent from "./Display";
 import { useState } from "react";
 import {useEditModeContext} from "../../EditModeContext";
 
+export const passwordPromptHeight=30;
+
 function ScheduleComponent() {
     const [showPasswordPrompt, setShowPasswordPrompt] = useState(false);
     const [password, setPassword] = useState(""); // State to store the entered password
@@ -12,6 +14,7 @@ function ScheduleComponent() {
     const viewSchedule = (
         <DisplayComponent
             setShowPasswordPrompt={setShowPasswordPrompt}
+            showPasswordPrompt={showPasswordPrompt}
             filter={filter}
             setFilter={setFilter}
         />
@@ -19,6 +22,7 @@ function ScheduleComponent() {
     const editSchedule = (
         <DisplayComponent
             setShowPasswordPrompt={setShowPasswordPrompt}
+            showPasswordPrompt={showPasswordPrompt}
             filter={filter}
             setFilter={setFilter}
         />
@@ -48,7 +52,7 @@ function ScheduleComponent() {
         <div>
             {editMode.isEditMode ? scheduleHeader[0] : scheduleHeader[1]}
             {showPasswordPrompt && (
-                <div className="PasswordPrompt">
+                <div className="PasswordPrompt" style={{height: `${passwordPromptHeight}px`}}>
                     <form onSubmit={(e) => {e.preventDefault(); handlePasswordSubmit(e)}}>
                     <label htmlFor="passwordInput">Enter Password:</label>
                     <input
@@ -66,3 +70,4 @@ function ScheduleComponent() {
     );
 }
 export default ScheduleComponent;
+
