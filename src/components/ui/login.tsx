@@ -10,47 +10,50 @@ const Login = () => {
 //if the username and password is incorrect, then it will display an error message
 const [username, setUsername] = useState('');
 const [password, setPassword] = useState('');
-const [getAuthToken, { loading, error, data }] = useLazyQuery(GET_AUTHENTICATION_TOKEN)
+
 
 
 
 function handleLogin(e : React.MouseEvent<HTMLButtonElement, MouseEvent>) {
   e.preventDefault();
 
-  const credentials = btoa(`${username}:${password}`);
+  const body = {
+    username: username,
+    password: password
+  }
 
-  localStorage.setItem('auth_token', '');
-  try {
-  
-  getAuthToken({
-    context: {
+ 
+    fetch('http://localhost:8080/authenticate', {
+      method: 'POST',
       headers: {
-        Authorization: `Basic ${credentials}`
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(body)
+    }).then(response => {
+      if (!response.ok) {
+          // Handle HTTP errors
+          throw new Error('Network response was not ok: ' + response.statusText);
       }
-    }
-  }).then((error) => console.log(error.error));
-
+      return response.text(); // or response.json() if your server responds with JSON
+  })
+  .then(data => {
+      // Handle the response data
+      console.log("login success"); 
+      localStorage.setItem('auth_token', data);
+      // You might want to store the token in localStorage or sessionStorage
+  })
+  .catch(error => {
+      // Handle any errors
+      console.error('There has been a problem with your fetch operation:', error);
+  });
+}
   
-    if (data) {
-      console.log("Login success", data);
-      localStorage.setItem('auth_token', data.authenticate);
-      // Handle successful login here (e.g., redirect to home)
-    }
-
-
-  if (loading) console.log("Loading...");
-  if (error) console.log("Wrong username or password");
-}
-catch (e) {
-  console.log("Wrong username or passworddsd");
-}
-}
 
 function handleLogout(e : React.MouseEvent<HTMLButtonElement, MouseEvent>) {
   e.preventDefault();
   console.log(localStorage.getItem('auth_token'));
   console.log("Logout success");
-  // Handle successful logout here (e.g., redirect to login)
+  //Handle successful logout here (e.g., redirect to login)
 }
 
 

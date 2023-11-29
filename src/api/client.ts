@@ -12,6 +12,10 @@ import { setContext } from '@apollo/client/link/context';
 const httpLink = new HttpLink({
 
   uri: 'http://localhost:8080/graphql',
+  headers:
+  {
+    authorization: localStorage.getItem('auth_token') ? `Bearer ${localStorage.getItem('auth_token')}` : "",
+  }
 });
 
 export const wsLink = new GraphQLWsLink(createClient({
