@@ -8,6 +8,22 @@
     border-color: black;
 }
 
+.input_field{
+    border-left: 2px solid black;
+    border-bottom: 2px solid black;
+}
+
 .bp_menu_title{
-    border-right: 2px solid black;
+    align-items: center;
+    margin-top: 5px;
+    border-bottom: 2px solid black;
+}
+
+.bp_menu_cancel{
+    background-color: rgb(212, 59, 21);
+}
+
+.bp_menu_submit{
+    border-left: 2px solid black;
+    background-color: rgb(32, 171, 32);
 }

@@ -8,7 +8,6 @@ import './BPMenu.css';
 import { useQuery, useMutation} from "@apollo/client";
 import { GET_ALL_ENGINEERS } from "../../api/queryList";
 import { ADD_BP } from "../../api/mutationList";
-import { addPath } from "graphql/jsutils/Path";
 
 
 function BladeProjectMenu() {
@@ -50,7 +49,13 @@ function BladeProjectMenu() {
                 customer: customer,
                 projectLeader: leader,
             }}).then((result) => console.log(result));
-        }else console.log("Error");
+        }else console.log("Unable To Submit Form");
+    }
+
+    const handleCancel = () => {
+        setProjectName('');
+        setCustomer('');
+        setLeader('');
     }
 
 
@@ -63,9 +68,9 @@ function BladeProjectMenu() {
             <InputField className="input_field" value={customer} setState={setCustomer}/>
 
             <h2 className="bp_menu_title">Project Leader</h2>
-            <DropdownList data={leaderOptions} onChange={value => setLeader(value)}/>
+            <DropdownList className="input_field" value={leader} data={leaderOptions} onChange={value => setLeader(value)}/>
 
-            <button className="bp_menu_cancel">CANCEL</button>
+            <button className="bp_menu_cancel" onClick={handleCancel}>CANCEL</button>
             <button className="bp_menu_submit" onClick={handleSubmit}>SUBMIT</button>
         </div>
     );
