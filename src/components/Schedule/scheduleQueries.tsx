@@ -1,4 +1,4 @@
-import {client} from '../../index';
+import {client} from '../../api/client';
 import {GET_BT_DATE_INFO} from '../../api/queryList';
 import { useQuery } from '@apollo/client';
 

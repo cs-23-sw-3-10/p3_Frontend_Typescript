@@ -2,11 +2,12 @@ import React from "react";
 
 import { columnBP } from "./BladeProjectColumns";
 import { columnBT } from "../BladeTask/BladeTaskColumns";
-import { useQuery } from "@apollo/client";
+import { useQuery, useSubscription } from "@apollo/client";
 import { GET_ALL_BP } from "../../api/queryList";
 import { GET_ALL_BT } from "../../api/queryList";
 import { TableLogicWOHeaders } from "../TableLogic/TableLogicWOHeader";
 import { TableLogic } from "../TableLogic/TableLogic";
+
 
 /**
  * gets all bladeprojects from the database and renders them in a table

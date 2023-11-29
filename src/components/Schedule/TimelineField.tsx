@@ -201,7 +201,6 @@ export function handleDragEnd(
     console.log("drag ended");
 
     const { active, over } = event;
-    console.log("active :", active);
 
     const updatedBladeTaskCards = bladeTaskHolder.getBladeTasks();
     const updatedBladeTaskCardsPending = bladeTaskHolderPending.getBladeTasks();
@@ -369,6 +368,7 @@ export function handleDragEnd(
         console.log("over is null");
     }
 }
+
 
 export function findBTIndex(
     bladeTaskCards: any,
