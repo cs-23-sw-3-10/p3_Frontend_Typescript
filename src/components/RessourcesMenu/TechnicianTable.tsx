@@ -4,8 +4,8 @@ import React, { useState } from 'react';
 import { CREATE_TECHNICIAN_MUTATION } from '../../api/mutationList';
 import { SanitizeString } from './RessourceUtils';
 import './Ressource.css';
-import { GET_ALL_TECHNICIAN_TYPES } from '../../api/queryList';
-import { ComboBoxDictionarySelector } from './RessourcesUtils';
+import { GET_ALL_TECHNICIANS, GET_ALL_TECHNICIAN_TYPES } from '../../api/queryList';
+import { ComboBoxSelector } from './RessourcesUtils';
 
 /** TODO
  * 1. Types are queried from the dictionary, and not the technician table.
@@ -36,18 +36,15 @@ function TechnicianTable() {
     const [createTechnician, { data, loading, error }] = useMutation(CREATE_TECHNICIAN_MUTATION); 
     const [technicianTypesList, setTechnicianTypesList] = useState<string[]>([]);
 
-    
-
     function validateForm() : boolean { 
         let tempErros: TechnicianErrors = {type:'', count:'', maxWorkHours:''};
         let isValid = true;
-        if (!formData.type || formData.type.trim().length < 2 || formData.type.trim().length > 50) {
+        if (!formData.type || formData.type.trim().length < 3 || formData.type.trim().length > 50) {
             tempErros.type = "Type is required and must be between 2 and 50 characters";
             isValid = false;
         }
         if (technicianTypesList.indexOf(formData.type) === -1) { 
-            tempErros.type = "Type must be in the list";
-            isValid = false;
+            addTypeToDataBase(formData.type);
         }
         if (!formData.count || formData.count < 1 || formData.count > 1000){
             tempErros.count = "Count must be between 1 and 1000";
@@ -75,6 +72,9 @@ function TechnicianTable() {
         return isValid;
 
     }
+    function addTypeToDataBase(type : string) {
+        
+    }
 
     function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
         setFormData({...formData, [e.target.name]: e.target.value});
@@ -83,7 +83,7 @@ function TechnicianTable() {
     function handleSubmit(e: React.FormEvent) {
         e.preventDefault();
         if(validateForm()) {
-            console.log(formData);
+            console.log("submit " + formData);
             createTechnician({variables: {
                 type: String (formData.type.toLowerCase().trim()),
                 count: Number (formData.count),
@@ -99,16 +99,17 @@ function TechnicianTable() {
     return (
         <> 
             <form onSubmit={handleSubmit} className='form-style'>
-                <h2 className='h2-style'>Add Technician</h2>
+                <h2 className='h2-style'>Add/update Technician</h2>
                 <div>
                     <label htmlFor="type" className='label-style'>Type</label>
-                    <ComboBoxDictionarySelector
+                    <ComboBoxSelector
                         selectedValue={formData.type}
                         setSelectedValue={(value : string) => setFormData({...formData, type: value})}
-                        setTypeList={setTechnicianTypesList}
+                        setItemList={setTechnicianTypesList}
                         className='text-input'
-                        query={GET_ALL_TECHNICIAN_TYPES}
-                        mappingFunction = {({label} : {label : string}) => label}
+                        query={GET_ALL_TECHNICIANS}
+                        dataKey='AllTechnicians'
+                        mappingFunction = {({type} : {type : string}) => type}
                     />
                     {errors.type && <span className='error-message'>{errors.type}</span>}
                 </div>
@@ -140,7 +141,7 @@ function TechnicianTable() {
                 <div>
                     {loading && <p className='loading-message'>Loading...</p>}
                     {error && <p className='error-message'>Error: {error.message}</p>}
-                    {data && <p className='success-message'>Technician created successfully!</p>}
+                    {data && <p className='success-message'>Database was successfully updated!</p>}
                 </div>
             </form> 
         </>

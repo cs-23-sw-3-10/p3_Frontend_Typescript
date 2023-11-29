@@ -194,6 +194,16 @@ query AllBladeProjects {
 
 `;
 
+export const GET_EQUIPMENT_BY_TYPE = gql`
+    query EquipmentByType($type: String!) {
+        EquipmentByType(type: $type) {
+            id
+            name
+            type
+            calibrationExpirationDate
+        }
+    }
+`;
 export const GET_EQUIPMENT = gql`
     query AllEquipment {
         AllEquipment {

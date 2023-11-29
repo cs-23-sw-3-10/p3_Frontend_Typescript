@@ -3,6 +3,8 @@ import './Ressource.css';
 import { useMutation } from '@apollo/client';
 import { CREATE_ENGINEER_MUTATION } from '../../api/mutationList';
 import { SanitizeString } from './RessourceUtils';
+import { ComboBoxSelector } from './RessourcesUtils';
+import { GET_ALL_ENGINEERS } from '../../api/queryList';
 
 interface EngineerFormData {
     name : string;
@@ -22,8 +24,8 @@ function EngineerTable(){
     function validateForm() : boolean { 
         let tempErros: EngineerErrors = {name:'', maxWorkHours:''};
         let isValid = true;
-        if (!formData.name || formData.name.trim().length < 2 || formData.name.trim().length > 50) {
-            tempErros.name = "Name is required and must be between 2 and 50 characters";
+        if (!formData.name || formData.name.trim().length < 3 || formData.name.trim().length > 50) {
+            tempErros.name = "Name is required and must be between 3 and 50 characters";
             isValid = false;
         }
         
@@ -65,16 +67,17 @@ function EngineerTable(){
     return (
         <>
             <form onSubmit={handleSubmit} className='form-style'>
-                <h2 className='h2-style'>Add Engineer</h2>
+                <h2 className='h2-style'>Add/update Engineer</h2>
                 <div>
                     <label htmlFor="name" className='label-style'>Name</label>
-                    <input 
-                        type="text"
-                        name="name"
-                        id="name"
-                        value={formData.name} 
-                        onChange={handleChange} 
-                        className='text-input' 
+                    <ComboBoxSelector
+                        selectedValue={formData.name}
+                        setSelectedValue={(value : string) => setFormData({...formData, name: value})}
+                        setItemList={() => {}}
+                        className='text-input'
+                        query={GET_ALL_ENGINEERS}
+                        dataKey='AllEngineers'
+                        mappingFunction = {({name} : {name : string}) => name}
                     />
                     {errors.name && <span className='error-message'>{errors.name}</span>}
                 </div>
@@ -94,7 +97,7 @@ function EngineerTable(){
                 <div>
                     {loading && <p className='loading-message'>Loading...</p>}
                     {error && <p className='error-message'>{error.message}</p>}
-                    {data && <p className='success-message'>{formData.name} created successfully!</p>}
+                    {data && <p className='success-message'>Datebase was successfully updated!</p>}
                 </div>
             </form>
         </>

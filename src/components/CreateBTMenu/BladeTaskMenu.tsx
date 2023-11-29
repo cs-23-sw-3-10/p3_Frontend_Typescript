@@ -16,7 +16,7 @@ import EquipmentList from './EquipmentList';
 import { useMutation } from '@apollo/client';
 import { ADD_BT } from '../../api/mutationList';
 import { ValidateForm } from './ValidateForm';
-import { ComboBoxDictionarySelector } from '../RessourcesMenu/RessourcesUtils';
+import { ComboBoxSelector } from '../RessourcesMenu/RessourcesUtils';
 import { GET_TEST_TYPES } from '../../api/queryList';
 import '../CreateBTMenu/TestTypeSelector.css';
 import '../CreateBTMenu/BladeTaskMenu.css'
@@ -119,12 +119,13 @@ function BladeTaskMenu() {
             </div>
             <div className= 'item testtype_wrapper'>
                 <h2 className="title">Type</h2>
-                <ComboBoxDictionarySelector
+                <ComboBoxSelector
                     selectedValue = {testType}
                     setSelectedValue = {(value: string) => setTestType(value)}
-                    setTypeList={setTestTypesList}
+                    setItemList={setTestTypesList}
                     className='testtype_select input_sideborders'
                     query={GET_TEST_TYPES}
+                    dataKey='DictionaryAllByCategory'
                     mappingFunction={({ label }: { label: string }) => label}
                 />
             </div>

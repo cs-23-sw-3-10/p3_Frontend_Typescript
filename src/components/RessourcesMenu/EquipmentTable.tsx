@@ -3,8 +3,8 @@ import React, {useState} from 'react';
 import { CREATE_EQUIPMENT_MUTATION } from '../../api/mutationList';
 import { SanitizeString } from './RessourceUtils';
 import './Ressource.css';
-import { ComboBoxDictionarySelector } from './RessourcesUtils';
-import { GET_ALL_EQUIPMENT_TYPES } from '../../api/queryList';
+import { ComboBoxSelector } from './RessourcesUtils';
+import { GET_ALL_EQUIPMENT_TYPES, GET_EQUIPMENT_BY_TYPE } from '../../api/queryList';
 
 interface EquipmentFormData {
     type : string;
@@ -37,12 +37,8 @@ function EquipmentTable() {
         let tempErrors: EquipmentErrors = { type: '', calibrationExpirationDate: '', name: '' };
         let isValid = true;
 
-        if ((formData.type.trim().length < 4 || (formData.type.trim().length > 50) || (formData.type.trim().length === 0))) {
-            tempErrors.type = "Type must be between 4 and 50 characters";
-            isValid = false;
-        }
-        if (testTypesList.indexOf(formData.type) === -1) { 
-            tempErrors.type = "Type must be in the list";
+        if ((formData.type.trim().length < 3 || (formData.type.trim().length > 50) || (formData.type.trim().length === 0))) {
+            tempErrors.type = "Type must be between 3 and 50 characters";
             isValid = false;
         }
         if (!formData.name || formData.name.trim().length === 0) {
@@ -90,15 +86,16 @@ function EquipmentTable() {
     return (
         <>
             <form onSubmit={handleSubmit} className='form-style'>
-                <h2 className='h2-style'>Add Equipment</h2>
+                <h2 className='h2-style'>Add/update Equipment</h2>
                 <div>
                     <label htmlFor="type" className='label-style'>Type</label>
-                    <ComboBoxDictionarySelector
+                    <ComboBoxSelector
                         selectedValue = {formData.type}
                         setSelectedValue = {(value: string) => setFormData({ ...formData, type: value })}
-                        setTypeList={setTestTypesList}
+                        setItemList={setTestTypesList}
                         className=''
                         query={GET_ALL_EQUIPMENT_TYPES}
+                        dataKey='DictionaryAllByCategory'
                         mappingFunction={({ label }: { label: string }) => label}
                     />
 
@@ -106,14 +103,19 @@ function EquipmentTable() {
                 </div>
                 <div>
                     <label htmlFor="name" className='label-style'>Name</label>
-                    <input
-                        type="text"
-                        name="name"
-                        id="name"
-                        value={formData.name}
-                        onChange={handleChange}
-                        className='text-input'
+                    
+                    <ComboBoxSelector
+                        selectedValue={formData.name}
+                        setSelectedValue={(value: string) => setFormData({ ...formData, name: value })}
+                        setItemList={() => {}}
+                        className=''
+                        query={GET_EQUIPMENT_BY_TYPE}
+                        queryVariables = {{ type: formData.type }}
+                        dataKey='EquipmentByType'
+                        mappingFunction = {({name} : {name : string}) => name}
                     />
+                    
+                    
                     {errors.name && <span className='error-message'>{errors.name}</span>}
                 </div>
                 <div>
@@ -132,7 +134,7 @@ function EquipmentTable() {
                 <div>
                     {loading && <p className='loading-message'>Loading...</p>}
                     {error && <p className='error-message'>Error: {error.message}</p>}
-                    {data && <p className='success-message'>Equipment created successfully!</p>}
+                    {data && <p className='success-message'>Database was successfully updated!!</p>}
                 </div>
             </form>
         </>

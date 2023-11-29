@@ -9,8 +9,15 @@ export default function ResourceTable() {
         <div>
             <h1 className='h1-style'>
                 Add a ressource to the database by completing its information.
+                
             </h1>
-
+            <h2 className=''>Guide:</h2>
+            <p className='p-style'>
+                To add a new type of technician or equipment, simply write a different name in the type field.
+                <br/>
+                Please update the page after adding a ressource to view it in the ComboBox
+                
+            </p>
             <div style={{ display: 'flex' }}>
                 <EngineerTable/>
                 <TechnicianTable/>
