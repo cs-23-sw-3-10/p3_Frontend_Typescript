@@ -5,6 +5,7 @@ import { useQuery } from "@apollo/client";
 import { GET_EQUIPMENT } from "../../api/queryList";
 import ScheduleComponent from "../Schedule/ScheduleComponent";
 import { TableLogic } from "../TableLogic/TableLogic";
+import Login from "../ui/login";
 
 function EquipmentPage() {
     const { loading, error, data } = useQuery(GET_EQUIPMENT);
@@ -18,11 +19,14 @@ function EquipmentPage() {
     }
 
     return (
+        <>
         <TableLogic
             columns={columnEQ}
             data={equipmentData}
             renderExpandedComponent={() => <ScheduleComponent />}
         />
+        //<Login />
+        </>
     );
 }
 
