@@ -5,8 +5,10 @@ import DropdownList from "react-widgets/DropdownList";
 import { BladeProjectForm } from "./BPMenuTypes";
 import { validateBPForm } from "./ValidateBPForm";
 import './BPMenu.css';
-import { useQuery } from "@apollo/client";
+import { useQuery, useMutation} from "@apollo/client";
 import { GET_ALL_ENGINEERS } from "../../api/queryList";
+import { ADD_BP } from "../../api/mutationList";
+import { addPath } from "graphql/jsutils/Path";
 
 
 function BladeProjectMenu() {
@@ -17,6 +19,7 @@ function BladeProjectMenu() {
     const [equipmentList, setEquipmentList] = useState<string[]>([]);
     const [currentBladeTasks, setCurrentBladeTasks] = useState([]);
 
+    const [addBP, {loading, error }] = useMutation(ADD_BP);
     const {data} = useQuery(GET_ALL_ENGINEERS);
 
     useEffect(() => {
@@ -42,7 +45,11 @@ function BladeProjectMenu() {
 
     const handleSubmit = () => {
         if(validateBPForm(currentForm)){
-
+            addBP({variables:{
+                name: projectName,
+                customer: customer,
+                projectLeader: leader,
+            }}).then((result) => console.log(result));
         }else console.log("Error");
     }
 
@@ -58,8 +65,8 @@ function BladeProjectMenu() {
             <h2 className="bp_menu_title">Project Leader</h2>
             <DropdownList data={leaderOptions} onChange={value => setLeader(value)}/>
 
-            <button className="bp_menu_submit" onClick={handleSubmit}>SUBMIT</button>
             <button className="bp_menu_cancel">CANCEL</button>
+            <button className="bp_menu_submit" onClick={handleSubmit}>SUBMIT</button>
         </div>
     );
 }
