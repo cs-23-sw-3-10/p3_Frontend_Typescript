@@ -50,6 +50,9 @@ export const GET_BT_WITH_ID = gql`
             resourceOrders {
                 id
             }
+            bookings{
+                
+            }
         }
     }
 `;
