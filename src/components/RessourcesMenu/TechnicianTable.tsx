@@ -7,7 +7,10 @@ import './Ressource.css';
 import { GET_ALL_TECHNICIAN_TYPES } from '../../api/queryList';
 import { ComboBoxDictionarySelector } from './RessourcesUtils';
 
-
+/** TODO
+ * 1. Types are queried from the dictionary, and not the technician table.
+ * 2. The technician need to be addtion instead of only creation.
+ */
 interface TechnicianFormData {
     type : string;
     count : number;
