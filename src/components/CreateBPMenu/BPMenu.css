@@ -1,0 +1,13 @@
+.bp_menu_wrapper{
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    min-width: 290px;
+    max-width: 500px;
+    border: solid;
+    border-width: 2px;
+    border-color: black;
+}
+
+.bp_menu_title{
+    border-right: 2px solid black;
+}

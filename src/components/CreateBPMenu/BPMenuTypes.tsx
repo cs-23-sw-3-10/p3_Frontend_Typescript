@@ -1,11 +1,9 @@
 import { BTOrder } from "../CreateBTMenu/BTMenuTypes";
 
-type BladeProjectForm = {
-    id: number; //Set by DB
-    startDate: string; //Set by inserting BT's
-    endDate: string; //Set by inserting BT's
+export type BladeProjectForm = {
     projectName: string; //Changed in menu
     customer: string; //Changed in menu
     leader: string; //Changed in menu
-    bladeTaskList: Array<BTOrder>;
+    equipmentList: Array<string>; //Changed in menu
+    bladeTaskList: Array<BTOrder>; //Used by menu to display existing tasks in editing mode
 }
