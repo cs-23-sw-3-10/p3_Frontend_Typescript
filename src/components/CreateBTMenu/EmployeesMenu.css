@@ -1,4 +1,5 @@
 .employees_wrapper{
+    
     display: grid;
     grid-template-columns: 1fr;
     grid-template-rows: 60px 60px auto;
@@ -143,6 +144,7 @@
 
 /*Employee Selector Menu(Pop Up)*/
 .employee_selector_menu{
+    
     display: grid;
     grid-template-columns: 1fr;
     grid-template-rows: 50px 150px 150px;

@@ -3,32 +3,35 @@ import { useDraggable } from "@dnd-kit/core";
 import { CSS } from "@dnd-kit/utilities";
 import React, { useState, useRef, useEffect } from "react";
 import MessageBox from "../ui/MessageBox";
+import EditBTPopup from "./EditBTPopup";import { dateDivLength } from "./TimelineField";
 
 //interface used to define the types of the props of BladeTaskCard
 interface BladeTaskCardProps {
-    startDate: Date;
-    endDate?: Date;
-    duration: number;
-    attachPeriod: number;
-    detachPeriod: number;
-    rig?: number;
-    projectColor: string;
-    projectId: number;
-    customer: string;
-    taskName: string;
-    id: number;
-    shown?: boolean;
-    inConflict?: boolean;
-    disableDraggable?: boolean;
-    setContextMenu?: (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => void;
+  startDate?: Date;
+  endDate?: Date;
+  duration: number;
+  attachPeriod: number;
+  detachPeriod: number;
+  rig?: number;
+  projectColor: string;
+  projectId: number;
+  projectName?: string;
+  customer: string;
+  taskName: string;
+  id: number;
+  shown?: boolean;
+  inConflict?: boolean;
+  enableDraggable?: boolean;
+  setContextMenu?: (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => void;
 }
+
 interface BladeTaskDraggableProps {
     style: any;
     id: number;
     taskName: string;
     attachPeriod: number;
     detachPeriod: number;
-    disableDraggable?: boolean;
+    enableDraggable?: boolean;
     inConflict?: boolean;
     shown?: boolean;
     setContextMenu?: (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => void;
@@ -41,6 +44,7 @@ function BladeTaskCard(props: BladeTaskCardProps) {
         y: 0,
     });
     const [showMessageBox, setShowMessageBox] = useState(false); // Used to show the message box when the user clicks on a task card
+    const [showPopup, setShowPopup] = useState(false); // Used to show the popup when the user clicks edit in a task card
     const contextMenuRef = useRef<HTMLDivElement>(null);
     useEffect(() => {
         // Function to check if click is outside the context menu
@@ -69,8 +73,12 @@ function BladeTaskCard(props: BladeTaskCardProps) {
     const handleEditClick = () => {
         console.log("Edit " + props.taskName);
         console.log(props.inConflict);
-
+        togglePopup();
         setShowContextMenu(false);
+    };
+
+    const togglePopup = () => {
+        setShowPopup(!showPopup);
     };
 
     const handleConflictClick = () => {
@@ -85,20 +93,21 @@ function BladeTaskCard(props: BladeTaskCardProps) {
         setContextMenuPosition({ x: event.clientX, y: event.clientY });
     };
 
-    //Dynamic styling based on props values
-    const cardStyle = {
-        backgroundColor: props.shown ? props.projectColor : "grey",
-        gridColumn: `date-${props.startDate.getFullYear()}-${props.startDate.getMonth()}-${props.startDate.getDate()} / span ${
-            props.duration + props.attachPeriod + props.detachPeriod //kan tilføjes/fjernes hvis duraation kun er for testen
-        }`,
-        border: props.inConflict ? "2px dashed red" : "",
-    };
+  //Dynamic styling based on props values
+  if(props.startDate){
+  const cardStyle = {
+    backgroundColor: props.shown ? props.projectColor : "grey",
+    gridColumn: `date-${props.startDate.getFullYear()}-${props.startDate.getMonth()}-${props.startDate.getDate()} / span ${
+      props.duration
+    }`,
+    border: props.inConflict ? "2px dashed red" : "", 
+  };
 
     const droppableProps: BladeTaskDraggableProps = {
         style: cardStyle,
         id: props.id,
         taskName: props.taskName,
-        disableDraggable: props.disableDraggable,
+        enableDraggable: props.enableDraggable,
         setContextMenu: handleRightClick,
         shown: props.shown,
         attachPeriod: props.attachPeriod ? props.attachPeriod : 0,
@@ -142,15 +151,53 @@ function BladeTaskCard(props: BladeTaskCardProps) {
                     onClose={handleMessageClose}
                 />
             )}
+            {showPopup && <EditBTPopup onClose={togglePopup}/>}
+
         </>
     );
+}else{
+    const cardStyle = {
+      backgroundColor: props.shown ? props.projectColor : "grey",
+      width: `${props.duration*dateDivLength}px`,
+      border: props.inConflict ? '2px dashed red' : '', 
+      gridRow: `project-${props.projectName}`,
+      gridColumn: "2",
+      justifyContent: "left"
+    };
+  
+    const droppableProps: BladeTaskDraggableProps = {
+      style: cardStyle,
+      id: props.id,
+      taskName: props.taskName,
+      enableDraggable: props.enableDraggable,
+      setContextMenu: handleRightClick,
+      shown: props.shown,
+      attachPeriod: props.attachPeriod ? props.attachPeriod : 0,
+      detachPeriod: props.detachPeriod ? props.detachPeriod : 0,
+    };
+  
+    return(<>
+      <DraggableBladeTask {...droppableProps} />
+      {showContextMenu && (
+          <div ref={contextMenuRef} className="context-menu" style={{ left: `${contextMenuPosition.x}px`, top: `${contextMenuPosition.y}px` }}>
+            <ul className="context-menu-list">
+                <li className="context-menu-item" onClick={handleEditClick}>Edit</li>
+                {props.inConflict && <li className="context-menu-item" onClick={handleConflictClick}>Conflict details</li>}
+                {/* Add more items as needed */}
+            </ul>
+        </div>    
+    )}
+    {showMessageBox && ( <MessageBox message={"Insert conflict information here"} onClose={handleMessageClose} />) }   
+      </>
+      );
+  }
 }
 export default BladeTaskCard;
 
 function DraggableBladeTask(props: BladeTaskDraggableProps) {
     const { attributes, listeners, setNodeRef, transform } = useDraggable({
         id: props.id,
-        disabled: props.disableDraggable,
+        disabled: !props.enableDraggable,
     });
 
     const style = {

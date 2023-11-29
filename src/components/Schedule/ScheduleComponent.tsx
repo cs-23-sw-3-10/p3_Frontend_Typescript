@@ -1,26 +1,28 @@
 import DisplayComponent from "./Display";
 import { useState } from "react";
+import {useEditModeContext} from "../../EditModeContext";
+
+export const passwordPromptHeight=30;
 
 function ScheduleComponent() {
-    const [editMode, setEditMode] = useState(false);
     const [showPasswordPrompt, setShowPasswordPrompt] = useState(false);
     const [password, setPassword] = useState(""); // State to store the entered password
     const [filter, setFilter] = useState("None"); // State to store the filter
 
+    const editMode = useEditModeContext();
+
     const viewSchedule = (
         <DisplayComponent
-            editMode={editMode}
-            setEditMode={setEditMode}
             setShowPasswordPrompt={setShowPasswordPrompt}
+            showPasswordPrompt={showPasswordPrompt}
             filter={filter}
             setFilter={setFilter}
         />
     );
     const editSchedule = (
         <DisplayComponent
-            editMode={editMode}
-            setEditMode={setEditMode}
             setShowPasswordPrompt={setShowPasswordPrompt}
+            showPasswordPrompt={showPasswordPrompt}
             filter={filter}
             setFilter={setFilter}
         />
@@ -28,11 +30,19 @@ function ScheduleComponent() {
 
     const scheduleHeader = [<h1>Edit Mode</h1>, <h1>View Mode</h1>];
 
-    const handlePasswordSubmit = () => {
+    const handlePasswordSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+        event.preventDefault();
+        // Get the form element from the event   
+        const form = event.target as HTMLFormElement;
+
+        // Explicitly assert the type to HTMLInputElement
+        const passwordSubmit = (form.elements.namedItem("passwordInput") as HTMLInputElement)?.value;
+       
+        setPassword(passwordSubmit);
         // Check the entered password (you can replace "your_password" with the actual password)
-        if (password === "123") {
+        if (passwordSubmit === "123") {
             setShowPasswordPrompt(false);
-            setEditMode(!editMode);
+            editMode.setEditMode(!editMode.isEditMode);
         } else {
             alert("Incorrect password. Please try again.");
         }
@@ -40,21 +50,24 @@ function ScheduleComponent() {
 
     return (
         <div>
-            {editMode ? scheduleHeader[0] : scheduleHeader[1]}
+            {editMode.isEditMode ? scheduleHeader[0] : scheduleHeader[1]}
             {showPasswordPrompt && (
-                <div className="PasswordPrompt">
+                <div className="PasswordPrompt" style={{height: `${passwordPromptHeight}px`}}>
+                    <form onSubmit={(e) => {e.preventDefault(); handlePasswordSubmit(e)}}>
                     <label htmlFor="passwordInput">Enter Password:</label>
                     <input
                         type="password"
                         id="passwordInput"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
+                        name="passwordInput"
+                        defaultValue={password}
                     />
-                    <button onClick={handlePasswordSubmit}>Submit</button>
+                    <input type="submit" value={"Enter"}></input>
+                    </form>
                 </div>
             )}
-            {editMode ? editSchedule : viewSchedule}
+            {editMode.isEditMode ? editSchedule : viewSchedule}
         </div>
     );
 }
 export default ScheduleComponent;
+

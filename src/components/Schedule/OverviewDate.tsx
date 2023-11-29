@@ -1,3 +1,5 @@
+export const dateElementHeight=30
+
 type OverviewDateProps = {
     currentDate: Date;
 };
@@ -23,6 +25,8 @@ function CreateOverviewDate(props: OverviewDateProps) {
                 backgroundColor: colour,
                 gridColumn: `date-${year}-${monthNumber}-${date}`, // The date is placed in the column corresponding to its date
                 gridRow: "1",
+                height: `${dateElementHeight}px`,
+                maxHeight: `${dateElementHeight}px`
             }}
         >
             <p>{date}</p>
