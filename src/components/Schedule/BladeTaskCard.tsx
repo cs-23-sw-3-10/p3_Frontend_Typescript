@@ -3,26 +3,30 @@ import { useDraggable } from "@dnd-kit/core";
 import { CSS } from "@dnd-kit/utilities";
 import React, { useState, useRef, useEffect } from "react";
 import MessageBox from "../ui/MessageBox";
-import EditBTPopup from "./EditBTPopup";import { dateDivLength } from "./TimelineField";
-
+import PopupWindow from "../ui/PopupWindow";
+import { ResourceOrder } from "../CreateBTMenu/BTMenuTypes";
+import EditBTComponent from "../ui/EditBTComponent";
+import { dateDivLength } from "./TimelineField";
 //interface used to define the types of the props of BladeTaskCard
-interface BladeTaskCardProps {
-  startDate?: Date;
-  endDate?: Date;
-  duration: number;
-  attachPeriod: number;
-  detachPeriod: number;
-  rig?: number;
-  projectColor: string;
-  projectId: number;
-  projectName?: string;
-  customer: string;
-  taskName: string;
-  id: number;
-  shown?: boolean;
-  inConflict?: boolean;
-  enableDraggable?: boolean;
-  setContextMenu?: (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => void;
+export interface BladeTaskCardProps {
+    startDate?: Date;
+    endDate?: Date;
+    duration: number;
+    attachPeriod: number;
+    detachPeriod: number;
+    rig?: number;
+    projectColor: string;
+    projectId: number;
+    projectName?: string;
+    customer: string;
+    taskName: string;
+    id: number;
+    shown?: boolean;
+    inConflict?: boolean;
+    enableDraggable?: boolean;
+    setContextMenu?: (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => void;
+    resourceOrders?: Array<ResourceOrder>;
+    testType?: string;
 }
 
 interface BladeTaskDraggableProps {
@@ -151,7 +155,7 @@ function BladeTaskCard(props: BladeTaskCardProps) {
                     onClose={handleMessageClose}
                 />
             )}
-            {showPopup && <EditBTPopup onClose={togglePopup}/>}
+            {showPopup && <PopupWindow onClose={togglePopup} component={<EditBTComponent bladeTaskID={props.id}/>}/>}
 
         </>
     );

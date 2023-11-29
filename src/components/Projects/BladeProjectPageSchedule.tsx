@@ -16,6 +16,7 @@ import { getMonthsInView } from "../Schedule/Display";
 import { getMonthLength } from "../Schedule/TimelineField";
 import { capitalizeFirstLetter } from "../Schedule/TimelineField";
 import { start } from "repl";
+import { shouldAutoRemoveFilter } from "@tanstack/table-core";
 
 
 /**
@@ -151,6 +152,7 @@ function BladeProjectPageWithSchedule() {
                                     enableDraggable={false}
                                     attachPeriod={bladeTask.attachPeriod}
                                     detachPeriod={bladeTask.detachPeriod}
+                                    shown={true}
                                 />
                             );
                         } else {
@@ -166,6 +168,7 @@ function BladeProjectPageWithSchedule() {
                                     taskName={bladeTask.taskName}
                                     id={bladeTask.id}
                                     enableDraggable={false}
+                                    shown={true}
                                 />
                             );
                         }

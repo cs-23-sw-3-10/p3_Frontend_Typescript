@@ -13,6 +13,31 @@ export const UPDATE_BT = gql`
     }
 `;
 
+export const UPDATE_BT_INFO = gql`
+  mutation updateBTInfo($updates: BladeTaskInput!, $id: Int!) {
+      updateBTInfo(updates: $updates, btId: $id) {
+        id
+        startDate
+        endDate
+        duration
+        testType
+        attachPeriod
+        detachPeriod
+        taskName
+        testRig
+    
+      resourceOrders {
+        id
+        resourceName
+        resourceType
+        amount
+        workHours
+        equipmentAssignmentStatus
+      }
+    }
+  }
+`;
+
 export const CREATE_BP = gql`
     mutation CreateBladeProject{
         createBladeProject{

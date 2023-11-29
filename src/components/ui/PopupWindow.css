@@ -1,0 +1,39 @@
+.PopupWindow{
+    position: fixed;
+    display: grid;
+    grid-template-columns: [bufferspace]10px [left]1fr 1fr [right]100px [bufferspace]10px;
+    grid-template-rows:  [bufferspace]10px [top]50px [bottom]1fr [bufferspace]10px;
+    background-color: white;
+    border: 1px solid #ddd; 
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 4px;
+    overflow: hidden;
+    z-index: 10000; /* Ensure it's above other elements */
+    left: 10%;
+    top: 10%;
+    max-width: 1250px;
+    min-height: 500px;
+    max-height: 600px;
+}
+
+.PopupContent{
+    grid-column: left/span 3;
+    grid-row: bottom;
+    border: 1px solid black;
+    border-radius: 4px;
+    width: 100%;
+    height: 100%;
+    overflow-y: auto;
+}
+
+.PopupCloseButton {
+    display: flex;
+    grid-column: right;
+    grid-row: top;
+    border: 1px solid black;
+    border-radius: 4px;
+    width: 100%;
+    height: 100%;
+    justify-content: center;
+    align-items: center;
+}
