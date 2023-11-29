@@ -41,10 +41,6 @@ function BladeProjectMenu() {
         bladeTaskList: currentBladeTasks
     }
 
-    useEffect(() => {
-        console.log(currentForm)
-    }, [projectName, customer, leader, equipmentList, currentBladeTasks]);
-
     const handleSubmit = () => {
         if (validateBPForm(currentForm)) {
             addBP({
