@@ -61,6 +61,7 @@ function EngineerTable(){
         }
     }
 
+
     return (
         <>
             <form onSubmit={handleSubmit} className='form-style'>
@@ -68,9 +69,9 @@ function EngineerTable(){
                 <div>
                     <label htmlFor="name" className='label-style'>Name</label>
                     <input 
-                        type="text" 
-                        name="name" 
-                        id="name" 
+                        type="text"
+                        name="name"
+                        id="name"
                         value={formData.name} 
                         onChange={handleChange} 
                         className='text-input' 

@@ -8,7 +8,7 @@ export default function ResourceTable() {
     return (
         <div>
             <h1 className='h1-style'>
-                Add a resource to the database by completing its information.
+                Add a ressource to the database by completing its information.
             </h1>
 
             <div style={{ display: 'flex' }}>

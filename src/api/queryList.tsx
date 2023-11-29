@@ -191,6 +191,14 @@ query GetAllEquipmentTypes{
     }
 }
 `;
+export const GET_ALL_TECHNICIAN_TYPES = gql`
+query GetAllTechnicianTypes{
+    DictionaryAllByCategory(category:"technician"){
+      id
+    	label
+    }
+}
+`;
 
 export const GET_BT_DATE_INFO = gql`
   query GetBTDateInfo{

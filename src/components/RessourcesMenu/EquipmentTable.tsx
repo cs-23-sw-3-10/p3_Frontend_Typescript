@@ -1,11 +1,10 @@
-import { useMutation } from '@apollo/client';
+import { useMutation, useQuery } from '@apollo/client';
 import React, {useState} from 'react';
 import { CREATE_EQUIPMENT_MUTATION } from '../../api/mutationList';
 import { SanitizeString } from './RessourceUtils';
 import './Ressource.css';
-import TestRigSelector from '../CreateBTMenu/TestRigSelector';
-import TestTypeSelector from '../CreateBTMenu/TestTypeSelector';
-import { type } from 'os';
+import { ComboBoxDictionarySelector } from './RessourcesUtils';
+import { GET_ALL_EQUIPMENT_TYPES } from '../../api/queryList';
 
 interface EquipmentFormData {
     type : string;
@@ -31,6 +30,7 @@ function EquipmentTable() {
         calibrationExpirationDate: '',
         name: ''
     });
+    const [testTypesList, setTestTypesList] = useState<string[]>([]);
     
 
     function validateForm(): boolean {
@@ -39,6 +39,10 @@ function EquipmentTable() {
 
         if ((formData.type.trim().length < 4 || (formData.type.trim().length > 50) || (formData.type.trim().length === 0))) {
             tempErrors.type = "Type must be between 4 and 50 characters";
+            isValid = false;
+        }
+        if (testTypesList.indexOf(formData.type) === -1) { 
+            tempErrors.type = "Type must be in the list";
             isValid = false;
         }
         if (!formData.name || formData.name.trim().length === 0) {
@@ -89,11 +93,15 @@ function EquipmentTable() {
                 <h2 className='h2-style'>Add Equipment</h2>
                 <div>
                     <label htmlFor="type" className='label-style'>Type</label>
-                    <TestTypeSelector
-                        testType={formData.type}
-                        setTestType={(value: string) => setFormData({ ...formData, type: value })}
-                        className='text-input'
+                    <ComboBoxDictionarySelector
+                        selectedValue = {formData.type}
+                        setSelectedValue = {(value: string) => setFormData({ ...formData, type: value })}
+                        setTypeList={setTestTypesList}
+                        className=''
+                        query={GET_ALL_EQUIPMENT_TYPES}
+                        mappingFunction={({ label }: { label: string }) => label}
                     />
+
                     {errors.type && <span className='error-message'>{errors.type}</span>}
                 </div>
                 <div>
@@ -124,7 +132,7 @@ function EquipmentTable() {
                 <div>
                     {loading && <p className='loading-message'>Loading...</p>}
                     {error && <p className='error-message'>Error: {error.message}</p>}
-                    {data && <p className='success-message'>{formData.name} with type {formData.type} created successfully!</p>}
+                    {data && <p className='success-message'>Equipment created successfully!</p>}
                 </div>
             </form>
         </>
@@ -132,3 +140,10 @@ function EquipmentTable() {
 }
 
 export default EquipmentTable;
+/**
+ *                     <TestTypeSelector
+                        testType={formData.type}
+                        setTestType={(value: string) => setFormData({ ...formData, type: value })}
+                        className='text-input'
+                    />
+ */

@@ -4,7 +4,8 @@ import React, { useState } from 'react';
 import { CREATE_TECHNICIAN_MUTATION } from '../../api/mutationList';
 import { SanitizeString } from './RessourceUtils';
 import './Ressource.css';
-import TestTypeSelector from '../CreateBTMenu/TestTypeSelector';
+import { GET_ALL_TECHNICIAN_TYPES } from '../../api/queryList';
+import { ComboBoxDictionarySelector } from './RessourcesUtils';
 
 
 interface TechnicianFormData {
@@ -21,9 +22,16 @@ interface TechnicianErrors {
 
 
 function TechnicianTable() {
-    const [formData, setFormData] = useState<TechnicianFormData>({type:'', count:0, maxWorkHours:0});
-    const [errors, setErros] = useState<TechnicianErrors>({type:'', count:'', maxWorkHours:''});
+    const [formData, setFormData] = useState<TechnicianFormData>({
+        type:'', 
+        count:0, 
+        maxWorkHours:0});
+    const [errors, setErros] = useState<TechnicianErrors>({
+        type:'', 
+        count:'', 
+        maxWorkHours:''});
     const [createTechnician, { data, loading, error }] = useMutation(CREATE_TECHNICIAN_MUTATION); 
+    const [technicianTypesList, setTechnicianTypesList] = useState<string[]>([]);
 
     
 
@@ -32,6 +40,10 @@ function TechnicianTable() {
         let isValid = true;
         if (!formData.type || formData.type.trim().length < 2 || formData.type.trim().length > 50) {
             tempErros.type = "Type is required and must be between 2 and 50 characters";
+            isValid = false;
+        }
+        if (technicianTypesList.indexOf(formData.type) === -1) { 
+            tempErros.type = "Type must be in the list";
             isValid = false;
         }
         if (!formData.count || formData.count < 1 || formData.count > 1000){
@@ -87,10 +99,13 @@ function TechnicianTable() {
                 <h2 className='h2-style'>Add Technician</h2>
                 <div>
                     <label htmlFor="type" className='label-style'>Type</label>
-                    <TestTypeSelector
-                        testType={formData.type}
-                        setTestType={(value: string) => setFormData({ ...formData, type: value })}
+                    <ComboBoxDictionarySelector
+                        selectedValue={formData.type}
+                        setSelectedValue={(value : string) => setFormData({...formData, type: value})}
+                        setTypeList={setTechnicianTypesList}
                         className='text-input'
+                        query={GET_ALL_TECHNICIAN_TYPES}
+                        mappingFunction = {({label} : {label : string}) => label}
                     />
                     {errors.type && <span className='error-message'>{errors.type}</span>}
                 </div>
@@ -122,7 +137,7 @@ function TechnicianTable() {
                 <div>
                     {loading && <p className='loading-message'>Loading...</p>}
                     {error && <p className='error-message'>Error: {error.message}</p>}
-                    {data && <p className='success-message'>{formData.type} created successfully!</p>}
+                    {data && <p className='success-message'>Technician created successfully!</p>}
                 </div>
             </form> 
         </>

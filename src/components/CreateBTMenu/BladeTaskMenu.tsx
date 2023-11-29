@@ -16,6 +16,10 @@ import EquipmentList from './EquipmentList';
 import { useMutation } from '@apollo/client';
 import { ADD_BT } from '../../api/mutationList';
 import { ValidateForm } from './ValidateForm';
+import { ComboBoxDictionarySelector } from '../RessourcesMenu/RessourcesUtils';
+import { GET_TEST_TYPES } from '../../api/queryList';
+import '../CreateBTMenu/TestTypeSelector.css';
+import '../CreateBTMenu/BladeTaskMenu.css'
 
 
 function BladeTaskMenu() {
@@ -70,6 +74,7 @@ function BladeTaskMenu() {
     //State for the equipment selection menu
     const [equipmentActive, setEquipmentActive] = useState(false);
 
+    const [testTypesList, setTestTypesList] = useState<string[]>([]);
     //The BTOrder object sent to the server -> Is created as a new Blade Tasks instance in DB and displayed in schedule
     let currentOrder: BTOrder =
     {
@@ -112,14 +117,17 @@ function BladeTaskMenu() {
                 <TaskNameSelector taskName={taskName} setTaskName={setTaskName} inErrorChart={inErrorChart} setInErrorChart={setInErrorChart}/>
                 <ProjectSelector bladeProjectId={bladeProjectId} setBladeProjectId={setBladeProjectId}/>
             </div>
-                <div className="item testtype_wrapper">
-                    <h2 className="title">Type</h2>
-                    <TestTypeSelector 
-                    testType={testType}
-                    setTestType={setTestType}
+            <div className= 'item testtype_wrapper'>
+                <h2 className="title">Type</h2>
+                <ComboBoxDictionarySelector
+                    selectedValue = {testType}
+                    setSelectedValue = {(value: string) => setTestType(value)}
+                    setTypeList={setTestTypesList}
                     className='testtype_select input_sideborders'
-                    />
-                </div>
+                    query={GET_TEST_TYPES}
+                    mappingFunction={({ label }: { label: string }) => label}
+                />
+            </div>
             <div className='item date_selection_wrapper'>
                 <StartDateSelector 
                     startDate={startDate} 
