@@ -81,3 +81,16 @@ mutation CreateBladeTask($bladeTask: BladeTaskInput!) {
     }
   }
 `;
+
+export const ADD_BP = gql`
+mutation CreateBladeProject($name: String, $customer: String, $projectLeader: String){
+  createBladeProject(name: $name, customer: $customer, projectLeader: $projectLeader ){
+    id
+    projectName
+    customer
+    projectLeader
+    startDate
+    endDate
+  }
+}
+`;
