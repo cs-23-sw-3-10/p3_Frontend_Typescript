@@ -22,7 +22,7 @@ type RigFieldDateProps = {
     rig: string;
     date: Date;
     bladeTaskHolder: BladeTaskHolder;
-    setDragging: React.Dispatch<React.SetStateAction<boolean>>;
+    setDragging: React.Dispatch<React.SetStateAction<boolean>>; //Hvordan er setDraggin brugt?
 };
 
 function CreateRigFieldDate(props: RigFieldDateProps) {

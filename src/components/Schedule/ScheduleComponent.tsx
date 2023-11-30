@@ -2,6 +2,8 @@ import DisplayComponent from "./Display";
 import { useState } from "react";
 import {useEditModeContext} from "../../EditModeContext";
 
+export const passwordPromptHeight=30;
+
 function ScheduleComponent() {
     const [showPasswordPrompt, setShowPasswordPrompt] = useState(false);
     const [filter, setFilter] = useState("None"); // State to store the filter
@@ -11,6 +13,7 @@ function ScheduleComponent() {
     const viewSchedule = (
         <DisplayComponent
             setShowPasswordPrompt={setShowPasswordPrompt}
+            showPasswordPrompt={showPasswordPrompt}
             filter={filter}
             setFilter={setFilter}
         />
@@ -18,6 +21,7 @@ function ScheduleComponent() {
     const editSchedule = (
         <DisplayComponent
             setShowPasswordPrompt={setShowPasswordPrompt}
+            showPasswordPrompt={showPasswordPrompt}
             filter={filter}
             setFilter={setFilter}
         />
@@ -30,3 +34,4 @@ function ScheduleComponent() {
     );
 }
 export default ScheduleComponent;
+

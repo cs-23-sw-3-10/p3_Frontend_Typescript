@@ -4,14 +4,10 @@ import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import 'material-symbols';
-import { render } from 'react-dom';
-import { ApolloClient, InMemoryCache, ApolloProvider, gql} from '@apollo/client';
+import { ApolloProvider} from '@apollo/client';
+import { client } from './api/client';
 import { BrowserRouter } from 'react-router-dom';
 
-export const client = new ApolloClient({
-  uri: 'http://localhost:8080/graphql',
-  cache: new InMemoryCache(),
-});
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement

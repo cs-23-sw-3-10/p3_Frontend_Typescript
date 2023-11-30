@@ -190,7 +190,7 @@ export function TableLogic<TData, TValue>({
                 </div>
             {/* We do not use this ATM */}
                 <div className="ml-10">
-                    <StyledButton>
+                    <StyledButton >
                         Create {window.location.pathname.split("/")[1]}
                     </StyledButton>
                 </div>

@@ -1,8 +1,9 @@
 import React, { useState, useContext } from "react";
 
 import { columnBP } from "./BladeProjectColumns";
-import { useQuery } from "@apollo/client";
 import { GET_ALL_BP, GET_ALL_BP_IN_DIFF_SCHEDULE, GET_TEST_RIGS } from "../../api/queryList";
+import { columnBT } from "../BladeTask/BladeTaskColumns";
+import { useQuery, useSubscription } from "@apollo/client";
 import { TableLogic } from "../TableLogic/TableLogic";
 import BladeTaskCard from "../Schedule/BladeTaskCard";
 import CreateTimelineField from "../Schedule/TimelineField";
@@ -30,6 +31,7 @@ function countMonthsIncludingStartAndEnd(startDate: Date, endDate: Date) {
     // Adjust to include both start and end months
     return months + 1;
 }
+
 
 /**
  * gets all bladeprojects from the database and renders them in a table
@@ -159,6 +161,8 @@ function BladeProjectPage() {
                             rigs={rigs}
                             months={dates}
                             btCards={btCards}
+                            btCardsPending={[]}
+                            isPendingTasksIncluded={false}
                         />
                     </div>
                 );

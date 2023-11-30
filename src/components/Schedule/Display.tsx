@@ -1,11 +1,11 @@
 import "./Display.css";
 import CreateTestRigDivs from "./TestRigDivs";
 import CreateTimelineField from "./TimelineField";
-import React, { useState} from "react";
+import React, { useMemo, useState} from "react";
 import CreateAdditionalContent from "./AdditionalContent";
 import BladeTaskCard from "./BladeTaskCard";
-import { useQuery } from "@apollo/client";
-import { GET_BT_IN_RANGE, GET_TEST_RIGS } from "../../api/queryList";
+import { useQuery, useSubscription } from "@apollo/client";
+import { GET_BT_IN_RANGE, GET_BT_IN_RANGE_SUB, GET_TEST_RIGS, GET_BT_PENDING, GET_BT_PENDING_SUB } from "../../api/queryList";
 import { getMonthLength } from "./TimelineField";
 import { capitalizeFirstLetter } from "./TimelineField";
 import { useEditModeContext } from "../../EditModeContext";
@@ -16,6 +16,7 @@ const currentDate = new Date(Date.now()); // Get the current date
 
 type DisplayProps = {
     setShowPasswordPrompt: React.Dispatch<React.SetStateAction<boolean>>;
+    showPasswordPrompt: boolean;
     filter: string;
     setFilter: React.Dispatch<React.SetStateAction<string>>;
 };
@@ -35,15 +36,6 @@ function DisplayComponent(props: DisplayProps) {
         getMonthsInView(currentDate, numberOfMonths)
     ); // should be imported from database
     
-
-    const handleDateChange = (date: string) => {
-        setSelectedDate(date);
-    };
-
-    const handleNumberChange = (numberOfMonthsInView: number) => {
-        setNumberOfMonths(numberOfMonthsInView);
-    };
-
     const handleViewChange = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         // Get the form element from the event   
@@ -53,21 +45,39 @@ function DisplayComponent(props: DisplayProps) {
         const dateInput = (form.elements.namedItem("dateInput") as HTMLInputElement)?.value;
         const numberInput = (form.elements.namedItem("numberInput") as HTMLInputElement)?.value;
 
-        handleDateChange(dateInput);
-        handleNumberChange(parseInt(numberInput));
-        goTo(parseInt(numberInput));
+        console.log("her er number ", numberInput);
+
+        setSelectedDate(dateInput);
+        setNumberOfMonths(parseInt(numberInput));
+        goTo(dateInput, parseInt(numberInput));
     };
 
-    const goTo = (number: number) => {
-        const newDate = new Date(selectedDate);
+    const handleModeChange = () => {
+        if (!editMode.isEditMode) {
+            // If switching to edit mode, show password prompt
+            props.setShowPasswordPrompt(true);
+        } else {
+            // If switching from edit mode, just toggle the edit mode
+            editMode.setEditMode(!editMode.isEditMode);
+        }
+    };
+
+    const goTo = (viewDate: string, number: number) => {
+        const newDate = new Date(viewDate);
         if (!isNaN(newDate.valueOf())) {
+            if (!isNaN(number)) {
             setDates(getMonthsInView(newDate, number));
+            }
+            else {
+                setDates(getMonthsInView(newDate, 3));
+            }
         } else {
             setDates(getMonthsInView(currentDate, numberOfMonths));
         }
     };
 
     const queryDates = getQueryDates(dates[0], dates[dates.length - 1]);
+
 
     const {
         loading: loadingRigs,
@@ -76,14 +86,27 @@ function DisplayComponent(props: DisplayProps) {
     } = useQuery(GET_TEST_RIGS);
     
 
-    const { loading: loadingBT, error: errorBT, data: dataBT } = useQuery(GET_BT_IN_RANGE, {
-        variables: {
-            startDate: queryDates.startDate,
-            endDate: queryDates.endDate,
-            isActive: !editMode.isEditMode,
-        },
-    });
 
+    const {
+        loading: loadingBT,
+        error: errorBT,
+        data: dataBT,
+    } = useSubscription(GET_BT_IN_RANGE_SUB, {variables: {
+        
+        startDate: queryDates.startDate,
+        endDate: queryDates.endDate,
+        isActive:  !editMode.isEditMode,
+    },});
+
+
+    
+    const {
+        loading: loadingPendingBT,
+        error: errorPendingBT,
+        data: dataPendingBT,
+    } =useSubscription(GET_BT_PENDING_SUB); 
+   
+    
     if (loadingRigs) {
         return <p>Loading...</p>;
     }
@@ -98,14 +121,24 @@ function DisplayComponent(props: DisplayProps) {
         return <p>Error {errorBT.message}</p>;
     }
 
+    if (loadingPendingBT) {
+        return <p>Loading...</p>;
+    }
+    if (errorPendingBT) {
+        return <p>Error {errorPendingBT.message}</p>;
+    }
+
+    console.log(dataBT["AllBladeTasksInRangeSub"]);
+
     const numberOfRigs = parseInt(dataRigs.DictionaryAllByCategory[0].label);
     if (rigs.length !== numberOfRigs){
         setRigs(createRigs(numberOfRigs));
     }
 
+    //Makeing schedulet BladeTaskCards
     let btCards: React.ReactNode[] = [];
 
-    dataBT["AllBladeTasksInRange"].forEach((bt: any) => {
+    dataBT["AllBladeTasksInRangeSub"].forEach((bt: any) => {
         let btShown = false;
         if (
             bt.bladeProject.customer === props.filter ||
@@ -118,30 +151,64 @@ function DisplayComponent(props: DisplayProps) {
         const month = parseInt(dateSplit[1]) - 1;
         const day = parseInt(dateSplit[2]);
 
-        let endDateSplit = bt.endDate.split("-");
-        const endYear = parseInt(endDateSplit[0]);
-        const endMonth = parseInt(endDateSplit[1]) - 1;
-        const endDate = parseInt(endDateSplit[2]);
-        btCards.push(
+            let endDateSplit = bt.endDate.split("-");
+            const endYear = parseInt(endDateSplit[0]);
+            const endMonth = parseInt(endDateSplit[1]) - 1;
+            const endDate = parseInt(endDateSplit[2]);
+            btCards.push(
+                <BladeTaskCard
+                    key={bt.id}
+                    duration={bt.duration}
+                    projectColor={bt.bladeProject.color}
+                    projectId={bt.bladeProject.id}
+                    projectName={bt.bladeProject.projectName}
+                    customer={bt.bladeProject.customer}
+                    taskName={bt.taskName}
+                    startDate={new Date(year, month, day)}
+                    endDate={new Date(endYear, endMonth, endDate)}
+                    attachPeriod={bt.attachPeriod}
+                    detachPeriod={bt.detachPeriod}
+                    rig={bt.testRig}
+                    id={bt.id}
+                    shown={btShown}
+                    enableDraggable={editMode.isEditMode}
+                    inConflict={bt.inConflict}
+                                    />
+            );
+    });
+
+
+    
+    //Making pending BladeTaskCards
+    let btCardsPending: React.ReactNode[] = [];
+    dataPendingBT["AllBladeTasksPendingSub"].forEach((bt: any) => {
+        let btShown = false;
+        if (
+            bt.bladeProject.customer === props.filter ||
+            props.filter === "None"
+        ) {
+            btShown = true;
+        }
+
+        btCardsPending.push(
             <BladeTaskCard
                 key={bt.id}
                 duration={bt.duration}
-                projectColor={bt.bladeProject.color}
-                projectId={bt.bladeProject.id}
-                customer={bt.bladeProject.customer}
-                taskName={bt.taskName}
-                startDate={new Date(year, month, day)}
-                endDate={new Date(endYear, endMonth, endDate)}
                 attachPeriod={bt.attachPeriod}
                 detachPeriod={bt.detachPeriod}
-                rig={bt.testRig}
+                projectColor={bt.bladeProject.color}
+                projectId={bt.bladeProject.id}
+                projectName={bt.bladeProject.projectName}
+                customer={bt.bladeProject.customer}
+                taskName={bt.taskName}
                 id={bt.id}
                 shown={btShown}
-                inConflict={bt.inConflict}
                 enableDraggable={editMode.isEditMode}
+                inConflict={false}
             />
         );
     });
+  
 
     return (
         <div className="ScheduleContentContainer">
@@ -161,6 +228,7 @@ function DisplayComponent(props: DisplayProps) {
                     <input
                         name="numberInput"
                         type="number"
+                        defaultValue={numberOfMonths}
                         min="2"
                         max="24"
                     />
@@ -195,6 +263,9 @@ function DisplayComponent(props: DisplayProps) {
                     rigs={rigs}
                     months={dates}
                     btCards={btCards}
+                    btCardsPending={btCardsPending}
+                    showPasswordPrompt={props.showPasswordPrompt}
+                    isPendingTasksIncluded={true}
                 />
             </div>
 
