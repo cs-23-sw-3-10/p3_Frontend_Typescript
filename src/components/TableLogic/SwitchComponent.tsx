@@ -18,9 +18,6 @@ const SwitchComponent = (props: SwitchProps) => {
   }, [editMode.isEditMode]);
 
   const handleSwitch = () => {
-    console.log("handleSwitch");
-    console.log("Auth Token: ", localStorage.getItem('token'));
-    console.log("Checked before conditionals: ", checked);
 
     if (!localStorage.getItem('token') && !checked) {
         setShowPasswordPrompt(true);
@@ -41,26 +38,7 @@ const SwitchComponent = (props: SwitchProps) => {
     }
 
 }
-  
-   // Handle the password submit
-  const handlePasswordSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-       event.preventDefault();
-       // Get the form element from the event   
-       const form = event.target as HTMLFormElement;
-       // Explicitly assert the type to HTMLInputElement
-       const passwordSubmit = (form.elements.namedItem("passwordInput") as HTMLInputElement)?.value;  
-      
-       setPassword(passwordSubmit);
-       // Check the entered password (you can replace "your_password" with the actual password)
-       if (passwordSubmit === "123") {
-        setShowPasswordPrompt(false);
-           editMode.setEditMode(!editMode.isEditMode);
-        } else {
-          alert("Incorrect password. Please try again.");
-          }
-      };
-
-      
+ 
     return (
       <>
        <div className="inline-flex items-center h-full ">

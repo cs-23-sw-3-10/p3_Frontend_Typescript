@@ -109,7 +109,10 @@ function DisplayComponent(props: DisplayProps) {
         return <p>Loading...</p>;
     }
     if (errorRigs) {
-        return <p>Error {errorRigs.message}</p>;
+        //TDOO: Find better way to handle timesout token
+        console.log(errorRigs);
+        localStorage.removeItem("token");
+        return <p>Error {errorRigs.message} </p>;
     }
     if (loadingBT) {
         return <p>Loading...</p>;

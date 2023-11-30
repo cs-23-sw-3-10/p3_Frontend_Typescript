@@ -43,8 +43,10 @@ function handleLogin(e : React.MouseEvent<HTMLButtonElement, MouseEvent>) {
           
       }
       if(response.ok)
+      console.log(response);
       {
         response.text().then(data => {
+            
             localStorage.setItem('token', data);
             console.log(localStorage.getItem('token'));
             }); 
