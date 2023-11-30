@@ -9,6 +9,8 @@ import { GET_BT_IN_RANGE, GET_BT_IN_RANGE_SUB, GET_TEST_RIGS, GET_BT_PENDING, GE
 import { getMonthLength } from "./TimelineField";
 import { capitalizeFirstLetter } from "./TimelineField";
 import { useEditModeContext } from "../../EditModeContext";
+import { Switch } from "@mui/base";
+import SwitchComponent from "../TableLogic/SwitchComponent";
 
 const currentDate = new Date(Date.now()); // Get the current date
 
@@ -42,8 +44,6 @@ function DisplayComponent(props: DisplayProps) {
         // Explicitly assert the type to HTMLInputElement and acces value
         const dateInput = (form.elements.namedItem("dateInput") as HTMLInputElement)?.value;
         const numberInput = (form.elements.namedItem("numberInput") as HTMLInputElement)?.value;
-
-        console.log("her er number ", numberInput);
 
         setSelectedDate(dateInput);
         setNumberOfMonths(parseInt(numberInput));
@@ -111,22 +111,18 @@ function DisplayComponent(props: DisplayProps) {
     if (errorRigs) {
         return <p>Error {errorRigs.message}</p>;
     }
-
     if (loadingBT) {
         return <p>Loading...</p>;
     }
     if (errorBT) {
         return <p>Error {errorBT.message}</p>;
     }
-
     if (loadingPendingBT) {
         return <p>Loading...</p>;
     }
     if (errorPendingBT) {
         return <p>Error {errorPendingBT.message}</p>;
     }
-
-    console.log(dataBT["AllBladeTasksInRangeSub"]);
 
     const numberOfRigs = parseInt(dataRigs.DictionaryAllByCategory[0].label);
     if (rigs.length !== numberOfRigs){
@@ -212,7 +208,7 @@ function DisplayComponent(props: DisplayProps) {
         <div className="ScheduleContentContainer">
             <div className="ScheduleViewControl">
                 <form onSubmit={(e) => {handleViewChange(e)}}>
-                    <label htmlFor="dateInput" style={{ fontSize: "10px" }}>
+                    <label htmlFor="dateInput" className="text-sm">
                         Date:
                     </label>
                     <input
@@ -220,7 +216,7 @@ function DisplayComponent(props: DisplayProps) {
                         type="date"
                         defaultValue={selectedDate}
                     />
-                    <label htmlFor="numberInput" style={{ fontSize: "10px" }}>
+                    <label htmlFor="numberInput" className="text-sm">
                         Months shown:
                     </label>
                     <input
@@ -235,8 +231,7 @@ function DisplayComponent(props: DisplayProps) {
             </div>
             {editMode.isEditMode ? (
             <div className="ScheduleFilterAndMode">
-                <label className="switch"> Edit Mode</label>
-                <input type="checkbox" checked={true} onChange={handleModeChange} />
+                <SwitchComponent setShowPasswordPrompt={props.setShowPasswordPrompt} />
             </div>
             ) : (
             <div className="ScheduleFilterAndMode">
@@ -252,9 +247,8 @@ function DisplayComponent(props: DisplayProps) {
                     <option value="Goldwind">Goldwind</option>
                     <option value="Suzlon">Suzlon</option>
                 </select>
-                <label className="switch"> Edit Mode</label>
-                <input type="checkbox" checked={false} onChange={handleModeChange} />
-            </div>
+               <SwitchComponent setShowPasswordPrompt={props.setShowPasswordPrompt} />
+            </div>           
             )}
             
             <div className="ScheduleDisplay">
@@ -348,7 +342,7 @@ function getQueryDates(startDate: Date, endDate: Date) {
     return { startDate: startDateSTR, endDate: endDateSTR };
 }
 
-function createRigs(numberOfRigs: number) {
+export function createRigs(numberOfRigs: number) {
     let rigs: {rigName: string, rigNumber: number}[]= [];
     for (let i = 1; i <= numberOfRigs; i++) {
         rigs.push({

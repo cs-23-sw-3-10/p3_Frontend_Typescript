@@ -5,9 +5,9 @@ import EquipmentPage from "./components/Resources/EquipmentPage";
 import { Routes, Route, Navigate } from "react-router-dom";
 import "./App.css";
 import ScheduleComponent from "./components/Schedule/ScheduleComponent";
-import BladeProjectPage from "./components/Projects/BladeProjectPage";
 import BTPage from "./components/BladeTask/BladeTaskPage";
-import BladeProjectPageWithSchedule from "./components/Projects/BladeProjectPageSchedule";
+import BladeProjectPage from "./components/Projects/BladeProjectPage";
+
 
 import { EditModeProvider } from "./EditModeContext";
 import BladeTaskMenu from "./components/CreateBTMenu/BladeTaskMenu";
@@ -26,13 +26,15 @@ function App() {
                         <Route path="/" element={<ScheduleComponent/>} />
                         <Route
                             path="/projects"
-                            element={<BladeProjectPageWithSchedule />}
+                            element={<BladeProjectPage />}
                         />
                         <Route path="/bladetask" element={<BTPage />} />
                         <Route path="/resources" element={<EquipmentPage />} />
+                       
                         <Route path="*" element={<Navigate to="/" />} />
                     </Routes>
                     </EditModeProvider>
+
                 </div>
             </div>
         </>
