@@ -130,7 +130,10 @@ function CreateTimelineField(props: TimelineFieldProps) {
                             />
                         ))}
                     </div>
-                    {props.isPendingTasksIncluded &&<PendingTasks
+                    <div>
+                    
+                    </div>
+                        {props.isPendingTasksIncluded &&<PendingTasks
                         bladeTaskHolder={bladeTasksPending}
                         bladeTaskCards={bladeTasksPending.getBladeTasks()}
                         numberOfRigs={props.rigs.length}

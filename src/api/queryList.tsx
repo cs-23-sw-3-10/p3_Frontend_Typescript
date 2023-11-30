@@ -3,6 +3,37 @@ import { gql } from "@apollo/client";
 /**
  * This file contains all the queries used in the application
  */
+
+export const GET_ALL_BP_IN_DIFF_SCHEDULE = gql`
+    query AllSchedules {
+        AllSchedules {
+            id
+            isActive
+            bladeProject {
+                id
+                startDate
+                endDate
+                customer
+                projectLeader
+                projectName
+                color
+                bladeTasks {
+                    id
+                    startDate
+                    endDate
+                    duration
+                    testType
+                    attachPeriod
+                    detachPeriod
+                    taskName
+                    testRig
+                    inConflict
+                }
+            }
+    }
+}
+    `;
+
 export const GET_ALL_BT = gql`
     query AllBladeTasks {
         AllBladeTasks {

@@ -1,8 +1,9 @@
 "use client";
-import React from "react";
+import React,{useState}from "react";
 import StyledButton from "../ui/styledButton";
 import { useCollapse } from "react-collapsed";
 import { Input } from "../ui/input";
+import { useContext } from "react";
 
 import {
     ColumnDef,
@@ -28,6 +29,8 @@ import {
     TableHeader,
     TableRow,
 } from "../ui/table";
+
+import SwitchComponent from "./SwitchComponent";
 
 /**
  * Represents the props for the DataTable component.
@@ -59,7 +62,6 @@ const defaultPagination: PaginationState = {
     pageSize: 10,
 };
 
-
 export function TableLogic<TData, TValue>({
     columns,
     data,
@@ -67,14 +69,16 @@ export function TableLogic<TData, TValue>({
 }: DataTableProps<TData, TValue>) {
 
     //List of useState hooks that are used to set the state of the table.
-    const [sorting, setSorting] = React.useState<SortingState>([]);
-    const [columnVisibility, setColumnVisibility] = React.useState({});
+    const [sorting, setSorting] = useState<SortingState>([]);
+    const [columnVisibility, setColumnVisibility] = useState({});
     const [columnFilters, setColumnFilters] =
-        React.useState<ColumnFiltersState>([]);
-    const [filtering, setFiltering] = React.useState("");
-    const [expanded, setExpanded] = React.useState<ExpandedState>({});
-    const [inputValue, setInputValue] = React.useState("");
+        useState<ColumnFiltersState>([]);
+    const [filtering, setFiltering] = useState("");
+    const [expanded, setExpanded] = useState<ExpandedState>({});
+    const [inputValue, setInputValue] = useState("");
     const { getToggleProps } = useCollapse();
+    const [showPasswordPrompt, setShowPasswordPrompt] = useState(false);
+
 
     /**  
      * The useReactTable hook is used to create a table .
@@ -120,7 +124,6 @@ export function TableLogic<TData, TValue>({
         }
     };
 
-
     return (
         <div>
             {/* global filtering textfield*/}
@@ -131,7 +134,7 @@ export function TableLogic<TData, TValue>({
                     onChange={(e) => {
                         setFiltering(e.target.value);
                     }}
-                    className="max-w-sm"
+                    className="w-80 r"
                 />
                 <div>
                     {/* popover for changing column visibility*/}
@@ -190,6 +193,9 @@ export function TableLogic<TData, TValue>({
                     <StyledButton >
                         Create {window.location.pathname.split("/")[1]}
                     </StyledButton>
+                </div>
+                <div>
+                    <SwitchComponent setShowPasswordPrompt={setShowPasswordPrompt}/>
                 </div>
             </div>
 

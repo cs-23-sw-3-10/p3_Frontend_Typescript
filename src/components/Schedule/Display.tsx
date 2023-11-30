@@ -9,6 +9,8 @@ import { GET_BT_IN_RANGE, GET_BT_IN_RANGE_SUB, GET_TEST_RIGS, GET_BT_PENDING, GE
 import { getMonthLength } from "./TimelineField";
 import { capitalizeFirstLetter } from "./TimelineField";
 import { useEditModeContext } from "../../EditModeContext";
+import { Switch } from "@mui/base";
+import SwitchComponent from "../TableLogic/SwitchComponent";
 
 const currentDate = new Date(Date.now()); // Get the current date
 
@@ -206,7 +208,7 @@ function DisplayComponent(props: DisplayProps) {
         <div className="ScheduleContentContainer">
             <div className="ScheduleViewControl">
                 <form onSubmit={(e) => {handleViewChange(e)}}>
-                    <label htmlFor="dateInput" style={{ fontSize: "10px" }}>
+                    <label htmlFor="dateInput" className="text-sm">
                         Date:
                     </label>
                     <input
@@ -214,7 +216,7 @@ function DisplayComponent(props: DisplayProps) {
                         type="date"
                         defaultValue={selectedDate}
                     />
-                    <label htmlFor="numberInput" style={{ fontSize: "10px" }}>
+                    <label htmlFor="numberInput" className="text-sm">
                         Months shown:
                     </label>
                     <input
@@ -229,8 +231,7 @@ function DisplayComponent(props: DisplayProps) {
             </div>
             {editMode.isEditMode ? (
             <div className="ScheduleFilterAndMode">
-                <label className="switch"> Edit Mode</label>
-                <input type="checkbox" checked={true} onChange={handleModeChange} />
+                <SwitchComponent setShowPasswordPrompt={props.setShowPasswordPrompt} />
             </div>
             ) : (
             <div className="ScheduleFilterAndMode">
@@ -246,9 +247,8 @@ function DisplayComponent(props: DisplayProps) {
                     <option value="Goldwind">Goldwind</option>
                     <option value="Suzlon">Suzlon</option>
                 </select>
-                <label className="switch"> Edit Mode</label>
-                <input type="checkbox" checked={false} onChange={handleModeChange} />
-            </div>
+               <SwitchComponent setShowPasswordPrompt={props.setShowPasswordPrompt} />
+            </div>           
             )}
             
             <div className="ScheduleDisplay">
@@ -342,7 +342,7 @@ function getQueryDates(startDate: Date, endDate: Date) {
     return { startDate: startDateSTR, endDate: endDateSTR };
 }
 
-function createRigs(numberOfRigs: number) {
+export function createRigs(numberOfRigs: number) {
     let rigs: {rigName: string, rigNumber: number}[]= [];
     for (let i = 1; i <= numberOfRigs; i++) {
         rigs.push({
