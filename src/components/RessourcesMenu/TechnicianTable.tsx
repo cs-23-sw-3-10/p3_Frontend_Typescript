@@ -1,10 +1,10 @@
 
-import { useMutation } from '@apollo/client';
+import { useMutation, useQuery } from '@apollo/client';
 import React, { useState } from 'react';
 import { CREATE_TECHNICIAN_MUTATION } from '../../api/mutationList';
 import { SanitizeString } from './RessourceUtils';
 import './Ressource.css';
-import { GET_ALL_TECHNICIANS, GET_ALL_TECHNICIAN_TYPES } from '../../api/queryList';
+import { DELETE_TECHNICIAN, GET_ALL_TECHNICIANS, GET_ALL_TECHNICIAN_TYPES } from '../../api/queryList';
 import { ComboBoxSelector } from './RessourcesUtils';
 
 /** TODO
@@ -22,6 +22,10 @@ interface TechnicianErrors {
     count : string;
     maxWorkHours : string;
 }
+interface FormFeedback {
+    message : string;
+    type : 'error' | 'success' | 'loading' | '';
+}
 
 
 function TechnicianTable() {
@@ -34,7 +38,12 @@ function TechnicianTable() {
         count:'', 
         maxWorkHours:''});
     const [createTechnician, { data, loading, error }] = useMutation(CREATE_TECHNICIAN_MUTATION); 
+    const [deleteTechnician, { data: deleteData, loading: deleteLoading, error: deleteError }] = useMutation(DELETE_TECHNICIAN);
+    const [submitAction, setSubmitAction] = useState<string>('');
+
     const [technicianTypesList, setTechnicianTypesList] = useState<string[]>([]);
+    const [formFeedback, setFormFeedback] = useState({message:'', type:''});
+    const { refetch } = useQuery(GET_ALL_TECHNICIANS);
 
     function validateForm() : boolean { 
         let tempErros: TechnicianErrors = {type:'', count:'', maxWorkHours:''};
@@ -42,9 +51,6 @@ function TechnicianTable() {
         if (!formData.type || formData.type.trim().length < 3 || formData.type.trim().length > 50) {
             tempErros.type = "Type is required and must be between 2 and 50 characters";
             isValid = false;
-        }
-        if (technicianTypesList.indexOf(formData.type) === -1) { 
-            addTypeToDataBase(formData.type);
         }
         if (!formData.count || formData.count < 1 || formData.count > 1000){
             tempErros.count = "Count must be between 1 and 1000";
@@ -72,9 +78,6 @@ function TechnicianTable() {
         return isValid;
 
     }
-    function addTypeToDataBase(type : string) {
-        
-    }
 
     function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
         setFormData({...formData, [e.target.name]: e.target.value});
@@ -83,23 +86,41 @@ function TechnicianTable() {
     function handleSubmit(e: React.FormEvent) {
         e.preventDefault();
         if(validateForm()) {
-            console.log("submit " + formData);
-            createTechnician({variables: {
-                type: String (formData.type.toLowerCase().trim()),
-                count: Number (formData.count),
-                maxWorkHours: Number (formData.maxWorkHours)
-            }}).then(response => {
-                console.log('Technician created: ' + response);
-            }).catch(error => {
-                console.log('Error creating Technician: ' + error);
-            });
+            setFormFeedback({message:'', type:'loading'});
+            if (submitAction === 'submit') {
+                console.log("submit " + formData);
+                createTechnician({variables: {
+                    type: String (formData.type.toLowerCase().trim()),
+                    count: Number (formData.count),
+                    maxWorkHours: Number (formData.maxWorkHours)
+                }}).then(response => {
+                    console.log('Technician created: ' + response);
+                    setFormFeedback({ message: response.data.CreateTechnician.type + ' was added to the database', type: 'success' });
+                    refetch(); //Force refetch to update the table
+                    
+                }).catch(error => {
+                    console.log('Error creating Technician: ' + error);
+                    setFormFeedback({ message: 'Error creating Technician: ' + error.message, type: 'error' });
+                });
+            } else if (submitAction === 'delete') {
+                deleteTechnician({variables: {
+                    type: String (formData.type.toLowerCase().trim())
+                }}).then(response => {
+                    console.log('Technician deleted: ' + response);
+                    setFormFeedback({ message: response.data.DeleteTechnician.type + ' was deleted from the database', type: 'success' })
+                    refetch(); //Force refetch to update the table
+                }).catch(error => {
+                    console.log('Error deleting Technician: ' + error);
+                    setFormFeedback({ message: 'Error deleting Technician: ' + error.message, type: 'error' });
+                });
+            }
         }
     }
 
     return (
         <> 
             <form onSubmit={handleSubmit} className='form-style'>
-                <h2 className='h2-style'>Add/update Technician</h2>
+                <h2 className='h2-style'>Technician</h2>
                 <div>
                     <label htmlFor="type" className='label-style'>Type</label>
                     <ComboBoxSelector
@@ -137,11 +158,12 @@ function TechnicianTable() {
                     />
                     {errors.maxWorkHours && <span className='error-message'>{errors.maxWorkHours}</span>}
                 </div>
-                <button type="submit" className='submit-button'>Submit</button>
+                <button type="submit" onClick={() => setSubmitAction('submit')} className='submit-button' value="submit">Submit</button>
+                <button type="submit" onClick={() => setSubmitAction('delete')} className='delete-button' value="delete">Delete</button>
                 <div>
-                    {loading && <p className='loading-message'>Loading...</p>}
-                    {error && <p className='error-message'>Error: {error.message}</p>}
-                    {data && <p className='success-message'>Database was successfully updated!</p>}
+                    {formFeedback.type === "loading" && <p className='loading-message'>Loading...</p>}
+                    {formFeedback.type === "error" && <p className='error-message'>{formFeedback.message}</p>}
+                    {formFeedback.type === "success" && <p className='success-message'>{formFeedback.message}</p>}
                 </div>
             </form> 
         </>

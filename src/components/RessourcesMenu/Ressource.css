@@ -1,21 +1,61 @@
-/* General form styling */
-.form-style {
-    width: 80%;
-    max-width: 30%;
+
+
+
+/* ResourceTable Component Styling */
+.resource-table-container {
     margin: 20px;
     padding: 20px;
-    background-color: #f9f9f9;
-    border-radius: 10px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
 }
 
-/* Label styling */
-.label-style {
-    display: block;
+/* Heading styling */
+.h2-style {
+    text-align: left;
+    color: #333;
+    font-size: 22px;
+    font-weight: bold;
     margin-top: 10px;
+    margin-bottom: 15px;
+}
+
+/* Paragraph styling */
+.p-style {
+    color: #666;
+    line-height: 1.5;
+    margin-bottom: 20px;
+}
+
+/* Bold text in paragraphs */
+.p-style b {
     font-weight: bold;
 }
 
+/* Flex container for tables */
+.tables-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: space-around;
+}
+
+/* Individual table styling */
+.engineer-table, .technician-table, .equipment-table {
+    flex: 1;
+    min-width: 300px; /* Adjust based on your layout requirements */
+    background-color: #f2f2f2;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Responsive styling - adjust breakpoint as needed */
+@media (max-width: 768px) {
+    .tables-container {
+        flex-direction: column;
+    }
+}
 /* Input field styling */
 .text-input{
     width: 100%;
@@ -39,10 +79,13 @@
     margin-bottom: 15px;
     font-size: 25px;
 }
-.h2-style { 
-    text-align: center;
-    margin-bottom: 10px;
-    font-size: 20px;
+.h2-style {
+    text-align: left;
+    color: #333;
+    font-size: 22px;
+    font-weight: bold;
+    margin-top: 10px;
+    margin-bottom: 15px;
 }
 
 /* Error, Loading, Success message styling */
@@ -71,10 +114,24 @@
     border-radius: 4px;
     cursor: pointer;
     transition: background-color 0.1s ease;
-}
+    margin-right: 2px;
 
+}
 .submit-button:hover {
     background-color: #0f6313;
+}
+.delete-button {
+    background-color: rgb(208, 47, 47);
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.1s ease;
+}
+
+.delete-button:hover {
+    background-color: #771313;
 }
 
 /* Dropdown container styling */

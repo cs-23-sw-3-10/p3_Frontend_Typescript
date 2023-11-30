@@ -45,9 +45,9 @@ interface ComboBoxProps {
  */
 export function ComboBoxSelector(props : ComboBoxProps) {
     const {selectedValue, setSelectedValue, setItemList, className, query, dataKey, queryVariables, mappingFunction} = props;
-    const { loading, error, data } = useQuery(query, {variables: queryVariables});
+    const { loading, error, data, refetch} = useQuery(query, {variables: queryVariables});
     const [optionsList, setOptionsList] = useState<Array<string>>([]);
-    console.log(data);
+    //console.log(data);
 
     useEffect(() => {
         if (data && Array.isArray(data[dataKey])) {

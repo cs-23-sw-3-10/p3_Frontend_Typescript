@@ -6,22 +6,25 @@ import './Ressource.css'
 
 export default function ResourceTable() {
     return (
-        <div>
-            <h1 className='h1-style'>
-                Add a ressource to the database by completing its information.
-                
-            </h1>
-            <h2 className=''>Guide:</h2>
+        <div className='resource-table-container'>
+            <h1 className='h1-style'> Ressources</h1>
+            <h2 className='h2-style'>Add, update or remove a ressource to/from the database</h2>
             <p className='p-style'>
-                To add a new type of technician or equipment, simply write a different name in the type field.
-                <br/>
-                Please update the page after adding a ressource to view it in the ComboBox
+                To <b>add</b> a new type, name ect. simply overwrite the text in the dropdown menu. <br/>
+                To <b>update</b>, select the specific ressource in the dropdown you want to update and overwrite the variables<br/>
+                To <b>delete</b>, select the specific ressource in the dropdown you want to delete and press the delete button
                 
             </p>
-            <div style={{ display: 'flex' }}>
-                <EngineerTable/>
-                <TechnicianTable/>
-                <EquipmentTable/>
+            <div className="tables-container">
+                <div className="engineer-table">
+                    <EngineerTable/>
+                </div>
+                <div className="technician-table">
+                    <TechnicianTable/>
+                </div>
+                <div className="equipment-table">
+                    <EquipmentTable/>
+                </div>
             </div>
         </div>
     );

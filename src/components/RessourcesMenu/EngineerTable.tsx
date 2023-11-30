@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import './Ressource.css';
-import { useMutation } from '@apollo/client';
+import { useMutation, useQuery } from '@apollo/client';
 import { CREATE_ENGINEER_MUTATION } from '../../api/mutationList';
 import { SanitizeString } from './RessourceUtils';
 import { ComboBoxSelector } from './RessourcesUtils';
-import { GET_ALL_ENGINEERS } from '../../api/queryList';
+import { DELETE_ENGINEER, GET_ALL_ENGINEERS } from '../../api/queryList';
 
 interface EngineerFormData {
     name : string;
@@ -14,12 +14,21 @@ interface EngineerErrors {
     name : string;
     maxWorkHours : string;
 }
+interface FormFeedback {
+    message : string;
+    type : 'error' | 'success' | 'loading' | '';
+}
 
 
 function EngineerTable(){
     const [formData, setFormData] = useState<EngineerFormData>({name:'', maxWorkHours:0});
     const [errors, setErros] = useState<EngineerErrors>({name:'', maxWorkHours:''});
-    const [createEngineer, { data, loading, error }] = useMutation(CREATE_ENGINEER_MUTATION);
+    const [createEngineer, { data, loading, error}] = useMutation(CREATE_ENGINEER_MUTATION);
+    const [deleteEngineer, { data: deleteData, loading: deleteLoading, error: deleteError }] = useMutation(DELETE_ENGINEER);
+    const [formFeedback, setFormFeedback] = useState<FormFeedback>({message:'', type:''});
+    const { refetch } = useQuery(GET_ALL_ENGINEERS);
+
+    const [submitAction, setSubmitAction] = useState<string>('');
 
     function validateForm() : boolean { 
         let tempErros: EngineerErrors = {name:'', maxWorkHours:''};
@@ -52,14 +61,34 @@ function EngineerTable(){
     function handleSubmit(e: React.FormEvent) {
         e.preventDefault();
         if(validateForm()) {
-            createEngineer({variables: { 
-                name: String (formData.name),
-                maxWorkHours: Number (formData.maxWorkHours)
+            setFormFeedback({message:'', type:'loading'});
+            if (submitAction === 'submit') {
+                createEngineer({variables: { 
+                    name: String (formData.name),
+                    maxWorkHours: Number (formData.maxWorkHours)
             }}).then(response => {
                 console.log('Engineer created: ' + response);
+                setFormFeedback({ message: response.data.CreateEngineer.name + ' was added to the database', type: 'success' });
+                refetch(); //update combobox
             }).catch(error => {
                 console.log('Error creating Engineer: ' + error);
+                setFormFeedback({ message: 'Error creating Engineer: ' + error.message, type: 'error' });
             })
+            } else if (submitAction === 'delete') {
+                deleteEngineer(
+                    {variables: {
+                        name: String (formData.name)
+                }}).then(response => {
+                    console.log('Engineer deleted: ' + response);
+                    setFormFeedback({ message: response.data.DeleteEngineer.name + ' was deleted from the database', type: 'success' })
+                    refetch(); //update combobox
+                }
+                ).catch(error => {
+                    console.log('Error deleting Engineer: ' + error);
+                    setFormFeedback({ message: 'Error deleting Engineer: ' + error.message, type: 'error' });
+                });
+            }
+
         }
     }
 
@@ -67,7 +96,7 @@ function EngineerTable(){
     return (
         <>
             <form onSubmit={handleSubmit} className='form-style'>
-                <h2 className='h2-style'>Add/update Engineer</h2>
+                <h2 className='h2-style'>Engineer</h2>
                 <div>
                     <label htmlFor="name" className='label-style'>Name</label>
                     <ComboBoxSelector
@@ -93,11 +122,12 @@ function EngineerTable(){
                     />
                     {errors.maxWorkHours && <span className='error-message'>{errors.maxWorkHours}</span>}
                 </div>
-                <button type="submit" className='submit-button'>Submit</button>
+                <button type="submit" onClick={() => setSubmitAction('submit')} className='submit-button' value="submit">Submit</button>
+                <button type="submit" onClick={() => setSubmitAction('delete')} className='delete-button' value="delete">Delete</button>
                 <div>
-                    {loading && <p className='loading-message'>Loading...</p>}
-                    {error && <p className='error-message'>{error.message}</p>}
-                    {data && <p className='success-message'>Datebase was successfully updated!</p>}
+                    {formFeedback.type === "loading" && <p className='loading-message'>Loading...</p>}
+                    {formFeedback.type === "error" && <p className='error-message'>{formFeedback.message}</p>}
+                    {formFeedback.type === "success" && <p className='success-message'>{formFeedback.message}</p>}
                 </div>
             </form>
         </>

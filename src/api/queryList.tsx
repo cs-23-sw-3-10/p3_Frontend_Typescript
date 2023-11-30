@@ -326,8 +326,52 @@ query GetAllBladeProjects{
 }
 `;
 
-
-
+export const DELETE_ENGINEER = gql`
+mutation DeleteEngineer($name: String!) {
+    DeleteEngineer(name: $name) {
+        id
+        name
+        workHours
+        maxWorkHours
+    }
+}
+`;
+export const ALL_EQUIPMENT = gql`
+query AllEquipment {
+    AllEquipment {
+        id
+        type
+        name
+        calibrationExpirationDate
+    }
+}
+`;
+export const GET_EQUIPMENT_TYPES = gql`
+query GetEquipmentTypes {
+    GetEquipmentTypes
+}
+`;
+export const DELETE_EQUIPMENT = gql`
+mutation DeleteEquipment($name: String!) {
+    DeleteEquipment(name: $name) {
+        id
+        type
+        name
+        calibrationExpirationDate
+    }
+}
+`;
+export const DELETE_TECHNICIAN = gql`
+mutation DeleteTechnician($type: String!) {
+    DeleteTechnician(type: $type) {
+        id
+        type
+        workHours
+        maxWorkHours
+        count
+    }
+}
+`;
 
 
 
