@@ -58,6 +58,9 @@ export const GET_ALL_BT = gql`
                 resourceType
                 workHours
             }
+            resourceOrders {
+                id
+            }
         }
     }
 `;
