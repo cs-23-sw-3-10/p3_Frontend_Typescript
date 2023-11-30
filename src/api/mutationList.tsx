@@ -30,7 +30,6 @@ export const UPDATE_BT_INFO = gql`
         id
         resourceName
         resourceType
-        amount
         workHours
         equipmentAssignmentStatus
       }
@@ -74,7 +73,6 @@ mutation CreateBladeTask($bladeTask: BladeTaskInput!) {
         id
         resourceName
         resourceType
-        amount
         workHours
         equipmentAssignmentStatus
       }
