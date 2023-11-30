@@ -15,7 +15,7 @@ interface BladeProjectMenuProps {
 }
 
 function BladeProjectMenu(props: BladeProjectMenuProps) {
-    const creator = props.creator;
+    const creator = props.creator; //true if creating a new blade project, false if editing an existing one
 
     const { data: BPData } = useQuery(GET_ALL_BP);
     const BPArray = BPData?.AllBladeProjects;
@@ -34,7 +34,7 @@ function BladeProjectMenu(props: BladeProjectMenuProps) {
     const [projectError, setProjectError] = useState<boolean>(false);
     const [missingInput, setMissingInput] = useState<boolean>(false);
 
-    const [addBP, { loading: addLoading, error: adderror }] = useMutation(ADD_BP);
+    const [addBP, { loading: addLoading, error: addError }] = useMutation(ADD_BP);
     const { data } = useQuery(GET_ALL_ENGINEERS);
     const [updateBP, { loading: updateLoading, error: updateError}] = useMutation(UPDATE_BP);
 
@@ -58,14 +58,14 @@ function BladeProjectMenu(props: BladeProjectMenuProps) {
     const handleSubmit = () => {
         if (creator){
             if (validateBPForm(currentForm)) {
-                addBP({
+                addBP({ //add blade project to database
                     variables: {
                         name: projectName,
                         customer: customer,
                         projectLeader: leader,
                     }
                 }).then((result) => console.log(result));
-                setMissingInput(false);
+                setMissingInput(false); 
                 setProjectError(false);
                 handleCancel();
             } else{
@@ -73,7 +73,7 @@ function BladeProjectMenu(props: BladeProjectMenuProps) {
             }
         } else {
             if (validateBPForm(currentForm)) {
-                updateBP({
+                updateBP({ //update blade project in database
                     variables: {
                         bpId: parseInt(currentBP.id),
                         updates: {

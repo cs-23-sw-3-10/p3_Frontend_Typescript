@@ -66,7 +66,7 @@ export function getColumns(setShowPopup: Function, setChoosenBP: Function){
             cell: ({row, getValue}) => {
                 return (
                     <>
-                        <button className="bg-blue-500" onClick={() => {setChoosenBP(getValue()); setShowPopup(true)}}>
+                        <button className="bg-gray-200 hover:bg-gray-500 rounded" onClick={() => {setChoosenBP(getValue()); setShowPopup(true)}}>
                             Edit
                         </button>
                         {getValue()}
