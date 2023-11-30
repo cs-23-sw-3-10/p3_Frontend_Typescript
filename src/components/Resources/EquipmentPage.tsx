@@ -25,7 +25,7 @@ function EquipmentPage() {
             data={equipmentData}
             renderExpandedComponent={() => <ScheduleComponent />}
         />
-        //<Login />
+    
         </>
     );
 }

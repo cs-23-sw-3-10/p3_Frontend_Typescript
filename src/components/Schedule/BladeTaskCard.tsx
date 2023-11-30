@@ -7,6 +7,7 @@ import PopupWindow from "../ui/PopupWindow";
 import { ResourceOrder } from "../CreateBTMenu/BTMenuTypes";
 import EditBTComponent from "../ui/EditBTComponent";
 import { dateDivLength } from "./TimelineField";
+import { useEditModeContext } from "../../EditModeContext";
 //interface used to define the types of the props of BladeTaskCard
 export interface BladeTaskCardProps {
     startDate?: Date;
@@ -42,6 +43,7 @@ interface BladeTaskDraggableProps {
 }
 
 function BladeTaskCard(props: BladeTaskCardProps) {
+    const editMode = useEditModeContext();
     const [showContextMenu, setShowContextMenu] = useState(false);
     const [contextMenuPosition, setContextMenuPosition] = useState({
         x: 0,
@@ -121,7 +123,7 @@ function BladeTaskCard(props: BladeTaskCardProps) {
     return (
         <>
             <DraggableBladeTask {...droppableProps} />
-            {showContextMenu && (
+            {showContextMenu && editMode.isEditMode && (
                 <div
                     ref={contextMenuRef}
                     className="context-menu"

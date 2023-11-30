@@ -1,13 +1,19 @@
 import React, { useState } from 'react';
 import './login.css';
+import { useEditModeContext } from "../../EditModeContext";
+type LoginProps = {
+    setShowPasswordPrompt: React.Dispatch<React.SetStateAction<boolean>>;
+  };
 
-const Login = () => {
+
+const Login = (props:LoginProps) => {
 //login page that takes in username and password and sends it to the backend
 //if the username and password is correct, then it will redirect to the home page
 //if the username and password is incorrect, then it will display an error message
 const [username, setUsername] = useState('');
 const [password, setPassword] = useState('');
 const [message, setMessage] = useState('');
+const useEditMode = useEditModeContext();
 
 
 
@@ -47,6 +53,7 @@ function handleLogin(e : React.MouseEvent<HTMLButtonElement, MouseEvent>) {
         console.log("login success"); 
         setUsername('');
         setPassword('');
+        useEditMode.setEditMode(true);
       }
   })
   .catch(error => {
@@ -71,6 +78,7 @@ function handleLogout(e : React.MouseEvent<HTMLButtonElement, MouseEvent>) {
 
   return (
     <div className="loginContainer">
+        <button onClick={()=>props.setShowPasswordPrompt(false)}> close </button>
       <h1>Login</h1>
       <p>{message}</p>
       <form>

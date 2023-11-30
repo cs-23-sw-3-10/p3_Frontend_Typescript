@@ -1,6 +1,8 @@
 import React from "react";
 import { useState, useContext } from "react";
 import { useEditModeContext } from "../../EditModeContext";
+import PopupWindow from "../ui/PopupWindow";
+import Login from "../ui/login";
 
 type SwitchProps = {
   setShowPasswordPrompt: React.Dispatch<React.SetStateAction<boolean>>;
@@ -8,24 +10,35 @@ type SwitchProps = {
 
 const SwitchComponent = (props: SwitchProps) => {
   const editMode = useEditModeContext();
-  const [checked, setChecked] = useState(editMode.isEditMode)
+  const [checked, setChecked] = useState(false)
   const [password, setPassword] = useState(""); // State to store the entered password
   const [showPasswordPrompt, setShowPasswordPrompt] = useState(false);
 
   const handleSwitch = () => {
-    setChecked(!checked)  
-     if(!editMode.isEditMode){
-        setShowPasswordPrompt(true); // Show the password prompt
-        setPassword(""); //reset password
-         if(checked === true){
-          setShowPasswordPrompt(false) // Hide the password prompt if the user clicks the switch again before entering the password
-        }
-      }
-      else{
-        setShowPasswordPrompt(false)
-        editMode.setEditMode(false)
-        }
-   }
+    console.log("handleSwitch");
+    console.log("Auth Token: ", localStorage.getItem('auth_token'));
+    console.log("Checked before conditionals: ", checked);
+
+    if (!localStorage.getItem('auth_token')) {
+        console.log("No auth token found");
+        setChecked(true);
+        setShowPasswordPrompt(true);
+        setPassword("");
+    }
+    else if (localStorage.getItem('auth_token') && checked === false) {
+        console.log("Auth token found and checked is false");
+        setChecked(true);
+        editMode.setEditMode(true);
+    }
+    else {
+        console.log("Else condition");
+        setShowPasswordPrompt(false);
+        setChecked(false);
+        editMode.setEditMode(false);
+    }
+
+    console.log("Checked after conditionals: ", checked);
+}
   
    // Handle the password submit
   const handlePasswordSubmit = (event: React.FormEvent<HTMLFormElement>) => {
@@ -62,12 +75,12 @@ const SwitchComponent = (props: SwitchProps) => {
         />
         <span
           className={`slider mx-4 flex h-8 w-[60px] items-center rounded-full p-1 duration-200 cursor-pointer ${
-            checked ? "bg-[#212b36]" : "bg-[#CCCCCE]"
+            editMode.isEditMode ? "bg-[#212b36]" : "bg-[#CCCCCE]"
           }`}
         >
           <span
             className={`dot h-6 w-6 rounded-full bg-white duration-200 ${
-              checked ? "translate-x-[28px]" : ""
+              editMode.isEditMode ? "translate-x-[28px]" : ""
             }`}
           ></span>
         </span>
@@ -80,21 +93,7 @@ const SwitchComponent = (props: SwitchProps) => {
       <div>
     </div>
     <div className="mx-4">
-    {showPasswordPrompt && (
-                <div className="PasswordPrompt inline-block">
-                    <form onSubmit={(e) => {e.preventDefault(); handlePasswordSubmit(e)}}>
-                        <label className="text-sm" htmlFor="passwordInput">Enter Password:</label>
-        
-                        <input
-                        className="w-20 inline-block border rounded h-4 border-black"
-                            type="password"
-                            id="passwordInput"
-                            name="passwordInput"
-                            defaultValue={password}
-                        />
-                    </form>
-                </div>
-            )}
+    {showPasswordPrompt && <Login  setShowPasswordPrompt={setShowPasswordPrompt}/>}
     </div>
    
     </div>
