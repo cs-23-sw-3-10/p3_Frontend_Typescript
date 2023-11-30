@@ -11,7 +11,7 @@ import EquipmentSelectionMenu from "./EquipmentSelector";
 import EmployeesMenu from "./EmployeesMenu";
 import { ResourceOrderContext } from "./BladeTaskOrderContext";
 import { useState } from "react";
-import { BTOrder, InErrorChart } from "./BTMenuTypes";
+import { BTOrder, InErrorChart, ResourceOrder } from "./BTMenuTypes";
 import EquipmentList from "./EquipmentList";
 import { useMutation, useQuery } from "@apollo/client";
 import { ADD_BT, UPDATE_BT_INFO } from "../../api/mutationList";
@@ -62,7 +62,8 @@ function BladeTaskMenu(props: BladeTaskMenuProps) {
         creator ? 0 : props.inputs!.detachPeriod
     );
     const [testRig, setTestRig] = useState(creator ? 0 : props.inputs!.testRig);
-    const [resourceOrders, setResourceOrder] = useState(
+
+    const [resourceOrders, setResourceOrder] = useState<ResourceOrder[]>(
         creator ? [] : props.inputs!.resourceOrders
     );
 
