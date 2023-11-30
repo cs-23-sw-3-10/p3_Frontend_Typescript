@@ -94,3 +94,15 @@ mutation CreateBladeProject($name: String, $customer: String, $projectLeader: St
   }
 }
 `;
+
+export const UPDATE_BP = gql`
+mutation UpdateBladeProject($bpId: Int!, $updates: BladeProjectInput!){
+  updateBladeProject(bpId: $bpId, updates: $updates){
+    projectName
+    customer
+    projectLeader
+    startDate
+    endDate
+  }
+}
+`;

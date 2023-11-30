@@ -152,8 +152,6 @@ subscription AllBladeTasksPendingSub{
 }
 `;
 
-
-
 export const GET_BT_PENDING = gql`
 query AllBladeTasksPending {
     AllBladeTasksPending{
@@ -172,7 +170,6 @@ query AllBladeTasksPending {
     }
 }
 `;
-
 
 export const GET_ALL_BT_WITH_BOOKINGS_EQNAME = gql`
 query AllBladeTasks {
@@ -211,8 +208,6 @@ query AllBladeTasks {
     }
 }
 `;
-
-
 
 export const GET_ALL_BP = gql`
 query AllBladeProjects {
