@@ -43,8 +43,6 @@ function DisplayComponent(props: DisplayProps) {
         const dateInput = (form.elements.namedItem("dateInput") as HTMLInputElement)?.value;
         const numberInput = (form.elements.namedItem("numberInput") as HTMLInputElement)?.value;
 
-        console.log("her er number ", numberInput);
-
         setSelectedDate(dateInput);
         setNumberOfMonths(parseInt(numberInput));
         goTo(dateInput, parseInt(numberInput));
@@ -111,22 +109,18 @@ function DisplayComponent(props: DisplayProps) {
     if (errorRigs) {
         return <p>Error {errorRigs.message}</p>;
     }
-
     if (loadingBT) {
         return <p>Loading...</p>;
     }
     if (errorBT) {
         return <p>Error {errorBT.message}</p>;
     }
-
     if (loadingPendingBT) {
         return <p>Loading...</p>;
     }
     if (errorPendingBT) {
         return <p>Error {errorPendingBT.message}</p>;
     }
-
-    console.log(dataBT["AllBladeTasksInRangeSub"]);
 
     const numberOfRigs = parseInt(dataRigs.DictionaryAllByCategory[0].label);
     if (rigs.length !== numberOfRigs){

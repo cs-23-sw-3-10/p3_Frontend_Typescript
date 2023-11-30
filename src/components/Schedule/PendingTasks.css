@@ -5,7 +5,7 @@
     flex-direction: column;
     height: fit-content;
     min-height: 100px;
-    min-width: 1620px;
+    min-width: 1200px;
     width: max-content;
     grid-row: 4;   
     border: 2px solid rgba(0,0,0, 1);
