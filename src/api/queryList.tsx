@@ -332,6 +332,14 @@ query GetAllBladeProjects{
 `;
 
 
+export const GET_CONFLICTS_FOR_BT= gql`
+    query findConflictsForBladeTask($id: ID!,$isActive: Boolean!) {
+        findConflictsForBladeTask(id: $id,isActive: $isActive) {
+            message
+        }
+    }
+`;
+
 
 
 

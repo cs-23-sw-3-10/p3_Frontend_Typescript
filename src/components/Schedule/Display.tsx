@@ -1,11 +1,11 @@
 import "./Display.css";
 import CreateTestRigDivs from "./TestRigDivs";
 import CreateTimelineField from "./TimelineField";
-import React, { useMemo, useState} from "react";
+import React, { useState} from "react";
 import CreateAdditionalContent from "./AdditionalContent";
 import BladeTaskCard from "./BladeTaskCard";
 import { useQuery, useSubscription } from "@apollo/client";
-import { GET_BT_IN_RANGE, GET_BT_IN_RANGE_SUB, GET_TEST_RIGS, GET_BT_PENDING, GET_BT_PENDING_SUB } from "../../api/queryList";
+import { GET_BT_IN_RANGE_SUB, GET_TEST_RIGS, GET_BT_PENDING_SUB } from "../../api/queryList";
 import { getMonthLength } from "./TimelineField";
 import { capitalizeFirstLetter } from "./TimelineField";
 import { useEditModeContext } from "../../EditModeContext";

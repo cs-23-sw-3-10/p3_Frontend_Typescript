@@ -7,6 +7,9 @@ import PopupWindow from "../ui/PopupWindow";
 import { ResourceOrder } from "../CreateBTMenu/BTMenuTypes";
 import EditBTComponent from "../ui/EditBTComponent";
 import { dateDivLength } from "./TimelineField";
+import {GET_CONFLICTS_FOR_BT} from "../../api/queryList"
+import { useQuery } from "@apollo/client";
+
 //interface used to define the types of the props of BladeTaskCard
 export interface BladeTaskCardProps {
     startDate?: Date;
@@ -69,6 +72,20 @@ function BladeTaskCard(props: BladeTaskCardProps) {
             document.removeEventListener("mousedown", handleClickOutside);
         };
     }, []);
+
+    console.log("props.id",props.id);
+
+    const {
+        loading: loadingConflicts,
+        error: errorConflicts,
+        data: dataConflicts,
+    } = useQuery( GET_CONFLICTS_FOR_BT,{variables: {
+        id: props.id,
+        isActive: false,
+    },});
+
+    console.log("error:",errorConflicts)
+    console.log("dataConflicts: ",dataConflicts);
 
     const handleMessageClose = () => {
         setShowMessageBox(false);
