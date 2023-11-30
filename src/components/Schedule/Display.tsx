@@ -109,14 +109,12 @@ function DisplayComponent(props: DisplayProps) {
     if (errorRigs) {
         return <p>Error {errorRigs.message}</p>;
     }
-
     if (loadingBT) {
         return <p>Loading...</p>;
     }
     if (errorBT) {
         return <p>Error {errorBT.message}</p>;
     }
-
     if (loadingPendingBT) {
         return <p>Loading...</p>;
     }
