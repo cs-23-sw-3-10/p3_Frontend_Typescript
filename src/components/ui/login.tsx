@@ -26,7 +26,7 @@ function handleLogin(e : React.MouseEvent<HTMLButtonElement, MouseEvent>) {
     password: password
   }
 
- 
+    // Send a POST request with the user input to the server and check if the user exists in the database 
     fetch('http://localhost:8080/authenticate', {
       method: 'POST',
       headers: {
@@ -36,8 +36,7 @@ function handleLogin(e : React.MouseEvent<HTMLButtonElement, MouseEvent>) {
     }).then(response => {
       if (!response.ok) {
         setMessage('Username or password is incorrect');
-        console.log("Det er det forkeret password");
-        console.log(localStorage.getItem('auth_token'));
+      
           // Handle HTTP errors
           setUsername('');
           setPassword('');
@@ -46,20 +45,19 @@ function handleLogin(e : React.MouseEvent<HTMLButtonElement, MouseEvent>) {
       if(response.ok)
       {
         response.text().then(data => {
-            localStorage.setItem('auth_token', data);
-            console.log(localStorage.getItem('auth_token'));
+            localStorage.setItem('token', data);
+            console.log(localStorage.getItem('token'));
             }); 
-        setMessage('Login successful'); 
-        console.log("login success"); 
+        
         setUsername('');
         setPassword('');
         useEditMode.setEditMode(true);
+        props.setShowPasswordPrompt(false);
       }
   })
   .catch(error => {
       // Handle any errors
-      console.log("error");
-        console.log(localStorage.getItem('auth_token'));
+      
       console.error('There has been a problem with your fetch operation:', error);
       setUsername('');
       setPassword('');
@@ -69,8 +67,8 @@ function handleLogin(e : React.MouseEvent<HTMLButtonElement, MouseEvent>) {
 
 function handleLogout(e : React.MouseEvent<HTMLButtonElement, MouseEvent>) {
   e.preventDefault();
-  console.log(localStorage.getItem('auth_token'));
-  localStorage.removeItem('auth_token');
+  
+  localStorage.removeItem('token');
   setMessage('Logout successful');
   //Handle successful logout here (e.g., redirect to login)
 }
@@ -78,7 +76,7 @@ function handleLogout(e : React.MouseEvent<HTMLButtonElement, MouseEvent>) {
 
   return (
     <div className="loginContainer">
-        <button onClick={()=>props.setShowPasswordPrompt(false)}> close </button>
+        <button className='close_button' onClick={()=>props.setShowPasswordPrompt(false)}> x </button>
       <h1>Login</h1>
       <p>{message}</p>
       <form>
@@ -86,7 +84,7 @@ function handleLogout(e : React.MouseEvent<HTMLButtonElement, MouseEvent>) {
         <input type="text" value={username} onChange={(e) => setUsername(e.target.value)} />
         <label>Password</label>
         <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
-        <button type="submit" onClick={(e) => handleLogin(e)}>Login</button>
+        <button className="login_button" type="submit" onClick={(e) => handleLogin(e)}>Login</button>
         {localStorage.getItem('auth_token') && <button onClick={(e)=> handleLogout(e)}> Logout </button>}
        
       </form>

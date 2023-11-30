@@ -18,11 +18,33 @@
     border-radius: 10px;
 }
 
+.close_button {
+  position: absolute;
+  top: 0;
+  right: 0;
+  margin: 10px;
+  height: 20px;
+  width: 20px;
+  cursor: pointer;
+  background-color: tomato;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.close_button:hover {
+  background-color: red; /* Change color on hover */
+}
+
 /* Style for the login header */
 .loginContainer h1 {
   color: #333;
   margin-bottom: 20px;
 }
+
+
 
 /* Style for the form */
 .loginContainer form {
@@ -54,7 +76,7 @@
 }
 
 /* Style for the submit button */
-.loginContainer  button {
+.login_button {
   background-color: #4a90e2;
   color: white;
   padding: 10px 15px;

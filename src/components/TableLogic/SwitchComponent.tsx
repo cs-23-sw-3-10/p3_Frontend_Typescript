@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useState, useContext } from "react";
 import { useEditModeContext } from "../../EditModeContext";
 import PopupWindow from "../ui/PopupWindow";
@@ -13,31 +13,33 @@ const SwitchComponent = (props: SwitchProps) => {
   const [checked, setChecked] = useState(false)
   const [password, setPassword] = useState(""); // State to store the entered password
   const [showPasswordPrompt, setShowPasswordPrompt] = useState(false);
+  useEffect(() => {
+    setChecked(editMode.isEditMode);
+  }, [editMode.isEditMode]);
 
   const handleSwitch = () => {
     console.log("handleSwitch");
-    console.log("Auth Token: ", localStorage.getItem('auth_token'));
+    console.log("Auth Token: ", localStorage.getItem('token'));
     console.log("Checked before conditionals: ", checked);
 
-    if (!localStorage.getItem('auth_token')) {
-        console.log("No auth token found");
-        setChecked(true);
+    if (!localStorage.getItem('token') && !checked) {
         setShowPasswordPrompt(true);
         setPassword("");
+     
     }
-    else if (localStorage.getItem('auth_token') && checked === false) {
-        console.log("Auth token found and checked is false");
-        setChecked(true);
+    else if (localStorage.getItem('token') && !checked) {
         editMode.setEditMode(true);
+        
+    }
+    else if (!localStorage.getItem('token') && checked) {
+        editMode.setEditMode(false);
     }
     else {
         console.log("Else condition");
-        setShowPasswordPrompt(false);
-        setChecked(false);
         editMode.setEditMode(false);
+    
     }
 
-    console.log("Checked after conditionals: ", checked);
 }
   
    // Handle the password submit
@@ -69,7 +71,7 @@ const SwitchComponent = (props: SwitchProps) => {
       <label>
         <input
           type="checkbox"
-          checked={checked}
+          checked={editMode.isEditMode}
           onChange={handleSwitch}
           className="sr-only"
         />
