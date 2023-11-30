@@ -406,11 +406,6 @@ function checkBTEditOverlaps(
     projectId: string,
     rig: number
 ) {
-    console.log("allBT: ", allBT);
-    console.log("startDate: ", startDate);
-    console.log("endDate: ", endDate);
-    console.log("id: ", btId);
-    console.log("rig: ", rig);
     if (startDate > endDate) {
         console.log("Invalid Date: start date is after end date");
         return true;
@@ -423,13 +418,13 @@ function checkBTEditOverlaps(
     allBT.forEach((bt: any) => {
         let btStartDate = new Date(bt.startDate);   
         let btEndDate = new Date(bt.endDate);
+        
         if (
-            bt.id !== btId &&
-            (bt.testRig === rig || bt.bladeProject.bladeProjectId === projectId) &&
+            parseInt(bt.id) !== btId &&
+            (bt.testRig === rig || bt.bladeProject.id === projectId) &&
             ((btStartDate <= endDate && btStartDate >= startDate) ||
                 (btEndDate >= startDate && btEndDate <= endDate))
         ) {
-            console.log("bt: ", bt);
             overlap = true;
         }
     });
@@ -442,10 +437,6 @@ function checkBTCreationOverlaps(
     projectId: string,
     rig: number
 ) {
-    console.log("allBT: ", allBT);
-    console.log("startDate: ", startDate);
-    console.log("endDate: ", endDate);
-    console.log("rig: ", rig);
     let overlap = false;
     if (startDate > endDate) {
         return true;
