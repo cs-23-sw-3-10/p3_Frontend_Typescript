@@ -2,13 +2,10 @@ import React from "react";
 
 import { columnBTID } from "./BladeTaskColumns";
 import { useQuery } from "@apollo/client";
-import { GET_ALL_BT } from "../../api/queryList";
 import { TableLogic } from "../TableLogic/TableLogic";
 import { TableLogicWOHeaders } from "../TableLogic/TableLogicWOHeader";
 import { columnBookings } from "../Resources/BookingsColumns";
 import { GET_ALL_BT_WITH_BOOKINGS_EQNAME } from "../../api/queryList";
-import { BladeTaskQuery } from "./BladeTaskData";
-import { useContext } from "react";
 
 /**
  * gets all bladetasks from the database and renders them in a table

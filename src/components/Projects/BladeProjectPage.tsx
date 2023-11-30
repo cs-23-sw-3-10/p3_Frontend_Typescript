@@ -2,7 +2,6 @@ import React, { useState, useContext } from "react";
 
 import { columnBP } from "./BladeProjectColumns";
 import { GET_ALL_BP, GET_ALL_BP_IN_DIFF_SCHEDULE, GET_TEST_RIGS } from "../../api/queryList";
-import { columnBT } from "../BladeTask/BladeTaskColumns";
 import { useQuery, useSubscription } from "@apollo/client";
 import { TableLogic } from "../TableLogic/TableLogic";
 import BladeTaskCard from "../Schedule/BladeTaskCard";

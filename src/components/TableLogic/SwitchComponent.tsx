@@ -48,7 +48,7 @@ const SwitchComponent = (props: SwitchProps) => {
       
     return (
       <>
-       <div className="inline-flex items-center h-full">
+       <div className="inline-flex items-center h-full ">
         <div className="themeSwitcherTwo relative inline-flex cursor-pointer select-none items-center mx-4">
         <span className="label flex items-center text-sm font-medium text-black cursor-auto">
         View Mode
