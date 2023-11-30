@@ -1,8 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import './login.css';
-import { useLazyQuery, useQuery, useMutation } from '@apollo/client';
-import { GET_AUTHENTICATION_TOKEN } from '../../api/queryList';
-import { CREATE_BP } from '../../api/mutationList';
 
 const Login = () => {
 //login page that takes in username and password and sends it to the backend
@@ -10,6 +7,7 @@ const Login = () => {
 //if the username and password is incorrect, then it will display an error message
 const [username, setUsername] = useState('');
 const [password, setPassword] = useState('');
+const [message, setMessage] = useState('');
 
 
 
@@ -31,23 +29,30 @@ function handleLogin(e : React.MouseEvent<HTMLButtonElement, MouseEvent>) {
       body: JSON.stringify(body)
     }).then(response => {
       if (!response.ok) {
+        setMessage('Username or password is incorrect');
+        console.log("Det er det forkeret password");
+        console.log(localStorage.getItem('auth_token'));
           // Handle HTTP errors
           setUsername('');
           setPassword('');
-          throw new Error('Network response was not ok: ' + response.statusText);
+          
       }
-      return response.text(); // or response.json() if your server responds with JSON
-  })
-  .then(data => {
-      // Handle the response data
-      console.log("login success"); 
-      localStorage.setItem('auth_token', data);
-      setUsername('');
-      setPassword('');
-      // You might want to store the token in localStorage or sessionStorage
+      if(response.ok)
+      {
+        response.text().then(data => {
+            localStorage.setItem('auth_token', data);
+            console.log(localStorage.getItem('auth_token'));
+            }); 
+        setMessage('Login successful'); 
+        console.log("login success"); 
+        setUsername('');
+        setPassword('');
+      }
   })
   .catch(error => {
       // Handle any errors
+      console.log("error");
+        console.log(localStorage.getItem('auth_token'));
       console.error('There has been a problem with your fetch operation:', error);
       setUsername('');
       setPassword('');
@@ -59,6 +64,7 @@ function handleLogout(e : React.MouseEvent<HTMLButtonElement, MouseEvent>) {
   e.preventDefault();
   console.log(localStorage.getItem('auth_token'));
   localStorage.removeItem('auth_token');
+  setMessage('Logout successful');
   //Handle successful logout here (e.g., redirect to login)
 }
 
@@ -66,13 +72,15 @@ function handleLogout(e : React.MouseEvent<HTMLButtonElement, MouseEvent>) {
   return (
     <div className="loginContainer">
       <h1>Login</h1>
+      <p>{message}</p>
       <form>
         <label>Username</label>
         <input type="text" value={username} onChange={(e) => setUsername(e.target.value)} />
         <label>Password</label>
         <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
         <button type="submit" onClick={(e) => handleLogin(e)}>Login</button>
-        <button onClick={(e)=> handleLogout(e)}> df </button>
+        {localStorage.getItem('auth_token') && <button onClick={(e)=> handleLogout(e)}> Logout </button>}
+       
       </form>
     </div>
   )
