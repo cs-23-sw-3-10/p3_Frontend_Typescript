@@ -11,6 +11,7 @@ import { capitalizeFirstLetter } from "./TimelineField";
 import { useEditModeContext } from "../../EditModeContext";
 import { Switch } from "@mui/base";
 import SwitchComponent from "../TableLogic/SwitchComponent";
+import StyledButton from "../ui/styledButton";
 
 const currentDate = new Date(Date.now()); // Get the current date
 
@@ -235,6 +236,7 @@ function DisplayComponent(props: DisplayProps) {
             {editMode.isEditMode ? (
             <div className="ScheduleFilterAndMode">
                 <SwitchComponent setShowPasswordPrompt={props.setShowPasswordPrompt} />
+                {localStorage.getItem('token') && <StyledButton onClick={()=>{localStorage.removeItem('token'); window.location.reload();}}> Logout </StyledButton>}
             </div>
             ) : (
             <div className="ScheduleFilterAndMode">
@@ -251,6 +253,7 @@ function DisplayComponent(props: DisplayProps) {
                     <option value="Suzlon">Suzlon</option>
                 </select>
                <SwitchComponent setShowPasswordPrompt={props.setShowPasswordPrompt} />
+               {localStorage.getItem('token') && <StyledButton onClick={()=>{localStorage.removeItem('token'); window.location.reload();}}> Logout </StyledButton>}
             </div>           
             )}
             
@@ -265,7 +268,6 @@ function DisplayComponent(props: DisplayProps) {
                     isPendingTasksIncluded={true}
                 />
             </div>
-
 
             {editMode.isEditMode ? <CreateAdditionalContent /> : null}
 

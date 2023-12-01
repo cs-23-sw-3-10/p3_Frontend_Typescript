@@ -196,6 +196,7 @@ export function TableLogic<TData, TValue>({
                 </div>
                 <div>
                     <SwitchComponent setShowPasswordPrompt={setShowPasswordPrompt}/>
+                    {localStorage.getItem('token') && <StyledButton onClick={()=>{localStorage.removeItem('token'); window.location.reload();}}> Logout </StyledButton>}
                 </div>
             </div>
 

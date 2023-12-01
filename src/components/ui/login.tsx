@@ -35,16 +35,18 @@ function handleLogin(e : React.MouseEvent<HTMLButtonElement, MouseEvent>) {
       body: JSON.stringify(body)
     }).then(response => {
       if (!response.ok) {
+        console.log("password is incorrect");
         setMessage('Username or password is incorrect');
       
+        
           // Handle HTTP errors
           setUsername('');
           setPassword('');
           
       }
       if(response.ok)
-      console.log(response);
       {
+        console.log("password is correct");
         response.text().then(data => {
             
             localStorage.setItem('token', data);
@@ -59,7 +61,6 @@ function handleLogin(e : React.MouseEvent<HTMLButtonElement, MouseEvent>) {
   })
   .catch(error => {
       // Handle any errors
-      
       console.error('There has been a problem with your fetch operation:', error);
       setUsername('');
       setPassword('');
@@ -69,7 +70,6 @@ function handleLogin(e : React.MouseEvent<HTMLButtonElement, MouseEvent>) {
 
 function handleLogout(e : React.MouseEvent<HTMLButtonElement, MouseEvent>) {
   e.preventDefault();
-  
   localStorage.removeItem('token');
   setMessage('Logout successful');
   //Handle successful logout here (e.g., redirect to login)
