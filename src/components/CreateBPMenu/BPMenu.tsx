@@ -78,8 +78,6 @@ function BladeProjectMenu(props: BladeProjectMenuProps) {
                         bpId: parseInt(currentBP.id),
                         updates: {
                             scheduleId: currentBP.scheduleId,
-                            startDate: currentBP.startDate,
-                            endDate: currentBP.endDate,
                             projectName: projectName,
                             customer: customer,
                             projectLeader: leader,
