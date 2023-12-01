@@ -303,6 +303,7 @@ interface ConflictProps {
 function extractConflictMessages(conflicts: ConflictProps[]) {
     const messages: string[] = [];
 
+    //For testeing
     const loremIpsum="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque eu varius purus. Nunc laoreet neque eget porta ultricies. Nam diam enim, cursus id efficitur quis, efficitur eu ante. Integer dapibus, est non semper vehicula, quam mauris molestie nibh, a malesuada magna dui eu lectus. Donec porttitor consequat neque vitae condimentum. Praesent eleifend nisl sed odio pellentesque, in tristique lectus semper. Cras mollis, ligula sed consectetur iaculis, nisl justo ultrices nibh, vel condimentum mauris lacus non ante. Aliquam posuere eu nisl quis luctus. Vivamus mollis eu elit in mollis. Aenean ultrices porta mi nec volutpat. Fusce quis arcu venenatis, aliquet enim. "
 
     for (let i = 0; i < conflicts.length; i++) {
@@ -310,6 +311,5 @@ function extractConflictMessages(conflicts: ConflictProps[]) {
             conflicts[i].message 
         );
     }
-
     return messages;
 }
