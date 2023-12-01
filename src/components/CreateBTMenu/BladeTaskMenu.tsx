@@ -1,22 +1,26 @@
-import "./BladeTaskMenu.css";
-import ProjectSelector from "./ProjectSelector";
-import TaskNameSelector from "./TaskNameSelector";
-import TestTypeSelector from "./TestTypeSelector";
-import DurationSelector from "./DurationSelecter";
-import StartDateSelector from "./StartDateSelector";
-import TestRigSelector from "./TestRigSelector";
-import AttachPeriodSelector from "./AttachPeriodSelector";
-import DetachPeriodSelector from "./DetachPeriodSelector";
-import EquipmentSelectionMenu from "./EquipmentSelector";
-import EmployeesMenu from "./EmployeesMenu";
-import { ResourceOrderContext } from "./BladeTaskOrderContext";
-import { useState } from "react";
+import './BladeTaskMenu.css';
+import ProjectSelector from './ProjectSelector';
+import TaskNameSelector from './TaskNameSelector';
+import TestTypeSelector from './TestTypeSelector';
+import DurationSelector from './DurationSelecter';
+import StartDateSelector from './StartDateSelector';
+import TestRigSelector from './TestRigSelector';
+import AttachPeriodSelector from './AttachPeriodSelector';
+import DetachPeriodSelector from './DetachPeriodSelector';
+import EquipmentSelectionMenu from './EquipmentSelector';
+import EmployeesMenu from './EmployeesMenu';
+import { ResourceOrderContext } from './BladeTaskOrderContext';
+import { useState, useEffect } from 'react';
 import { BTOrder, InErrorChart, ResourceOrder } from "./BTMenuTypes";
-import EquipmentList from "./EquipmentList";
+import EquipmentList from './EquipmentList';
 import { useMutation, useQuery } from "@apollo/client";
 import { ADD_BT, UPDATE_BT_INFO } from "../../api/mutationList";
 import { GET_ALL_BT } from "../../api/queryList";
-import { ValidateForm } from "./ValidateForm";
+import { ValidateForm } from './ValidateForm';
+import { ComboBoxSelector } from '../RessourcesMenu/RessourcesUtils';
+import { GET_TEST_TYPES } from '../../api/queryList';
+import '../CreateBTMenu/TestTypeSelector.css';
+import '../CreateBTMenu/BladeTaskMenu.css'
 
 export interface BladeTaskMenuProps {
     creator: boolean;
@@ -63,7 +67,7 @@ function BladeTaskMenu(props: BladeTaskMenuProps) {
     );
     const [testRig, setTestRig] = useState(creator ? 0 : props.inputs!.testRig);
 
-    const [resourceOrders, setResourceOrder] = useState<ResourceOrder[]>(
+    const [resourceOrders, setResourceOrder] = useState<ResourceOrder[]>( 
         creator ? [] : props.inputs!.resourceOrders
     );
 
@@ -246,9 +250,18 @@ function BladeTaskMenu(props: BladeTaskMenuProps) {
                     setBladeProjectId={setBladeProjectId}
                 />
             </div>
-
-            <TestTypeSelector testType={testType} setTestType={setTestType} />
-
+            <div className= 'item testtype_wrapper'>
+                <h2 className="title">Type</h2>
+                <ComboBoxSelector
+                    selectedValue = {testType}
+                    setSelectedValue = {(value: string) => setTestType(value)}
+                    setItemList={() => {}} //not used
+                    className='testtype_select input_sideborders'
+                    query={GET_TEST_TYPES}
+                    dataKey='DictionaryAllByCategory'
+                    mappingFunction={({ label }: { label: string }) => label}
+                />
+            </div>
             <div className="item date_selection_wrapper">
                 <StartDateSelector
                     startDate={startDate}
@@ -420,9 +433,9 @@ function checkBTEditOverlaps(
     allBT.forEach((bt: any) => {
         let btStartDate = new Date(bt.startDate);
         let btEndDate = new Date(bt.endDate);
-
-        if ( //check if the edited blade task overlaps with another blade task that is not itself
-            parseInt(bt.id) !== btId && 
+        
+        if (
+            parseInt(bt.id) !== btId &&
             (bt.testRig === rig || bt.bladeProject.id === projectId) &&
             ((btStartDate <= endDate && btStartDate >= startDate) ||
                 (btEndDate >= startDate && btEndDate <= endDate))
@@ -445,9 +458,8 @@ function checkBTCreationOverlaps(
     allBT.forEach((bt: any) => {
         let btStartDate = new Date(bt.startDate);
         let btEndDate = new Date(bt.endDate);
-        if ( //check if the created blade task overlaps with another blade task
-            (bt.testRig === rig ||
-                bt.bladeProject.bladeProjectId === projectId) &&
+        if (
+            (bt.testRig === rig || bt.bladeProject.bladeProjectId === projectId) &&
             ((btStartDate <= endDate && btStartDate >= startDate) ||
                 (btEndDate >= startDate && btEndDate <= endDate))
         ) {

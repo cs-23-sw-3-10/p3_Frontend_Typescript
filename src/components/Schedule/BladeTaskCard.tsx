@@ -77,8 +77,6 @@ function BladeTaskCard(props: BladeTaskCardProps) {
     };
 
     const handleEditClick = () => {
-        console.log("Edit " + props.taskName);
-        console.log(props.inConflict);
         togglePopup();
         setShowContextMenu(false);
     };
@@ -88,7 +86,6 @@ function BladeTaskCard(props: BladeTaskCardProps) {
     };
 
     const handleConflictClick = () => {
-        console.log("Conflict " + props.taskName);
         setShowContextMenu(false);
         setShowMessageBox(true);
     };
@@ -99,26 +96,26 @@ function BladeTaskCard(props: BladeTaskCardProps) {
         setContextMenuPosition({ x: event.clientX, y: event.clientY });
     };
 
-  //Dynamic styling based on props values
-  if(props.startDate){
-  const cardStyle = {
-    backgroundColor: props.shown ? props.projectColor : "grey",
-    gridColumn: `date-${props.startDate.getFullYear()}-${props.startDate.getMonth()}-${props.startDate.getDate()} / span ${
-      props.duration
-    }`,
-    border: props.inConflict ? "2px dashed red" : "", 
-  };
+    //Dynamic styling based on props values
+    if (props.startDate) {
+        const cardStyle = {
+            backgroundColor: props.shown ? props.projectColor : "grey",
+            gridColumn: `date-${props.startDate.getFullYear()}-${props.startDate.getMonth()}-${props.startDate.getDate()} / span ${
+                props.duration
+            }`,
+            border: props.inConflict ? "2px dashed red" : "",
+        };
 
-    const droppableProps: BladeTaskDraggableProps = {
-        style: cardStyle,
-        id: props.id,
-        taskName: props.taskName,
-        enableDraggable: props.enableDraggable,
-        setContextMenu: handleRightClick,
-        shown: props.shown,
-        attachPeriod: props.attachPeriod ? props.attachPeriod : 0,
-        detachPeriod: props.detachPeriod ? props.detachPeriod : 0,
-    };
+        const droppableProps: BladeTaskDraggableProps = {
+            style: cardStyle,
+            id: props.id,
+            taskName: props.taskName,
+            enableDraggable: props.enableDraggable,
+            setContextMenu: handleRightClick,
+            shown: props.shown,
+            attachPeriod: props.attachPeriod ? props.attachPeriod : 0,
+            detachPeriod: props.detachPeriod ? props.detachPeriod : 0,
+        };
 
     return (
         <>
