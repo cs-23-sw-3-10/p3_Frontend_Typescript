@@ -88,7 +88,7 @@ function BladeTaskMenu(props: BladeTaskMenuProps) {
         return <p>Loading...</p>;
     }
     if (updateError) {
-        return <p> Error {updateError.message}</p>
+        return <p> Error {updateError.message}</p>;
     }
     if (addLoading) {
         return <p>Loading...</p>;
@@ -417,9 +417,9 @@ function checkBTEditOverlaps(
     }
     let overlap = false;
     allBT.forEach((bt: any) => {
-        let btStartDate = new Date(bt.startDate);   
+        let btStartDate = new Date(bt.startDate);
         let btEndDate = new Date(bt.endDate);
-        
+
         if (
             parseInt(bt.id) !== btId &&
             (bt.testRig === rig || bt.bladeProject.id === projectId) &&
@@ -446,9 +446,10 @@ function checkBTCreationOverlaps(
         let btStartDate = new Date(bt.startDate);
         let btEndDate = new Date(bt.endDate);
         if (
-            (bt.testRig === rig || bt.bladeProject.bladeProjectId === projectId) &&
+            (bt.testRig === rig ||
+                bt.bladeProject.bladeProjectId === projectId) &&
             ((btStartDate <= endDate && btStartDate >= startDate) ||
-            (btEndDate >= startDate && btEndDate <= endDate))
+                (btEndDate >= startDate && btEndDate <= endDate))
         ) {
             overlap = true;
         }
