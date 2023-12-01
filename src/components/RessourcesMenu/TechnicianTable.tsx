@@ -1,10 +1,10 @@
 
 import { useMutation, useQuery } from '@apollo/client';
 import React, { useState } from 'react';
-import { CREATE_TECHNICIAN_MUTATION } from '../../api/mutationList';
-import { SanitizeString } from './RessourceUtils';
+import { DELETE_TECHNICIAN, CREATE_TECHNICIAN_MUTATION } from '../../api/mutationList';
+import { SanitizeString } from './RessourcesUtils';
 import './Ressource.css';
-import { DELETE_TECHNICIAN, GET_ALL_TECHNICIANS, GET_ALL_TECHNICIAN_TYPES } from '../../api/queryList';
+import { GET_ALL_TECHNICIANS } from '../../api/queryList';
 import { ComboBoxSelector } from './RessourcesUtils';
 
 /** TODO
@@ -116,7 +116,6 @@ function TechnicianTable() {
             }
         }
     }
-
     return (
         <> 
             <form onSubmit={handleSubmit} className='form-style'>

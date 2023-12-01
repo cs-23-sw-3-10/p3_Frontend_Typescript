@@ -1,10 +1,10 @@
 import { useMutation, useQuery } from '@apollo/client';
 import React, {useState} from 'react';
-import { CREATE_EQUIPMENT_MUTATION } from '../../api/mutationList';
-import { SanitizeString } from './RessourceUtils';
+import { CREATE_EQUIPMENT_MUTATION, DELETE_EQUIPMENT} from '../../api/mutationList';
+import { SanitizeString } from './RessourcesUtils';
 import './Ressource.css';
 import { ComboBoxSelector } from './RessourcesUtils';
-import { ALL_EQUIPMENT, DELETE_EQUIPMENT, GET_EQUIPMENT_BY_TYPE, GET_EQUIPMENT_TYPES } from '../../api/queryList';
+import { ALL_EQUIPMENT, GET_EQUIPMENT_BY_TYPE, GET_EQUIPMENT_TYPES } from '../../api/queryList';
 
 
 interface EquipmentFormData {

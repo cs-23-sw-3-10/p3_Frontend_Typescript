@@ -68,3 +68,8 @@ export function ComboBoxSelector(props : ComboBoxProps) {
     );
 }
 
+export function SanitizeString(str: string) : string {
+    //Accept only alphanumeric and space and - and _
+    let output : string = str.replace(/[^a-zA-Z0-9-_ ]/g, "")
+    return output;
+}

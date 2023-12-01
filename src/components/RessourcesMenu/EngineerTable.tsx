@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import './Ressource.css';
 import { useMutation, useQuery } from '@apollo/client';
-import { CREATE_ENGINEER_MUTATION } from '../../api/mutationList';
-import { SanitizeString } from './RessourceUtils';
+import { CREATE_ENGINEER_MUTATION, DELETE_ENGINEER } from '../../api/mutationList';
+import { SanitizeString } from './RessourcesUtils';
 import { ComboBoxSelector } from './RessourcesUtils';
-import { DELETE_ENGINEER, GET_ALL_ENGINEERS } from '../../api/queryList';
+import { GET_ALL_ENGINEERS } from '../../api/queryList';
 
 interface EngineerFormData {
     name : string;
