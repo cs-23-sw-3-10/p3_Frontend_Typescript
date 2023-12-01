@@ -41,7 +41,6 @@ function BladeProjectMenu(props: BladeProjectMenuProps) {
     useEffect(() => {
         if (data && data.AllEngineers) {
             const engineerNamesArray: Array<string> = data.AllEngineers.map(({ name }: { name: string }) => name);
-            console.log(engineerNamesArray);
             setLeaderOptions(engineerNamesArray);
         }
     }, [data]);

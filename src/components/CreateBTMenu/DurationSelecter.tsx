@@ -11,7 +11,7 @@ function DurationSelector({duration, setDuration, inErrorChart, setInErrorChart}
                 name="duration_select"
                 placeholder='Days'
                 value={duration}
-                onChange={(e) => setDuration(e.currentTarget.value)}
+                onChange={(e) => setDuration(parseInt(e.currentTarget.value))}
                 onBlur={(e) => handleDurationValidation(e, setDuration, inErrorChart, setInErrorChart)}
             />
         </>

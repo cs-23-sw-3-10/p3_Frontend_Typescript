@@ -20,7 +20,7 @@ function AttachPeriodSelector(
                 name="attach_period_select"
                 placeholder='Days'
                 value={attachPeriod}
-                onChange={(e) => setAttachPeriod(e.currentTarget.value)}
+                onChange={(e) => setAttachPeriod(parseInt(e.currentTarget.value))}
                 onBlur={(e) => handleAttachPeriodValidation(e, duration, detachPeriod, setAttachPeriod, inErrorChart, setInErrorChart)}
             />
         </>
