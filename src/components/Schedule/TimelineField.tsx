@@ -1,5 +1,4 @@
-import { DndContext } from "@dnd-kit/core";
-import { DragOverlay } from "@dnd-kit/core";
+import { DndContext, DragOverlay } from "@dnd-kit/core";
 import CreateMonthDateContainer from "./MonthDateContainer";
 import CreateRigFieldContainer from "./RigFieldContainer";
 import MonthLengths from "./MonthLengthsEnum";
@@ -23,6 +22,7 @@ export const dateDivLength = 25; // px length of the dates in the schedule
 
 function CreateTimelineField(props: TimelineFieldProps) {
     const [updateBt, { error, data }] = useMutation(UPDATE_BT);
+    const [activeId, setActiveId] = useState(null);
 
     let fieldWidth: number = 0; // px width of the field dynamically calculated from the number of months displayed
     props.months.forEach((month) => {
@@ -68,36 +68,36 @@ function CreateTimelineField(props: TimelineFieldProps) {
     };
 
     const [isDragging, setDragging] = useState(false);
-    
+
     // Create a BladeTaskHolder object to store the blade tasks
-    let bladeTasks = new BladeTaskHolder(props.btCards); 
+    let bladeTasks = new BladeTaskHolder(props.btCards);
     // Create a BladeTaskHolder object to store the pending blade tasks
-    let bladeTasksPending = new BladeTaskHolder(props.btCardsPending); 
+    let bladeTasksPending = new BladeTaskHolder(props.btCardsPending);
 
     return (
         <div className="TimelineFieldContainer">
-            <div className="TimelineField" style={BTFieldStyle}>
-                {props.months.map((month) => (
-                    <CreateMonthDateContainer
-                        key={getMonthContainerKey(month)}
-                        currentMonth={month}
-                    />
-                ))}
+            <DndContext // DndContext is used to enable drag and drop functionality
+                onDragStart={(event) => {
+                    handleDragStart(event, setDragging);
+                }}
+                onDragEnd={(event) => {
+                    handleDragEnd(
+                        event,
+                        bladeTasks,
+                        bladeTasksPending,
+                        setDragging,
+                        updateBt
+                    );
+                }}
+            >
+                <div className="TimelineField" style={BTFieldStyle}>
+                    {props.months.map((month) => (
+                        <CreateMonthDateContainer
+                            key={getMonthContainerKey(month)}
+                            currentMonth={month}
+                        />
+                    ))}
 
-                <DndContext // DndContext is used to enable drag and drop functionality
-                    onDragStart={(event) => {
-                        handleDragStart(event, setDragging);
-                    }}
-                    onDragEnd={(event) => {
-                        handleDragEnd(
-                            event,
-                            bladeTasks,
-                            bladeTasksPending,
-                            setDragging,
-                            updateBt
-                        );
-                    }}
-                >
                     <div
                         className="RigFieldContainer"
                         style={rigFieldContainerStyle}
@@ -131,7 +131,6 @@ function CreateTimelineField(props: TimelineFieldProps) {
                             />
                         ))}
                     </div>
-                    <div></div>
                     {props.isPendingTasksIncluded && (
                         <PendingTasks
                             bladeTaskHolder={bladeTasksPending}
@@ -140,8 +139,23 @@ function CreateTimelineField(props: TimelineFieldProps) {
                             showPasswordPrompt={props.showPasswordPrompt}
                         />
                     )}
-                </DndContext>
-            </div>
+                </div>
+                <DragOverlay>
+                    {({ over }): React.ReactNode => {
+                        // Access the drag data from the over object
+                        const bladeTaskCardData =
+                            over.data.dragData.bladeTaskCardData;
+
+                        return (
+                            <>
+                                {bladeTaskCardData && (
+                                    <BladeTaskCard {...bladeTaskCardData} />
+                                )}
+                            </>
+                        ) as React.ReactNode;
+                    }}
+                </DragOverlay>
+            </DndContext>
         </div>
     );
 }
@@ -192,6 +206,10 @@ export function handleDragStart(
     if (active !== null) {
         setDragging(true);
     }
+
+    event.setDragData({
+        bladeTaskCardData: active.props, // or extract the necessary data
+    });
 }
 
 export function handleDragEnd(
@@ -205,7 +223,8 @@ export function handleDragEnd(
     const updatedBladeTaskCards = bladeTaskHolder.getBladeTasks(); // Get the blade tasks from the BladeTaskHolder
     const updatedBladeTaskCardsPending = bladeTaskHolderPending.getBladeTasks(); // Get the pending blade tasks from the BladeTaskHolder
 
-    const { statusBT, indexBT } = findBTIndex( // Find the index of the blade task being dragged
+    const { statusBT, indexBT } = findBTIndex(
+        // Find the index of the blade task being dragged
         updatedBladeTaskCards,
         updatedBladeTaskCardsPending,
         active
@@ -215,9 +234,11 @@ export function handleDragEnd(
 
     if (over !== null && indexBT !== -1) {
         //get dragged card
-        if (statusBT === "scheduled") { // If the blade task is scheduled, get the blade task from the scheduled blade tasks
+        if (statusBT === "scheduled") {
+            // If the blade task is scheduled, get the blade task from the scheduled blade tasks
             draggedCard = updatedBladeTaskCards[indexBT] as React.ReactElement;
-        } else { // Else, get the blade task from the pending blade tasks
+        } else {
+            // Else, get the blade task from the pending blade tasks
             draggedCard = updatedBladeTaskCardsPending[
                 indexBT
             ] as React.ReactElement;
@@ -226,7 +247,8 @@ export function handleDragEnd(
         //Moving to pending tasks
         if (over.id === "droppablePendingTasksId") {
             if (statusBT === "scheduled") {
-                updateBT({ //update blade task in database
+                updateBT({
+                    //update blade task in database
                     variables: {
                         id: draggedCard.props.id,
                         startDate: "undefined",
@@ -237,7 +259,8 @@ export function handleDragEnd(
 
                 updatedBladeTaskCards.splice(indexBT, 1);
 
-                updatedBladeTaskCardsPending.push( // Add the blade task to the pending blade tasks
+                updatedBladeTaskCardsPending.push(
+                    // Add the blade task to the pending blade tasks
                     <BladeTaskCard
                         key={draggedCard.key}
                         id={draggedCard.props.id}
@@ -256,7 +279,8 @@ export function handleDragEnd(
                 );
 
                 bladeTaskHolder.setBladeTasks(updatedBladeTaskCards); // Update the blade tasks in the BladeTaskHolder
-                bladeTaskHolderPending.setBladeTasks( // Update the pending blade tasks in the BladeTaskHolder
+                bladeTaskHolderPending.setBladeTasks(
+                    // Update the pending blade tasks in the BladeTaskHolder
                     updatedBladeTaskCardsPending
                 );
             } else {
@@ -283,11 +307,13 @@ export function handleDragEnd(
             if (!isOverlap) {
                 let newEndDate = new Date(overDate);
 
-                newEndDate.setDate( // Set the end date of the blade task
-                    newEndDate.getDate() + draggedCard.props.duration - 1 
+                newEndDate.setDate(
+                    // Set the end date of the blade task
+                    newEndDate.getDate() + draggedCard.props.duration - 1
                 );
 
-                updateBT({ //update blade task in database
+                updateBT({
+                    //update blade task in database
                     variables: {
                         id: draggedCard.props.id,
                         startDate: formatDate(overDate),
@@ -297,30 +323,34 @@ export function handleDragEnd(
                 });
 
                 if (statusBT === "scheduled") {
-                    updatedBladeTaskCards[indexBT] = ( // Update the blade task in the scheduled blade tasks
-                        <BladeTaskCard
-                            key={draggedCard.key}
-                            id={draggedCard.props.id}
-                            duration={draggedCard.props.duration}
-                            projectColor={draggedCard.props.projectColor}
-                            projectId={draggedCard.props.projectId}
-                            customer={draggedCard.props.customer}
-                            taskName={draggedCard.props.taskName}
-                            startDate={new Date(overDate)}
-                            endDate={newEndDate}
-                            rig={overRig}
-                            attachPeriod={draggedCard.props.attachPeriod}
-                            detachPeriod={draggedCard.props.detachPeriod}
-                            enableDraggable={draggedCard.props.enableDraggable}
-                            shown={draggedCard.props.shown}
-                        />
-                    );
+                    updatedBladeTaskCards[indexBT] = // Update the blade task in the scheduled blade tasks
+                        (
+                            <BladeTaskCard
+                                key={draggedCard.key}
+                                id={draggedCard.props.id}
+                                duration={draggedCard.props.duration}
+                                projectColor={draggedCard.props.projectColor}
+                                projectId={draggedCard.props.projectId}
+                                customer={draggedCard.props.customer}
+                                taskName={draggedCard.props.taskName}
+                                startDate={new Date(overDate)}
+                                endDate={newEndDate}
+                                rig={overRig}
+                                attachPeriod={draggedCard.props.attachPeriod}
+                                detachPeriod={draggedCard.props.detachPeriod}
+                                enableDraggable={
+                                    draggedCard.props.enableDraggable
+                                }
+                                shown={draggedCard.props.shown}
+                            />
+                        );
 
                     bladeTaskHolder.setBladeTasks(updatedBladeTaskCards); // Update the scheduled blade tasks in the BladeTaskHolder
                 } else {
                     updatedBladeTaskCardsPending.splice(indexBT, 1);
 
-                    updatedBladeTaskCards.push( // Add the blade task to the scheduled blade tasks
+                    updatedBladeTaskCards.push(
+                        // Add the blade task to the scheduled blade tasks
                         <BladeTaskCard
                             key={draggedCard.key}
                             id={draggedCard.props.id}
@@ -340,7 +370,8 @@ export function handleDragEnd(
                     );
 
                     bladeTaskHolder.setBladeTasks(updatedBladeTaskCards); // Update the scheduled blade tasks in the BladeTaskHolder
-                    bladeTaskHolderPending.setBladeTasks( // Update the pending blade tasks in the BladeTaskHolder
+                    bladeTaskHolderPending.setBladeTasks(
+                        // Update the pending blade tasks in the BladeTaskHolder
                         updatedBladeTaskCardsPending
                     );
                 }

@@ -5,20 +5,10 @@
     flex-direction: column;
     height: fit-content;
     min-height: 100px;
-    width: 1387px;
-
+    width: 70vw;
     grid-row: 4;   
     border: 2px solid rgba(0,0,0, 1);
     margin: 10px;
-    position: absolute;
-}
-
-.whiteSpace{
-    display: flex;
-    width: 1500px;
-    grid-row: 4; 
-    margin: 10px;
-    min-height: 105px;
 }
 
 .pendingTasksContainerInner{
@@ -37,6 +27,5 @@
     display: flex;
     flex-direction: row;
     grid-column: 2;
-    flex-wrap: wrap;
     gap: 5px;
 }

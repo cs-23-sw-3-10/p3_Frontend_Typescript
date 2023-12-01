@@ -48,20 +48,10 @@ function PendingTasks(props: PendingTasksProps) {
         gridTemplateRows: rowString,
     };
 
-    let containerOffSetFromTop=70+monthHeaderHeight+dateElementHeight+props.numberOfRigs*rigFieldHeight;
-
-    let whiteSpaceHeight=40+projectsWithPendingTasks.length*projectRowHeight;
-    if(props.showPasswordPrompt){
-        containerOffSetFromTop+=passwordPromptHeight;
-    }
 
     return (
         <>
-            <div className="whiteSpace" style={{height: `${whiteSpaceHeight}px`}}>
-
-
-            </div>
-            <div className="pendingTasksContainer" style={{top: `${containerOffSetFromTop}px`}}ref={setNodeRef}>
+            <div className="pendingTasksContainer" ref={setNodeRef}>
                 <h2>Pending Blade Tasks</h2>
                 <div
                     className="pendingTasksContainerInner"
