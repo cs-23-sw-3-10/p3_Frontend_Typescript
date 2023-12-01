@@ -416,3 +416,10 @@ query GetEquipmentTypes {
 }
 `;
 
+export const GET_AUTHENTICATION_TOKEN = gql`
+query Authenticate {
+    authenticate
+}
+`;
+
+

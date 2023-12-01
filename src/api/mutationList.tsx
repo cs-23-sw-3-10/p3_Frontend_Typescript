@@ -69,6 +69,17 @@ export const UPDATE_BT_INFO = gql`
   }
 `;
 
+export const CREATE_BP = gql`
+    mutation CreateBladeProject{
+        createBladeProject{
+            id
+            projectName
+            customer
+            color
+        }
+    }
+`;
+
 export const ADD_BT = gql`
 mutation CreateBladeTask($bladeTask: BladeTaskInput!) {
     createBladeTask(bladeTask: $bladeTask){

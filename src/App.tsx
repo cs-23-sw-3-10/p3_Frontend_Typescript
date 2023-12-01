@@ -17,6 +17,7 @@ import { EditModeProvider } from "./EditModeContext";
 
 function App() {
 
+ 
     return (
         <>
             <div className="app-container">
@@ -38,6 +39,7 @@ function App() {
                     </EditModeProvider>
 
                 </div>
+                <button onClick={()=>{localStorage.clear()}}>Clear auth</button>
             </div>
         </>
     );
