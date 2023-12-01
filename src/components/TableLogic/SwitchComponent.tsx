@@ -1,7 +1,5 @@
-import React, { useEffect } from "react";
-import { useState, useContext } from "react";
+import React, { useEffect, useState } from "react";
 import { useEditModeContext } from "../../EditModeContext";
-import PopupWindow from "../ui/PopupWindow";
 import Login from "../ui/login";
 
 type SwitchProps = {
