@@ -430,19 +430,20 @@ function checkBTEditOverlaps(
         console.log("Invalid ID: id is NaN");
         return true;
     }
-    allBT.forEach((bt: any) => {
+    for (let i = 0; i < allBT.length; i++) {
+        const bt = allBT[i];
         let btStartDate = new Date(bt.startDate);
         let btEndDate = new Date(bt.endDate);
-        
+
         if (
             parseInt(bt.id) !== btId &&
-            (bt.testRig === rig || bt.bladeProject.id === projectId) &&
+            (bt.testRig === rig || bt.bladeProject.bladeProjectId === projectId) &&
             ((btStartDate <= endDate && btStartDate >= startDate) ||
                 (btEndDate >= startDate && btEndDate <= endDate))
         ) {
             return true;
         }
-    });
+    }
     return false;
 }
 function checkBTCreationOverlaps(
@@ -452,12 +453,15 @@ function checkBTCreationOverlaps(
     projectId: string,
     rig: number
 ) {
+    let overlaps = false;
     if (startDate > endDate) {
         return true;
     }
-    allBT.forEach((bt: any) => {
+    for (let i = 0; i < allBT.length; i++) {
+        const bt = allBT[i];
         let btStartDate = new Date(bt.startDate);
         let btEndDate = new Date(bt.endDate);
+
         if (
             (bt.testRig === rig || bt.bladeProject.bladeProjectId === projectId) &&
             ((btStartDate <= endDate && btStartDate >= startDate) ||
@@ -465,6 +469,6 @@ function checkBTCreationOverlaps(
         ) {
             return true;
         }
-    });
-    return false;
+    }
+    return overlaps;
 }
