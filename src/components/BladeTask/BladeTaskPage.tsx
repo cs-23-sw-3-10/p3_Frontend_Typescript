@@ -2,12 +2,10 @@ import React from "react";
 
 import { columnBTID } from "./BladeTaskColumns";
 import { useQuery } from "@apollo/client";
-import { GET_ALL_BT } from "../../api/queryList";
 import { TableLogic } from "../TableLogic/TableLogic";
 import { TableLogicWOHeaders } from "../TableLogic/TableLogicWOHeader";
 import { columnBookings } from "../Resources/BookingsColumns";
 import { GET_ALL_BT_WITH_BOOKINGS_EQNAME } from "../../api/queryList";
-import { BladeTaskQuery } from "./BladeTaskData";
 
 /**
  * gets all bladetasks from the database and renders them in a table
@@ -15,6 +13,7 @@ import { BladeTaskQuery } from "./BladeTaskData";
  * @returns the BTPage component
  */
 function BTPage() {
+
     // get data from the database
     const { loading, error, data } = useQuery(GET_ALL_BT_WITH_BOOKINGS_EQNAME);
 
@@ -25,6 +24,8 @@ function BTPage() {
     const bladeTasks = data["AllBladeTasks"];
   
     if (!bladeTasks) return <p> No data for {"AllBladeTasks"} </p>;
+
+   
 
     /**
      * renders the table. The renderExpandedComponent prop is used to render the bookings table

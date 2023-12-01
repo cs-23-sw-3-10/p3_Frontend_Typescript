@@ -30,7 +30,6 @@ export const UPDATE_BT_INFO = gql`
         id
         resourceName
         resourceType
-        amount
         workHours
         equipmentAssignmentStatus
       }
@@ -74,10 +73,22 @@ mutation CreateBladeTask($bladeTask: BladeTaskInput!) {
         id
         resourceName
         resourceType
-        amount
         workHours
         equipmentAssignmentStatus
       }
     }
   }
+`;
+
+export const ADD_BP = gql`
+mutation CreateBladeProject($name: String, $customer: String, $projectLeader: String){
+  createBladeProject(name: $name, customer: $customer, projectLeader: $projectLeader ){
+    id
+    projectName
+    customer
+    projectLeader
+    startDate
+    endDate
+  }
+}
 `;

@@ -98,20 +98,6 @@ export const columnBP: ColumnDef<BladeProjectDataQuery>[] = [
                         column.toggleSorting(column.getIsSorted() === "asc")
                     }
                 >
-                    End Date
-                </button>
-            );
-        },
-        accessorKey: "endDate",
-    },
-    {
-        header: ({ column }) => {
-            return (
-                <button
-                    onClick={() =>
-                        column.toggleSorting(column.getIsSorted() === "asc")
-                    }
-                >
                     Start Date
                 </button>
             );

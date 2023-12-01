@@ -33,12 +33,12 @@
     ); /*background in a darker tone of the project color */
     justify-content: right;
 }
-.BT-Name {
-    margin-left: 20px;
+.BT-Name {    
     top: 0;
     flex: 1;
     justify-content: center;
-    align-items: center;
+    text-align: center;
+    font-size: 50%;
 }
 
 .context-menu {

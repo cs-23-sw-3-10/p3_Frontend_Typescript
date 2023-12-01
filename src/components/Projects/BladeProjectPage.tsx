@@ -1,12 +1,35 @@
-import React from "react";
+import React, { useState, useContext } from "react";
 
 import { columnBP } from "./BladeProjectColumns";
-import { columnBT } from "../BladeTask/BladeTaskColumns";
+import { GET_ALL_BP, GET_ALL_BP_IN_DIFF_SCHEDULE, GET_TEST_RIGS } from "../../api/queryList";
 import { useQuery, useSubscription } from "@apollo/client";
-import { GET_ALL_BP } from "../../api/queryList";
-import { GET_ALL_BT } from "../../api/queryList";
-import { TableLogicWOHeaders } from "../TableLogic/TableLogicWOHeader";
 import { TableLogic } from "../TableLogic/TableLogic";
+import BladeTaskCard from "../Schedule/BladeTaskCard";
+import CreateTimelineField from "../Schedule/TimelineField";
+import CreateTestRigDivs from "../Schedule/TestRigDivs";
+import { getMonthsInView } from "../Schedule/Display";
+import { getMonthLength } from "../Schedule/TimelineField";
+import { capitalizeFirstLetter } from "../Schedule/TimelineField";
+import { useEditModeContext } from "../../EditModeContext";
+import { createRigs } from "../Schedule/Display";
+
+
+/**
+ * Calculates the number of months between start and enddate of a bladeproject,
+ * which is used to regulate the number of months shown in the expanded table, when it is rendered
+ * @param startDate: the start date of the bladeproject
+ * @param endDate: the end date of the bladeproject
+ * @returns: the number of months between the start and end date
+ */
+function countMonthsIncludingStartAndEnd(startDate: Date, endDate: Date) {
+    // Calculate the month difference
+    let months = (endDate.getFullYear() - startDate.getFullYear()) * 12;
+    months -= startDate.getMonth();
+    months += endDate.getMonth();
+
+    // Adjust to include both start and end months
+    return months + 1;
+}
 
 
 /**
@@ -16,20 +39,32 @@ import { TableLogic } from "../TableLogic/TableLogic";
  */
 
 function BladeProjectPage() {
+    const editMode = useEditModeContext();
+    const [rigs, setRigs] = useState <{rigName: string, rigNumber: number}[]>([{rigName: "No Rigs", rigNumber: 0}])
+
     //get data from the database
     const {
         loading: loadingBP,
         error: errorBP,
         data: dataBP,
     } = useQuery(GET_ALL_BP);
-    const {
-        loading: loadingBT,
-        error: errorBT,
-        data: dataBT,
-    } = useQuery(GET_ALL_BT);
+
+
+    const { 
+        loading: loadingSchedule, 
+        error: errorSchedule, 
+        data: dataSchedule,
+     } = useQuery(GET_ALL_BP_IN_DIFF_SCHEDULE);
+
+     const {
+        loading: loadingRigs,
+        error: errorRigs,
+        data: dataRigs,
+     } = useQuery(GET_TEST_RIGS);
 
 
     //handle loading and error states for the used queries
+    
     if (loadingBP) return <p>Loading...</p>;
     if (errorBP) return <p> Error {errorBP.message}</p>;
     const BPData = dataBP["AllBladeProjects"];
@@ -37,49 +72,103 @@ function BladeProjectPage() {
         return <p> No data for {"AllBladeProjects"} </p>;
     }
 
-    if (loadingBT) return <p>Loading...</p>;
-    if (errorBT) return <p> Error {errorBT.message}</p>;
-
-    const BTData = dataBT["AllBladeTasks"];
-    if (!BTData) {
-        return <p> No data for {"AllBladeTasks"} </p>;
+    //
+    if (loadingSchedule) return <p>Loading...</p>;
+    if (errorSchedule) return <p> Error {errorSchedule.message}</p>;
+    const ScheduleData = dataSchedule["AllSchedules"];
+    if (!ScheduleData) {
+        return <p> No data for {"AllSchedules"} </p>;
     }
 
+
+    if(loadingRigs) return <p>Loading...</p>;
+    if(errorRigs) return <p> Error {errorRigs.message}</p>;
+    const numberOfRigs = parseInt(dataRigs.DictionaryAllByCategory[0].label)
+    if(rigs.length !== numberOfRigs){
+        setRigs(createRigs(numberOfRigs))
+    }
+
+
+    let DataForScreen;
+    if(editMode.isEditMode === false){
+        DataForScreen = ScheduleData.filter((scheduleIsActiveCheck: any) => scheduleIsActiveCheck.id === "1")
+        DataForScreen = DataForScreen[0].bladeProject
+    }
+    else {
+        DataForScreen = ScheduleData.filter((scheduleIsActiveCheck: any) => scheduleIsActiveCheck.id === "2")
+        DataForScreen = DataForScreen[0].bladeProject
+    }
+
+    
     /* renders the table. The renderExpandedComponent prop is used to render the bladeTasks table
-     * based on the current row.id which is equal to the bladeproject ID. 
+     * based on the current row.id which is equal to the bladeproject ID.
      * The data for the TableLogicWOHeaders is therefore only containing the bladeTasks for the expanded bladeproject
      */
     return (
+
         <TableLogic
             columns={columnBP}
-            data={BPData}
+            data={DataForScreen}
             renderExpandedComponent={(row) => {
-                // Filter bladeTasksData based on the current row.id
-                const bladeTasksDataForCurrentRow =
-                    dataBP["AllBladeProjects"]
-                        .find((project: any) => project.id === row.id)
-                        ?.bladeTasks.map((bladeTask: any) => ({
-                            id: Number(bladeTask.id),
-                            startDate: String(bladeTask.startDate),
-                            endDate: String(bladeTask.endDate),
-                            duration: Number(bladeTask.duration),
-                            testType: String(bladeTask.testType),
-                            attachPeriod: Number(bladeTask.attachPeriod),
-                            detachPeriod: Number(bladeTask.detachPeriod),
-                            taskName: String(bladeTask.taskName),
-                            testRig: String(bladeTask.testRig),
-                        })) || [];
+                let btCards: React.ReactNode[] = [];
+                let bladeProjectIndex = dataBP["AllBladeProjects"].find(
+                    (project: any) => project.id === row.id
+                );
 
+                const dates = getMonthsInView(
+                    new Date(bladeProjectIndex.startDate),
+                    countMonthsIncludingStartAndEnd(
+                        new Date(bladeProjectIndex.startDate),
+                        new Date(bladeProjectIndex.endDate)
+                    )
+                );
+
+                if (bladeProjectIndex && bladeProjectIndex.bladeTasks) {
+                    bladeProjectIndex.bladeTasks.forEach((bladeTask: any) => {
+                        let dateSplit = bladeTask.startDate.split("-");
+                        const year = parseInt(dateSplit[0]);
+                        const month = parseInt(dateSplit[1]) - 1;
+                        const day = parseInt(dateSplit[2]);
+
+                        let endDateSplit = bladeTask.endDate.split("-");
+                        const endYear = parseInt(endDateSplit[0]);
+                        const endMonth = parseInt(endDateSplit[1]) - 1;
+                        const endDate = parseInt(endDateSplit[2]);
+
+                        btCards.push(
+                            <BladeTaskCard
+                                key={bladeTask.id}
+                                duration={bladeTask.duration}
+                                projectColor={bladeTask.bladeProject.color}
+                                projectId={bladeTask.bladeProject.id}
+                                customer={bladeTask.bladeProject.customer}
+                                taskName={bladeTask.taskName}
+                                startDate={new Date(year, month, day)}
+                                rig={bladeTask.testRig}
+                                id={bladeTask.id}
+                                enableDraggable={false}
+                                attachPeriod={bladeTask.attachPeriod}
+                                detachPeriod={bladeTask.detachPeriod}
+                            />
+                        );
+                    });
+                }
                 return (
-                    <TableLogicWOHeaders
-                        columns={columnBT}
-                        data={bladeTasksDataForCurrentRow}
-                        
-                    />
+                    <div className="flex flex rows">
+                        <CreateTestRigDivs rigs={rigs} />
+                        <CreateTimelineField
+                            rigs={rigs}
+                            months={dates}
+                            btCards={btCards}
+                            btCardsPending={[]}
+                            isPendingTasksIncluded={false}
+                        />
+                    </div>
                 );
             }}
         />
     );
+    
 }
 
 export default BladeProjectPage;
