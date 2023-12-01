@@ -2,7 +2,7 @@ import BladeTaskMenu from "../CreateBTMenu/BladeTaskMenu";
 import TestRigSelector from "../CreateBTMenu/TestRigSelector";
 import { BladeTaskCardProps } from "../Schedule/BladeTaskCard";
 import { BladeTaskMenuProps } from "../CreateBTMenu/BladeTaskMenu";
-import { BTOrder } from "../CreateBTMenu/BTMenuTypes";
+import { BTOrder, ResourceOrder } from "../CreateBTMenu/BTMenuTypes";
 import { useQuery } from "@apollo/client";
 import { GET_BT_WITH_ID } from "../../api/queryList";
 
@@ -21,6 +21,21 @@ function EditBTComponent(BT: EditBTComponentProps) {
 
     const bladeTask = data["BladeTaskById"];
 
+    let newResourceOrders: Array<ResourceOrder> = [];    
+    if (bladeTask.bookings.length > 0) {
+        bladeTask.bookings.forEach((booking: any) => {
+            newResourceOrders.push({
+                resourceType: booking.resourceType,
+                resourceName: booking.resourceName,
+                equipmentAssignmentStatus: [true, true],
+                workHours: booking.workHours,
+            });
+        });
+    }
+
+    console.log("bladeTask.resourceOrders", bladeTask.resourceOrders);
+    console.log("newResourceOrders", newResourceOrders);
+
     const inputs: BTOrder = {
         bladeProjectId: bladeTask.bladeProject.id,
         taskName: bladeTask.taskName,
@@ -30,7 +45,7 @@ function EditBTComponent(BT: EditBTComponentProps) {
         attachPeriod: bladeTask.attachPeriod,
         detachPeriod: bladeTask.detachPeriod,
         testRig: bladeTask.testRig,
-        resourceOrders: bladeTask.resourceOrders,
+        resourceOrders: [...bladeTask.resourceOrders, ...newResourceOrders],
     }
 
   return (
