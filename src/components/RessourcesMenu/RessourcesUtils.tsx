@@ -52,7 +52,6 @@ export function ComboBoxSelector(props : ComboBoxProps) {
     useEffect(() => {
         if (data && Array.isArray(data[dataKey])) {
             let listFromDB: Array<string> = data[dataKey].map(mappingFunction);
-            console.log(listFromDB);
             setOptionsList(listFromDB);
             setItemList(listFromDB);
         }

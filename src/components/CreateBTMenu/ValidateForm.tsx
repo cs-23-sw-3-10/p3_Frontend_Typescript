@@ -7,14 +7,12 @@ export function ValidateForm(currentOrder:BTOrder){
     let typeIsValid = (currentOrder.testType !== "");
     let projectIsValid = (currentOrder.bladeProjectId !== "");
     let durationIsValid = (currentOrder.duration > 0);
-    let attachPeriodIsValid = (currentOrder.attachPeriod > 0);
-    let detachPeriodIsValid = (currentOrder.detachPeriod > 0);
-    let sumOfAttachAndDetachIsValid = ((currentOrder.attachPeriod + currentOrder.detachPeriod) <= currentOrder.duration);
+    let attachPeriodIsValid = (currentOrder.attachPeriod >= 0);
+    let detachPeriodIsValid = (currentOrder.detachPeriod >= 0);
     
     if(btNameIsValid && typeIsValid && 
        projectIsValid && durationIsValid && 
-       attachPeriodIsValid && detachPeriodIsValid && 
-       sumOfAttachAndDetachIsValid)
+       attachPeriodIsValid && detachPeriodIsValid)
     {
         return true;
     }else return false;
