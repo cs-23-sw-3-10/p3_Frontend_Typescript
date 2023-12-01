@@ -35,11 +35,14 @@ export interface BladeTaskCardProps {
 
 interface BladeTaskDraggableProps {
     style: any;
+    attachStyle: any;
+    detachStyle: any;
     id: number;
     taskName: string;
     attachPeriod: number;
     detachPeriod: number;
     enableDraggable?: boolean;
+    projectColor: string;
     inConflict?: boolean;
     shown?: boolean;
     setContextMenu?: (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => void;
@@ -128,8 +131,40 @@ function BladeTaskCard(props: BladeTaskCardProps) {
             border: props.inConflict ? "2px dashed red" : "",
         };
 
+        const attachStyle={
+            maxWidth: `${props.attachPeriod * 25}px`,
+            minWidth: `${props.attachPeriod * 25}px`,
+            position: "static",
+            height: "100%",
+            backgroundColor: `rgba(
+                0,
+                35,
+                0,
+                0.5
+            )}`,
+            justifyContent: "left",
+        }
+
+        const detachStyle={
+            maxWidth: `${props.detachPeriod * 25}px`,
+            minWidth: `${props.detachPeriod * 25}px`,
+            position: "static",
+            height: "100%",
+            backgroundColor: `rgba(
+                35,
+                0,
+                0,
+                0.5
+            )}`,
+            justifyContent: "right",
+        }
+
+
+
         const droppableProps: BladeTaskDraggableProps = {
             style: cardStyle,
+            attachStyle: attachStyle,
+            detachStyle: detachStyle,
             id: props.id,
             taskName: props.taskName,
             enableDraggable: props.enableDraggable,
@@ -137,92 +172,145 @@ function BladeTaskCard(props: BladeTaskCardProps) {
             shown: props.shown,
             attachPeriod: props.attachPeriod ? props.attachPeriod : 0,
             detachPeriod: props.detachPeriod ? props.detachPeriod : 0,
+            projectColor: props.projectColor,
         };
 
-    return (
-        <>
-            <DraggableBladeTask {...droppableProps} />
-            {showContextMenu && editMode.isEditMode && (
-                <div
-                    ref={contextMenuRef}
-                    className="context-menu"
-                    style={{
-                        left: `${contextMenuPosition.x}px`,
-                        top: `${contextMenuPosition.y}px`,
-                    }}
-                >
-                    <ul className="context-menu-list">
-                        <li
-                            className="context-menu-item"
-                            onClick={handleEditClick}
-                        >
-                            Edit
-                        </li>
-                        {props.inConflict && (
+        return (
+            <>
+                <DraggableBladeTask {...droppableProps} />
+                {showContextMenu && editMode.isEditMode && (
+                    <div
+                        ref={contextMenuRef}
+                        className="context-menu"
+                        style={{
+                            left: `${contextMenuPosition.x}px`,
+                            top: `${contextMenuPosition.y}px`,
+                        }}
+                    >
+                        <ul className="context-menu-list">
                             <li
                                 className="context-menu-item"
-                                onClick={handleConflictClick}
+                                onClick={handleEditClick}
                             >
-                                Conflict details
+                                Edit
                             </li>
-                        )}
-                        {/* Add more items as needed */}
-                    </ul>
-                </div>
-            )}
-            {showMessageBox && (
-                <MessageBox
-                    title={props.taskName}
-                    messages={extractConflictMessages(
-                    dataConflicts.findConflictsForBladeTask
+                            {props.inConflict && (
+                                <li
+                                    className="context-menu-item"
+                                    onClick={handleConflictClick}
+                                >
+                                    Conflict details
+                                </li>
+                            )}
+                            {/* Add more items as needed */}
+                        </ul>
+                    </div>
                 )}
-                    onClose={handleMessageClose}
-                />
-            )}
-            {showPopup && <PopupWindow onClose={togglePopup} component={<EditBTComponent bladeTaskID={props.id}/>}/>}
+                {showMessageBox && (
+                    <MessageBox
+                        title={props.taskName}
+                        messages={extractConflictMessages(
+                            dataConflicts.findConflictsForBladeTask
+                        )}
+                        onClose={handleMessageClose}
+                    />
+                )}
+                {showPopup && (
+                    <PopupWindow
+                        onClose={togglePopup}
+                        component={<EditBTComponent bladeTaskID={props.id} />}
+                    />
+                )}
+            </>
+        );
+    } else {
+        const cardStyle = {
+            backgroundColor: props.shown ? props.projectColor : "grey",
+            width: `${props.duration * dateDivLength}px`,
+            border: props.inConflict ? "2px dashed red" : "",
+            gridRow: `project-${props.projectName}`,
+            gridColumn: "2",
+            justifyContent: "left",
+        };
 
-        </>
-    );
-}else{
-    const cardStyle = {
-      backgroundColor: props.shown ? props.projectColor : "grey",
-      width: `${props.duration*dateDivLength}px`,
-      border: props.inConflict ? '2px dashed red' : '', 
-      gridRow: `project-${props.projectName}`,
-      gridColumn: "2",
-      justifyContent: "left"
-    };
-  
-    const droppableProps: BladeTaskDraggableProps = {
-      style: cardStyle,
-      id: props.id,
-      taskName: props.taskName,
-      enableDraggable: props.enableDraggable,
-      setContextMenu: handleRightClick,
-      shown: props.shown,
-      attachPeriod: props.attachPeriod ? props.attachPeriod : 0,
-      detachPeriod: props.detachPeriod ? props.detachPeriod : 0,
-    };
-  
-    return(<>
-      <DraggableBladeTask {...droppableProps} />
-      {showContextMenu && (
-          <div ref={contextMenuRef} className="context-menu" style={{ left: `${contextMenuPosition.x}px`, top: `${contextMenuPosition.y}px` }}>
-            <ul className="context-menu-list">
-                <li className="context-menu-item" onClick={handleEditClick}>Edit</li>
-                {/* Add more items as needed */}
-            </ul>
-        </div>    
-    )}
-      </>
-      );
-  }
+        const attachStyle={
+            maxWidth: `${props.attachPeriod * 25}px`,
+            minWidth: `${props.attachPeriod * 25}px`,
+            position: "static",
+            height: "100%",
+            backgroundColor: `rgba(
+                0,
+                35,
+                0,
+                0.5
+            )}`,
+            justifyContent: "left",      
+        }
+
+        const detachStyle={
+            maxWidth: `${props.detachPeriod * 25}px`,
+            minWidth: `${props.detachPeriod * 25}px`,
+            position: "static",
+            height: "100%",
+            backgroundColor: `rgba(
+                35,
+                0,
+                0,
+                0.5
+            )}`,
+            justifyContent: "right",
+        }
+
+        const droppableProps: BladeTaskDraggableProps = {
+            style: cardStyle,
+            attachStyle: attachStyle,
+            detachStyle: detachStyle,
+            id: props.id,
+            taskName: props.taskName,
+            enableDraggable: props.enableDraggable,
+            setContextMenu: handleRightClick,
+            shown: props.shown,
+            attachPeriod: props.attachPeriod ? props.attachPeriod : 0,
+            detachPeriod: props.detachPeriod ? props.detachPeriod : 0,
+            projectColor: props.projectColor,
+        };
+
+        return (
+            <>
+                <DraggableBladeTask {...droppableProps} />
+                {showContextMenu && (
+                    <div
+                        ref={contextMenuRef}
+                        className="context-menu"
+                        style={{
+                            left: `${contextMenuPosition.x}px`,
+                            top: `${contextMenuPosition.y}px`,
+                        }}
+                    >
+                        <ul className="context-menu-list">
+                            <li
+                                className="context-menu-item"
+                                onClick={handleEditClick}
+                            >
+                                Edit
+                            </li>
+                            {/* Add more items as needed */}
+                        </ul>
+                    </div>
+                )}
+            </>
+        );
+    }
 }
 export default BladeTaskCard;
 
 function DraggableBladeTask(props: BladeTaskDraggableProps) {
     const { attributes, listeners, setNodeRef, transform } = useDraggable({
         id: props.id,
+        data: {
+            type: "BladeTaskCardProps",
+            props: props,
+        },
         disabled: !props.enableDraggable,
     });
 
@@ -236,29 +324,25 @@ function DraggableBladeTask(props: BladeTaskDraggableProps) {
         <div
             className="bladeTaskCard"
             style={style}
-            id={`${props.id}`}
             ref={setNodeRef}
             {...listeners}
             {...attributes}
+            id={`${props.id}`}
             onContextMenu={props.setContextMenu}
         >
-            {/* {used to visualize the attach period} */}
-            <div
-                className="attachPeriod"
-                style={{
-                    maxWidth: `${props.attachPeriod * 25}px`,
-                    minWidth: `${props.attachPeriod * 25}px`,
-                }}
-            ></div>
-            <div className="BT-Name">{props.taskName}</div>
-            {/* {used to visualize the detach period} */}
-            <div
-                className="detachPeriod"
-                style={{
-                    maxWidth: `${props.detachPeriod * 25}px`,
-                    minWidth: `${props.detachPeriod * 25}px`,
-                }}
-            ></div>
+           
+                {/* {used to visualize the attach period} */}
+                <div
+                    className="attachPeriod"
+                    style={props.attachStyle}
+                >attach</div>
+                <div className="BT-Name">{props.taskName}</div>
+                {/* {used to visualize the detach period} */}
+                <div
+                    className="detachPeriod"
+                    style={props.detachStyle}
+                >detach</div>
+           
         </div>
     ) : (
         <div
@@ -284,12 +368,11 @@ function extractConflictMessages(conflicts: ConflictProps[]) {
     const messages: string[] = [];
 
     //For testeing
-    const loremIpsum="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque eu varius purus. Nunc laoreet neque eget porta ultricies. Nam diam enim, cursus id efficitur quis, efficitur eu ante. Integer dapibus, est non semper vehicula, quam mauris molestie nibh, a malesuada magna dui eu lectus. Donec porttitor consequat neque vitae condimentum. Praesent eleifend nisl sed odio pellentesque, in tristique lectus semper. Cras mollis, ligula sed consectetur iaculis, nisl justo ultrices nibh, vel condimentum mauris lacus non ante. Aliquam posuere eu nisl quis luctus. Vivamus mollis eu elit in mollis. Aenean ultrices porta mi nec volutpat. Fusce quis arcu venenatis, aliquet enim. "
+    const loremIpsum =
+        "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque eu varius purus. Nunc laoreet neque eget porta ultricies. Nam diam enim, cursus id efficitur quis, efficitur eu ante. Integer dapibus, est non semper vehicula, quam mauris molestie nibh, a malesuada magna dui eu lectus. Donec porttitor consequat neque vitae condimentum. Praesent eleifend nisl sed odio pellentesque, in tristique lectus semper. Cras mollis, ligula sed consectetur iaculis, nisl justo ultrices nibh, vel condimentum mauris lacus non ante. Aliquam posuere eu nisl quis luctus. Vivamus mollis eu elit in mollis. Aenean ultrices porta mi nec volutpat. Fusce quis arcu venenatis, aliquet enim. ";
 
     for (let i = 0; i < conflicts.length; i++) {
-        messages.push(
-            conflicts[i].message 
-        );
+        messages.push(conflicts[i].message);
     }
     return messages;
 }

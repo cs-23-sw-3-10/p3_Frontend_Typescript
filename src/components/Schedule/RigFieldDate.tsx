@@ -9,7 +9,6 @@ interface RigFieldDateDroppableProps {
     date: Date;
     style: RigFieldDateStyle;
     bladeTaskHolder: BladeTaskHolder;
-    setDragging: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 interface RigFieldDateStyle {
@@ -22,7 +21,6 @@ type RigFieldDateProps = {
     rig: string;
     date: Date;
     bladeTaskHolder: BladeTaskHolder;
-    setDragging: React.Dispatch<React.SetStateAction<boolean>>; 
 };
 
 function CreateRigFieldDate(props: RigFieldDateProps) {
@@ -45,7 +43,6 @@ function CreateRigFieldDate(props: RigFieldDateProps) {
         date: props.date,
         style: dateStyle,
         bladeTaskHolder: props.bladeTaskHolder,
-        setDragging: props.setDragging,
     };
 
     return Droppable(dateProps); // Create a droppable date

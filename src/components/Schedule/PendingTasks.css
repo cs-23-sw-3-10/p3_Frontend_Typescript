@@ -3,6 +3,7 @@
 .pendingTasksContainer{
     display: flex;
     flex-direction: column;
+    overflow-x: scroll;
     height: fit-content;
     min-height: 100px;
     width: 70vw;

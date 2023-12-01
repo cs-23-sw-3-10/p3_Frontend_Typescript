@@ -14,8 +14,6 @@ type RigFieldContainerProps = {
     columns: string; // The columns of the schedule
     BladeTaskHolder: BladeTaskHolder;
     BladeTaskCards: React.ReactNode[];
-    isDragging: boolean;
-    setDragging: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 function CreateRigFieldContainer(props: RigFieldContainerProps) {
@@ -93,7 +91,6 @@ function CreateRigFieldContainer(props: RigFieldContainerProps) {
                         rig={props.rig}
                         date={date}
                         bladeTaskHolder={props.BladeTaskHolder}
-                        setDragging={props.setDragging}
                     />
                 ) // Create a date for each day in the month
             )}

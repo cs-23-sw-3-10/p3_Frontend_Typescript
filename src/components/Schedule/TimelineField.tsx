@@ -3,11 +3,13 @@ import CreateMonthDateContainer from "./MonthDateContainer";
 import CreateRigFieldContainer from "./RigFieldContainer";
 import MonthLengths from "./MonthLengthsEnum";
 import React, { useState } from "react";
-import BladeTaskCard from "./BladeTaskCard";
+import BladeTaskCard, { BladeTaskCardProps } from "./BladeTaskCard";
 import { BladeTaskHolder } from "./BladeTaskHolder";
 import { useMutation } from "@apollo/client";
 import { UPDATE_BT } from "../../api/mutationList";
 import PendingTasks from "./PendingTasks";
+import { createPortal } from "react-dom";
+import "./BladeTaskCard.css"
 
 type TimelineFieldProps = {
     rigs: { rigName: string; rigNumber: number }[];
@@ -22,7 +24,8 @@ export const dateDivLength = 25; // px length of the dates in the schedule
 
 function CreateTimelineField(props: TimelineFieldProps) {
     const [updateBt, { error, data }] = useMutation(UPDATE_BT);
-    const [activeId, setActiveId] = useState(null);
+    
+
 
     let fieldWidth: number = 0; // px width of the field dynamically calculated from the number of months displayed
     props.months.forEach((month) => {
@@ -67,7 +70,7 @@ function CreateTimelineField(props: TimelineFieldProps) {
         minHeight: props.rigs.length * 50 + "px",
     };
 
-    const [isDragging, setDragging] = useState(false);
+    const [activeCard, setActiveCard] = useState<any>(null);
 
     // Create a BladeTaskHolder object to store the blade tasks
     let bladeTasks = new BladeTaskHolder(props.btCards);
@@ -78,14 +81,13 @@ function CreateTimelineField(props: TimelineFieldProps) {
         <div className="TimelineFieldContainer">
             <DndContext // DndContext is used to enable drag and drop functionality
                 onDragStart={(event) => {
-                    handleDragStart(event, setDragging);
+                    handleDragStart(event, setActiveCard);
                 }}
                 onDragEnd={(event) => {
                     handleDragEnd(
                         event,
                         bladeTasks,
                         bladeTasksPending,
-                        setDragging,
                         updateBt
                     );
                 }}
@@ -112,8 +114,6 @@ function CreateTimelineField(props: TimelineFieldProps) {
                                 allDates={allDates}
                                 fieldWidth={fieldWidth}
                                 columns={columnsOfSchedule}
-                                isDragging={isDragging}
-                                setDragging={setDragging}
                                 BladeTaskHolder={bladeTasks}
                                 BladeTaskCards={bladeTasks
                                     .getBladeTasks()
@@ -140,21 +140,22 @@ function CreateTimelineField(props: TimelineFieldProps) {
                         />
                     )}
                 </div>
-                <DragOverlay>
-                    {({ over }): React.ReactNode => {
-                        // Access the drag data from the over object
-                        const bladeTaskCardData =
-                            over.data.dragData.bladeTaskCardData;
-
-                        return (
-                            <>
-                                {bladeTaskCardData && (
-                                    <BladeTaskCard {...bladeTaskCardData} />
-                                )}
-                            </>
-                        ) as React.ReactNode;
-                    }}
-                </DragOverlay>
+                {createPortal(
+                 <DragOverlay>
+                    {activeCard && <BladeTaskCard
+                    duration={activeCard.duration}
+                    attachPeriod={activeCard.attachPeiod}
+                    detachPeriod={activeCard.detachPeiod}
+                    projectColor={activeCard.projectColor}
+                    projectId={activeCard.projectId}
+                    customer={activeCard.customer}
+                    taskName={activeCard.taskName}
+                    id={activeCard.id}
+                    shown={activeCard.shown}
+                    />}
+                </DragOverlay>,
+                document.body
+                    )}    
             </DndContext>
         </div>
     );
@@ -200,23 +201,21 @@ function getMonthContainerKey(month: Date) {
 
 export function handleDragStart(
     event: any,
-    setDragging: React.Dispatch<React.SetStateAction<boolean>>
+    setActiveCard: React.Dispatch<React.SetStateAction<BladeTaskCardProps |null>>,
 ) {
-    const { active } = event;
-    if (active !== null) {
-        setDragging(true);
+
+    console.log("event: ",event);
+
+    if(event.active.data.current.type==="BladeTaskCardProps"){
+        setActiveCard(event.active.data.current.props)
     }
 
-    event.setDragData({
-        bladeTaskCardData: active.props, // or extract the necessary data
-    });
 }
 
 export function handleDragEnd(
     event: any,
     bladeTaskHolder: BladeTaskHolder,
     bladeTaskHolderPending: BladeTaskHolder,
-    setDragging: React.Dispatch<React.SetStateAction<boolean>>,
     updateBT: Function
 ) {
     const { active, over } = event; // active is the element being dragged, over is the element being dragged over
@@ -378,7 +377,6 @@ export function handleDragEnd(
             } else {
                 console.log("Overlap detected. drag opreation cancelled");
             }
-            setDragging(false);
         }
     } else {
         console.log("over is null");
