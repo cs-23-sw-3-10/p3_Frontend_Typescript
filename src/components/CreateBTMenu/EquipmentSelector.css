@@ -1,12 +1,12 @@
 /* EQUIPMENT MENU */
-.equipment_menu{
+.equipment_bt_menu{
     position: absolute;
     width: 300px;
     background-color: white;
     border: solid;
     transform: translate(700px, 5px);
     display: grid;
-    grid-template-rows: 70px 200px 30px 50px;
+    grid-template-rows: 70px 200px;
     grid-template-columns: 1fr;
 }
 

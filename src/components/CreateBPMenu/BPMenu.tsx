@@ -8,6 +8,11 @@ import './BPMenu.css';
 import { useQuery, useMutation } from "@apollo/client";
 import { GET_ALL_ENGINEERS } from "../../api/queryList";
 import { ADD_BP } from "../../api/mutationList";
+import { ResourceOrderContext } from "../CreateBTMenu/BladeTaskOrderContext";
+import EquipmentSelectionMenu from "../CreateBTMenu/EquipmentSelector";
+import { ResourceOrder } from "../CreateBTMenu/BTMenuTypes";
+import EquipmentList from "../CreateBTMenu/EquipmentList";
+import './EquipmentListBP.css';
 
 
 function BladeProjectMenu() {
@@ -21,6 +26,9 @@ function BladeProjectMenu() {
     const [projectError, setProjectError] = useState<boolean>(false);
     const [missingInput, setMissingInput] = useState<boolean>(false);
 
+    const [equipmentMenuIsActive, setEquipmentMenuIsActive] = useState<boolean>(true);
+    const [resourceOrders, setResourceOrders] = useState<ResourceOrder[]>([]);
+
     const [addBP, { loading, error }] = useMutation(ADD_BP);
     const { data } = useQuery(GET_ALL_ENGINEERS);
 
@@ -32,6 +40,9 @@ function BladeProjectMenu() {
         }
     }, [data]);
 
+    useEffect(() => {
+        console.log(resourceOrders);
+    }, [resourceOrders])
 
     const currentForm: BladeProjectForm = {
         projectName: projectName,
@@ -53,7 +64,7 @@ function BladeProjectMenu() {
             setMissingInput(false);
             setProjectError(false);
             handleCancel();
-        } else{
+        } else {
             setMissingInput(true);
         }
     }
@@ -62,25 +73,36 @@ function BladeProjectMenu() {
         setProjectName('');
         setCustomer('');
         setLeader('');
+        setResourceOrders([]);
     }
 
 
     return (
         <div className="bp_menu_wrapper">
+            <ResourceOrderContext.Provider value={setResourceOrders}>
+                <h2 className="bp_menu_heading">Create Blade Project</h2>
+                <h2 className="bp_menu_title">Project Name</h2>
+                <InputField className="input_field" value={projectName} setState={setProjectName} />
 
-            <h2 className="bp_menu_heading">Create Blade Project</h2>
-            <h2 className="bp_menu_title">Project Name</h2>
-            <InputField className="input_field" value={projectName} setState={setProjectName} />
+                <h2 className="bp_menu_title">Customer</h2>
+                <InputField className="input_field" value={customer} setState={setCustomer} />
 
-            <h2 className="bp_menu_title">Customer</h2>
-            <InputField className="input_field" value={customer} setState={setCustomer} />
+                <h2 className="bp_menu_title">Project Leader</h2>
+                <DropdownList className="input_field" value={leader} data={leaderOptions} onChange={value => setLeader(value)} />
+                
+                <h2 className="bp_menu_title">Equipment</h2>
+                <div className="bp_menu_add_wrapper">
+                    <button className="bp_menu_add" onClick={() => setEquipmentMenuIsActive(true)}>+</button>
+                </div>
+                <EquipmentList resourceOrders={resourceOrders} classNameFor="bp"/>
 
-            <h2 className="bp_menu_title">Project Leader</h2>
-            <DropdownList className="input_field" value={leader} data={leaderOptions} onChange={value => setLeader(value)} />
+                <button className="bp_menu_cancel" onClick={handleCancel}>CANCEL</button>
+                <button className="bp_menu_submit" onClick={handleSubmit}>SUBMIT</button>
+                <ErrorMessageBox projectError={projectError} missingInput={missingInput} />
+                {equipmentMenuIsActive ? <EquipmentSelectionMenu setEquipmentActive={setEquipmentMenuIsActive} className="equipment_bp_menu"/> : <></>}
+            </ResourceOrderContext.Provider>
 
-            <button className="bp_menu_cancel" onClick={handleCancel}>CANCEL</button>
-            <button className="bp_menu_submit" onClick={handleSubmit}>SUBMIT</button>
-            <ErrorMessageBox projectError={projectError} missingInput={missingInput} />
+
         </div>
     );
 }

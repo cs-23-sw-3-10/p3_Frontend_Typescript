@@ -6,16 +6,14 @@ import { ResourceOrder } from './BTMenuTypes';
 import { useResourceOrderContext } from './BladeTaskOrderContext';
 import { colors } from '@mui/material';
 
-function EquipmentSelectionMenu({ setEquipmentActive }: { setEquipmentActive: Function }) {
+function EquipmentSelectionMenu({ setEquipmentActive, className}: { setEquipmentActive: Function, className:string}) {
     return (
-        <div className='equipment_menu'>
+        <div className={className}>
             <h2 className="equipment_menu_title">Equipment</h2>
             <button className='equipment_menu_close' onClick={() => setEquipmentActive(false)}><span className="material-symbols-outlined">close</span></button>
             <div className="equipment_menu_items_wrapper">
                 <EquipmentListGenerator />
             </div>
-            <h2 className='custom_item_title'>Add Custom Equipment</h2>
-            <CustomMenuItem/>
         </div>
     );
 }

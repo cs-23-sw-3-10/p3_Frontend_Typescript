@@ -293,6 +293,7 @@ function BladeTaskMenu(props: BladeTaskMenuProps) {
                     <EquipmentList
                         resourceOrders={resourceOrders}
                         key={"Equipment_List"}
+                        classNameFor="bt"
                     />
                 </ResourceOrderContext.Provider>
 
@@ -311,6 +312,7 @@ function BladeTaskMenu(props: BladeTaskMenuProps) {
                     <ResourceOrderContext.Provider value={setResourceOrder}>
                         <EquipmentSelectionMenu
                             setEquipmentActive={setEquipmentActive}
+                            className="equipment_bt_menu"
                         />
                     </ResourceOrderContext.Provider>
                 ) : (
