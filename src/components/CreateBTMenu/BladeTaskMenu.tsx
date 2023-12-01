@@ -433,9 +433,9 @@ function checkBTEditOverlaps(
     allBT.forEach((bt: any) => {
         let btStartDate = new Date(bt.startDate);
         let btEndDate = new Date(bt.endDate);
-
-        if ( //check if the edited blade task overlaps with another blade task that is not itself
-            parseInt(bt.id) !== btId && 
+        
+        if (
+            parseInt(bt.id) !== btId &&
             (bt.testRig === rig || bt.bladeProject.id === projectId) &&
             ((btStartDate <= endDate && btStartDate >= startDate) ||
                 (btEndDate >= startDate && btEndDate <= endDate))
@@ -458,9 +458,8 @@ function checkBTCreationOverlaps(
     allBT.forEach((bt: any) => {
         let btStartDate = new Date(bt.startDate);
         let btEndDate = new Date(bt.endDate);
-        if ( //check if the created blade task overlaps with another blade task
-            (bt.testRig === rig ||
-                bt.bladeProject.bladeProjectId === projectId) &&
+        if (
+            (bt.testRig === rig || bt.bladeProject.bladeProjectId === projectId) &&
             ((btStartDate <= endDate && btStartDate >= startDate) ||
                 (btEndDate >= startDate && btEndDate <= endDate))
         ) {
