@@ -143,9 +143,12 @@ function DisplayComponent(props: DisplayProps) {
         setRigs(createRigs(numberOfRigs));
     }
 
+    if (editMode.isEditMode) {
+        props.setFilter("None");
+    }
+
     //Making schedule BladeTaskCards
     let btCards: React.ReactNode[] = [];
-
     dataBT["AllBladeTasksInRangeSub"].forEach((bt: any) => {
         let btShown = false;
         if (
