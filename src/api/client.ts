@@ -7,11 +7,12 @@ import { setContext } from '@apollo/client/link/context';
 
 
 
-
+// sets up the apollo client with the uri of the server for graphql queries and mutations
 const httpLink = createHttpLink({
   uri: 'http://localhost:8080/graphql',
 });
 
+// sets up the apollo client with when the server is using websockets for graphql subscriptions
 export const wsLink = new GraphQLWsLink(createClient({
   url: 'ws://localhost:8080/graphql',
 }
