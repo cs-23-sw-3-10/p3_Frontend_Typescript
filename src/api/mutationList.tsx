@@ -1,5 +1,37 @@
-import { gql } from "@apollo/client";
 
+import {gql} from '@apollo/client';
+
+
+export const CREATE_EQUIPMENT_MUTATION = gql`
+    mutation CreateEquipment($type: String!, $calibrationExpirationDate: String!, $name: String!) {
+        CreateEquipment(type: $type, calibrationExpirationDate: $calibrationExpirationDate, name: $name) {
+            id
+            type
+            calibrationExpirationDate
+            name
+        }
+    }
+`;
+export const CREATE_ENGINEER_MUTATION = gql`
+    mutation CreateEngineer($name: String!, $maxWorkHours: Int!) {
+        CreateEngineer(name: $name, maxWorkHours: $maxWorkHours) {
+            id
+            name
+            maxWorkHours
+        }
+    }
+`;
+export const CREATE_TECHNICIAN_MUTATION = gql`
+    mutation CreateTechnician($type: String!, $maxWorkHours: Int!, $count: Int!) {
+        CreateTechnician(type: $type, maxWorkHours: $maxWorkHours, count: $count,) {
+            id
+            type
+            workHours
+            maxWorkHours
+            count
+        }
+    }
+`;
 export const UPDATE_BT = gql`
     mutation updateStartAndDurationBladeTask(
         $id: ID!
@@ -102,5 +134,36 @@ mutation UpdateBladeProject($bpId: Int!, $updates: BladeProjectInput!){
     startDate
     endDate
   }
+}
+`;
+export const DELETE_EQUIPMENT = gql`
+mutation DeleteEquipment($name: String!) {
+    DeleteEquipment(name: $name) {
+        id
+        type
+        name
+        calibrationExpirationDate
+    }
+}
+`;
+export const DELETE_TECHNICIAN = gql`
+mutation DeleteTechnician($type: String!) {
+    DeleteTechnician(type: $type) {
+        id
+        type
+        workHours
+        maxWorkHours
+        count
+    }
+}
+`;
+export const DELETE_ENGINEER = gql`
+mutation DeleteEngineer($name: String!) {
+    DeleteEngineer(name: $name) {
+        id
+        name
+        workHours
+        maxWorkHours
+    }
 }
 `;

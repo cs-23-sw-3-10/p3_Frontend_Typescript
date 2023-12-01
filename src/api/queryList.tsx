@@ -268,6 +268,16 @@ export const GET_ALL_BP = gql`
     }
 `;
 
+export const GET_EQUIPMENT_BY_TYPE = gql`
+    query EquipmentByType($type: String!) {
+        EquipmentByType(type: $type) {
+            id
+            name
+            type
+            calibrationExpirationDate
+        }
+    }
+`;
 export const GET_EQUIPMENT = gql`
     query AllEquipment {
         AllEquipment {
@@ -329,6 +339,14 @@ export const GET_ALL_EQUIPMENT_TYPES = gql`
         }
     }
 `;
+export const GET_ALL_TECHNICIAN_TYPES = gql`
+query GetAllTechnicianTypes{
+    DictionaryAllByCategory(category:"technician"){
+      id
+    	label
+    }
+}
+`;
 
 export const GET_BT_DATE_INFO = gql`
     query GetBTDateInfo {
@@ -381,3 +399,20 @@ export const GET_ALL_BLADE_PROJECTS = gql`
         }
     }
 `;
+
+export const ALL_EQUIPMENT = gql`
+query AllEquipment {
+    AllEquipment {
+        id
+        type
+        name
+        calibrationExpirationDate
+    }
+}
+`;
+export const GET_EQUIPMENT_TYPES = gql`
+query GetEquipmentTypes {
+    GetEquipmentTypes
+}
+`;
+
