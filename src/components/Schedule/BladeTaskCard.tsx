@@ -46,6 +46,7 @@ interface BladeTaskDraggableProps {
 }
 
 function BladeTaskCard(props: BladeTaskCardProps) {
+    const editMode = useEditModeContext();
     const [showContextMenu, setShowContextMenu] = useState(false);
     const [contextMenuPosition, setContextMenuPosition] = useState({
         x: 0,
@@ -139,101 +140,84 @@ function BladeTaskCard(props: BladeTaskCardProps) {
             detachPeriod: props.detachPeriod ? props.detachPeriod : 0,
         };
 
-        return (
-            <>
-                <DraggableBladeTask {...droppableProps} />
-                {showContextMenu && (
-                    <div
-                        ref={contextMenuRef}
-                        className="context-menu"
-                        style={{
-                            left: `${contextMenuPosition.x}px`,
-                            top: `${contextMenuPosition.y}px`,
-                        }}
-                    >
-                        <ul className="context-menu-list">
+    return (
+        <>
+            <DraggableBladeTask {...droppableProps} />
+            {showContextMenu && editMode.isEditMode && (
+                <div
+                    ref={contextMenuRef}
+                    className="context-menu"
+                    style={{
+                        left: `${contextMenuPosition.x}px`,
+                        top: `${contextMenuPosition.y}px`,
+                    }}
+                >
+                    <ul className="context-menu-list">
+                        <li
+                            className="context-menu-item"
+                            onClick={handleEditClick}
+                        >
+                            Edit
+                        </li>
+                        {props.inConflict && (
                             <li
                                 className="context-menu-item"
-                                onClick={handleEditClick}
+                                onClick={handleConflictClick}
                             >
-                                Edit
+                                Conflict details
                             </li>
-                            {props.inConflict && (
-                                <li
-                                    className="context-menu-item"
-                                    onClick={handleConflictClick}
-                                >
-                                    Conflict details
-                                </li>
-                            )}
-                            {/* Add more items as needed */}
-                        </ul>
-                    </div>
-                )}
-                {showMessageBox && (
-                    <MessageBox
-                        title={props.taskName}
-                        messages={extractConflictMessages(
-                            dataConflicts.findConflictsForBladeTask
                         )}
-                        onClose={handleMessageClose}
-                    />
+                        {/* Add more items as needed */}
+                    </ul>
+                </div>
+            )}
+            {showMessageBox && (
+                <MessageBox
+                    title={props.taskName}
+                    messages={extractConflictMessages(
+                    dataConflicts.findConflictsForBladeTask
                 )}
-                {showPopup && (
-                    <PopupWindow
-                        onClose={togglePopup}
-                        component={<EditBTComponent bladeTaskID={props.id} />}
-                    />
-                )}
-            </>
-        );
-    } else {
-        const cardStyle = {
-            backgroundColor: props.shown ? props.projectColor : "grey",
-            width: `${props.duration * dateDivLength}px`,
-            border: props.inConflict ? "2px dashed red" : "",
-            gridRow: `project-${props.projectName}`,
-            gridColumn: "2",
-            justifyContent: "left",
-        };
+                    onClose={handleMessageClose}
+                />
+            )}
+            {showPopup && <PopupWindow onClose={togglePopup} component={<EditBTComponent bladeTaskID={props.id}/>}/>}
 
-        const droppableProps: BladeTaskDraggableProps = {
-            style: cardStyle,
-            id: props.id,
-            taskName: props.taskName,
-            enableDraggable: props.enableDraggable,
-            setContextMenu: handleRightClick,
-            shown: props.shown,
-            attachPeriod: props.attachPeriod ? props.attachPeriod : 0,
-            detachPeriod: props.detachPeriod ? props.detachPeriod : 0,
-        };
-
-        return (
-            <>
-                <DraggableBladeTask {...droppableProps} />
-                {showContextMenu && (
-                    <div
-                        ref={contextMenuRef}
-                        className="context-menu"
-                        style={{
-                            left: `${contextMenuPosition.x}px`,
-                            top: `${contextMenuPosition.y}px`,
-                        }}
-                    >
-                        <ul className="context-menu-list">
-                            <li
-                                className="context-menu-item"
-                                onClick={handleEditClick}
-                            >
-                                Edit
-                            </li>
-                            {/* Add more items as needed */}
-                        </ul>
-                    </div>
-                )}
-            </>
-        );
-    }
+        </>
+    );
+}else{
+    const cardStyle = {
+      backgroundColor: props.shown ? props.projectColor : "grey",
+      width: `${props.duration*dateDivLength}px`,
+      border: props.inConflict ? '2px dashed red' : '', 
+      gridRow: `project-${props.projectName}`,
+      gridColumn: "2",
+      justifyContent: "left"
+    };
+  
+    const droppableProps: BladeTaskDraggableProps = {
+      style: cardStyle,
+      id: props.id,
+      taskName: props.taskName,
+      enableDraggable: props.enableDraggable,
+      setContextMenu: handleRightClick,
+      shown: props.shown,
+      attachPeriod: props.attachPeriod ? props.attachPeriod : 0,
+      detachPeriod: props.detachPeriod ? props.detachPeriod : 0,
+    };
+  
+    return(<>
+      <DraggableBladeTask {...droppableProps} />
+      {showContextMenu && (
+          <div ref={contextMenuRef} className="context-menu" style={{ left: `${contextMenuPosition.x}px`, top: `${contextMenuPosition.y}px` }}>
+            <ul className="context-menu-list">
+                <li className="context-menu-item" onClick={handleEditClick}>Edit</li>
+                {/* Add more items as needed */}
+            </ul>
+        </div>    
+    )}
+      </>
+      );
+  }
 }
 export default BladeTaskCard;
 
