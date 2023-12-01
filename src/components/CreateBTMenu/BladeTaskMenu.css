@@ -42,8 +42,6 @@
     grid-template-rows: 60px;
 }
 
-
-
 .testtype_wrapper{
     display: grid;
     grid-template-columns: 1fr 2fr;

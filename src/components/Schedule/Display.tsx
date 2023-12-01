@@ -15,6 +15,7 @@ import { getMonthLength } from "./TimelineField";
 import { capitalizeFirstLetter } from "./TimelineField";
 import { useEditModeContext } from "../../EditModeContext";
 import SwitchComponent from "../TableLogic/SwitchComponent";
+import StyledButton from "../ui/styledButton";
 
 const currentDate = new Date(Date.now()); // Get the current date
 
@@ -124,7 +125,10 @@ function DisplayComponent(props: DisplayProps) {
         return <p>Loading...</p>;
     }
     if (errorRigs) {
-        return <p>Error {errorRigs.message}</p>;
+        //TDOO: Find better way to handle timesout token
+        console.log(errorRigs);
+        localStorage.removeItem("token");
+        return <p>Error {errorRigs.message} </p>;
     }
     if (loadingBT) {
         return <p>Loading...</p>;
@@ -265,30 +269,27 @@ function DisplayComponent(props: DisplayProps) {
                 </form>
             </div>
             {editMode.isEditMode ? (
-                <div className="ScheduleFilterAndMode">
-                    <SwitchComponent
-                        setShowPasswordPrompt={props.setShowPasswordPrompt}
-                    />
-                </div>
+            <div className="ScheduleFilterAndMode">
+                <SwitchComponent setShowPasswordPrompt={props.setShowPasswordPrompt} />
+                {localStorage.getItem('token') && <StyledButton onClick={()=>{localStorage.removeItem('token'); window.location.reload();}}> Logout </StyledButton>}
+            </div>
             ) : (
-                <div className="ScheduleFilterAndMode">
-                    <label>Filter:</label>
-                    <select
-                        name="customerFilter"
-                        id="customerFilter"
-                        onChange={(e) => {
-                            props.setFilter(e.target.value);
-                        }}
-                    >
-                        <option key="None" value="None">
-                            None
-                        </option>
-                        {customers.map((customer) => FilterCustomers(customer))}
-                    </select>
-                    <SwitchComponent
-                        setShowPasswordPrompt={props.setShowPasswordPrompt}
-                    />
-                </div>
+            <div className="ScheduleFilterAndMode">
+                <label>Filter:</label>
+                <select
+                    name="customerFilter"
+                    id="customerFilter"
+                    onChange={(e) => {
+                        props.setFilter(e.target.value);
+                    }}
+                >
+                    <option value="None">None</option>
+                    <option value="Goldwind">Goldwind</option>
+                    <option value="Suzlon">Suzlon</option>
+                </select>
+               <SwitchComponent setShowPasswordPrompt={props.setShowPasswordPrompt} />
+               {localStorage.getItem('token') && <StyledButton onClick={()=>{localStorage.removeItem('token'); window.location.reload();}}> Logout </StyledButton>}
+            </div>           
             )}
 
             <div className="ScheduleDisplay">
