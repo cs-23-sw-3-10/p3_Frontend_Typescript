@@ -48,7 +48,7 @@ function BladeProjectMenu() {
         projectName: projectName,
         customer: customer,
         leader: leader,
-        equipmentList: equipmentList,
+        equipmentList: resourceOrders,
         bladeTaskList: currentBladeTasks
     }
 
