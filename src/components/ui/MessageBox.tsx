@@ -1,11 +1,11 @@
 import React from "react";
 
 interface MessageBoxProps {
-    message: string;
+    messages: string[];
     onClose: () => void;
 }
 
-const MessageBox: React.FC<MessageBoxProps> = ({ message, onClose }) => {
+const MessageBox: React.FC<MessageBoxProps> = ({ messages, onClose }) => {
   
     return (
         <div
@@ -18,12 +18,17 @@ const MessageBox: React.FC<MessageBoxProps> = ({ message, onClose }) => {
                 padding: "20px",
                 borderRadius: "5px",
                 boxShadow: "0 2px 4px rgba(0, 0, 0, 0.2)",
-                height: "100px",
-                width: "300px",
+                height: "auto",
+                width: "auto",
                 zIndex: 100,
             }}
         >
-            <p>{message}</p>
+            <ul >
+                {messages.map((msg, index) => (
+                    <li key={index} style={{ marginBottom: "10px" }}>{msg}</li>
+                ))}
+            </ul>
+
             <button
                 onClick={onClose}
                 style={{

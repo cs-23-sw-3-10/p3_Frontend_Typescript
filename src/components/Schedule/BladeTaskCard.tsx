@@ -9,6 +9,7 @@ import EditBTComponent from "../ui/EditBTComponent";
 import { dateDivLength } from "./TimelineField";
 import {GET_CONFLICTS_FOR_BT} from "../../api/queryList"
 import { useQuery } from "@apollo/client";
+import { useEditModeContext } from "../../EditModeContext";
 
 //interface used to define the types of the props of BladeTaskCard
 export interface BladeTaskCardProps {
@@ -52,6 +53,8 @@ function BladeTaskCard(props: BladeTaskCardProps) {
     });
     const [showMessageBox, setShowMessageBox] = useState(false); // Used to show the message box when the user clicks on a task card
     const [showPopup, setShowPopup] = useState(false); // Used to show the popup when the user clicks edit in a task card
+    const editMode = useEditModeContext();
+    
     const contextMenuRef = useRef<HTMLDivElement>(null);
     useEffect(() => {
         // Function to check if click is outside the context menu
@@ -73,19 +76,22 @@ function BladeTaskCard(props: BladeTaskCardProps) {
         };
     }, []);
 
-    console.log("props.id",props.id);
-
     const {
         loading: loadingConflicts,
         error: errorConflicts,
         data: dataConflicts,
     } = useQuery( GET_CONFLICTS_FOR_BT,{variables: {
         id: props.id,
-        isActive: false,
+        isActive: !editMode.isEditMode,
     },});
+    
 
-    console.log("error:",errorConflicts)
-    console.log("dataConflicts: ",dataConflicts);
+    if (loadingConflicts) {
+        return <p>Loading...</p>;
+    }
+    if (errorConflicts) {
+        return <p>Error {errorConflicts.message}</p>;
+    }
 
     const handleMessageClose = () => {
         setShowMessageBox(false);
@@ -168,7 +174,7 @@ function BladeTaskCard(props: BladeTaskCardProps) {
             )}
             {showMessageBox && (
                 <MessageBox
-                    message={"Insert conflict information here"}
+                    messages={extractConflictMessages(dataConflicts.findConflictsForBladeTask)}
                     onClose={handleMessageClose}
                 />
             )}
@@ -203,12 +209,10 @@ function BladeTaskCard(props: BladeTaskCardProps) {
           <div ref={contextMenuRef} className="context-menu" style={{ left: `${contextMenuPosition.x}px`, top: `${contextMenuPosition.y}px` }}>
             <ul className="context-menu-list">
                 <li className="context-menu-item" onClick={handleEditClick}>Edit</li>
-                {props.inConflict && <li className="context-menu-item" onClick={handleConflictClick}>Conflict details</li>}
                 {/* Add more items as needed */}
             </ul>
         </div>    
-    )}
-    {showMessageBox && ( <MessageBox message={"Insert conflict information here"} onClose={handleMessageClose} />) }   
+    )}   
       </>
       );
   }
@@ -268,4 +272,22 @@ function DraggableBladeTask(props: BladeTaskDraggableProps) {
             <div className="BT-Name"></div>
         </div>
     );
+}
+
+interface ConflictProps{
+    message: string,
+    __typename: string
+}
+
+function extractConflictMessages(conflicts: ConflictProps[]){
+    const messages: string[]=[];
+
+
+    for(let i=0; i<conflicts.length;i++){
+
+    messages.push(conflicts[i].message)
+        
+    }
+
+    return messages
 }
