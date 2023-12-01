@@ -132,11 +132,6 @@ function BladeProjectPage() {
 
                 if (bladeProjectIndex && bladeProjectIndex.bladeTasks) {
                     bladeProjectIndex.bladeTasks.forEach((bladeTask: any) => {
-                        let dateSplit = bladeTask.startDate.split("-");
-                        const year = parseInt(dateSplit[0]);
-                        const month = parseInt(dateSplit[1]) - 1;
-                        const day = parseInt(dateSplit[2]);
-
                         btCards.push(
                             <BladeTaskCard
                                 key={bladeTask.id}
@@ -145,7 +140,7 @@ function BladeProjectPage() {
                                 projectId={bladeTask.bladeProject.id}
                                 customer={bladeTask.bladeProject.customer}
                                 taskName={bladeTask.taskName}
-                                startDate={new Date(year, month, day)}
+                                startDate={new Date(bladeTask.startDate)}
                                 rig={bladeTask.testRig}
                                 id={bladeTask.id}
                                 enableDraggable={false}
@@ -154,7 +149,7 @@ function BladeProjectPage() {
                                 shown={true}
                             />
                         );
-                    });
+                });
                 }
                 return (
                     <div className="flex flex rows">
@@ -165,6 +160,7 @@ function BladeProjectPage() {
                             btCards={btCards}
                             btCardsPending={[]}
                             isPendingTasksIncluded={false}
+                       
                         />
                     </div>
                 );
