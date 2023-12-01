@@ -114,10 +114,6 @@ function BladeProjectMenu(props: BladeProjectMenuProps) {
     return (
         <div className="bp_menu_wrapper">
             <ResourceOrderContext.Provider value={setResourceOrders}>
-                <h2 className="bp_menu_heading">Create Blade Project</h2>
-                <h2 className="bp_menu_title">Project Name</h2>
-                <InputField className="input_field" value={projectName} setState={setProjectName} />
-
             {creator ? <h2 className="bp_menu_heading">Create Blade Project</h2> : 
                             <h2 className="bp_menu_heading">Edit Blade Project</h2>}
             <h2 className="bp_menu_title">Project Name</h2>
