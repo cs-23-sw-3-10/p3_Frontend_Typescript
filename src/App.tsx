@@ -1,4 +1,3 @@
-import React, {useState, useMemo, SetStateAction, Dispatch}from "react";
 //Ville nok være en god ide bare at importere alt fra components
 import NavBar from "./components/NavBar/NavBar";
 

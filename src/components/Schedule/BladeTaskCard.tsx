@@ -7,7 +7,10 @@ import PopupWindow from "../ui/PopupWindow";
 import { ResourceOrder } from "../CreateBTMenu/BTMenuTypes";
 import EditBTComponent from "../ui/EditBTComponent";
 import { dateDivLength } from "./TimelineField";
+import { GET_CONFLICTS_FOR_BT } from "../../api/queryList";
+import { useQuery } from "@apollo/client";
 import { useEditModeContext } from "../../EditModeContext";
+
 //interface used to define the types of the props of BladeTaskCard
 export interface BladeTaskCardProps {
     startDate?: Date;
@@ -51,6 +54,7 @@ function BladeTaskCard(props: BladeTaskCardProps) {
     });
     const [showMessageBox, setShowMessageBox] = useState(false); // Used to show the message box when the user clicks on a task card
     const [showPopup, setShowPopup] = useState(false); // Used to show the popup when the user clicks edit in a task card
+
     const contextMenuRef = useRef<HTMLDivElement>(null);
     useEffect(() => {
         // Function to check if click is outside the context menu
@@ -71,6 +75,24 @@ function BladeTaskCard(props: BladeTaskCardProps) {
             document.removeEventListener("mousedown", handleClickOutside);
         };
     }, []);
+
+    const {
+        loading: loadingConflicts,
+        error: errorConflicts,
+        data: dataConflicts,
+    } = useQuery(GET_CONFLICTS_FOR_BT, {
+        variables: {
+            id: props.id,
+            isActive: !editMode.isEditMode,
+        },
+    });
+
+    if (loadingConflicts) {
+        return <p>Loading...</p>;
+    }
+    if (errorConflicts) {
+        return <p>Error {errorConflicts.message}</p>;
+    }
 
     const handleMessageClose = () => {
         setShowMessageBox(false);
@@ -150,7 +172,10 @@ function BladeTaskCard(props: BladeTaskCardProps) {
             )}
             {showMessageBox && (
                 <MessageBox
-                    message={"Insert conflict information here"}
+                    title={props.taskName}
+                    messages={extractConflictMessages(
+                    dataConflicts.findConflictsForBladeTask
+                )}
                     onClose={handleMessageClose}
                 />
             )}
@@ -185,12 +210,10 @@ function BladeTaskCard(props: BladeTaskCardProps) {
           <div ref={contextMenuRef} className="context-menu" style={{ left: `${contextMenuPosition.x}px`, top: `${contextMenuPosition.y}px` }}>
             <ul className="context-menu-list">
                 <li className="context-menu-item" onClick={handleEditClick}>Edit</li>
-                {props.inConflict && <li className="context-menu-item" onClick={handleConflictClick}>Conflict details</li>}
                 {/* Add more items as needed */}
             </ul>
         </div>    
     )}
-    {showMessageBox && ( <MessageBox message={"Insert conflict information here"} onClose={handleMessageClose} />) }   
       </>
       );
   }
@@ -250,4 +273,23 @@ function DraggableBladeTask(props: BladeTaskDraggableProps) {
             <div className="BT-Name"></div>
         </div>
     );
+}
+
+interface ConflictProps {
+    message: string;
+    __typename: string;
+}
+
+function extractConflictMessages(conflicts: ConflictProps[]) {
+    const messages: string[] = [];
+
+    //For testeing
+    const loremIpsum="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque eu varius purus. Nunc laoreet neque eget porta ultricies. Nam diam enim, cursus id efficitur quis, efficitur eu ante. Integer dapibus, est non semper vehicula, quam mauris molestie nibh, a malesuada magna dui eu lectus. Donec porttitor consequat neque vitae condimentum. Praesent eleifend nisl sed odio pellentesque, in tristique lectus semper. Cras mollis, ligula sed consectetur iaculis, nisl justo ultrices nibh, vel condimentum mauris lacus non ante. Aliquam posuere eu nisl quis luctus. Vivamus mollis eu elit in mollis. Aenean ultrices porta mi nec volutpat. Fusce quis arcu venenatis, aliquet enim. "
+
+    for (let i = 0; i < conflicts.length; i++) {
+        messages.push(
+            conflicts[i].message 
+        );
+    }
+    return messages;
 }
