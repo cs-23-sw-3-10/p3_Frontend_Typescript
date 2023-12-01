@@ -1,17 +1,17 @@
 import React, { useState, useContext } from "react";
 
-import { columnBP } from "./BladeProjectColumns";
+import {getColumns} from "./BladeProjectColumns";
 import { GET_ALL_BP, GET_ALL_BP_IN_DIFF_SCHEDULE, GET_TEST_RIGS } from "../../api/queryList";
-import { useQuery, useSubscription } from "@apollo/client";
+import { useQuery } from "@apollo/client";
 import { TableLogic } from "../TableLogic/TableLogic";
 import BladeTaskCard from "../Schedule/BladeTaskCard";
 import CreateTimelineField from "../Schedule/TimelineField";
 import CreateTestRigDivs from "../Schedule/TestRigDivs";
 import { getMonthsInView } from "../Schedule/Display";
-import { getMonthLength } from "../Schedule/TimelineField";
-import { capitalizeFirstLetter } from "../Schedule/TimelineField";
 import { useEditModeContext } from "../../EditModeContext";
 import { createRigs } from "../Schedule/Display";
+import PopupWindow from "../ui/PopupWindow";
+import BPMenu from "../CreateBPMenu/BPMenu";
 
 
 /**
@@ -41,6 +41,8 @@ function countMonthsIncludingStartAndEnd(startDate: Date, endDate: Date) {
 function BladeProjectPage() {
     const editMode = useEditModeContext();
     const [rigs, setRigs] = useState <{rigName: string, rigNumber: number}[]>([{rigName: "No Rigs", rigNumber: 0}])
+    const [showPopup, setShowPopup] = useState(false); // Used to show the popup when the user clicks edit in a task card
+    const [choosenBP, setChoosenBP] = useState<any>(null); // Used to store the choosen bladeproject when the user clicks edit in a task card
 
     //get data from the database
     const {
@@ -99,15 +101,20 @@ function BladeProjectPage() {
         DataForScreen = DataForScreen[0].bladeProject
     }
 
+    const togglePopup = () => {
+        setShowPopup(!showPopup);
+    };
+
+
     
     /* renders the table. The renderExpandedComponent prop is used to render the bladeTasks table
      * based on the current row.id which is equal to the bladeproject ID.
      * The data for the TableLogicWOHeaders is therefore only containing the bladeTasks for the expanded bladeproject
      */
     return (
-
+        <>
         <TableLogic
-            columns={columnBP}
+            columns={getColumns(setShowPopup, setChoosenBP)}
             data={DataForScreen}
             renderExpandedComponent={(row) => {
                 let btCards: React.ReactNode[] = [];
@@ -125,16 +132,6 @@ function BladeProjectPage() {
 
                 if (bladeProjectIndex && bladeProjectIndex.bladeTasks) {
                     bladeProjectIndex.bladeTasks.forEach((bladeTask: any) => {
-                        let dateSplit = bladeTask.startDate.split("-");
-                        const year = parseInt(dateSplit[0]);
-                        const month = parseInt(dateSplit[1]) - 1;
-                        const day = parseInt(dateSplit[2]);
-
-                        let endDateSplit = bladeTask.endDate.split("-");
-                        const endYear = parseInt(endDateSplit[0]);
-                        const endMonth = parseInt(endDateSplit[1]) - 1;
-                        const endDate = parseInt(endDateSplit[2]);
-
                         btCards.push(
                             <BladeTaskCard
                                 key={bladeTask.id}
@@ -143,15 +140,16 @@ function BladeProjectPage() {
                                 projectId={bladeTask.bladeProject.id}
                                 customer={bladeTask.bladeProject.customer}
                                 taskName={bladeTask.taskName}
-                                startDate={new Date(year, month, day)}
+                                startDate={new Date(bladeTask.startDate)}
                                 rig={bladeTask.testRig}
                                 id={bladeTask.id}
                                 enableDraggable={false}
                                 attachPeriod={bladeTask.attachPeriod}
                                 detachPeriod={bladeTask.detachPeriod}
+                                shown={true}
                             />
                         );
-                    });
+                });
                 }
                 return (
                     <div className="flex flex rows">
@@ -162,13 +160,14 @@ function BladeProjectPage() {
                             btCards={btCards}
                             btCardsPending={[]}
                             isPendingTasksIncluded={false}
+                       
                         />
                     </div>
                 );
             }}
-        />
+            />
+            {showPopup && <PopupWindow component={<BPMenu creator={false} BPName={choosenBP}/>} onClose={togglePopup}/>}
+        </>
     );
-    
 }
-
 export default BladeProjectPage;

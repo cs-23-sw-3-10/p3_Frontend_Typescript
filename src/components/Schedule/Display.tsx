@@ -1,16 +1,21 @@
 import "./Display.css";
 import CreateTestRigDivs from "./TestRigDivs";
 import CreateTimelineField from "./TimelineField";
-import React, { useMemo, useState} from "react";
+import React, { useState } from "react";
 import CreateAdditionalContent from "./AdditionalContent";
 import BladeTaskCard from "./BladeTaskCard";
 import { useQuery, useSubscription } from "@apollo/client";
-import { GET_BT_IN_RANGE, GET_BT_IN_RANGE_SUB, GET_TEST_RIGS, GET_BT_PENDING, GET_BT_PENDING_SUB } from "../../api/queryList";
+import {
+    GET_BT_IN_RANGE_SUB,
+    GET_TEST_RIGS,
+    GET_BT_PENDING_SUB,
+    GET_ALL_BLADE_PROJECTS,
+} from "../../api/queryList";
 import { getMonthLength } from "./TimelineField";
 import { capitalizeFirstLetter } from "./TimelineField";
 import { useEditModeContext } from "../../EditModeContext";
-import { Switch } from "@mui/base";
 import SwitchComponent from "../TableLogic/SwitchComponent";
+import StyledButton from "../ui/styledButton";
 
 const currentDate = new Date(Date.now()); // Get the current date
 
@@ -23,7 +28,9 @@ type DisplayProps = {
 
 function DisplayComponent(props: DisplayProps) {
     const editMode = useEditModeContext();
-    const [rigs, setRigs] = useState<{rigName: string, rigNumber: number}[]>([{rigName: "No Rigs", rigNumber: 0}]);
+    const [rigs, setRigs] = useState<{ rigName: string; rigNumber: number }[]>([
+        { rigName: "No Rigs", rigNumber: 0 },
+    ]);
 
     const [selectedDate, setSelectedDate] = useState(
         `${currentDate.getFullYear()}-${
@@ -34,16 +41,20 @@ function DisplayComponent(props: DisplayProps) {
 
     const [dates, setDates] = useState(
         getMonthsInView(currentDate, numberOfMonths)
-    ); // should be imported from database
-    
+    ); // State to store the months to display
+
     const handleViewChange = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
-        // Get the form element from the event   
+        // Get the form element from the event
         const form = event.target as HTMLFormElement;
 
         // Explicitly assert the type to HTMLInputElement and acces value
-        const dateInput = (form.elements.namedItem("dateInput") as HTMLInputElement)?.value;
-        const numberInput = (form.elements.namedItem("numberInput") as HTMLInputElement)?.value;
+        const dateInput = (
+            form.elements.namedItem("dateInput") as HTMLInputElement
+        )?.value;
+        const numberInput = (
+            form.elements.namedItem("numberInput") as HTMLInputElement
+        )?.value;
 
         setSelectedDate(dateInput);
         setNumberOfMonths(parseInt(numberInput));
@@ -61,12 +72,12 @@ function DisplayComponent(props: DisplayProps) {
     };
 
     const goTo = (viewDate: string, number: number) => {
+        // Function to change the date and number of months to display
         const newDate = new Date(viewDate);
         if (!isNaN(newDate.valueOf())) {
             if (!isNaN(number)) {
-            setDates(getMonthsInView(newDate, number));
-            }
-            else {
+                setDates(getMonthsInView(newDate, number));
+            } else {
                 setDates(getMonthsInView(newDate, 3));
             }
         } else {
@@ -74,42 +85,50 @@ function DisplayComponent(props: DisplayProps) {
         }
     };
 
+    // convert dates to string for query
     const queryDates = getQueryDates(dates[0], dates[dates.length - 1]);
 
-
     const {
+        // get test rigs
         loading: loadingRigs,
         error: errorRigs,
         data: dataRigs,
     } = useQuery(GET_TEST_RIGS);
-    
-
 
     const {
+        // get blade projects
+        loading: loadingBP,
+        error: errorBP,
+        data: dataBP,
+    } = useQuery(GET_ALL_BLADE_PROJECTS);
+
+    const {
+        // get blade tasks in range
         loading: loadingBT,
         error: errorBT,
         data: dataBT,
-    } = useSubscription(GET_BT_IN_RANGE_SUB, {variables: {
-        
-        startDate: queryDates.startDate,
-        endDate: queryDates.endDate,
-        isActive:  !editMode.isEditMode,
-    },});
+    } = useSubscription(GET_BT_IN_RANGE_SUB, {
+        variables: {
+            startDate: queryDates.startDate,
+            endDate: queryDates.endDate,
+            isActive: !editMode.isEditMode,
+        },
+    });
 
-
-    
     const {
         loading: loadingPendingBT,
         error: errorPendingBT,
         data: dataPendingBT,
-    } =useSubscription(GET_BT_PENDING_SUB); 
-   
-    
+    } = useSubscription(GET_BT_PENDING_SUB);
+
     if (loadingRigs) {
         return <p>Loading...</p>;
     }
     if (errorRigs) {
-        return <p>Error {errorRigs.message}</p>;
+        //TDOO: Find better way to handle timesout token
+        console.log(errorRigs);
+        localStorage.removeItem("token");
+        return <p>Error {errorRigs.message} </p>;
     }
     if (loadingBT) {
         return <p>Loading...</p>;
@@ -123,63 +142,80 @@ function DisplayComponent(props: DisplayProps) {
     if (errorPendingBT) {
         return <p>Error {errorPendingBT.message}</p>;
     }
+    if (loadingBP) {
+        return <p>Loading...</p>;
+    }
+    if (errorBP) {
+        return <p>Error {errorBP.message}</p>;
+    }
+
+    const customers: string[] = [];
+    dataBP["AllBladeProjects"].forEach((bp: any) => {
+        if (!customers.includes(bp.customer)) {
+            customers.push(bp.customer);
+        }
+    });
 
     const numberOfRigs = parseInt(dataRigs.DictionaryAllByCategory[0].label);
-    if (rigs.length !== numberOfRigs){
+    if (rigs.length !== numberOfRigs) {
+        // if number of rigs changed, update rigs
         setRigs(createRigs(numberOfRigs));
     }
 
-    //Makeing schedulet BladeTaskCards
-    let btCards: React.ReactNode[] = [];
+    if (editMode.isEditMode) {
+        props.setFilter("None");
+    }
 
+    //Making schedule BladeTaskCards
+    let btCards: React.ReactNode[] = [];
     dataBT["AllBladeTasksInRangeSub"].forEach((bt: any) => {
         let btShown = false;
         if (
             bt.bladeProject.customer === props.filter ||
-            props.filter === "None"
+            props.filter === "None" ||
+            editMode.isEditMode
         ) {
             btShown = true;
         }
         let dateSplit = bt.startDate.split("-");
         const year = parseInt(dateSplit[0]);
-        const month = parseInt(dateSplit[1]) - 1;
+        const month = parseInt(dateSplit[1]) - 1; // month is 0 indexed
         const day = parseInt(dateSplit[2]);
 
-            let endDateSplit = bt.endDate.split("-");
-            const endYear = parseInt(endDateSplit[0]);
-            const endMonth = parseInt(endDateSplit[1]) - 1;
-            const endDate = parseInt(endDateSplit[2]);
-            btCards.push(
-                <BladeTaskCard
-                    key={bt.id}
-                    duration={bt.duration}
-                    projectColor={bt.bladeProject.color}
-                    projectId={bt.bladeProject.id}
-                    projectName={bt.bladeProject.projectName}
-                    customer={bt.bladeProject.customer}
-                    taskName={bt.taskName}
-                    startDate={new Date(year, month, day)}
-                    endDate={new Date(endYear, endMonth, endDate)}
-                    attachPeriod={bt.attachPeriod}
-                    detachPeriod={bt.detachPeriod}
-                    rig={bt.testRig}
-                    id={bt.id}
-                    shown={btShown}
-                    enableDraggable={editMode.isEditMode}
-                    inConflict={bt.inConflict}
-                                    />
-            );
+        let endDateSplit = bt.endDate.split("-");
+        const endYear = parseInt(endDateSplit[0]);
+        const endMonth = parseInt(endDateSplit[1]) - 1; // month is 0 indexed
+        const endDate = parseInt(endDateSplit[2]);
+        btCards.push(
+            <BladeTaskCard
+                key={bt.id}
+                duration={bt.duration}
+                projectColor={bt.bladeProject.color}
+                projectId={bt.bladeProject.id}
+                projectName={bt.bladeProject.projectName}
+                customer={bt.bladeProject.customer}
+                taskName={bt.taskName}
+                startDate={new Date(year, month, day)}
+                endDate={new Date(endYear, endMonth, endDate)}
+                attachPeriod={bt.attachPeriod}
+                detachPeriod={bt.detachPeriod}
+                rig={bt.testRig}
+                id={bt.id}
+                shown={btShown}
+                enableDraggable={editMode.isEditMode}
+                inConflict={bt.inConflict}
+            />
+        );
     });
 
-
-    
     //Making pending BladeTaskCards
     let btCardsPending: React.ReactNode[] = [];
     dataPendingBT["AllBladeTasksPendingSub"].forEach((bt: any) => {
         let btShown = false;
         if (
             bt.bladeProject.customer === props.filter ||
-            props.filter === "None"
+            props.filter === "None" ||
+            editMode.isEditMode
         ) {
             btShown = true;
         }
@@ -202,12 +238,15 @@ function DisplayComponent(props: DisplayProps) {
             />
         );
     });
-  
 
     return (
         <div className="ScheduleContentContainer">
             <div className="ScheduleViewControl">
-                <form onSubmit={(e) => {handleViewChange(e)}}>
+                <form
+                    onSubmit={(e) => {
+                        handleViewChange(e);
+                    }}
+                >
                     <label htmlFor="dateInput" className="text-sm">
                         Date:
                     </label>
@@ -232,6 +271,7 @@ function DisplayComponent(props: DisplayProps) {
             {editMode.isEditMode ? (
             <div className="ScheduleFilterAndMode">
                 <SwitchComponent setShowPasswordPrompt={props.setShowPasswordPrompt} />
+                {localStorage.getItem('token') && <StyledButton onClick={()=>{localStorage.removeItem('token'); window.location.reload();}}> Logout </StyledButton>}
             </div>
             ) : (
             <div className="ScheduleFilterAndMode">
@@ -248,9 +288,10 @@ function DisplayComponent(props: DisplayProps) {
                     <option value="Suzlon">Suzlon</option>
                 </select>
                <SwitchComponent setShowPasswordPrompt={props.setShowPasswordPrompt} />
+               {localStorage.getItem('token') && <StyledButton onClick={()=>{localStorage.removeItem('token'); window.location.reload();}}> Logout </StyledButton>}
             </div>           
             )}
-            
+
             <div className="ScheduleDisplay">
                 <CreateTestRigDivs rigs={rigs} />
                 <CreateTimelineField
@@ -262,10 +303,7 @@ function DisplayComponent(props: DisplayProps) {
                     isPendingTasksIncluded={true}
                 />
             </div>
-
-
             {editMode.isEditMode ? <CreateAdditionalContent /> : null}
-
         </div>
     );
 }
@@ -275,6 +313,7 @@ function convertToQueryDate(year: number, month: number, day: number) {
     let queryDateSTR = year.toString() + "-";
     let queryMonth = month + 1;
     if (queryMonth < 10) {
+        // format date to match query YYYY-MM-DD
         queryDateSTR += "0" + queryMonth.toString() + "-";
     } else {
         queryDateSTR += queryMonth.toString() + "-";
@@ -343,12 +382,20 @@ function getQueryDates(startDate: Date, endDate: Date) {
 }
 
 export function createRigs(numberOfRigs: number) {
-    let rigs: {rigName: string, rigNumber: number}[]= [];
+    let rigs: { rigName: string; rigNumber: number }[] = [];
     for (let i = 1; i <= numberOfRigs; i++) {
         rigs.push({
-            rigName: "Rig " + (i).toString(),
+            rigName: "Rig " + i.toString(),
             rigNumber: i,
         });
     }
     return rigs;
+}
+
+function FilterCustomers(customer: string) {
+    return (
+        <option key={customer} value={customer}>
+            {customer}
+        </option>
+    );
 }

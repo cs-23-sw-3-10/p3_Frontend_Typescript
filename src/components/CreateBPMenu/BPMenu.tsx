@@ -6,22 +6,35 @@ import { BladeProjectForm } from "./BPMenuTypes";
 import { validateBPForm } from "./ValidateBPForm";
 import './BPMenu.css';
 import { useQuery, useMutation } from "@apollo/client";
-import { GET_ALL_ENGINEERS } from "../../api/queryList";
-import { ADD_BP } from "../../api/mutationList";
+import { GET_ALL_ENGINEERS, GET_ALL_BP} from "../../api/queryList";
+import { ADD_BP, UPDATE_BP } from "../../api/mutationList";
 import { ResourceOrderContext } from "../CreateBTMenu/BladeTaskOrderContext";
 import EquipmentSelectionMenu from "../CreateBTMenu/EquipmentSelector";
 import { ResourceOrder } from "../CreateBTMenu/BTMenuTypes";
 import EquipmentList from "../CreateBTMenu/EquipmentList";
 import './EquipmentListBP.css';
 
+interface BladeProjectMenuProps {
+    creator: boolean;
+    BPName?: string;
+}
 
-function BladeProjectMenu() {
-    const [projectName, setProjectName] = useState<string>('');
-    const [customer, setCustomer] = useState<string>('');
-    const [leader, setLeader] = useState<string>('')
+function BladeProjectMenu(props: BladeProjectMenuProps) {
+    const creator = props.creator; //true if creating a new blade project, false if editing an existing one
+
+    const { data: BPData } = useQuery(GET_ALL_BP);
+    const BPArray = BPData?.AllBladeProjects;
+    let currentBP: any;
+    if (!creator){
+        currentBP = BPArray?.find((element: any) => element.projectName === props.BPName);
+    }
+    
+    const [projectName, setProjectName] = useState<string>(creator ? '' : currentBP.projectName);
+    const [customer, setCustomer] = useState<string>(creator ? '' : currentBP.customer);
+    const [leader, setLeader] = useState<string>(creator ? '' : currentBP.projectLeader)
     const [leaderOptions, setLeaderOptions] = useState<string[]>([]);
     const [equipmentList, setEquipmentList] = useState<string[]>([]);
-    const [currentBladeTasks, setCurrentBladeTasks] = useState([]);
+    const [currentBladeTasks, setCurrentBladeTasks] = useState(creator ? [] : currentBP.bladeTasks);
 
     const [projectError, setProjectError] = useState<boolean>(false);
     const [missingInput, setMissingInput] = useState<boolean>(false);
@@ -31,11 +44,11 @@ function BladeProjectMenu() {
 
     const [addBP, { loading, error }] = useMutation(ADD_BP);
     const { data } = useQuery(GET_ALL_ENGINEERS);
+    const [updateBP, { loading: updateLoading, error: updateError}] = useMutation(UPDATE_BP);
 
     useEffect(() => {
         if (data && data.AllEngineers) {
             const engineerNamesArray: Array<string> = data.AllEngineers.map(({ name }: { name: string }) => name);
-            console.log(engineerNamesArray);
             setLeaderOptions(engineerNamesArray);
         }
     }, [data]);
@@ -53,19 +66,40 @@ function BladeProjectMenu() {
     }
 
     const handleSubmit = () => {
-        if (validateBPForm(currentForm)) {
-            addBP({
-                variables: {
-                    name: projectName,
-                    customer: customer,
-                    projectLeader: leader,
-                }
-            }).then((result) => console.log(result));
-            setMissingInput(false);
-            setProjectError(false);
-            handleCancel();
+        if (creator){
+            if (validateBPForm(currentForm)) {
+                addBP({ //add blade project to database
+                    variables: {
+                        name: projectName,
+                        customer: customer,
+                        projectLeader: leader,
+                    }
+                }).then((result) => console.log(result));
+                setMissingInput(false); 
+                setProjectError(false);
+                handleCancel();
+            } else{
+                setMissingInput(true);
+            }
         } else {
-            setMissingInput(true);
+            if (validateBPForm(currentForm)) {
+                updateBP({ //update blade project in database
+                    variables: {
+                        bpId: parseInt(currentBP.id),
+                        updates: {
+                            scheduleId: currentBP.scheduleId,
+                            projectName: projectName,
+                            customer: customer,
+                            projectLeader: leader,
+                        }
+                    }
+                }).then((result) => console.log(result));
+                setMissingInput(false);
+                setProjectError(false);
+                handleCancel();
+            } else{
+                setMissingInput(true);
+            }
         }
     }
 
@@ -84,8 +118,10 @@ function BladeProjectMenu() {
                 <h2 className="bp_menu_title">Project Name</h2>
                 <InputField className="input_field" value={projectName} setState={setProjectName} />
 
-                <h2 className="bp_menu_title">Customer</h2>
-                <InputField className="input_field" value={customer} setState={setCustomer} />
+            {creator ? <h2 className="bp_menu_heading">Create Blade Project</h2> : 
+                            <h2 className="bp_menu_heading">Edit Blade Project</h2>}
+            <h2 className="bp_menu_title">Project Name</h2>
+            <InputField className="input_field" value={projectName} setState={setProjectName} />
 
                 <h2 className="bp_menu_title">Project Leader</h2>
                 <DropdownList className="input_field" value={leader} data={leaderOptions} onChange={value => setLeader(value)} />

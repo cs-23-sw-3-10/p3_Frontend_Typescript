@@ -3,7 +3,7 @@ import React from "react";
 import { BladeTaskHolder } from "./BladeTaskHolder";
 import BladeTaskCard from "./BladeTaskCard";
 
-export const rigFieldHeight=50
+export const rigFieldHeight = 50;
 
 type RigFieldContainerProps = {
     rig: string;
@@ -25,7 +25,7 @@ function CreateRigFieldContainer(props: RigFieldContainerProps) {
         gridTemplateRows: "auto",
         heigt: rigFieldHeight,
         minHeight: `${rigFieldHeight}px`,
-        maxHeight: `${rigFieldHeight}px`
+        maxHeight: `${rigFieldHeight}px`,
     };
     let BTsStartInView: React.ReactNode[] = []; // BladeTaskCards that start in the view
     let BTsEndInView: React.ReactNode[] = []; // BladeTaskCards that end in the view
@@ -36,20 +36,20 @@ function CreateRigFieldContainer(props: RigFieldContainerProps) {
             (bladeTask as React.ReactElement<any>).props.startDate <=
                 props.viewMonths[props.viewMonths.length - 1]
         ) {
-            BTsStartInView.push(bladeTask);
+            BTsStartInView.push(bladeTask); // Add the BladeTaskCard to the array if the startDate is in the view
         } else if (
             (bladeTask as React.ReactElement<any>).props.endDate >=
                 props.viewMonths[0] &&
             (bladeTask as React.ReactElement<any>).props.endDate <=
                 props.viewMonths[props.viewMonths.length - 1]
         ) {
-            BTsEndInView.push(bladeTask);
+            BTsEndInView.push(bladeTask); // Add the BladeTaskCard to the array if the endDate is in the view
         }
     });
 
     let renderEndInView: React.ReactNode[] = []; // place holder for the BladeTaskCards that end in the view
     BTsEndInView.forEach((bladeTask) => {
-        renderEndInView.push(
+        renderEndInView.push( // Add the BladeTaskCard to the array if the endDate is in the view
             <BladeTaskCard
                 key={(bladeTask as React.ReactElement<any>).props.id + 11111111}
                 id={(bladeTask as React.ReactElement<any>).props.id}
@@ -67,9 +67,7 @@ function CreateRigFieldContainer(props: RigFieldContainerProps) {
                 projectId={
                     (bladeTask as React.ReactElement<any>).props.projectId
                 }
-                customer={
-                    (bladeTask as React.ReactElement<any>).props.customer
-                }
+                customer={(bladeTask as React.ReactElement<any>).props.customer}
                 taskName={(bladeTask as React.ReactElement<any>).props.taskName}
                 attachPeriod={
                     (bladeTask as React.ReactElement<any>).props.attachPeriod
@@ -77,13 +75,17 @@ function CreateRigFieldContainer(props: RigFieldContainerProps) {
                 detachPeriod={
                     (bladeTask as React.ReactElement<any>).props.detachPeriod
                 }
-                
             />
         );
     });
 
     return (
-        <div key={props.rig} className="RigField" style={rigStyle} id="rigFieldContainerId">
+        <div
+            key={props.rig}
+            className="RigField"
+            style={rigStyle}
+            id="rigFieldContainerId"
+        >
             {props.allDates.map(
                 (date) => (
                     <CreateRigFieldDate

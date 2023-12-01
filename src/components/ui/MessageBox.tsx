@@ -1,29 +1,43 @@
 import React from "react";
 
 interface MessageBoxProps {
-    message: string;
+    title: string;
+    messages: string[];
     onClose: () => void;
 }
 
-const MessageBox: React.FC<MessageBoxProps> = ({ message, onClose }) => {
-  
+const MessageBox: React.FC<MessageBoxProps> = ({
+    title,
+    messages,
+    onClose,
+}) => {
     return (
         <div
             style={{
                 position: "fixed",
-                top: "30%",
+                top: "15%",
                 left: "50%",
-                transform: "translate(-50%, -50%)",
+                transform: "translate(-50%)",
                 backgroundColor: "white",
                 padding: "20px",
                 borderRadius: "5px",
                 boxShadow: "0 2px 4px rgba(0, 0, 0, 0.2)",
-                height: "100px",
-                width: "300px",
+                height: "auto",
+                width: "auto",
                 zIndex: 100,
+                maxHeight: "80%",
+                overflowY: "auto"
             }}
         >
-            <p>{message}</p>
+            <h1 style={{ marginBottom: "10px", fontWeight: "bold" }}>{title}</h1>
+            <ul>
+                {messages.map((msg, index) => (
+                    <li key={index} style={{ marginBottom: "10px" }}>
+                        {msg}
+                    </li>
+                ))}
+            </ul>
+
             <button
                 onClick={onClose}
                 style={{

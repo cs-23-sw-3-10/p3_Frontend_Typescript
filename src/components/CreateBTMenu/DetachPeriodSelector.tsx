@@ -12,7 +12,7 @@ function DetachPeriodSelector(
                 name="detach_period_select"
                 placeholder='Days'
                 value={detachPeriod}
-                onChange={(e) => setDetachPeriod(e.currentTarget.value)}
+                onChange={(e) => setDetachPeriod(parseInt(e.currentTarget.value))}
                 onBlur={(e) => handleDetachPeriodValidation(e, duration, attachPeriod, setDetachPeriod, inErrorChart, setInErrorChart)}
             />
         </>

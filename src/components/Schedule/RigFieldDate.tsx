@@ -22,7 +22,7 @@ type RigFieldDateProps = {
     rig: string;
     date: Date;
     bladeTaskHolder: BladeTaskHolder;
-    setDragging: React.Dispatch<React.SetStateAction<boolean>>; //Hvordan er setDraggin brugt?
+    setDragging: React.Dispatch<React.SetStateAction<boolean>>; 
 };
 
 function CreateRigFieldDate(props: RigFieldDateProps) {
@@ -35,7 +35,7 @@ function CreateRigFieldDate(props: RigFieldDateProps) {
     const dateStyle: RigFieldDateStyle = {
         gridColumn: `date-${year}-${monthNumber}-${dateNumber}`,
         gridRow: "1",
-        backgroundColor: weekDay === 0 || weekDay === 6 ? "lightgrey" : "white", // Default color
+        backgroundColor: weekDay === 0 || weekDay === 6 ? "lightgrey" : "white", // Gray out weekends
     };
 
     const dateProps: RigFieldDateDroppableProps = {
@@ -48,7 +48,7 @@ function CreateRigFieldDate(props: RigFieldDateProps) {
         setDragging: props.setDragging,
     };
 
-    return Droppable(dateProps);
+    return Droppable(dateProps); // Create a droppable date
 }
 export default CreateRigFieldDate;
 
@@ -57,7 +57,7 @@ function Droppable(props: RigFieldDateDroppableProps) {
         id: props.id,
     });
 
-    return (
+    return ( // Create a droppable date
         <div
             ref={setNodeRef}
             key={props.id}
