@@ -10,7 +10,7 @@ function CreateOverviewDate(props: OverviewDateProps) {
     let date = props.currentDate.getDate();
     let idSTR = `${year}-${monthNumber}-${date}`; // id for the date div
 
-    let todayDate = new Date(Date.now());
+    let todayDate = new Date(Date.now()); // Get the current date
     const todayColour = "rgba(50, 128, 128, 0.6)";
     let todayDateSTR = `${todayDate.getFullYear()}-${todayDate.getMonth()}-${todayDate.getDate()}`;
     // marking the current date with a different colour

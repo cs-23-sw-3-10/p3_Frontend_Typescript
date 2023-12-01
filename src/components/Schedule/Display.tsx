@@ -9,6 +9,8 @@ import { GET_BT_IN_RANGE, GET_BT_IN_RANGE_SUB, GET_TEST_RIGS, GET_BT_PENDING, GE
 import { getMonthLength } from "./TimelineField";
 import { capitalizeFirstLetter } from "./TimelineField";
 import { useEditModeContext } from "../../EditModeContext";
+import { Switch } from "@mui/base";
+import SwitchComponent from "../TableLogic/SwitchComponent";
 
 const currentDate = new Date(Date.now()); // Get the current date
 
@@ -32,17 +34,8 @@ function DisplayComponent(props: DisplayProps) {
 
     const [dates, setDates] = useState(
         getMonthsInView(currentDate, numberOfMonths)
-    ); // should be imported from database
+    ); // State to store the months to display
     
-
-    const handleDateChange = (date: string) => {
-        setSelectedDate(date);
-    };
-
-    const handleNumberChange = (numberOfMonthsInView: number) => {
-        setNumberOfMonths(numberOfMonthsInView);
-    };
-
     const handleViewChange = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         // Get the form element from the event   
@@ -52,9 +45,9 @@ function DisplayComponent(props: DisplayProps) {
         const dateInput = (form.elements.namedItem("dateInput") as HTMLInputElement)?.value;
         const numberInput = (form.elements.namedItem("numberInput") as HTMLInputElement)?.value;
 
-        handleDateChange(dateInput);
-        handleNumberChange(parseInt(numberInput));
-        goTo(parseInt(numberInput));
+        setSelectedDate(dateInput);
+        setNumberOfMonths(parseInt(numberInput));
+        goTo(dateInput, parseInt(numberInput));
     };
 
     const handleModeChange = () => {
@@ -67,27 +60,30 @@ function DisplayComponent(props: DisplayProps) {
         }
     };
 
-    const goTo = (number: number) => {
-        const newDate = new Date(selectedDate);
+    const goTo = (viewDate: string, number: number) => { // Function to change the date and number of months to display
+        const newDate = new Date(viewDate);
         if (!isNaN(newDate.valueOf())) {
+            if (!isNaN(number)) {
             setDates(getMonthsInView(newDate, number));
+            }
+            else {
+                setDates(getMonthsInView(newDate, 3));
+            }
         } else {
             setDates(getMonthsInView(currentDate, numberOfMonths));
         }
     };
 
+    // convert dates to string for query
     const queryDates = getQueryDates(dates[0], dates[dates.length - 1]);
 
-
-    const {
+    const { // get test rigs
         loading: loadingRigs,
         error: errorRigs,
         data: dataRigs,
     } = useQuery(GET_TEST_RIGS);
-    
 
-
-    const {
+    const { // get blade tasks in range
         loading: loadingBT,
         error: errorBT,
         data: dataBT,
@@ -97,8 +93,6 @@ function DisplayComponent(props: DisplayProps) {
         endDate: queryDates.endDate,
         isActive:  !editMode.isEditMode,
     },});
-
-
     
     const {
         loading: loadingPendingBT,
@@ -113,14 +107,12 @@ function DisplayComponent(props: DisplayProps) {
     if (errorRigs) {
         return <p>Error {errorRigs.message}</p>;
     }
-
     if (loadingBT) {
         return <p>Loading...</p>;
     }
     if (errorBT) {
         return <p>Error {errorBT.message}</p>;
     }
-
     if (loadingPendingBT) {
         return <p>Loading...</p>;
     }
@@ -128,14 +120,12 @@ function DisplayComponent(props: DisplayProps) {
         return <p>Error {errorPendingBT.message}</p>;
     }
 
-    console.log(dataBT["AllBladeTasksInRangeSub"]);
-
     const numberOfRigs = parseInt(dataRigs.DictionaryAllByCategory[0].label);
-    if (rigs.length !== numberOfRigs){
+    if (rigs.length !== numberOfRigs){ // if number of rigs changed, update rigs
         setRigs(createRigs(numberOfRigs));
     }
 
-    //Makeing schedulet BladeTaskCards
+    //Making schedule BladeTaskCards
     let btCards: React.ReactNode[] = [];
 
     dataBT["AllBladeTasksInRangeSub"].forEach((bt: any) => {
@@ -148,33 +138,33 @@ function DisplayComponent(props: DisplayProps) {
         }
         let dateSplit = bt.startDate.split("-");
         const year = parseInt(dateSplit[0]);
-        const month = parseInt(dateSplit[1]) - 1;
+        const month = parseInt(dateSplit[1]) - 1; // month is 0 indexed
         const day = parseInt(dateSplit[2]);
 
-            let endDateSplit = bt.endDate.split("-");
-            const endYear = parseInt(endDateSplit[0]);
-            const endMonth = parseInt(endDateSplit[1]) - 1;
-            const endDate = parseInt(endDateSplit[2]);
-            btCards.push(
-                <BladeTaskCard
-                    key={bt.id}
-                    duration={bt.duration}
-                    projectColor={bt.bladeProject.color}
-                    projectId={bt.bladeProject.id}
-                    projectName={bt.bladeProject.projectName}
-                    customer={bt.bladeProject.customer}
-                    taskName={bt.taskName}
-                    startDate={new Date(year, month, day)}
-                    endDate={new Date(endYear, endMonth, endDate)}
-                    attachPeriod={bt.attachPeriod}
-                    detachPeriod={bt.detachPeriod}
-                    rig={bt.testRig}
-                    id={bt.id}
-                    shown={btShown}
-                    enableDraggable={editMode.isEditMode}
-                    inConflict={bt.inConflict}
-                                    />
-            );
+        let endDateSplit = bt.endDate.split("-");
+        const endYear = parseInt(endDateSplit[0]);
+        const endMonth = parseInt(endDateSplit[1]) - 1; // month is 0 indexed
+        const endDate = parseInt(endDateSplit[2]);
+        btCards.push(
+            <BladeTaskCard
+                key={bt.id}
+                duration={bt.duration}
+                projectColor={bt.bladeProject.color}
+                projectId={bt.bladeProject.id}
+                projectName={bt.bladeProject.projectName}
+                customer={bt.bladeProject.customer}
+                taskName={bt.taskName}
+                startDate={new Date(year, month, day)}
+                endDate={new Date(endYear, endMonth, endDate)}
+                attachPeriod={bt.attachPeriod}
+                detachPeriod={bt.detachPeriod}
+                rig={bt.testRig}
+                id={bt.id}
+                shown={btShown}
+                enableDraggable={editMode.isEditMode}
+                inConflict={bt.inConflict}
+            />
+        );
     });
 
 
@@ -214,7 +204,7 @@ function DisplayComponent(props: DisplayProps) {
         <div className="ScheduleContentContainer">
             <div className="ScheduleViewControl">
                 <form onSubmit={(e) => {handleViewChange(e)}}>
-                    <label htmlFor="dateInput" style={{ fontSize: "10px" }}>
+                    <label htmlFor="dateInput" className="text-sm">
                         Date:
                     </label>
                     <input
@@ -222,12 +212,13 @@ function DisplayComponent(props: DisplayProps) {
                         type="date"
                         defaultValue={selectedDate}
                     />
-                    <label htmlFor="numberInput" style={{ fontSize: "10px" }}>
+                    <label htmlFor="numberInput" className="text-sm">
                         Months shown:
                     </label>
                     <input
                         name="numberInput"
                         type="number"
+                        defaultValue={numberOfMonths}
                         min="2"
                         max="24"
                     />
@@ -236,8 +227,7 @@ function DisplayComponent(props: DisplayProps) {
             </div>
             {editMode.isEditMode ? (
             <div className="ScheduleFilterAndMode">
-                <label className="switch"> Edit Mode</label>
-                <input type="checkbox" checked={true} onChange={handleModeChange} />
+                <SwitchComponent setShowPasswordPrompt={props.setShowPasswordPrompt} />
             </div>
             ) : (
             <div className="ScheduleFilterAndMode">
@@ -253,9 +243,8 @@ function DisplayComponent(props: DisplayProps) {
                     <option value="Goldwind">Goldwind</option>
                     <option value="Suzlon">Suzlon</option>
                 </select>
-                <label className="switch"> Edit Mode</label>
-                <input type="checkbox" checked={false} onChange={handleModeChange} />
-            </div>
+               <SwitchComponent setShowPasswordPrompt={props.setShowPasswordPrompt} />
+            </div>           
             )}
             
             <div className="ScheduleDisplay">
@@ -281,7 +270,7 @@ export default DisplayComponent;
 function convertToQueryDate(year: number, month: number, day: number) {
     let queryDateSTR = year.toString() + "-";
     let queryMonth = month + 1;
-    if (queryMonth < 10) {
+    if (queryMonth < 10) { // format date to match query YYYY-MM-DD
         queryDateSTR += "0" + queryMonth.toString() + "-";
     } else {
         queryDateSTR += queryMonth.toString() + "-";
@@ -349,7 +338,7 @@ function getQueryDates(startDate: Date, endDate: Date) {
     return { startDate: startDateSTR, endDate: endDateSTR };
 }
 
-function createRigs(numberOfRigs: number) {
+export function createRigs(numberOfRigs: number) {
     let rigs: {rigName: string, rigNumber: number}[]= [];
     for (let i = 1; i <= numberOfRigs; i++) {
         rigs.push({

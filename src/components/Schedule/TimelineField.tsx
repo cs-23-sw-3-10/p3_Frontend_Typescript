@@ -9,7 +9,6 @@ import { BladeTaskHolder } from "./BladeTaskHolder";
 import { useMutation } from "@apollo/client";
 import { UPDATE_BT } from "../../api/mutationList";
 import PendingTasks from "./PendingTasks";
-import ReactDOM from "react-dom";
 
 type TimelineFieldProps = {
     rigs: { rigName: string; rigNumber: number }[];
@@ -17,7 +16,7 @@ type TimelineFieldProps = {
     btCards: React.ReactNode[];
     btCardsPending: React.ReactNode[];
     showPasswordPrompt?: boolean;
-    isPendingTasksIncluded: boolean
+    isPendingTasksIncluded: boolean;
 };
 
 export const dateDivLength = 25; // px length of the dates in the schedule
@@ -69,9 +68,11 @@ function CreateTimelineField(props: TimelineFieldProps) {
     };
 
     const [isDragging, setDragging] = useState(false);
-
-    let bladeTasks = new BladeTaskHolder(props.btCards);
-    let bladeTasksPending = new BladeTaskHolder(props.btCardsPending);
+    
+    // Create a BladeTaskHolder object to store the blade tasks
+    let bladeTasks = new BladeTaskHolder(props.btCards); 
+    // Create a BladeTaskHolder object to store the pending blade tasks
+    let bladeTasksPending = new BladeTaskHolder(props.btCardsPending); 
 
     return (
         <div className="TimelineFieldContainer">
@@ -83,7 +84,7 @@ function CreateTimelineField(props: TimelineFieldProps) {
                     />
                 ))}
 
-                <DndContext
+                <DndContext // DndContext is used to enable drag and drop functionality
                     onDragStart={(event) => {
                         handleDragStart(event, setDragging);
                     }}
@@ -93,7 +94,7 @@ function CreateTimelineField(props: TimelineFieldProps) {
                             bladeTasks,
                             bladeTasksPending,
                             setDragging,
-                            updateBt,
+                            updateBt
                         );
                     }}
                 >
@@ -130,12 +131,15 @@ function CreateTimelineField(props: TimelineFieldProps) {
                             />
                         ))}
                     </div>
-                    {props.isPendingTasksIncluded &&<PendingTasks
-                        bladeTaskHolder={bladeTasksPending}
-                        bladeTaskCards={bladeTasksPending.getBladeTasks()}
-                        numberOfRigs={props.rigs.length}
-                        showPasswordPrompt={props.showPasswordPrompt}
-                    />}
+                    <div></div>
+                    {props.isPendingTasksIncluded && (
+                        <PendingTasks
+                            bladeTaskHolder={bladeTasksPending}
+                            bladeTaskCards={bladeTasksPending.getBladeTasks()}
+                            numberOfRigs={props.rigs.length}
+                            showPasswordPrompt={props.showPasswordPrompt}
+                        />
+                    )}
                 </DndContext>
             </div>
         </div>
@@ -185,7 +189,6 @@ export function handleDragStart(
     setDragging: React.Dispatch<React.SetStateAction<boolean>>
 ) {
     const { active } = event;
-    console.log("drag started");
     if (active !== null) {
         setDragging(true);
     }
@@ -198,15 +201,11 @@ export function handleDragEnd(
     setDragging: React.Dispatch<React.SetStateAction<boolean>>,
     updateBT: Function
 ) {
-    console.log("drag ended");
+    const { active, over } = event; // active is the element being dragged, over is the element being dragged over
+    const updatedBladeTaskCards = bladeTaskHolder.getBladeTasks(); // Get the blade tasks from the BladeTaskHolder
+    const updatedBladeTaskCardsPending = bladeTaskHolderPending.getBladeTasks(); // Get the pending blade tasks from the BladeTaskHolder
 
-    const { active, over } = event;
-    console.log("active :", active);
-
-    const updatedBladeTaskCards = bladeTaskHolder.getBladeTasks();
-    const updatedBladeTaskCardsPending = bladeTaskHolderPending.getBladeTasks();
-
-    const { statusBT, indexBT } = findBTIndex(
+    const { statusBT, indexBT } = findBTIndex( // Find the index of the blade task being dragged
         updatedBladeTaskCards,
         updatedBladeTaskCardsPending,
         active
@@ -216,9 +215,9 @@ export function handleDragEnd(
 
     if (over !== null && indexBT !== -1) {
         //get dragged card
-        if (statusBT === "scheduled") {
+        if (statusBT === "scheduled") { // If the blade task is scheduled, get the blade task from the scheduled blade tasks
             draggedCard = updatedBladeTaskCards[indexBT] as React.ReactElement;
-        } else {
+        } else { // Else, get the blade task from the pending blade tasks
             draggedCard = updatedBladeTaskCardsPending[
                 indexBT
             ] as React.ReactElement;
@@ -226,10 +225,8 @@ export function handleDragEnd(
 
         //Moving to pending tasks
         if (over.id === "droppablePendingTasksId") {
-
             if (statusBT === "scheduled") {
-
-                updateBT({
+                updateBT({ //update blade task in database
                     variables: {
                         id: draggedCard.props.id,
                         startDate: "undefined",
@@ -240,7 +237,7 @@ export function handleDragEnd(
 
                 updatedBladeTaskCards.splice(indexBT, 1);
 
-                updatedBladeTaskCardsPending.push(
+                updatedBladeTaskCardsPending.push( // Add the blade task to the pending blade tasks
                     <BladeTaskCard
                         key={draggedCard.key}
                         id={draggedCard.props.id}
@@ -258,21 +255,17 @@ export function handleDragEnd(
                     />
                 );
 
-            
-
-
-                bladeTaskHolder.setBladeTasks(updatedBladeTaskCards);
-                bladeTaskHolderPending.setBladeTasks(
+                bladeTaskHolder.setBladeTasks(updatedBladeTaskCards); // Update the blade tasks in the BladeTaskHolder
+                bladeTaskHolderPending.setBladeTasks( // Update the pending blade tasks in the BladeTaskHolder
                     updatedBladeTaskCardsPending
                 );
-
             } else {
                 console.log("a pending BT was moved to pending");
             }
         } else {
             const overIdSlpit = over.id.split("-");
-            const overRig = parseInt(overIdSlpit[0].split(" ")[1]);
-            const overDate = new Date(
+            const overRig = parseInt(overIdSlpit[0].split(" ")[1]); // Get the rig number of the column being dragged over
+            const overDate = new Date( // Get the date of the column being dragged over
                 overIdSlpit[1],
                 overIdSlpit[2],
                 overIdSlpit[3]
@@ -290,18 +283,11 @@ export function handleDragEnd(
             if (!isOverlap) {
                 let newEndDate = new Date(overDate);
 
-                newEndDate.setDate(
-                    newEndDate.getDate() + draggedCard.props.duration - 1
+                newEndDate.setDate( // Set the end date of the blade task
+                    newEndDate.getDate() + draggedCard.props.duration - 1 
                 );
 
-                console.log("dragged card new start :", overDate);
-                console.log("dragged card new end :", newEndDate);
-                console.log(
-                    "dragged card duration :",
-                    draggedCard.props.duration
-                );
-
-                updateBT({
+                updateBT({ //update blade task in database
                     variables: {
                         id: draggedCard.props.id,
                         startDate: formatDate(overDate),
@@ -311,8 +297,7 @@ export function handleDragEnd(
                 });
 
                 if (statusBT === "scheduled") {
-
-                    updatedBladeTaskCards[indexBT] = (
+                    updatedBladeTaskCards[indexBT] = ( // Update the blade task in the scheduled blade tasks
                         <BladeTaskCard
                             key={draggedCard.key}
                             id={draggedCard.props.id}
@@ -331,12 +316,11 @@ export function handleDragEnd(
                         />
                     );
 
-                    bladeTaskHolder.setBladeTasks(updatedBladeTaskCards);
+                    bladeTaskHolder.setBladeTasks(updatedBladeTaskCards); // Update the scheduled blade tasks in the BladeTaskHolder
                 } else {
-
                     updatedBladeTaskCardsPending.splice(indexBT, 1);
 
-                    updatedBladeTaskCards.push(
+                    updatedBladeTaskCards.push( // Add the blade task to the scheduled blade tasks
                         <BladeTaskCard
                             key={draggedCard.key}
                             id={draggedCard.props.id}
@@ -355,8 +339,8 @@ export function handleDragEnd(
                         />
                     );
 
-                    bladeTaskHolder.setBladeTasks(updatedBladeTaskCards);
-                    bladeTaskHolderPending.setBladeTasks(
+                    bladeTaskHolder.setBladeTasks(updatedBladeTaskCards); // Update the scheduled blade tasks in the BladeTaskHolder
+                    bladeTaskHolderPending.setBladeTasks( // Update the pending blade tasks in the BladeTaskHolder
                         updatedBladeTaskCardsPending
                     );
                 }

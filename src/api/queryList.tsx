@@ -3,6 +3,37 @@ import { gql } from "@apollo/client";
 /**
  * This file contains all the queries used in the application
  */
+
+export const GET_ALL_BP_IN_DIFF_SCHEDULE = gql`
+    query AllSchedules {
+        AllSchedules {
+            id
+            isActive
+            bladeProject {
+                id
+                startDate
+                endDate
+                customer
+                projectLeader
+                projectName
+                color
+                bladeTasks {
+                    id
+                    startDate
+                    endDate
+                    duration
+                    testType
+                    attachPeriod
+                    detachPeriod
+                    taskName
+                    testRig
+                    inConflict
+                }
+            }
+    }
+}
+    `;
+
 export const GET_ALL_BT = gql`
     query AllBladeTasks {
         AllBladeTasks {
@@ -26,6 +57,32 @@ export const GET_ALL_BT = gql`
                 duration
                 resourceType
                 workHours
+            }
+            resourceOrders {
+                id
+            }
+        }
+    }
+`;
+
+export const GET_BT_WITH_ID = gql`
+    query BladeTaskById($id: ID!) {
+        BladeTaskById(id: $id) {
+            id
+            startDate
+            endDate
+            duration
+            testType
+            attachPeriod
+            detachPeriod
+            taskName
+            testRig
+            inConflict
+            bladeProject {
+                id
+            }
+            resourceOrders {
+                id
             }
         }
     }
@@ -95,8 +152,6 @@ subscription AllBladeTasksPendingSub{
 }
 `;
 
-
-
 export const GET_BT_PENDING = gql`
 query AllBladeTasksPending {
     AllBladeTasksPending{
@@ -115,7 +170,6 @@ query AllBladeTasksPending {
     }
 }
 `;
-
 
 export const GET_ALL_BT_WITH_BOOKINGS_EQNAME = gql`
 query AllBladeTasks {
@@ -154,8 +208,6 @@ query AllBladeTasks {
     }
 }
 `;
-
-
 
 export const GET_ALL_BP = gql`
 query AllBladeProjects {

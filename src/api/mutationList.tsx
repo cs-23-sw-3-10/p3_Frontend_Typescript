@@ -45,6 +45,30 @@ export const UPDATE_BT = gql`
     }
 `;
 
+export const UPDATE_BT_INFO = gql`
+  mutation updateBTInfo($updates: BladeTaskInput!, $id: Int!) {
+      updateBTInfo(updates: $updates, btId: $id) {
+        id
+        startDate
+        endDate
+        duration
+        testType
+        attachPeriod
+        detachPeriod
+        taskName
+        testRig
+    
+      resourceOrders {
+        id
+        resourceName
+        resourceType
+        workHours
+        equipmentAssignmentStatus
+      }
+    }
+  }
+`;
+
 export const ADD_BT = gql`
 mutation CreateBladeTask($bladeTask: BladeTaskInput!) {
     createBladeTask(bladeTask: $bladeTask){
@@ -81,10 +105,34 @@ mutation CreateBladeTask($bladeTask: BladeTaskInput!) {
         id
         resourceName
         resourceType
-        amount
         workHours
         equipmentAssignmentStatus
       }
     }
   }
+`;
+
+export const ADD_BP = gql`
+mutation CreateBladeProject($name: String, $customer: String, $projectLeader: String){
+  createBladeProject(name: $name, customer: $customer, projectLeader: $projectLeader ){
+    id
+    projectName
+    customer
+    projectLeader
+    startDate
+    endDate
+  }
+}
+`;
+
+export const UPDATE_BP = gql`
+mutation UpdateBladeProject($bpId: Int!, $updates: BladeProjectInput!){
+  updateBladeProject(bpId: $bpId, updates: $updates){
+    projectName
+    customer
+    projectLeader
+    startDate
+    endDate
+  }
+}
 `;
