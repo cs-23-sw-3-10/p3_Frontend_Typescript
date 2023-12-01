@@ -25,7 +25,7 @@ export interface BladeTaskMenuProps {
 }
 
 function BladeTaskMenu(props: BladeTaskMenuProps) {
-    const creator = props.creator;
+    const creator = props.creator; //true if creating a new blade task, false if editing an existing one
     //Apollo mutation setup:
     const [addBT, { loading: addLoading, error: addError }] =
         useMutation(ADD_BT);
@@ -118,7 +118,7 @@ function BladeTaskMenu(props: BladeTaskMenuProps) {
         try {
             if (props.creator) {
                 if (
-                    !checkBTCreationOverlaps(
+                    !checkBTCreationOverlaps( //check if the created blade task overlaps with another blade task
                         allBT,
                         submittedStartDate,
                         submittedEndDate,
@@ -128,6 +128,7 @@ function BladeTaskMenu(props: BladeTaskMenuProps) {
                 ) {
                     if (ValidateForm(currentOrder)) {
                         const response = await addBT({
+                            //add blade task to database
                             variables: {
                                 bladeTask: {
                                     bladeProjectId: bladeProjectId,
@@ -153,7 +154,7 @@ function BladeTaskMenu(props: BladeTaskMenuProps) {
                 }
             } else {
                 if (
-                    !checkBTEditOverlaps(
+                    !checkBTEditOverlaps( //check if the edited blade task overlaps with another blade task
                         allBT,
                         submittedStartDate,
                         submittedEndDate,
@@ -164,6 +165,7 @@ function BladeTaskMenu(props: BladeTaskMenuProps) {
                 ) {
                     if (ValidateForm(currentOrder)) {
                         const response = await updateBT({
+                            //update blade task in database
                             variables: {
                                 updates: {
                                     bladeProjectId: bladeProjectId,
@@ -415,21 +417,20 @@ function checkBTEditOverlaps(
         console.log("Invalid ID: id is NaN");
         return true;
     }
-    let overlap = false;
     allBT.forEach((bt: any) => {
         let btStartDate = new Date(bt.startDate);
         let btEndDate = new Date(bt.endDate);
-
+        
         if (
             parseInt(bt.id) !== btId &&
             (bt.testRig === rig || bt.bladeProject.id === projectId) &&
             ((btStartDate <= endDate && btStartDate >= startDate) ||
                 (btEndDate >= startDate && btEndDate <= endDate))
         ) {
-            overlap = true;
+            return true;
         }
     });
-    return overlap;
+    return false;
 }
 function checkBTCreationOverlaps(
     allBT: any,
@@ -438,7 +439,6 @@ function checkBTCreationOverlaps(
     projectId: string,
     rig: number
 ) {
-    let overlap = false;
     if (startDate > endDate) {
         return true;
     }
@@ -446,13 +446,12 @@ function checkBTCreationOverlaps(
         let btStartDate = new Date(bt.startDate);
         let btEndDate = new Date(bt.endDate);
         if (
-            (bt.testRig === rig ||
-                bt.bladeProject.bladeProjectId === projectId) &&
+            (bt.testRig === rig || bt.bladeProject.bladeProjectId === projectId) &&
             ((btStartDate <= endDate && btStartDate >= startDate) ||
                 (btEndDate >= startDate && btEndDate <= endDate))
         ) {
-            overlap = true;
+            return true;
         }
     });
-    return overlap;
+    return false;
 }

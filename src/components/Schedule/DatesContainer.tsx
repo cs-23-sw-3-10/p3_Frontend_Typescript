@@ -34,6 +34,6 @@ function CreateDatesContainer(props: DatesContainerProps) {
 }
 export default CreateDatesContainer;
 
-function getDateKey(date: Date) {
+function getDateKey(date: Date) { // Get the key for a date
     return `date-${date.getFullYear()}-${date.getMonth()}-${date.getDate()}`;
 }
