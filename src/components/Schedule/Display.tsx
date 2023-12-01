@@ -1,15 +1,14 @@
 import "./Display.css";
 import CreateTestRigDivs from "./TestRigDivs";
 import CreateTimelineField from "./TimelineField";
-import React, { useMemo, useState} from "react";
+import React, { useState} from "react";
 import CreateAdditionalContent from "./AdditionalContent";
 import BladeTaskCard from "./BladeTaskCard";
 import { useQuery, useSubscription } from "@apollo/client";
-import { GET_BT_IN_RANGE, GET_BT_IN_RANGE_SUB, GET_TEST_RIGS, GET_BT_PENDING, GET_BT_PENDING_SUB } from "../../api/queryList";
+import { GET_BT_IN_RANGE_SUB, GET_TEST_RIGS, GET_BT_PENDING_SUB, GET_ALL_BLADE_PROJECTS } from "../../api/queryList";
 import { getMonthLength } from "./TimelineField";
 import { capitalizeFirstLetter } from "./TimelineField";
 import { useEditModeContext } from "../../EditModeContext";
-import { Switch } from "@mui/base";
 import SwitchComponent from "../TableLogic/SwitchComponent";
 
 const currentDate = new Date(Date.now()); // Get the current date
@@ -83,6 +82,12 @@ function DisplayComponent(props: DisplayProps) {
         data: dataRigs,
     } = useQuery(GET_TEST_RIGS);
 
+    const { // get blade projects
+        loading: loadingBP,
+        error: errorBP,
+        data: dataBP,
+    } = useQuery(GET_ALL_BLADE_PROJECTS);
+
     const { // get blade tasks in range
         loading: loadingBT,
         error: errorBT,
@@ -119,6 +124,19 @@ function DisplayComponent(props: DisplayProps) {
     if (errorPendingBT) {
         return <p>Error {errorPendingBT.message}</p>;
     }
+    if (loadingBP) {
+        return <p>Loading...</p>;
+    }
+    if (errorBP) {
+        return <p>Error {errorBP.message}</p>;
+    }
+
+    const customers: string[] = [];
+    dataBP["AllBladeProjects"].forEach((bp: any) => {
+        if (!customers.includes(bp.customer)) {
+            customers.push(bp.customer);
+        }
+    });
 
     const numberOfRigs = parseInt(dataRigs.DictionaryAllByCategory[0].label);
     if (rigs.length !== numberOfRigs){ // if number of rigs changed, update rigs
@@ -132,7 +150,7 @@ function DisplayComponent(props: DisplayProps) {
         let btShown = false;
         if (
             bt.bladeProject.customer === props.filter ||
-            props.filter === "None"
+            props.filter === "None" || editMode.isEditMode
         ) {
             btShown = true;
         }
@@ -166,8 +184,6 @@ function DisplayComponent(props: DisplayProps) {
             />
         );
     });
-
-
     
     //Making pending BladeTaskCards
     let btCardsPending: React.ReactNode[] = [];
@@ -175,7 +191,7 @@ function DisplayComponent(props: DisplayProps) {
         let btShown = false;
         if (
             bt.bladeProject.customer === props.filter ||
-            props.filter === "None"
+            props.filter === "None" || editMode.isEditMode
         ) {
             btShown = true;
         }
@@ -239,9 +255,8 @@ function DisplayComponent(props: DisplayProps) {
                         props.setFilter(e.target.value);
                     }}
                 >
-                    <option value="None">None</option>
-                    <option value="Goldwind">Goldwind</option>
-                    <option value="Suzlon">Suzlon</option>
+                    <option key="None" value="None">None</option>
+                    {customers.map((customer) => FilterCustomers(customer))}
                 </select>
                <SwitchComponent setShowPasswordPrompt={props.setShowPasswordPrompt} />
             </div>           
@@ -258,8 +273,6 @@ function DisplayComponent(props: DisplayProps) {
                     isPendingTasksIncluded={true}
                 />
             </div>
-
-
             {editMode.isEditMode ? <CreateAdditionalContent /> : null}
 
         </div>
@@ -347,4 +360,10 @@ export function createRigs(numberOfRigs: number) {
         });
     }
     return rigs;
+}
+
+function FilterCustomers(customer: string) {
+    return (
+        <option key={customer} value={customer}>{customer}</option>
+    );
 }
