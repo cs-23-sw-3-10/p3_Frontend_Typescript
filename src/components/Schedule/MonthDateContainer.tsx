@@ -21,7 +21,7 @@ function CreateMonthDateContainer(props: MonthDateContainerProps) {
 
     let monthDates: Date[] = []; // All dates in the month
 
-    for (
+    for ( // Create an array of all dates in the month
         let i = 1;
         i <= getMonthLength(month, year);
         i++

@@ -32,7 +32,7 @@ function CreateAdditionalContent(){
                 </StyledButton>
             </div>
             {creationMenu === "createTask" && <BladeTaskMenu creator={true}/>}
-            {creationMenu ==="createProject" && <BladeProjectMenu/>}
+            {creationMenu ==="createProject" && <BladeProjectMenu creator={true}/>}
         </div>
     );
 }

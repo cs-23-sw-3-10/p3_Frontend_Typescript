@@ -2,120 +2,135 @@
 import { ColumnDef } from "@tanstack/react-table";
 import { BladeProjectDataQuery } from "./BladeProjectData";
 
-export const columnBP: ColumnDef<BladeProjectDataQuery>[] = [
-    {
-        header: ({ column }) => {
-            return (
-                <button
-                    onClick={() =>
-                        column.toggleSorting(column.getIsSorted() === "asc")
-                    }
-                >
-                    ID
-                </button>
-            );
+export function getColumns(setShowPopup: Function, setChoosenBP: Function){
+    
+    const columnBP: ColumnDef<BladeProjectDataQuery>[] = [
+        {
+            header: ({ column }) => {
+                return (
+                    <button
+                        onClick={() =>
+                            column.toggleSorting(column.getIsSorted() === "asc")
+                        }
+                    >
+                        ID
+                    </button>
+                );
+            },
+            accessorKey: "id",
+            enableHiding: true,
+            cell: ({ row, getValue }) => {
+                return (
+                    <>
+                        {row.getCanExpand() ? (
+                            <button
+                                {...{
+                                    onClick: () => {
+                                        console.log("headingdf.name");
+                                    },
+                                    style: { cursor: "pointer" },
+                                }}
+                            >
+                                {row.getIsExpanded() ? "▲" : "▼"}
+                            </button>
+                        ) : (
+                            <button
+                                {...{
+                                    onClick: () => {
+                                        row.toggleExpanded();
+                                    },
+                                    style: { cursor: "pointer" },
+                                }}
+                            >
+                                {row.getIsExpanded() ? "▲" : "▼"}
+                            </button>
+                        )}
+                        {getValue()}
+                    </>
+                );
+            },
         },
-        accessorKey: "id",
-        enableHiding: true,
-        cell: ({ row, getValue }) => {
-            return (
-                <>
-                    {row.getCanExpand() ? (
-                        <button
-                            {...{
-                                onClick: () => {
-                                    console.log("headingdf.name");
-                                },
-                                style: { cursor: "pointer" },
-                            }}
-                        >
-                            {row.getIsExpanded() ? "▲" : "▼"}
+        {
+            header: ({ column }) => {
+                return (
+                    <button
+                        onClick={() =>
+                            column.toggleSorting(column.getIsSorted() === "asc")
+                        }
+                    >
+                        Project Name
+                    </button> 
+                );
+            },
+            accessorKey: "projectName",
+            cell: ({row, getValue}) => {
+                return (
+                    <>
+                        <button className="bg-gray-200 hover:bg-gray-500 rounded" onClick={() => {setChoosenBP(getValue()); setShowPopup(true)}}>
+                            Edit
                         </button>
-                    ) : (
-                        <button
-                            {...{
-                                onClick: () => {
-                                    row.toggleExpanded();
-                                },
-                                style: { cursor: "pointer" },
-                            }}
-                        >
-                            {row.getIsExpanded() ? "▲" : "▼"}
-                        </button>
-                    )}
-                    {getValue()}
-                </>
-            );
+                        {getValue()}
+                    </>
+                );
+            }
         },
-    },
-    {
-        header: ({ column }) => {
-            return (
-                <button
-                    onClick={() =>
-                        column.toggleSorting(column.getIsSorted() === "asc")
-                    }
-                >
-                    Project Name
-                </button>
-            );
+
+        {
+            header: ({ column }) => {
+                return (
+                    <button
+                        onClick={() =>
+                            column.toggleSorting(column.getIsSorted() === "asc")
+                        }
+                    >
+                        Customer
+                    </button>
+                );
+            },
+            accessorKey: "customer",
         },
-        accessorKey: "projectName",
-    },
-    {
-        header: ({ column }) => {
-            return (
-                <button
-                    onClick={() =>
-                        column.toggleSorting(column.getIsSorted() === "asc")
-                    }
-                >
-                    Customer
-                </button>
-            );
+        {
+            header: ({ column }) => {
+                return (
+                    <button
+                        onClick={() =>
+                            column.toggleSorting(column.getIsSorted() === "asc")
+                        }
+                    >
+                        Project Leader
+                    </button>
+                );
+            },
+            accessorKey: "projectLeader",
         },
-        accessorKey: "customer",
-    },
-    {
-        header: ({ column }) => {
-            return (
-                <button
-                    onClick={() =>
-                        column.toggleSorting(column.getIsSorted() === "asc")
-                    }
-                >
-                    Project Leader
-                </button>
-            );
+        {
+            header: ({ column }) => {
+                return (
+                    <button
+                        onClick={() =>
+                            column.toggleSorting(column.getIsSorted() === "asc")
+                        }
+                    >
+                        Start Date
+                    </button>
+                );
+            },
+            accessorKey: "startDate",
         },
-        accessorKey: "projectLeader",
-    },
-    {
-        header: ({ column }) => {
-            return (
-                <button
-                    onClick={() =>
-                        column.toggleSorting(column.getIsSorted() === "asc")
-                    }
-                >
-                    Start Date
-                </button>
-            );
-        },
-        accessorKey: "startDate",
-    },
-    {
-        header: ({ column }) => {
-            return (
-                <button
-                    onClick={() =>
-                        column.toggleSorting(column.getIsSorted() === "asc")
-                    }
-                >
-                    End Date
-                </button>
-            );
-        },
-        accessorKey: "endDate",
-    },  
-];
+        {
+            header: ({ column }) => {
+                return (
+                    <button
+                        onClick={() =>
+                            column.toggleSorting(column.getIsSorted() === "asc")
+                        }
+                    >
+                        End Date
+                    </button>
+                );
+            },
+            accessorKey: "endDate",
+        },  
+    ];
+    return columnBP;
+}

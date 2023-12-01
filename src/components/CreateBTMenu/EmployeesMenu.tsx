@@ -148,6 +148,7 @@ function EmployeeEntry({name, initials, resourceOrders, activeEmployeesList}:{na
                 <input
                     className='emoloyee_entry_hours_input'
                     type="number"
+                    value={employeeHours}
                     placeholder='Hours'
                     onChange={(e) => handleEmployeeHours(Number(e.currentTarget.value))}
                 />

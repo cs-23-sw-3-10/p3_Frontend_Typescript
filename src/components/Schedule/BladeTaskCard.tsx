@@ -99,8 +99,6 @@ function BladeTaskCard(props: BladeTaskCardProps) {
     };
 
     const handleEditClick = () => {
-        console.log("Edit " + props.taskName);
-        console.log(props.inConflict);
         togglePopup();
         setShowContextMenu(false);
     };
@@ -110,7 +108,6 @@ function BladeTaskCard(props: BladeTaskCardProps) {
     };
 
     const handleConflictClick = () => {
-        console.log("Conflict " + props.taskName);
         setShowContextMenu(false);
         setShowMessageBox(true);
     };
