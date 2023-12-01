@@ -4,13 +4,13 @@ import {useEditModeContext} from "../../EditModeContext";
 
 export const passwordPromptHeight=30;
 
-function ScheduleComponent() {
+function ScheduleComponent() { // Component to display everything related to the schedule
     const [showPasswordPrompt, setShowPasswordPrompt] = useState(false);
-    const [filter, setFilter] = useState("None"); // State to store the filter
+    const [filter, setFilter] = useState("None"); 
 
-    const editMode = useEditModeContext();
+    const editMode = useEditModeContext(); // editMode is a boolean that is true if the user is in edit mode
 
-    const viewSchedule = (
+    const viewSchedule = ( // viewSchedule is the component that is displayed when the user is not in edit mode
         <DisplayComponent
             setShowPasswordPrompt={setShowPasswordPrompt}
             showPasswordPrompt={showPasswordPrompt}
@@ -18,7 +18,7 @@ function ScheduleComponent() {
             setFilter={setFilter}
         />
     );
-    const editSchedule = (
+    const editSchedule = ( // editSchedule is the component that is displayed when the user is in edit mode
         <DisplayComponent
             setShowPasswordPrompt={setShowPasswordPrompt}
             showPasswordPrompt={showPasswordPrompt}

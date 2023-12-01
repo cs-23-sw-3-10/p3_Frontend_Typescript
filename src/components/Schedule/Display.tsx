@@ -34,7 +34,7 @@ function DisplayComponent(props: DisplayProps) {
 
     const [dates, setDates] = useState(
         getMonthsInView(currentDate, numberOfMonths)
-    ); // should be imported from database
+    ); // State to store the months to display
     
     const handleViewChange = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
@@ -60,7 +60,7 @@ function DisplayComponent(props: DisplayProps) {
         }
     };
 
-    const goTo = (viewDate: string, number: number) => {
+    const goTo = (viewDate: string, number: number) => { // Function to change the date and number of months to display
         const newDate = new Date(viewDate);
         if (!isNaN(newDate.valueOf())) {
             if (!isNaN(number)) {
@@ -74,18 +74,16 @@ function DisplayComponent(props: DisplayProps) {
         }
     };
 
+    // convert dates to string for query
     const queryDates = getQueryDates(dates[0], dates[dates.length - 1]);
 
-
-    const {
+    const { // get test rigs
         loading: loadingRigs,
         error: errorRigs,
         data: dataRigs,
     } = useQuery(GET_TEST_RIGS);
-    
 
-
-    const {
+    const { // get blade tasks in range
         loading: loadingBT,
         error: errorBT,
         data: dataBT,
@@ -95,8 +93,6 @@ function DisplayComponent(props: DisplayProps) {
         endDate: queryDates.endDate,
         isActive:  !editMode.isEditMode,
     },});
-
-
     
     const {
         loading: loadingPendingBT,
@@ -125,11 +121,11 @@ function DisplayComponent(props: DisplayProps) {
     }
 
     const numberOfRigs = parseInt(dataRigs.DictionaryAllByCategory[0].label);
-    if (rigs.length !== numberOfRigs){
+    if (rigs.length !== numberOfRigs){ // if number of rigs changed, update rigs
         setRigs(createRigs(numberOfRigs));
     }
 
-    //Makeing schedulet BladeTaskCards
+    //Making schedule BladeTaskCards
     let btCards: React.ReactNode[] = [];
 
     dataBT["AllBladeTasksInRangeSub"].forEach((bt: any) => {
@@ -142,33 +138,33 @@ function DisplayComponent(props: DisplayProps) {
         }
         let dateSplit = bt.startDate.split("-");
         const year = parseInt(dateSplit[0]);
-        const month = parseInt(dateSplit[1]) - 1;
+        const month = parseInt(dateSplit[1]) - 1; // month is 0 indexed
         const day = parseInt(dateSplit[2]);
 
-            let endDateSplit = bt.endDate.split("-");
-            const endYear = parseInt(endDateSplit[0]);
-            const endMonth = parseInt(endDateSplit[1]) - 1;
-            const endDate = parseInt(endDateSplit[2]);
-            btCards.push(
-                <BladeTaskCard
-                    key={bt.id}
-                    duration={bt.duration}
-                    projectColor={bt.bladeProject.color}
-                    projectId={bt.bladeProject.id}
-                    projectName={bt.bladeProject.projectName}
-                    customer={bt.bladeProject.customer}
-                    taskName={bt.taskName}
-                    startDate={new Date(year, month, day)}
-                    endDate={new Date(endYear, endMonth, endDate)}
-                    attachPeriod={bt.attachPeriod}
-                    detachPeriod={bt.detachPeriod}
-                    rig={bt.testRig}
-                    id={bt.id}
-                    shown={btShown}
-                    enableDraggable={editMode.isEditMode}
-                    inConflict={bt.inConflict}
-                                    />
-            );
+        let endDateSplit = bt.endDate.split("-");
+        const endYear = parseInt(endDateSplit[0]);
+        const endMonth = parseInt(endDateSplit[1]) - 1; // month is 0 indexed
+        const endDate = parseInt(endDateSplit[2]);
+        btCards.push(
+            <BladeTaskCard
+                key={bt.id}
+                duration={bt.duration}
+                projectColor={bt.bladeProject.color}
+                projectId={bt.bladeProject.id}
+                projectName={bt.bladeProject.projectName}
+                customer={bt.bladeProject.customer}
+                taskName={bt.taskName}
+                startDate={new Date(year, month, day)}
+                endDate={new Date(endYear, endMonth, endDate)}
+                attachPeriod={bt.attachPeriod}
+                detachPeriod={bt.detachPeriod}
+                rig={bt.testRig}
+                id={bt.id}
+                shown={btShown}
+                enableDraggable={editMode.isEditMode}
+                inConflict={bt.inConflict}
+            />
+        );
     });
 
 
@@ -274,7 +270,7 @@ export default DisplayComponent;
 function convertToQueryDate(year: number, month: number, day: number) {
     let queryDateSTR = year.toString() + "-";
     let queryMonth = month + 1;
-    if (queryMonth < 10) {
+    if (queryMonth < 10) { // format date to match query YYYY-MM-DD
         queryDateSTR += "0" + queryMonth.toString() + "-";
     } else {
         queryDateSTR += queryMonth.toString() + "-";
