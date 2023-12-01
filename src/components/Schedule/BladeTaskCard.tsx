@@ -54,7 +54,6 @@ function BladeTaskCard(props: BladeTaskCardProps) {
     });
     const [showMessageBox, setShowMessageBox] = useState(false); // Used to show the message box when the user clicks on a task card
     const [showPopup, setShowPopup] = useState(false); // Used to show the popup when the user clicks edit in a task card
-    const editMode = useEditModeContext();
 
     const contextMenuRef = useRef<HTMLDivElement>(null);
     useEffect(() => {
