@@ -2,11 +2,12 @@ import "./PendingTasks.css";
 import { BladeTaskHolder } from "./BladeTaskHolder";
 import { useDroppable } from "@dnd-kit/core";
 
-const projectRowHeight=30;
+const projectRowHeight = 30;
 
 interface PendingTasksProps {
     btCardsPendingHolder: BladeTaskHolder;
     numberOfRigs: number;
+    transformStyle: any;
 }
 
 function PendingTasks(props: PendingTasksProps) {
@@ -14,15 +15,12 @@ function PendingTasks(props: PendingTasksProps) {
         id: "droppablePendingTasksId",
     });
 
-
     //Array to hold names of projects with pending tasks:
     let projectsWithPendingTasks: String[] = [];
 
-    const btCardsPending=props.btCardsPendingHolder.getBladeTasks();
-
+    const btCardsPending = props.btCardsPendingHolder.getBladeTasks();
 
     btCardsPending.forEach((card: any) => {
-
         let isInProctsWithPendingTasks = false;
 
         for (let i = 0; i < projectsWithPendingTasks.length; i++) {
@@ -44,56 +42,61 @@ function PendingTasks(props: PendingTasksProps) {
         gridTemplateRows: rowString,
     };
 
-
     return (
         <>
-            <div className="pendingTasksContainer" ref={setNodeRef}>
-                <h2>Pending Blade Tasks</h2>
+            <div style={props.transformStyle} className="pendingTasksContainer">
                 <div
-                    className="pendingTasksContainerInner"
-                    style={pendingTasksStyle}
+                    
+                    ref={setNodeRef}
+                    id={"pendingTasksContainerId"}
+                    
                 >
-                    {projectsWithPendingTasks.map((projectName) => {
-                        return (
-                            <div
-                                key={String(projectName) + "pending"}
-                                className="projectLegend"
-                                style={{
-                                    gridRow: `project-${projectName}`,
-                                    height: `${projectRowHeight}px`,
-                                    maxHeight: `${projectRowHeight}px`,
-                                }}
-                            >
-                                {projectName}
-                            </div>
-                        );
-                    })}
+                    <h2>Pending Blade Tasks</h2>
+                    <div
+                        className="pendingTasksContainerInner"
+                        style={pendingTasksStyle}
+                    >
+                        {projectsWithPendingTasks.map((projectName) => {
+                            return (
+                                <div
+                                    key={String(projectName) + "pending"}
+                                    className="projectLegend"
+                                    style={{
+                                        gridRow: `project-${projectName}`,
+                                        height: `${projectRowHeight}px`,
+                                        maxHeight: `${projectRowHeight}px`,
+                                    }}
+                                >
+                                    {projectName}
+                                </div>
+                            );
+                        })}
 
-                    {projectsWithPendingTasks.map((projectName: any) => {
-                        return (
-                            <div
-                                key={`${projectName}-pending-list`}
-                                className="pendingTasksColumn"
-                                style={{
-                                    gridRow: `project-${projectName}`,
-                                    height: `${projectRowHeight}px`,
-                                    maxHeight: `${projectRowHeight}px`,
-                                }
-                            }
-                            >
-                                {btCardsPending.filter((card: any) => {
-                                    if (card) {
-                                        return (
-                                            card.props.projectName ===
-                                            projectName
-                                        );
-                                    } else {
-                                        return false;
-                                    }
-                                })}
-                            </div>
-                        );
-                    })}
+                        {projectsWithPendingTasks.map((projectName: any) => {
+                            return (
+                                <div
+                                    key={`${projectName}-pending-list`}
+                                    className="pendingTasksColumn"
+                                    style={{
+                                        gridRow: `project-${projectName}`,
+                                        height: `${projectRowHeight}px`,
+                                        maxHeight: `${projectRowHeight}px`,
+                                    }}
+                                >
+                                    {btCardsPending.filter((card: any) => {
+                                        if (card) {
+                                            return (
+                                                card.props.projectName ===
+                                                projectName
+                                            );
+                                        } else {
+                                            return false;
+                                        }
+                                    })}
+                                </div>
+                            );
+                        })}
+                    </div>
                 </div>
             </div>
         </>

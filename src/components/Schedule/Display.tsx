@@ -239,6 +239,10 @@ function DisplayComponent(props: DisplayProps) {
         );
     });
 
+    
+
+
+
     return (
         <div className="ScheduleContentContainer">
             <div className="ScheduleViewControl">
@@ -269,27 +273,51 @@ function DisplayComponent(props: DisplayProps) {
                 </form>
             </div>
             {editMode.isEditMode ? (
-            <div className="ScheduleFilterAndMode">
-                <SwitchComponent setShowPasswordPrompt={props.setShowPasswordPrompt} />
-                {localStorage.getItem('token') && <StyledButton onClick={()=>{localStorage.removeItem('token'); window.location.reload();}}> Logout </StyledButton>}
-            </div>
+                <div className="ScheduleFilterAndMode">
+                    <SwitchComponent
+                        setShowPasswordPrompt={props.setShowPasswordPrompt}
+                    />
+                    {localStorage.getItem("token") && (
+                        <StyledButton
+                            onClick={() => {
+                                localStorage.removeItem("token");
+                                window.location.reload();
+                            }}
+                        >
+                            {" "}
+                            Logout{" "}
+                        </StyledButton>
+                    )}
+                </div>
             ) : (
-            <div className="ScheduleFilterAndMode">
-                <label>Filter:</label>
-                <select
-                    name="customerFilter"
-                    id="customerFilter"
-                    onChange={(e) => {
-                        props.setFilter(e.target.value);
-                    }}
-                >
-                    <option value="None">None</option>
-                    <option value="Goldwind">Goldwind</option>
-                    <option value="Suzlon">Suzlon</option>
-                </select>
-               <SwitchComponent setShowPasswordPrompt={props.setShowPasswordPrompt} />
-               {localStorage.getItem('token') && <StyledButton onClick={()=>{localStorage.removeItem('token'); window.location.reload();}}> Logout </StyledButton>}
-            </div>           
+                <div className="ScheduleFilterAndMode">
+                    <label>Filter:</label>
+                    <select
+                        name="customerFilter"
+                        id="customerFilter"
+                        onChange={(e) => {
+                            props.setFilter(e.target.value);
+                        }}
+                    >
+                        <option value="None">None</option>
+                        <option value="Goldwind">Goldwind</option>
+                        <option value="Suzlon">Suzlon</option>
+                    </select>
+                    <SwitchComponent
+                        setShowPasswordPrompt={props.setShowPasswordPrompt}
+                    />
+                    {localStorage.getItem("token") && (
+                        <StyledButton
+                            onClick={() => {
+                                localStorage.removeItem("token");
+                                window.location.reload();
+                            }}
+                        >
+                            {" "}
+                            Logout{" "}
+                        </StyledButton>
+                    )}
+                </div>
             )}
 
             <div className="ScheduleDisplay">

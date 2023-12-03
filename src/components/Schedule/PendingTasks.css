@@ -6,7 +6,7 @@
     overflow-x: scroll;
     height: fit-content;
     min-height: 100px;
-    width: 70vw;
+    width: calc(84vw);
     grid-row: 4;   
     border: 2px solid rgba(0,0,0, 1);
     margin: 10px;

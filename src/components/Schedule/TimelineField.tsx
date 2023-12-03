@@ -2,7 +2,7 @@ import { DndContext, DragOverlay} from "@dnd-kit/core";
 import CreateMonthDateContainer from "./MonthDateContainer";
 import CreateRigFieldContainer from "./RigFieldContainer";
 import MonthLengths from "./MonthLengthsEnum";
-import React, { useState } from "react";
+import React, { ReactEventHandler, useState } from "react";
 import BladeTaskCard, { BladeTaskCardProps } from "./BladeTaskCard";
 import { BladeTaskHolder } from "./BladeTaskHolder";
 import { useMutation } from "@apollo/client";
@@ -22,6 +22,8 @@ type TimelineFieldProps = {
 export const dateDivLength = 25; // px length of the dates in the schedule
 
 function CreateTimelineField(props: TimelineFieldProps) {
+    const [scrollTranslation, setScrollTranslation] = useState<number>(0);
+
     const [updateBt, { error, data }] = useMutation(UPDATE_BT);
 
     const [btCards, setBtCards] = useState<React.ReactNode[]>(props.btCards);
@@ -51,8 +53,16 @@ function CreateTimelineField(props: TimelineFieldProps) {
         minHeight: props.rigs.length * 50 + "px",
     };
 
+    const handleScroll: ReactEventHandler<HTMLDivElement> = (event) => {
+        const { scrollLeft, scrollWidth, clientWidth } = event.currentTarget;
+        console.log("scrollLeft :",scrollLeft);
+        console.log("scrollWidth :", scrollWidth);
+        setScrollTranslation(scrollLeft);
+      };
+
+
     return (
-        <div className="TimelineFieldContainer">
+        <div className="TimelineFieldContainer" onScroll={handleScroll} id={"TimelineFieldContainerId"}>
             <DndContext // DndContext is used to enable drag and drop functionality
                 onDragStart={(event) => {
                     handleDragStart(event, setActiveCard);
@@ -67,7 +77,7 @@ function CreateTimelineField(props: TimelineFieldProps) {
                     );
                 }}
             >
-                <div className="TimelineField" style={BTFieldStyle}>
+                <div className="TimelineField" style={BTFieldStyle} >
                     {props.months.map((month) => (
                         <CreateMonthDateContainer
                             key={getMonthContainerKey(month)}
@@ -105,10 +115,11 @@ function CreateTimelineField(props: TimelineFieldProps) {
                             />
                         ))}
                     </div>
-                    {props.isPendingTasksIncluded && (
+                    {props.isPendingTasksIncluded && ( 
                         <PendingTasks
                             btCardsPendingHolder={bladeTasksHolderPending}
                             numberOfRigs={props.rigs.length}
+                            transformStyle={{transform: `translateX(${scrollTranslation}px)`}}
                         />
                     )}
                 </div>
