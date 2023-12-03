@@ -1,4 +1,4 @@
-import { DndContext, DragOverlay, useDndContext } from "@dnd-kit/core";
+import { DndContext, DragOverlay} from "@dnd-kit/core";
 import CreateMonthDateContainer from "./MonthDateContainer";
 import CreateRigFieldContainer from "./RigFieldContainer";
 import MonthLengths from "./MonthLengthsEnum";
@@ -8,7 +8,6 @@ import { BladeTaskHolder } from "./BladeTaskHolder";
 import { useMutation } from "@apollo/client";
 import { UPDATE_BT } from "../../api/mutationList";
 import PendingTasks from "./PendingTasks";
-import { createPortal } from "react-dom";
 import "./BladeTaskCard.css";
 
 type TimelineFieldProps = {
@@ -27,29 +26,13 @@ function CreateTimelineField(props: TimelineFieldProps) {
 
     const [btCards, setBtCards] = useState<React.ReactNode[]>(props.btCards);
 
-    const [btCardsPending, setBtCardsPending] = useState<React.ReactNode[]>(
-        props.btCardsPending
-    );
+    let bladeTasksHolderPending = new BladeTaskHolder(props.btCardsPending);
 
     const [activeCard, setActiveCard] = useState<any>(null);
 
     let fieldWidth: number = setFieldWidth(props.months);
 
-    let allDates: Date[] = []; // All dates to be displayed in the schedule
-    props.months.forEach((month) => {
-        let monthName = capitalizeFirstLetter(
-            month.toLocaleString("default", { month: "long" }) // Get the month name
-        );
-        for (
-            // Create a date for each day in the month
-            let i = 1;
-            i <= getMonthLength(monthName, month.getFullYear());
-            i++
-        ) {
-            let date = new Date(month.getFullYear(), month.getMonth(), i);
-            allDates.push(date);
-        }
-    });
+    let allDates : Date[]=setAllDates(props.months)
 
     const columnsOfSchedule = createGridColumns(allDates); // Create the grid columns for the schedule
 
@@ -68,11 +51,6 @@ function CreateTimelineField(props: TimelineFieldProps) {
         minHeight: props.rigs.length * 50 + "px",
     };
 
-    // Create a BladeTaskHolder object to store the blade tasks
-    //let bladeTasks = new BladeTaskHolder(props.btCards);
-    // Create a BladeTaskHolder object to store the pending blade tasks
-    let bladeTasksPending = new BladeTaskHolder(props.btCardsPending);
-
     return (
         <div className="TimelineFieldContainer">
             <DndContext // DndContext is used to enable drag and drop functionality
@@ -84,8 +62,7 @@ function CreateTimelineField(props: TimelineFieldProps) {
                         event,
                         btCards,
                         setBtCards,
-                        btCardsPending,
-                        setBtCardsPending,
+                        bladeTasksHolderPending,
                         updateBt
                     );
                 }}
@@ -130,10 +107,8 @@ function CreateTimelineField(props: TimelineFieldProps) {
                     </div>
                     {props.isPendingTasksIncluded && (
                         <PendingTasks
-                            cardHolder={bladeTasksPending}
-                            bladeTaskCards={btCardsPending}
+                            btCardsPendingHolder={bladeTasksHolderPending}
                             numberOfRigs={props.rigs.length}
-                            showPasswordPrompt={props.showPasswordPrompt}
                         />
                     )}
                 </div>
@@ -161,6 +136,41 @@ function CreateTimelineField(props: TimelineFieldProps) {
     );
 }
 export default CreateTimelineField;
+
+function setFieldWidth(months: Date[]) {
+    let fieldWidth: number = 0; // px width of the field dynamically calculated from the number of months displayed
+    months.forEach((month) => {
+        fieldWidth += getTotalWidth(
+            capitalizeFirstLetter(
+                month.toLocaleString("default", { month: "long" }) // Get the month name
+            ),
+            month.getFullYear()
+        );
+    });
+    return fieldWidth;
+}
+
+function setAllDates(months: Date[]){
+    let allDates: Date[] = []; // All dates to be displayed in the schedule
+    months.forEach((month) => {
+        let monthName = capitalizeFirstLetter(
+            month.toLocaleString("default", { month: "long" }) // Get the month name
+        );
+        for (
+            // Create a date for each day in the month
+            let i = 1;
+            i <= getMonthLength(monthName, month.getFullYear());
+            i++
+        ) {
+            let date = new Date(month.getFullYear(), month.getMonth(), i);
+            allDates.push(date);
+        }
+    });
+
+    return allDates;
+}
+
+
 
 export function getTotalWidth(month: string, year: number) {
     let totalWidth = dateDivLength * getMonthLength(month, year); // Get the total width of the month // The total width is the number of days in the month times the width of each date
@@ -214,13 +224,12 @@ export function handleDragEnd(
     event: any,
     btCards: React.ReactNode[],
     setBtCards: React.Dispatch<React.SetStateAction<React.ReactNode[]>>,
-    btCardsPending: React.ReactNode[],
-    setBtCardsPending: React.Dispatch<React.SetStateAction<React.ReactNode[]>>,
+    btCardsPendingHolder: BladeTaskHolder,
     updateBT: Function,
 ) {
     const { active, over } = event; // active is the element being dragged, over is the element being dragged over
     const updatedBladeTaskCards = btCards; // Get the blade tasks from the BladeTaskHolder
-    const updatedBladeTaskCardsPending = btCardsPending; // Get the pending blade tasks from the BladeTaskHolder
+    const updatedBladeTaskCardsPending = btCardsPendingHolder.getBladeTasks(); // Get the pending blade tasks from the BladeTaskHolder
 
     const { statusBT, indexBT } = findBTIndex(
         // Find the index of the blade task being dragged
@@ -279,7 +288,7 @@ export function handleDragEnd(
                 );
 
                 setBtCards(updatedBladeTaskCards); // Update the blade tasks in the BladeTaskHolder
-                setBtCardsPending(
+                btCardsPendingHolder.setBladeTasks(
                     // Update the pending blade tasks in the BladeTaskHolder
                     updatedBladeTaskCardsPending
                 );
@@ -372,7 +381,7 @@ export function handleDragEnd(
                     );
 
                     setBtCards(updatedBladeTaskCards); // Update the scheduled blade tasks in the BladeTaskHolder
-                    setBtCardsPending(
+                    btCardsPendingHolder.setBladeTasks(
                         // Update the pending blade tasks in the BladeTaskHolder
                         updatedBladeTaskCardsPending
                     );
@@ -462,15 +471,4 @@ function formatDate(date: Date) {
     return `${year}-${month}-${day}`;
 }
 
-function setFieldWidth(months: Date[]) {
-    let fieldWidth: number = 0; // px width of the field dynamically calculated from the number of months displayed
-    months.forEach((month) => {
-        fieldWidth += getTotalWidth(
-            capitalizeFirstLetter(
-                month.toLocaleString("default", { month: "long" }) // Get the month name
-            ),
-            month.getFullYear()
-        );
-    });
-    return fieldWidth;
-}
+
