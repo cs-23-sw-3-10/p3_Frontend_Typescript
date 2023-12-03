@@ -21,7 +21,7 @@ export interface BladeTaskCardProps {
     rig?: number;
     projectColor: string;
     projectId: number;
-    projectName?: string;
+    projectName: string;
     customer: string;
     taskName: string;
     id: number;
@@ -35,8 +35,6 @@ export interface BladeTaskCardProps {
 
 interface BladeTaskDraggableProps {
     style: any;
-    attachStyle: any;
-    detachStyle: any;
     id: number;
     taskName: string;
     attachPeriod: number;
@@ -131,40 +129,8 @@ function BladeTaskCard(props: BladeTaskCardProps) {
             border: props.inConflict ? "2px dashed red" : "",
         };
 
-        const attachStyle={
-            maxWidth: `${props.attachPeriod * 25}px`,
-            minWidth: `${props.attachPeriod * 25}px`,
-            position: "static",
-            height: "100%",
-            backgroundColor: `rgba(
-                0,
-                35,
-                0,
-                0.5
-            )}`,
-            justifyContent: "left",
-        }
-
-        const detachStyle={
-            maxWidth: `${props.detachPeriod * 25}px`,
-            minWidth: `${props.detachPeriod * 25}px`,
-            position: "static",
-            height: "100%",
-            backgroundColor: `rgba(
-                35,
-                0,
-                0,
-                0.5
-            )}`,
-            justifyContent: "right",
-        }
-
-
-
-        const droppableProps: BladeTaskDraggableProps = {
+        const draggableProps: BladeTaskDraggableProps = {
             style: cardStyle,
-            attachStyle: attachStyle,
-            detachStyle: detachStyle,
             id: props.id,
             taskName: props.taskName,
             enableDraggable: props.enableDraggable,
@@ -177,7 +143,7 @@ function BladeTaskCard(props: BladeTaskCardProps) {
 
         return (
             <>
-                <DraggableBladeTask {...droppableProps} />
+                <DraggableBladeTask {...draggableProps} />
                 {showContextMenu && editMode.isEditMode && (
                     <div
                         ref={contextMenuRef}
@@ -233,38 +199,8 @@ function BladeTaskCard(props: BladeTaskCardProps) {
             justifyContent: "left",
         };
 
-        const attachStyle={
-            maxWidth: `${props.attachPeriod * 25}px`,
-            minWidth: `${props.attachPeriod * 25}px`,
-            position: "static",
-            height: "100%",
-            backgroundColor: `rgba(
-                0,
-                35,
-                0,
-                0.5
-            )}`,
-            justifyContent: "left",      
-        }
-
-        const detachStyle={
-            maxWidth: `${props.detachPeriod * 25}px`,
-            minWidth: `${props.detachPeriod * 25}px`,
-            position: "static",
-            height: "100%",
-            backgroundColor: `rgba(
-                35,
-                0,
-                0,
-                0.5
-            )}`,
-            justifyContent: "right",
-        }
-
-        const droppableProps: BladeTaskDraggableProps = {
+        const draggableProps: BladeTaskDraggableProps = {
             style: cardStyle,
-            attachStyle: attachStyle,
-            detachStyle: detachStyle,
             id: props.id,
             taskName: props.taskName,
             enableDraggable: props.enableDraggable,
@@ -277,7 +213,7 @@ function BladeTaskCard(props: BladeTaskCardProps) {
 
         return (
             <>
-                <DraggableBladeTask {...droppableProps} />
+                <DraggableBladeTask {...draggableProps} />
                 {showContextMenu && (
                     <div
                         ref={contextMenuRef}
@@ -305,19 +241,36 @@ function BladeTaskCard(props: BladeTaskCardProps) {
 export default BladeTaskCard;
 
 function DraggableBladeTask(props: BladeTaskDraggableProps) {
-    const { attributes, listeners, setNodeRef, transform } = useDraggable({
-        id: props.id,
-        data: {
-            type: "BladeTaskCardProps",
-            props: props,
-        },
-        disabled: !props.enableDraggable,
-    });
+    const { attributes, listeners, setNodeRef, transform, isDragging } =
+        useDraggable({
+            id: props.id,
+            data: {
+                type: "BladeTaskCardProps",
+                props: props,
+            },
+            disabled: !props.enableDraggable,
+        });
 
     const style = {
         ...props.style,
         transform: CSS.Translate.toString(transform),
     };
+
+    if (isDragging) {
+        return (
+            <div
+                className="bladeTaskCard"
+                style={{
+                    width: props.style.width,
+                    border: "2px dashed black",
+                    gridRow: props.style.gridRow,
+                    gridColumn: props.style.gridColumn,
+                    justifyContent: "left",
+                    backgroundColor: "grey",
+                }}
+            ></div>
+        );
+    }
 
     // Attach this handler to the window object to close the context menu
     return props.shown ? (
@@ -330,19 +283,23 @@ function DraggableBladeTask(props: BladeTaskDraggableProps) {
             id={`${props.id}`}
             onContextMenu={props.setContextMenu}
         >
-           
-                {/* {used to visualize the attach period} */}
-                <div
-                    className="attachPeriod"
-                    style={props.attachStyle}
-                >attach</div>
-                <div className="BT-Name">{props.taskName}</div>
-                {/* {used to visualize the detach period} */}
-                <div
-                    className="detachPeriod"
-                    style={props.detachStyle}
-                >detach</div>
-           
+            {/* {used to visualize the attach period} */}
+            <div
+                className="attachPeriod"
+                style={{
+                    maxWidth: `${props.attachPeriod * 25}px`,
+                    minWidth: `${props.attachPeriod * 25}px`,
+                }}
+            ></div>
+            <div className="BT-Name">{props.taskName}</div>
+            {/* {used to visualize the detach period} */}
+            <div
+                className="detachPeriod"
+                style={{
+                    maxWidth: `${props.detachPeriod * 25}px`,
+                    minWidth: `${props.detachPeriod * 25}px`,
+                }}
+            ></div>
         </div>
     ) : (
         <div
@@ -366,10 +323,6 @@ interface ConflictProps {
 
 function extractConflictMessages(conflicts: ConflictProps[]) {
     const messages: string[] = [];
-
-    //For testeing
-    const loremIpsum =
-        "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque eu varius purus. Nunc laoreet neque eget porta ultricies. Nam diam enim, cursus id efficitur quis, efficitur eu ante. Integer dapibus, est non semper vehicula, quam mauris molestie nibh, a malesuada magna dui eu lectus. Donec porttitor consequat neque vitae condimentum. Praesent eleifend nisl sed odio pellentesque, in tristique lectus semper. Cras mollis, ligula sed consectetur iaculis, nisl justo ultrices nibh, vel condimentum mauris lacus non ante. Aliquam posuere eu nisl quis luctus. Vivamus mollis eu elit in mollis. Aenean ultrices porta mi nec volutpat. Fusce quis arcu venenatis, aliquet enim. ";
 
     for (let i = 0; i < conflicts.length; i++) {
         messages.push(conflicts[i].message);

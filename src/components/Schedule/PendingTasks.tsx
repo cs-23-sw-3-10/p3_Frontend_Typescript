@@ -1,15 +1,12 @@
 import "./PendingTasks.css";
 import { BladeTaskHolder } from "./BladeTaskHolder";
 import { useDroppable } from "@dnd-kit/core";
-import { rigFieldHeight } from "./RigFieldContainer";
-import { monthHeaderHeight } from "./MonthHeader";
-import { dateElementHeight } from "./OverviewDate";
-import { passwordPromptHeight } from "./ScheduleComponent";
+import { useState } from "react";
 
 const projectRowHeight=30;
 
 interface PendingTasksProps {
-    bladeTaskHolder: BladeTaskHolder;
+    cardHolder: BladeTaskHolder;
     bladeTaskCards: React.ReactNode[];
     numberOfRigs: number
     showPasswordPrompt?: boolean
@@ -20,13 +17,18 @@ function PendingTasks(props: PendingTasksProps) {
         id: "droppablePendingTasksId",
     });
 
+    const [btCardsPending, setBtCardsPending] = useState<React.ReactNode[]>(
+        props.bladeTaskCards
+    );
+
     //Array to hold names of projects with pending tasks:
     let projectsWithPendingTasks: String[] = [];
 
-    //Populate proctsWithPendingTasks
-    const cards = props.bladeTaskHolder.getBladeTasks();
 
-    cards.forEach((card: any) => {
+    btCardsPending.forEach((card: any) => {
+
+        console.log("card :",card.props.projectName)
+
         let isInProctsWithPendingTasks = false;
 
         for (let i = 0; i < projectsWithPendingTasks.length; i++) {

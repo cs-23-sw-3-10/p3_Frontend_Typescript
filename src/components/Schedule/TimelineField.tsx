@@ -1,4 +1,4 @@
-import { DndContext, DragOverlay } from "@dnd-kit/core";
+import { DndContext, DragOverlay, useDndContext } from "@dnd-kit/core";
 import CreateMonthDateContainer from "./MonthDateContainer";
 import CreateRigFieldContainer from "./RigFieldContainer";
 import MonthLengths from "./MonthLengthsEnum";
@@ -9,7 +9,7 @@ import { useMutation } from "@apollo/client";
 import { UPDATE_BT } from "../../api/mutationList";
 import PendingTasks from "./PendingTasks";
 import { createPortal } from "react-dom";
-import "./BladeTaskCard.css"
+import "./BladeTaskCard.css";
 
 type TimelineFieldProps = {
     rigs: { rigName: string; rigNumber: number }[];
@@ -24,18 +24,16 @@ export const dateDivLength = 25; // px length of the dates in the schedule
 
 function CreateTimelineField(props: TimelineFieldProps) {
     const [updateBt, { error, data }] = useMutation(UPDATE_BT);
-    
 
+    const [btCards, setBtCards] = useState<React.ReactNode[]>(props.btCards);
 
-    let fieldWidth: number = 0; // px width of the field dynamically calculated from the number of months displayed
-    props.months.forEach((month) => {
-        fieldWidth += getTotalWidth(
-            capitalizeFirstLetter(
-                month.toLocaleString("default", { month: "long" }) // Get the month name
-            ),
-            month.getFullYear()
-        );
-    });
+    const [btCardsPending, setBtCardsPending] = useState<React.ReactNode[]>(
+        props.btCardsPending
+    );
+
+    const [activeCard, setActiveCard] = useState<any>(null);
+
+    let fieldWidth: number = setFieldWidth(props.months);
 
     let allDates: Date[] = []; // All dates to be displayed in the schedule
     props.months.forEach((month) => {
@@ -70,10 +68,8 @@ function CreateTimelineField(props: TimelineFieldProps) {
         minHeight: props.rigs.length * 50 + "px",
     };
 
-    const [activeCard, setActiveCard] = useState<any>(null);
-
     // Create a BladeTaskHolder object to store the blade tasks
-    let bladeTasks = new BladeTaskHolder(props.btCards);
+    //let bladeTasks = new BladeTaskHolder(props.btCards);
     // Create a BladeTaskHolder object to store the pending blade tasks
     let bladeTasksPending = new BladeTaskHolder(props.btCardsPending);
 
@@ -86,8 +82,10 @@ function CreateTimelineField(props: TimelineFieldProps) {
                 onDragEnd={(event) => {
                     handleDragEnd(
                         event,
-                        bladeTasks,
-                        bladeTasksPending,
+                        btCards,
+                        setBtCards,
+                        btCardsPending,
+                        setBtCardsPending,
                         updateBt
                     );
                 }}
@@ -114,10 +112,8 @@ function CreateTimelineField(props: TimelineFieldProps) {
                                 allDates={allDates}
                                 fieldWidth={fieldWidth}
                                 columns={columnsOfSchedule}
-                                BladeTaskHolder={bladeTasks}
-                                BladeTaskCards={bladeTasks
-                                    .getBladeTasks()
-                                    .filter((bladeTask: React.ReactNode) => {
+                                BladeTaskCards={btCards.filter(
+                                    (bladeTask: React.ReactNode) => {
                                         //Finds the blade tasks placed on the rig
                                         if (bladeTask) {
                                             return (
@@ -127,35 +123,39 @@ function CreateTimelineField(props: TimelineFieldProps) {
                                             );
                                         }
                                         return false;
-                                    })}
+                                    }
+                                )}
                             />
                         ))}
                     </div>
                     {props.isPendingTasksIncluded && (
                         <PendingTasks
-                            bladeTaskHolder={bladeTasksPending}
-                            bladeTaskCards={bladeTasksPending.getBladeTasks()}
+                            cardHolder={bladeTasksPending}
+                            bladeTaskCards={btCardsPending}
                             numberOfRigs={props.rigs.length}
                             showPasswordPrompt={props.showPasswordPrompt}
                         />
                     )}
                 </div>
-                {createPortal(
-                 <DragOverlay>
-                    {activeCard && <BladeTaskCard
-                    duration={activeCard.duration}
-                    attachPeriod={activeCard.attachPeiod}
-                    detachPeriod={activeCard.detachPeiod}
-                    projectColor={activeCard.projectColor}
-                    projectId={activeCard.projectId}
-                    customer={activeCard.customer}
-                    taskName={activeCard.taskName}
-                    id={activeCard.id}
-                    shown={activeCard.shown}
-                    />}
-                </DragOverlay>,
-                document.body
-                    )}    
+
+                {
+                    <DragOverlay>
+                        {activeCard && (
+                            <BladeTaskCard
+                                duration={activeCard.duration}
+                                attachPeriod={activeCard.attachPeriod}
+                                detachPeriod={activeCard.detachPeriod}
+                                projectColor={activeCard.projectColor}
+                                projectName={activeCard.projectName}
+                                projectId={activeCard.projectId}
+                                customer={activeCard.customer}
+                                taskName={activeCard.taskName}
+                                id={activeCard.id}
+                                shown={activeCard.shown}
+                            />
+                        )}
+                    </DragOverlay>
+                }
             </DndContext>
         </div>
     );
@@ -201,26 +201,26 @@ function getMonthContainerKey(month: Date) {
 
 export function handleDragStart(
     event: any,
-    setActiveCard: React.Dispatch<React.SetStateAction<BladeTaskCardProps |null>>,
+    setActiveCard: React.Dispatch<
+        React.SetStateAction<BladeTaskCardProps | null>
+    >
 ) {
-
-    console.log("event: ",event);
-
-    if(event.active.data.current.type==="BladeTaskCardProps"){
-        setActiveCard(event.active.data.current.props)
+    if (event.active.data.current.type === "BladeTaskCardProps") {
+        setActiveCard(event.active.data.current.props);
     }
-
 }
 
 export function handleDragEnd(
     event: any,
-    bladeTaskHolder: BladeTaskHolder,
-    bladeTaskHolderPending: BladeTaskHolder,
-    updateBT: Function
+    btCards: React.ReactNode[],
+    setBtCards: React.Dispatch<React.SetStateAction<React.ReactNode[]>>,
+    btCardsPending: React.ReactNode[],
+    setBtCardsPending: React.Dispatch<React.SetStateAction<React.ReactNode[]>>,
+    updateBT: Function,
 ) {
     const { active, over } = event; // active is the element being dragged, over is the element being dragged over
-    const updatedBladeTaskCards = bladeTaskHolder.getBladeTasks(); // Get the blade tasks from the BladeTaskHolder
-    const updatedBladeTaskCardsPending = bladeTaskHolderPending.getBladeTasks(); // Get the pending blade tasks from the BladeTaskHolder
+    const updatedBladeTaskCards = btCards; // Get the blade tasks from the BladeTaskHolder
+    const updatedBladeTaskCardsPending = btCardsPending; // Get the pending blade tasks from the BladeTaskHolder
 
     const { statusBT, indexBT } = findBTIndex(
         // Find the index of the blade task being dragged
@@ -268,6 +268,7 @@ export function handleDragEnd(
                         detachPeriod={draggedCard.props.detachPeriod}
                         projectColor={draggedCard.props.projectColor}
                         projectId={draggedCard.props.projectId}
+                        projectName={draggedCard.props.projectName}
                         customer={draggedCard.props.customer}
                         taskName={draggedCard.props.taskName}
                         shown={draggedCard.props.shown}
@@ -277,8 +278,8 @@ export function handleDragEnd(
                     />
                 );
 
-                bladeTaskHolder.setBladeTasks(updatedBladeTaskCards); // Update the blade tasks in the BladeTaskHolder
-                bladeTaskHolderPending.setBladeTasks(
+                setBtCards(updatedBladeTaskCards); // Update the blade tasks in the BladeTaskHolder
+                setBtCardsPending(
                     // Update the pending blade tasks in the BladeTaskHolder
                     updatedBladeTaskCardsPending
                 );
@@ -330,6 +331,7 @@ export function handleDragEnd(
                                 duration={draggedCard.props.duration}
                                 projectColor={draggedCard.props.projectColor}
                                 projectId={draggedCard.props.projectId}
+                                projectName={draggedCard.props.projectName}
                                 customer={draggedCard.props.customer}
                                 taskName={draggedCard.props.taskName}
                                 startDate={new Date(overDate)}
@@ -344,7 +346,7 @@ export function handleDragEnd(
                             />
                         );
 
-                    bladeTaskHolder.setBladeTasks(updatedBladeTaskCards); // Update the scheduled blade tasks in the BladeTaskHolder
+                    setBtCards(updatedBladeTaskCards); // Update the scheduled blade tasks in the BladeTaskHolder
                 } else {
                     updatedBladeTaskCardsPending.splice(indexBT, 1);
 
@@ -356,6 +358,7 @@ export function handleDragEnd(
                             duration={draggedCard.props.duration}
                             projectColor={draggedCard.props.projectColor}
                             projectId={draggedCard.props.projectId}
+                            projectName={draggedCard.props.projectName}
                             customer={draggedCard.props.customer}
                             taskName={draggedCard.props.taskName}
                             shown={draggedCard.props.shown}
@@ -368,8 +371,8 @@ export function handleDragEnd(
                         />
                     );
 
-                    bladeTaskHolder.setBladeTasks(updatedBladeTaskCards); // Update the scheduled blade tasks in the BladeTaskHolder
-                    bladeTaskHolderPending.setBladeTasks(
+                    setBtCards(updatedBladeTaskCards); // Update the scheduled blade tasks in the BladeTaskHolder
+                    setBtCardsPending(
                         // Update the pending blade tasks in the BladeTaskHolder
                         updatedBladeTaskCardsPending
                     );
@@ -457,4 +460,17 @@ function formatDate(date: Date) {
     const day = date.getDate().toString().padStart(2, "0");
 
     return `${year}-${month}-${day}`;
+}
+
+function setFieldWidth(months: Date[]) {
+    let fieldWidth: number = 0; // px width of the field dynamically calculated from the number of months displayed
+    months.forEach((month) => {
+        fieldWidth += getTotalWidth(
+            capitalizeFirstLetter(
+                month.toLocaleString("default", { month: "long" }) // Get the month name
+            ),
+            month.getFullYear()
+        );
+    });
+    return fieldWidth;
 }

@@ -138,6 +138,7 @@ function BladeProjectPage() {
                                 duration={bladeTask.duration}
                                 projectColor={bladeTask.bladeProject.color}
                                 projectId={bladeTask.bladeProject.id}
+                                projectName={bladeTask.bladeProject.projectName}
                                 customer={bladeTask.bladeProject.customer}
                                 taskName={bladeTask.taskName}
                                 startDate={new Date(bladeTask.startDate)}

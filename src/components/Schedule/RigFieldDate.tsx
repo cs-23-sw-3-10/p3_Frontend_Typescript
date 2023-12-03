@@ -1,6 +1,4 @@
 import { useDroppable } from "@dnd-kit/core";
-import { BladeTaskHolder } from "./BladeTaskHolder";
-import React from "react";
 
 interface RigFieldDateDroppableProps {
     className: "RigFieldDate";
@@ -8,7 +6,6 @@ interface RigFieldDateDroppableProps {
     rig: string;
     date: Date;
     style: RigFieldDateStyle;
-    bladeTaskHolder: BladeTaskHolder;
 }
 
 interface RigFieldDateStyle {
@@ -20,7 +17,6 @@ interface RigFieldDateStyle {
 type RigFieldDateProps = {
     rig: string;
     date: Date;
-    bladeTaskHolder: BladeTaskHolder;
 };
 
 function CreateRigFieldDate(props: RigFieldDateProps) {
@@ -42,7 +38,6 @@ function CreateRigFieldDate(props: RigFieldDateProps) {
         rig: props.rig,
         date: props.date,
         style: dateStyle,
-        bladeTaskHolder: props.bladeTaskHolder,
     };
 
     return Droppable(dateProps); // Create a droppable date

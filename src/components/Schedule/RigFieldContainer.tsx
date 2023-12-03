@@ -12,7 +12,6 @@ type RigFieldContainerProps = {
     viewMonths: Date[];
     fieldWidth: number;
     columns: string; // The columns of the schedule
-    BladeTaskHolder: BladeTaskHolder;
     BladeTaskCards: React.ReactNode[];
 };
 
@@ -65,6 +64,7 @@ function CreateRigFieldContainer(props: RigFieldContainerProps) {
                 projectId={
                     (bladeTask as React.ReactElement<any>).props.projectId
                 }
+                projectName={(bladeTask as React.ReactElement<any>).props.projectName}
                 customer={(bladeTask as React.ReactElement<any>).props.customer}
                 taskName={(bladeTask as React.ReactElement<any>).props.taskName}
                 attachPeriod={
@@ -90,7 +90,6 @@ function CreateRigFieldContainer(props: RigFieldContainerProps) {
                         key={getRigDateKey(props.rig, date)}
                         rig={props.rig}
                         date={date}
-                        bladeTaskHolder={props.BladeTaskHolder}
                     />
                 ) // Create a date for each day in the month
             )}
