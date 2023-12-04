@@ -26,8 +26,6 @@ function PendingTasks(props: PendingTasksProps) {
     const btCardsPending = props.btCardsPendingHolder.getBladeTasks();
 
     btCardsPending.forEach((card: any) => {
-        console.log("card.props.taskName :",card.props.taskName);
-        console.log("card.props.shown :",card.props.shown);
         let isInProjectsWithPendingTasks = false;
 
         for (let i = 0; i < projectsWithPendingTasks.length; i++) {
@@ -64,7 +62,6 @@ function PendingTasks(props: PendingTasksProps) {
                         style={pendingTasksStyle}
                     >
                         {projectsWithPendingTasks.map((projectNameAndFilter) => {
-                            console.log(projectNameAndFilter.projectName)
                             return (
                                 <div
                                     key={String(projectNameAndFilter.projectName) + "pending"}
