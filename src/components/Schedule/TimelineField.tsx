@@ -54,9 +54,7 @@ function CreateTimelineField(props: TimelineFieldProps) {
     };
 
     const handleScroll: ReactEventHandler<HTMLDivElement> = (event) => {
-        const { scrollLeft, scrollWidth, clientWidth } = event.currentTarget;
-        console.log("scrollLeft :",scrollLeft);
-        console.log("scrollWidth :", scrollWidth);
+        const { scrollLeft} = event.currentTarget;
         setScrollTranslation(scrollLeft);
       };
 
