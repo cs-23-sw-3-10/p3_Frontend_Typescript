@@ -284,8 +284,7 @@ function DisplayComponent(props: DisplayProps) {
                     }}
                 >
                     <option value="None">None</option>
-                    <option value="Goldwind">Goldwind</option>
-                    <option value="Suzlon">Suzlon</option>
+                    {customers.map((customer) => FilterCustomers(customer))}
                 </select>
                <SwitchComponent setShowPasswordPrompt={props.setShowPasswordPrompt} />
                {localStorage.getItem('token') && <StyledButton onClick={()=>{localStorage.removeItem('token'); window.location.reload();}}> Logout </StyledButton>}
