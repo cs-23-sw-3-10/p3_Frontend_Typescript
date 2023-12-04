@@ -14,7 +14,7 @@
 
 .pendingTasksContainerInner{
     display: grid;
-    grid-template-columns: min-content auto;
+    grid-template-columns: max-content auto;
     column-gap: 10px;
     row-gap: 3px;
 }

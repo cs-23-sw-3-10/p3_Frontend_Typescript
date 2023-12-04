@@ -25,8 +25,6 @@ function PendingTasks(props: PendingTasksProps) {
 
     const btCardsPending = props.btCardsPendingHolder.getBladeTasks();
 
-    console.log("btCardsPending  :",btCardsPending );
-
     btCardsPending.forEach((card: any) => {
         console.log("card.props.taskName :",card.props.taskName);
         console.log("card.props.shown :",card.props.shown);
@@ -78,6 +76,7 @@ function PendingTasks(props: PendingTasksProps) {
                                     }}
                                 >
                                     {projectNameAndFilter.shown &&projectNameAndFilter.projectName}
+                                    {!projectNameAndFilter.shown && "Hidden BP"}
                                 </div>
                             );
                         })}
