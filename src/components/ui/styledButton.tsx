@@ -1,4 +1,5 @@
 import React, { ReactNode, ButtonHTMLAttributes } from "react";
+import "./styledButton.css";
 
 type StyledButtonProps = {
     children: ReactNode; // You can define what types of children the button can have
@@ -7,7 +8,7 @@ type StyledButtonProps = {
 const StyledButton: React.FC<StyledButtonProps> = ({ children, ...props }) => {
     return (
         <button
-            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded capitalize "
+            className="styledButton"
             {...props}
         >
             {children}

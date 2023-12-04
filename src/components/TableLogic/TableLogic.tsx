@@ -4,6 +4,7 @@ import StyledButton from "../ui/styledButton";
 import { useCollapse } from "react-collapsed";
 import { Input } from "../ui/input";
 import { useContext } from "react";
+import "./TableLogic.css";
 
 import {
     ColumnDef,
@@ -127,7 +128,8 @@ export function TableLogic<TData, TValue>({
     return (
         <div>
             {/* global filtering textfield*/}
-            <div className="flex items-center py-4" >
+            <div className="tableButtons" >
+                <div className="tableButtonsleft">
                 <Input
                     placeholder="Filter by column"
                     value={filtering}
@@ -140,9 +142,9 @@ export function TableLogic<TData, TValue>({
                     {/* popover for changing column visibility*/}
                     <Popover>
                         <PopoverTrigger asChild>
-                            <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 r-100 capitalize">
+                            <StyledButton>
                                 Change Filters
-                            </button>
+                            </StyledButton>
                         </PopoverTrigger>
                         <PopoverContent className="bg-white">
                             {/* renders a checkbox that changes the visibility of different columns in the table. 
@@ -193,6 +195,7 @@ export function TableLogic<TData, TValue>({
                     <StyledButton >
                         Create {window.location.pathname.split("/")[1]}
                     </StyledButton>
+                </div>
                 </div>
                 <div>
                     <SwitchComponent setShowPasswordPrompt={setShowPasswordPrompt}/>
@@ -302,13 +305,12 @@ export function TableLogic<TData, TValue>({
                     Next
                 </StyledButton>
                 <div>
-                 <button
-                 className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-3 r-100 capitalize"
+                 <StyledButton
                     onClick={handlePageSizeChange}
                     disabled={!table.getCanNextPage()}
                 >
                     Set Page Size
-                </button>
+                </StyledButton>
                 <input
                     className="border border-gray-300 w-20 m-0 py-2 px-3 font-sm shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500"
                     type="text"

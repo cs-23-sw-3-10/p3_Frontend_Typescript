@@ -38,7 +38,6 @@ function App() {
                     </Routes>
 
                 </div>
-                <button onClick={()=>{localStorage.clear()}}>Clear auth</button>
                     </EditModeProvider>
             </div>
         </>

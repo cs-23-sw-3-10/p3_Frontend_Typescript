@@ -69,7 +69,10 @@ export const NavBar = () => {
                             </span>
                             <p>Resources</p>
                         </button>
+
                     </Link>: null}
+                <button onClick={()=>{localStorage.clear()}}>Clear auth</button>
+
                 </nav>
             </div>
         </nav>

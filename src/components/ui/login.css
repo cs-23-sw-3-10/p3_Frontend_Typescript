@@ -8,14 +8,14 @@
   height: 400px;
   width: 400px;
   border-width: 2px;
-    border-color: #4a90e2;
+  border-color: #4a90e2;
   z-index: 10000; /* Ensure it's above other elements */
   background-color: #ffffff;
   font-family: Arial, sans-serif;
-  top : 20%;
-    left : 40%;
+  top: 20%;
+  left: 40%;
 
-    border-radius: 10px;
+  border-radius: 10px;
 }
 
 .close_button {
@@ -44,8 +44,6 @@
   margin-bottom: 20px;
 }
 
-
-
 /* Style for the form */
 .loginContainer form {
   display: flex;
@@ -61,7 +59,8 @@
 }
 
 /* Style for input fields */
-.loginContainer input[type="text"], input[type="password"] {
+.loginContainer input[type="text"],
+input[type="password"] {
   padding: 10px;
   margin-bottom: 15px;
   border: 1px solid #ddd;
@@ -70,7 +69,8 @@
 }
 
 /* Change focus border color */
-.loginContainer  input[type="text"]:focus, input[type="password"]:focus {
+.loginContainer input[type="text"]:focus,
+input[type="password"]:focus {
   border-color: #4a90e2;
   outline: none;
 }
@@ -88,6 +88,5 @@
 
 /* Hover effect for the button */
 .loginContainer button:hover {
-
   background-color: #357ab8;
 }
