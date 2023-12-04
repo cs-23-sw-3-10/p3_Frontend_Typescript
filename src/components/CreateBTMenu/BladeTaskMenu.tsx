@@ -38,6 +38,7 @@ function BladeTaskMenu(props: BladeTaskMenuProps) {
         loading: btLoading,
         error: btError,
         data: btData,
+        refetch,
     } = useQuery(GET_ALL_BT);
 
     //All the states for the form -> Inserted into the BT-order as the user fills the form out
@@ -199,6 +200,7 @@ function BladeTaskMenu(props: BladeTaskMenuProps) {
         } catch (error) {
             console.log(error);
         }
+        refetch();
     };
 
     //Resets all field to their initial value
@@ -410,7 +412,6 @@ function ErrorMessageContainer({
         </div>
     );
 }
-
 export default BladeTaskMenu;
 
 function checkBTEditOverlaps(
@@ -429,16 +430,22 @@ function checkBTEditOverlaps(
         console.log("Invalid ID: id is NaN");
         return true;
     }
+    console.log("btId: " + projectId);
+    console.log("rig: " + rig);
     for (let i = 0; i < allBT.length; i++) {
         const bt = allBT[i];
         let btStartDate = new Date(bt.startDate);
         let btEndDate = new Date(bt.endDate);
+        console.log(" her Id: " + bt.bladeProject.id);
+        console.log(" her rig: " + bt.testRig);
 
         if (
             parseInt(bt.id) !== btId &&
-            (bt.testRig === rig || bt.bladeProject.bladeProjectId === projectId) &&
-            ((btStartDate <= endDate && btStartDate >= startDate) ||
-                (btEndDate >= startDate && btEndDate <= endDate))
+            (bt.testRig === rig || bt.bladeProject.id === projectId) &&
+            (((btStartDate <= endDate && btStartDate >= startDate) ||
+                (btEndDate >= startDate && btEndDate <= endDate)) || 
+                ((startDate >= btStartDate && startDate <= btEndDate) || 
+                (endDate >= btStartDate && endDate <= btEndDate)))
         ) {
             return true;
         }
@@ -462,9 +469,11 @@ function checkBTCreationOverlaps(
         let btEndDate = new Date(bt.endDate);
 
         if (
-            (bt.testRig === rig || bt.bladeProject.bladeProjectId === projectId) &&
-            ((btStartDate <= endDate && btStartDate >= startDate) ||
-                (btEndDate >= startDate && btEndDate <= endDate))
+            (bt.testRig === rig || bt.bladeProject.id === projectId) &&
+            (((btStartDate <= endDate && btStartDate >= startDate) ||
+                (btEndDate >= startDate && btEndDate <= endDate)) || 
+                ((startDate >= btStartDate && startDate <= btEndDate) || 
+                (endDate >= btStartDate && endDate <= btEndDate)))
         ) {
             return true;
         }

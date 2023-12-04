@@ -10,7 +10,7 @@ function DurationSelector({duration, setDuration, inErrorChart, setInErrorChart}
                 className={inErrorChart.duration ? "error" : "item duration_select input"}
                 name="duration_select"
                 placeholder='Days'
-                value={duration}
+                value={isNaN(duration) ? 0 : duration}
                 onChange={(e) => setDuration(parseInt(e.currentTarget.value))}
                 onBlur={(e) => handleDurationValidation(e, setDuration, inErrorChart, setInErrorChart)}
             />
