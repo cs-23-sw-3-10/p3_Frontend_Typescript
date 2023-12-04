@@ -1,6 +1,5 @@
 import CreateRigFieldDate from "./RigFieldDate";
 import React from "react";
-import { BladeTaskHolder } from "./BladeTaskHolder";
 import BladeTaskCard from "./BladeTaskCard";
 
 export const rigFieldHeight = 50;
