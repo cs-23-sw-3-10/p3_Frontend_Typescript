@@ -1,6 +1,6 @@
 import { useDroppable } from "@dnd-kit/core";
 import { BladeTaskHolder } from "./BladeTaskHolder";
-import React from "react";
+import React, { useMemo } from "react";
 
 interface RigFieldDateDroppableProps {
     className: "RigFieldDate";
@@ -38,8 +38,8 @@ function CreateRigFieldDate(props: RigFieldDateProps) {
         backgroundColor: weekDay === 0 || weekDay === 6 ? "lightgrey" : "white", // Gray out weekends
     };
 
-    const dateProps: RigFieldDateDroppableProps = {
-        className: "RigFieldDate",
+    const dateProps: RigFieldDateDroppableProps = useMemo(() => {
+        return{className: "RigFieldDate",
         id: idSTR,
         rig: props.rig,
         date: props.date,
@@ -47,6 +47,7 @@ function CreateRigFieldDate(props: RigFieldDateProps) {
         bladeTaskHolder: props.bladeTaskHolder,
         setDragging: props.setDragging,
     };
+}, [props.rig, props.date]);//only render when these props change
 
     return Droppable(dateProps); // Create a droppable date
 }
