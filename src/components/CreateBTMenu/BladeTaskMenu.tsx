@@ -1,7 +1,6 @@
 import './BladeTaskMenu.css';
 import ProjectSelector from './ProjectSelector';
 import TaskNameSelector from './TaskNameSelector';
-import TestTypeSelector from './TestTypeSelector';
 import DurationSelector from './DurationSelecter';
 import StartDateSelector from './StartDateSelector';
 import TestRigSelector from './TestRigSelector';
@@ -10,7 +9,7 @@ import DetachPeriodSelector from './DetachPeriodSelector';
 import EquipmentSelectionMenu from './EquipmentSelector';
 import EmployeesMenu from './EmployeesMenu';
 import { ResourceOrderContext } from './BladeTaskOrderContext';
-import { useState, useEffect } from 'react';
+import { useState} from 'react';
 import { BTOrder, InErrorChart, ResourceOrder } from "./BTMenuTypes";
 import EquipmentList from './EquipmentList';
 import { useMutation, useQuery } from "@apollo/client";
@@ -57,7 +56,7 @@ function BladeTaskMenu(props: BladeTaskMenuProps) {
             : props.inputs!.startDate
     ); //Sets the date to be the current day as initial value;
     const [duration, setDuration] = useState(
-        creator ? 0 : props.inputs!.duration
+        creator ? 0 : (props.inputs!.duration - props.inputs!.attachPeriod - props.inputs!.detachPeriod)
     );
     const [attachPeriod, setAttachPeriod] = useState(
         creator ? 0 : props.inputs!.attachPeriod
@@ -430,19 +429,20 @@ function checkBTEditOverlaps(
         console.log("Invalid ID: id is NaN");
         return true;
     }
-    allBT.forEach((bt: any) => {
+    for (let i = 0; i < allBT.length; i++) {
+        const bt = allBT[i];
         let btStartDate = new Date(bt.startDate);
         let btEndDate = new Date(bt.endDate);
-        
+
         if (
             parseInt(bt.id) !== btId &&
-            (bt.testRig === rig || bt.bladeProject.id === projectId) &&
+            (bt.testRig === rig || bt.bladeProject.bladeProjectId === projectId) &&
             ((btStartDate <= endDate && btStartDate >= startDate) ||
                 (btEndDate >= startDate && btEndDate <= endDate))
         ) {
             return true;
         }
-    });
+    }
     return false;
 }
 function checkBTCreationOverlaps(
@@ -452,12 +452,15 @@ function checkBTCreationOverlaps(
     projectId: string,
     rig: number
 ) {
+    let overlaps = false;
     if (startDate > endDate) {
         return true;
     }
-    allBT.forEach((bt: any) => {
+    for (let i = 0; i < allBT.length; i++) {
+        const bt = allBT[i];
         let btStartDate = new Date(bt.startDate);
         let btEndDate = new Date(bt.endDate);
+
         if (
             (bt.testRig === rig || bt.bladeProject.bladeProjectId === projectId) &&
             ((btStartDate <= endDate && btStartDate >= startDate) ||
@@ -465,6 +468,6 @@ function checkBTCreationOverlaps(
         ) {
             return true;
         }
-    });
-    return false;
+    }
+    return overlaps;
 }
