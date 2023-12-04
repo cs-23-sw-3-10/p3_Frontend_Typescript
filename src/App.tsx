@@ -9,20 +9,21 @@ import BTPage from "./components/BladeTask/BladeTaskPage";
 import BladeProjectPage from "./components/Projects/BladeProjectPage";
 
 
+
 import { EditModeProvider } from "./EditModeContext";
 
 
 
 
-function App() {
 
- 
+function App() {
+    
     return (
         <>
             <div className="app-container">
+                    <EditModeProvider>
                 <NavBar />
                 <div className="content-container">
-                    <EditModeProvider>
                     <Routes>
 
                         <Route path="/" element={<ScheduleComponent/>} />
@@ -35,10 +36,10 @@ function App() {
 
                         <Route path="*" element={<Navigate to="/" />} />
                     </Routes>
-                    </EditModeProvider>
 
                 </div>
                 <button onClick={()=>{localStorage.clear()}}>Clear auth</button>
+                    </EditModeProvider>
             </div>
         </>
     );
