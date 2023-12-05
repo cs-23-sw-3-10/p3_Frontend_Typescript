@@ -302,7 +302,7 @@ function DisplayComponent(props: DisplayProps) {
                     btCards={btCards}
                     btCardsPending={btCardsPending}
                     showPasswordPrompt={props.showPasswordPrompt}
-                    isPendingTasksIncluded={true}
+                    isPendingTasksIncluded={editMode.isEditMode}
                 />
             </div>
             {editMode.isEditMode ? <CreateAdditionalContent /> : null}

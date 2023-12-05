@@ -178,3 +178,12 @@ mutation DeleteEngineer($name: String!) {
     }
 }
 `;
+
+export const CLONE_AND_REPLACE = gql`
+mutation CloneScheduleAndReplace {
+        cloneScheduleAndReplace {
+            id
+            isActive
+        }
+    }
+`;
