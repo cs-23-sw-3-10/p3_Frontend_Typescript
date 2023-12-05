@@ -3,10 +3,15 @@ import EngineerTable from './EngineerTable';
 import EquipmentTable from './EquipmentTable';
 import TechnicianTable from './TechnicianTable';
 import './Ressource.css'
+import { useEditModeContext } from "../../EditModeContext";
 
 export default function ResourceTable() {
+    let editMode = useEditModeContext();
+
     return (
         <div className='resource-table-container'>
+        {((localStorage.getItem('token') !== null) && (editMode.isEditMode)) ? 
+        <div>
             <h1 className='h1-style'> Ressources</h1>
             <h2 className='h2-style'>Add, update or remove a ressource to/from the database</h2>
             <p className='p-style'>
@@ -26,6 +31,8 @@ export default function ResourceTable() {
                     <EquipmentTable/>
                 </div>
             </div>
+            </div>
+        : <p>To Add, update or remove please enter edit mode</p>}
         </div>
     );
 }

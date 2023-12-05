@@ -1,7 +1,6 @@
 import './BladeTaskMenu.css';
 import ProjectSelector from './ProjectSelector';
 import TaskNameSelector from './TaskNameSelector';
-import TestTypeSelector from './TestTypeSelector';
 import DurationSelector from './DurationSelecter';
 import StartDateSelector from './StartDateSelector';
 import TestRigSelector from './TestRigSelector';
@@ -10,7 +9,7 @@ import DetachPeriodSelector from './DetachPeriodSelector';
 import EquipmentSelectionMenu from './EquipmentSelector';
 import EmployeesMenu from './EmployeesMenu';
 import { ResourceOrderContext } from './BladeTaskOrderContext';
-import { useState, useEffect } from 'react';
+import { useState} from 'react';
 import { BTOrder, InErrorChart, ResourceOrder } from "./BTMenuTypes";
 import EquipmentList from './EquipmentList';
 import { useMutation, useQuery } from "@apollo/client";
@@ -39,6 +38,7 @@ function BladeTaskMenu(props: BladeTaskMenuProps) {
         loading: btLoading,
         error: btError,
         data: btData,
+        refetch,
     } = useQuery(GET_ALL_BT);
 
     //All the states for the form -> Inserted into the BT-order as the user fills the form out
@@ -54,10 +54,10 @@ function BladeTaskMenu(props: BladeTaskMenuProps) {
     const [startDate, setStartDate] = useState(
         creator
             ? new Date().toISOString().split("T")[0]
-            : props.inputs!.startDate
+            : (convertStartDateFromDB(props.inputs!.startDate, props.inputs!.attachPeriod))
     ); //Sets the date to be the current day as initial value;
     const [duration, setDuration] = useState(
-        creator ? 0 : props.inputs!.duration
+        creator ? 0 : (props.inputs!.duration - props.inputs!.attachPeriod - props.inputs!.detachPeriod)
     );
     const [attachPeriod, setAttachPeriod] = useState(
         creator ? 0 : props.inputs!.attachPeriod
@@ -114,18 +114,20 @@ function BladeTaskMenu(props: BladeTaskMenuProps) {
     //Other fields are optional
     const handleSubmit = async () => {
         const submittedStartDate = new Date(startDate);
-        const submittedEndDate = new Date(
-            submittedStartDate.getFullYear(),
-            submittedStartDate.getMonth(),
-            submittedStartDate.getDate() + duration
+        const realStartDate = convertStartDateToDB(submittedStartDate, attachPeriod);
+        const dbStartDate = new Date(realStartDate.getFullYear(), realStartDate.getMonth(), realStartDate.getDate() + 1).toISOString().split("T")[0];
+        const realEndDate = new Date(
+            realStartDate.getFullYear(),
+            realStartDate.getMonth(),
+            realStartDate.getDate() + duration + attachPeriod + detachPeriod
         );
         try {
             if (props.creator) {
                 if (
                     !checkBTCreationOverlaps( //check if the created blade task overlaps with another blade task
                         allBT,
-                        submittedStartDate,
-                        submittedEndDate,
+                        realStartDate,
+                        realEndDate,
                         bladeProjectId,
                         testRig
                     )
@@ -138,7 +140,7 @@ function BladeTaskMenu(props: BladeTaskMenuProps) {
                                     bladeProjectId: bladeProjectId,
                                     taskName: taskName,
                                     testType: testType,
-                                    startDate: startDate,
+                                    startDate: dbStartDate,
                                     duration: duration,
                                     attachPeriod: attachPeriod,
                                     detachPeriod: detachPeriod,
@@ -160,8 +162,8 @@ function BladeTaskMenu(props: BladeTaskMenuProps) {
                 if (
                     !checkBTEditOverlaps( //check if the edited blade task overlaps with another blade task
                         allBT,
-                        submittedStartDate,
-                        submittedEndDate,
+                        realStartDate,
+                        realEndDate,
                         parseInt(props.btId ? props.btId.toString() : "NaN"),
                         bladeProjectId,
                         testRig
@@ -175,7 +177,7 @@ function BladeTaskMenu(props: BladeTaskMenuProps) {
                                     bladeProjectId: bladeProjectId,
                                     taskName: taskName,
                                     testType: testType,
-                                    startDate: startDate,
+                                    startDate: dbStartDate,
                                     duration: duration,
                                     attachPeriod: attachPeriod,
                                     detachPeriod: detachPeriod,
@@ -200,6 +202,7 @@ function BladeTaskMenu(props: BladeTaskMenuProps) {
         } catch (error) {
             console.log(error);
         }
+        refetch();
     };
 
     //Resets all field to their initial value
@@ -413,7 +416,6 @@ function ErrorMessageContainer({
         </div>
     );
 }
-
 export default BladeTaskMenu;
 
 function checkBTEditOverlaps(
@@ -439,9 +441,11 @@ function checkBTEditOverlaps(
 
         if (
             parseInt(bt.id) !== btId &&
-            (bt.testRig === rig || bt.bladeProject.bladeProjectId === projectId) &&
-            ((btStartDate <= endDate && btStartDate >= startDate) ||
-                (btEndDate >= startDate && btEndDate <= endDate))
+            (bt.testRig === rig || bt.bladeProject.id === projectId) &&
+            (((btStartDate <= endDate && btStartDate >= startDate) ||
+                (btEndDate >= startDate && btEndDate <= endDate)) || 
+                ((startDate >= btStartDate && startDate <= btEndDate) || 
+                (endDate >= btStartDate && endDate <= btEndDate)))
         ) {
             return true;
         }
@@ -465,12 +469,28 @@ function checkBTCreationOverlaps(
         let btEndDate = new Date(bt.endDate);
 
         if (
-            (bt.testRig === rig || bt.bladeProject.bladeProjectId === projectId) &&
-            ((btStartDate <= endDate && btStartDate >= startDate) ||
-                (btEndDate >= startDate && btEndDate <= endDate))
+            (bt.testRig === rig || bt.bladeProject.id === projectId) &&
+            (((btStartDate <= endDate && btStartDate >= startDate) ||
+                (btEndDate >= startDate && btEndDate <= endDate)) || 
+                ((startDate >= btStartDate && startDate <= btEndDate) || 
+                (endDate >= btStartDate && endDate <= btEndDate)))
         ) {
             return true;
         }
     }
     return overlaps;
+}
+
+function convertStartDateFromDB(startDate: string, attachPeriod: number) {
+    let date = new Date(startDate);
+    let newStartDate = date.getDate() + 1 + attachPeriod; //the date is zero indexed
+    let realDate = new Date(date.getFullYear(), date.getMonth(), newStartDate).toISOString().split("T")[0];
+    return realDate;
+}
+
+function convertStartDateToDB(startDate: Date, attachPeriod: number) {
+    let date = new Date(startDate);
+    let newStartDate = date.getDate() - attachPeriod;
+    let realDate = new Date(date.getFullYear(), date.getMonth(), newStartDate);
+    return realDate;
 }

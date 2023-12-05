@@ -1,12 +1,14 @@
 import React, { useState } from "react";
 import "./NavBar.css";
 import { Link } from "react-router-dom";
+import { useEditModeContext } from "../../EditModeContext";
 
 //Items in the navigation bar. It is not used directly, anymore.
 //const navBarItems = ["calendar_month", "data_table", "manufacturing"];
 
 export const NavBar = () => {
     const [isOpen, setIsOpen] = useState(false);
+    const editMode = useEditModeContext();
     return (
         <nav className={`navBar ${isOpen ? "open" : ""}`}>
             <div className="navBarInner">
@@ -59,6 +61,7 @@ export const NavBar = () => {
                             <p>Blade Tasks</p>
                         </button>
                     </Link>
+                    {editMode.isEditMode ?
                     <Link to="/resources">
                         <button type="button" className="navBarButton">
                             <span className="material-symbols-outlined">
@@ -66,7 +69,10 @@ export const NavBar = () => {
                             </span>
                             <p>Resources</p>
                         </button>
-                    </Link>
+
+                    </Link>: null}
+                <button onClick={()=>{localStorage.clear()}}>Clear auth</button>
+
                 </nav>
             </div>
         </nav>

@@ -2,6 +2,7 @@ import BladeTaskMenu from "../CreateBTMenu/BladeTaskMenu";
 import { BTOrder, ResourceOrder } from "../CreateBTMenu/BTMenuTypes";
 import { useQuery } from "@apollo/client";
 import { GET_BT_WITH_ID } from "../../api/queryList";
+import "./EditBTComponent.css";
 
 interface EditBTComponentProps {
     bladeTaskID: number;

@@ -39,6 +39,10 @@ function DisplayComponent(props: DisplayProps) {
     ); // State to store the selected date
     const [numberOfMonths, setNumberOfMonths] = useState(3); // State to store the number of months to display
 
+    const currentMonth = new Date().toISOString().slice(0, 7);
+
+    const [selectedMonth, setSelectedMonth] = useState(currentMonth);
+
     const [dates, setDates] = useState(
         getMonthsInView(currentDate, numberOfMonths)
     ); // State to store the months to display
@@ -50,12 +54,13 @@ function DisplayComponent(props: DisplayProps) {
 
         // Explicitly assert the type to HTMLInputElement and acces value
         const dateInput = (
-            form.elements.namedItem("dateInput") as HTMLInputElement
+            form.elements.namedItem("monthInput") as HTMLInputElement
         )?.value;
         const numberInput = (
             form.elements.namedItem("numberInput") as HTMLInputElement
         )?.value;
 
+        setSelectedMonth(dateInput);
         setSelectedDate(dateInput);
         setNumberOfMonths(parseInt(numberInput));
         goTo(dateInput, parseInt(numberInput));
@@ -247,25 +252,23 @@ function DisplayComponent(props: DisplayProps) {
                         handleViewChange(e);
                     }}
                 >
-                    <label htmlFor="dateInput" className="text-sm">
-                        Date:
-                    </label>
                     <input
-                        name="dateInput"
-                        type="date"
-                        defaultValue={selectedDate}
+                        name="monthInput"
+                        type="month"
+                        defaultValue={selectedMonth}
                     />
                     <label htmlFor="numberInput" className="text-sm">
                         Months shown:
                     </label>
                     <input
+                        className="numberMonthsInput"
                         name="numberInput"
                         type="number"
                         defaultValue={numberOfMonths}
                         min="2"
                         max="24"
                     />
-                    <input type="submit" value={"Go To"} />
+                    <input className="goButton" type="submit" value={"Go To"} />
                 </form>
             </div>
             {editMode.isEditMode ? (
@@ -284,8 +287,7 @@ function DisplayComponent(props: DisplayProps) {
                     }}
                 >
                     <option value="None">None</option>
-                    <option value="Goldwind">Goldwind</option>
-                    <option value="Suzlon">Suzlon</option>
+                    {customers.map((customer) => FilterCustomers(customer))}
                 </select>
                <SwitchComponent setShowPasswordPrompt={props.setShowPasswordPrompt} />
                {localStorage.getItem('token') && <StyledButton onClick={()=>{localStorage.removeItem('token'); window.location.reload();}}> Logout </StyledButton>}
