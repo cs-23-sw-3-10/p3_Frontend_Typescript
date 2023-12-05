@@ -187,3 +187,12 @@ mutation CloneScheduleAndReplace {
         }
     }
 `;
+
+export const DISCARD_EDIT_CHANGES = gql`
+mutation discardEditChanges{
+  discardEditChanges{
+            id
+            isActive
+        }
+    }
+`;

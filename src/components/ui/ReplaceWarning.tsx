@@ -2,6 +2,7 @@ import { useMutation, useQuery } from "@apollo/client";
 import "./ReplaceWarning.css";
 import React, { useState } from "react";
 import { CLONE_AND_REPLACE } from "../../api/mutationList";
+import { DISCARD_EDIT_CHANGES } from "../../api/mutationList";
 
 type ReplaceWarningProps = {
     mode: string;
@@ -9,7 +10,9 @@ type ReplaceWarningProps = {
 };
 
 function ReplaceWarning({ mode, openstate }: ReplaceWarningProps) {
-    const [cloneScheduleAndReplace, { error, data }] = useMutation(CLONE_AND_REPLACE);
+    const [cloneScheduleAndReplace] = useMutation(CLONE_AND_REPLACE);
+    const [discardEditChanges] = useMutation(DISCARD_EDIT_CHANGES);
+
     const [Confirmation, setConfirmation] = useState("");
 
     function handleReplaceScheduleSubmit(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
@@ -21,6 +24,7 @@ function ReplaceWarning({ mode, openstate }: ReplaceWarningProps) {
             else
             {
              console.log("Discard changes");
+             discardEditChanges();
             }
             openstate("");
         } else {
