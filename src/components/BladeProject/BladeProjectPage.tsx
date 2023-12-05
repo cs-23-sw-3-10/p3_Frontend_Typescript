@@ -91,14 +91,13 @@ function BladeProjectPage() {
     }
 
 
-    let DataForScreen;
+    let dataForScreen;
     if(editMode.isEditMode === false){
-        DataForScreen = ScheduleData.filter((scheduleIsActiveCheck: any) => scheduleIsActiveCheck.id === "1")
-        DataForScreen = DataForScreen[0].bladeProject
+        dataForScreen = ScheduleData.filter((scheduleIsActiveCheck: any) => scheduleIsActiveCheck.id === "1")
+        dataForScreen = dataForScreen[0].bladeProject
     }
     else {
-        DataForScreen = ScheduleData.filter((scheduleIsActiveCheck: any) => scheduleIsActiveCheck.id === "2")
-        DataForScreen = DataForScreen[0].bladeProject
+        dataForScreen = BPData
     }
 
     const togglePopup = () => {
@@ -115,7 +114,7 @@ function BladeProjectPage() {
         <>
         <TableLogic
             columns={getColumns(setShowPopup, setChoosenBP)}
-            data={DataForScreen}
+            data={dataForScreen}
             renderExpandedComponent={(row) => {
                 let btCards: React.ReactNode[] = [];
                 let bladeProjectIndex = dataBP["AllBladeProjects"].find(
