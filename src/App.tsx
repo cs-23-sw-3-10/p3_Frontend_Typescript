@@ -6,7 +6,7 @@ import { Routes, Route, Navigate } from "react-router-dom";
 import "./App.css";
 import ScheduleComponent from "./components/Schedule/ScheduleComponent";
 import BTPage from "./components/BladeTask/BladeTaskPage";
-import BladeProjectPage from "./components/Projects/BladeProjectPage";
+import BladeProjectPage from "./components/BladeProject/BladeProjectPage";
 
 
 
