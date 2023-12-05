@@ -75,7 +75,7 @@ function BladeProjectMenu(props: BladeProjectMenuProps) {
                         name: projectName,
                         customer: customer,
                         projectLeader: leader,
-                        resourceOrders: resourceOrders
+                        resourceOrders: resourceOrders,
                     }
                 })
                 .then((result) => console.log(result))
