@@ -54,7 +54,7 @@ function BladeTaskMenu(props: BladeTaskMenuProps) {
     const [startDate, setStartDate] = useState(
         creator
             ? new Date().toISOString().split("T")[0]
-            : props.inputs!.startDate
+            : (convertStartDateFromDB(props.inputs!.startDate, props.inputs!.attachPeriod))
     ); //Sets the date to be the current day as initial value;
     const [duration, setDuration] = useState(
         creator ? 0 : (props.inputs!.duration - props.inputs!.attachPeriod - props.inputs!.detachPeriod)
@@ -114,18 +114,20 @@ function BladeTaskMenu(props: BladeTaskMenuProps) {
     //Other fields are optional
     const handleSubmit = async () => {
         const submittedStartDate = new Date(startDate);
-        const submittedEndDate = new Date(
-            submittedStartDate.getFullYear(),
-            submittedStartDate.getMonth(),
-            submittedStartDate.getDate() + duration
+        const realStartDate = convertStartDateToDB(submittedStartDate, attachPeriod);
+        const dbStartDate = new Date(realStartDate.getFullYear(), realStartDate.getMonth(), realStartDate.getDate() + 1).toISOString().split("T")[0];
+        const realEndDate = new Date(
+            realStartDate.getFullYear(),
+            realStartDate.getMonth(),
+            realStartDate.getDate() + duration + attachPeriod + detachPeriod
         );
         try {
             if (props.creator) {
                 if (
                     !checkBTCreationOverlaps( //check if the created blade task overlaps with another blade task
                         allBT,
-                        submittedStartDate,
-                        submittedEndDate,
+                        realStartDate,
+                        realEndDate,
                         bladeProjectId,
                         testRig
                     )
@@ -138,7 +140,7 @@ function BladeTaskMenu(props: BladeTaskMenuProps) {
                                     bladeProjectId: bladeProjectId,
                                     taskName: taskName,
                                     testType: testType,
-                                    startDate: startDate,
+                                    startDate: dbStartDate,
                                     duration: duration,
                                     attachPeriod: attachPeriod,
                                     detachPeriod: detachPeriod,
@@ -160,8 +162,8 @@ function BladeTaskMenu(props: BladeTaskMenuProps) {
                 if (
                     !checkBTEditOverlaps( //check if the edited blade task overlaps with another blade task
                         allBT,
-                        submittedStartDate,
-                        submittedEndDate,
+                        realStartDate,
+                        realEndDate,
                         parseInt(props.btId ? props.btId.toString() : "NaN"),
                         bladeProjectId,
                         testRig
@@ -175,7 +177,7 @@ function BladeTaskMenu(props: BladeTaskMenuProps) {
                                     bladeProjectId: bladeProjectId,
                                     taskName: taskName,
                                     testType: testType,
-                                    startDate: startDate,
+                                    startDate: dbStartDate,
                                     duration: duration,
                                     attachPeriod: attachPeriod,
                                     detachPeriod: detachPeriod,
@@ -430,14 +432,10 @@ function checkBTEditOverlaps(
         console.log("Invalid ID: id is NaN");
         return true;
     }
-    console.log("btId: " + projectId);
-    console.log("rig: " + rig);
     for (let i = 0; i < allBT.length; i++) {
         const bt = allBT[i];
         let btStartDate = new Date(bt.startDate);
         let btEndDate = new Date(bt.endDate);
-        console.log(" her Id: " + bt.bladeProject.id);
-        console.log(" her rig: " + bt.testRig);
 
         if (
             parseInt(bt.id) !== btId &&
@@ -479,4 +477,18 @@ function checkBTCreationOverlaps(
         }
     }
     return overlaps;
+}
+
+function convertStartDateFromDB(startDate: string, attachPeriod: number) {
+    let date = new Date(startDate);
+    let newStartDate = date.getDate() + 1 + attachPeriod; //the date is zero indexed
+    let realDate = new Date(date.getFullYear(), date.getMonth(), newStartDate).toISOString().split("T")[0];
+    return realDate;
+}
+
+function convertStartDateToDB(startDate: Date, attachPeriod: number) {
+    let date = new Date(startDate);
+    let newStartDate = date.getDate() - attachPeriod;
+    let realDate = new Date(date.getFullYear(), date.getMonth(), newStartDate);
+    return realDate;
 }

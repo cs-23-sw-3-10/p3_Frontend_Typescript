@@ -191,6 +191,4 @@
   display: flex;
   flex-direction: row;
   justify-content: flex-start; /* Aligns items from the start of the container. For flex-direction: row, this corresponds to aligning to the left*/
-
-
 }

@@ -1,5 +1,5 @@
-.employees_wrapper{
-    
+.employees_wrapper {
+    position: relative;
     display: grid;
     grid-template-columns: 1fr;
     grid-template-rows: 60px 60px auto;
@@ -8,14 +8,14 @@
     border-top: 1px solid;
 }
 
-.title.staff{
+.title.staff {
     font-size: 20px;
     grid-row: 1 / 2;
     grid-column: 1 / 2;
     text-align: left;
 }
 
-.employee_select{
+.employee_select {
     display: grid;
     grid-template-columns: 50px 150px 1fr;
     border-style: solid;
@@ -23,52 +23,51 @@
     border-color: black;
 }
 
-.material-symbols-outlined.badge{
+.material-symbols-outlined.badge {
     font-size: 40px;
     grid-column: 1 / 2;
     margin-top: 5px;
 }
 
-.title.employee{
+.title.employee {
     grid-column: 2 / 3;
     width: 100px;
     text-align: center;
     margin-top: 16px;
 }
 
-.expand{
+.expand {
     grid-column: 3 / 4;
     padding: 0px;
     margin: 2px;
     text-align: right;
 }
 
-.material-symbols-outlined.expand{
+.material-symbols-outlined.expand {
     font-size: 40px;
     background-color: limegreen;
     border-radius: 10px;
     box-shadow: 0 5px #999;
 }
 
-.material-symbols-outlined.expand:hover{
+.material-symbols-outlined.expand:hover {
     background-color: rgb(40, 144, 40);
 }
 
-.material-symbols-outlined.expand:active{
+.material-symbols-outlined.expand:active {
     background-color: limegreen;
     transform: translateY(2px);
     box-shadow: 0 3px #999;
 }
 
-
 /*Styles for Employee List and Entry in BT-Menu*/
-.employee_list{
+.employee_list {
     grid-column: 1 / 2;
     grid-row: 3 / 4;
     overflow-x: auto;
 }
 
-.employee_entry{
+.employee_entry {
     grid-column: 1 / 2;
     height: 50px;
     display: grid;
@@ -79,7 +78,7 @@
     border-right: 2px solid;
 }
 
-.employee_entry_remove{
+.employee_entry_remove {
     grid-column: 1 / 2;
     background-color: white;
     width: 18px;
@@ -88,17 +87,17 @@
     margin-left: 15px;
 }
 
-.employee_entry_remove:hover{
+.employee_entry_remove:hover {
     grid-column: 1 / 2;
     background-color: rgb(216, 216, 216);
 }
 
-.employee_entry_remove:active{
+.employee_entry_remove:active {
     grid-column: 1 / 2;
     background-color: white;
 }
 
-.employee_entry_icon{
+.employee_entry_icon {
     grid-column: 2 / 3;
     background-color: rgb(208, 0, 208);
     height: 35px;
@@ -109,42 +108,39 @@
     margin-top: 8px;
 }
 
-.employee_entry_initials{
+.employee_entry_initials {
     text-align: center;
     font-size: 17px;
     margin-top: 3px;
 }
 
-.employee_entry_name_wrapper{
+.employee_entry_name_wrapper {
     grid-column: 3 / 4;
     margin-top: 8px;
 }
 
-.employee_entry_name{
+.employee_entry_name {
     text-align: left;
     margin: 0;
     margin-top: 3px;
     font-size: 20px;
 }
 
-.employee_entry_hours{
+.employee_entry_hours {
     grid-column: 4 / 5;
     border-left: 2px solid;
     border-bottom: 2px solid;
     border-color: black;
 }
 
-.emoloyee_entry_hours_input{
+.emoloyee_entry_hours_input {
     width: 100%;
     height: 100%;
     text-align: center;
 }
 
-
-
 /*Employee Selector Menu(Pop Up)*/
-.employee_selector_menu{
-    
+.employee_selector_menu {
     display: grid;
     grid-template-columns: 1fr;
     grid-template-rows: 50px 150px 150px;
@@ -154,10 +150,10 @@
     background-color: white;
     border-style: solid;
     border-width: 3px;
-    transform: translate(699px,-212px);
+    transform: translate(699px, -212px);
 }
 
-.employee_selector_menu_header{
+.employee_selector_menu_header {
     grid-row: 1 / 2;
     grid-column: 1 / 2;
     display: grid;
@@ -166,7 +162,7 @@
     border-bottom: 3px solid;
 }
 
-.employee_selector_menu_title{
+.employee_selector_menu_title {
     text-align: center;
     grid-row: 1 / 2;
     grid-column: 1 / 2;
@@ -175,7 +171,7 @@
     margin-top: 10px;
 }
 
-.employee_selector_menu_close{
+.employee_selector_menu_close {
     grid-row: 1 / 2;
     grid-column: 2 / 3;
     background-color: red;
@@ -184,15 +180,15 @@
     margin-left: 21px;
 }
 
-.employee_selector_menu_close:hover{
+.employee_selector_menu_close:hover {
     background-color: rgb(180, 0, 0);
 }
 
-.employee_selector_menu_close:active{
+.employee_selector_menu_close:active {
     background-color: red;
 }
 
-.employee_selector_menu_engineers{
+.employee_selector_menu_engineers {
     display: grid;
     grid-template-rows: 40px 110px;
     grid-template-columns: 1fr;
@@ -201,21 +197,21 @@
     border-bottom: 3px solid;
 }
 
-.employee_selector_menu_engineers_title{
+.employee_selector_menu_engineers_title {
     grid-row: 1 / 2;
     grid-column: 1 / 2;
     text-align: left;
     margin-left: 10px;
 }
 
-.employee_selector_menu_engineers_list{
+.employee_selector_menu_engineers_list {
     grid-row: 2 / 3;
     grid-column: 1 / 2;
     border-top: 2px solid;
     overflow-y: auto;
 }
 
-.employee_selector_menu_technicians{
+.employee_selector_menu_technicians {
     grid-row: 3 / 4;
     grid-column: 1 / 2;
     display: grid;
@@ -223,44 +219,43 @@
     grid-template-columns: 1fr;
 }
 
-.employee_selector_menu_technicians_title{
+.employee_selector_menu_technicians_title {
     grid-row: 1 / 2;
     grid-column: 1 / 2;
     text-align: left;
     margin-left: 10px;
 }
 
-.employee_selector_menu_technicians_list{
+.employee_selector_menu_technicians_list {
     grid-row: 2 / 3;
     grid-column: 1 / 2;
     border-top: 2px solid;
     overflow: auto;
 }
 
-
 /*Styles for an Employee Entry in popup menu(Both engineer and technician*/
 
-.employee_selector_menu_entry{
+.employee_selector_menu_entry {
     display: grid;
     height: 50px;
     grid-template-columns: 60px 165px;
 }
 
-.employee_selector_menu_entry:hover{
+.employee_selector_menu_entry:hover {
     background-color: rgb(240, 240, 240);
 }
 
-.employee_selector_menu_entry_button{
+.employee_selector_menu_entry_button {
     background: none;
-	color: inherit;
-	border: none;
-	padding: 0;
-	font: inherit;
-	cursor: pointer;
-	outline: inherit;
+    color: inherit;
+    border: none;
+    padding: 0;
+    font: inherit;
+    cursor: pointer;
+    outline: inherit;
 }
 
-.employee_initials_profile{
+.employee_initials_profile {
     background-color: rgb(171, 39, 171);
     width: 30px;
     height: 30px;
@@ -269,22 +264,14 @@
     margin-left: 20px;
 }
 
-.employee_initials{
+.employee_initials {
     text-align: center;
     font-size: 18px;
     margin-top: 2px;
 }
 
-.employee_selector_menu_entry_name{
+.employee_selector_menu_entry_name {
     font-size: 15px;
     text-align: left;
     margin-top: 10px;
 }
-
-
-
-
-
-
-
-
