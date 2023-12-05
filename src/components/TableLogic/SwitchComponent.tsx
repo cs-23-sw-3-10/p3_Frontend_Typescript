@@ -32,8 +32,9 @@ const SwitchComponent = (props: SwitchProps) => {
         <>
             <div className="inline-flex items-center h-full ">
                 <div className="themeSwitcherTwo relative inline-flex cursor-pointer select-none items-center mx-4">
-                    <span className="label flex items-center text-sm font-medium text-black cursor-auto">
-                        View Mode
+                    {/* Highlight "View" text based on editMode */}
+                    <span className={`label flex items-center text-sm font-medium cursor-auto ${!editMode.isEditMode ? "text-black" : "text-gray"}`}>
+                        View
                     </span>
                     <label>
                         <input
@@ -58,11 +59,12 @@ const SwitchComponent = (props: SwitchProps) => {
                             ></span>
                         </span>
                     </label>
-                    <span className="label flex items-center text-sm font-medium text-black cursor-auto">
-                        Edit Mode
+                    {/* Highlight "Edit" text based on editMode */}
+                    <span className={`label flex items-center text-sm font-medium cursor-auto ${editMode.isEditMode ? "text-green" : "text-blue"}`}>
+                        Edit
                     </span>
                 </div>
-
+    
                 <div></div>
                 <div className="mx-4">
                     {showPasswordPrompt && (
