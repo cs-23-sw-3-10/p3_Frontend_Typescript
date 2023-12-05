@@ -261,6 +261,7 @@ function DisplayComponent(props: DisplayProps) {
                         Months shown:
                     </label>
                     <input
+                        className="numberMonthsInput"
                         name="numberInput"
                         type="number"
                         defaultValue={numberOfMonths}
