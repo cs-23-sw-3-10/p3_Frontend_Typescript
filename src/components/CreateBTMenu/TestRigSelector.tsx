@@ -4,7 +4,7 @@ import { useQuery } from "@apollo/client";
 
 function TestRigSelector({ testRig, setTestRig }: { testRig: number; setTestRig: Function }) {
     const { loading, error, data } = useQuery(GET_TEST_RIGS);
-    const [numberOfTestRigs, setNumberOfTestRigs] = useState<any>(0);
+    const [numberOfTestRigs, setNumberOfTestRigs] = useState<number>(0);
 
     useEffect(() => {
         //We get the number of test rigs as a string -> Converted into number
@@ -18,6 +18,7 @@ function TestRigSelector({ testRig, setTestRig }: { testRig: number; setTestRig:
     if (error) {
         return <select className="input_sideborders" id="testrig" name="testrig"></select>
     }
+
     return (
         <>
             <h2 className="title">Test Rig</h2>
@@ -32,8 +33,8 @@ function TestRigSelector({ testRig, setTestRig }: { testRig: number; setTestRig:
 function TestRigOptions({numberOfTestRigs}: { numberOfTestRigs: number }) {
     //Number of test rigs converted into an array [1..NumberOfTestRigs]
     let TestRigArray = Array(numberOfTestRigs);
-    for (let i = 1; i <= numberOfTestRigs; i++) {
-        TestRigArray[i - 1] = i;
+    for (let i = 0; i <= numberOfTestRigs; i++) {
+        TestRigArray[i] = i;
     }
 
     //Returns a dropdown of all the testrigs present in DB
@@ -41,7 +42,7 @@ function TestRigOptions({numberOfTestRigs}: { numberOfTestRigs: number }) {
         <>
             {TestRigArray.map((testRigNum) => (
                 <option value={testRigNum} key={testRigNum}>
-                    Test Rig {testRigNum}
+                    {(testRigNum === 0) ? "Pending" : ("Test Rig " + testRigNum) }
                 </option>
             ))}
         </>

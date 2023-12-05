@@ -14,7 +14,6 @@
 .type.bp{
     vertical-align: middle;
     grid-column: 1 / 2;
-    border-left: 2px solid;
     border-bottom: 2px solid;
 }
 
@@ -22,11 +21,11 @@
     position: relative;
     grid-column: 2 / 3;
     border-left: 2px solid;
-    border-right: 2px solid;
     border-bottom: 2px solid;
 }
 
 .period_selector.bp{
+    display: none;
     text-align: center;
     border: none;
 }
@@ -39,10 +38,10 @@
 
 .remove_equipment_button.bp{
     position: absolute;
-    transform: translate(196px, -23px);
+    transform: translate(139px, 3px);
     background-color: red;
-    width: 20px;
-    height: 20px;
+    width: 50px;
+    height: 24px;
     border-radius: 10px;
     display: inline;
     box-shadow: 0 3px #999;
@@ -55,5 +54,5 @@
 .remove_equipment_button.bp:active{
     background-color: red;
     box-shadow: 0 1px #666;
-    transform: translate(196px, -23px);
+    transform: translate(139px, 3px);
 }

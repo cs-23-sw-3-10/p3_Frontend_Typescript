@@ -4,7 +4,6 @@ import { InputField } from "./Fields";
 import DropdownList from "react-widgets/DropdownList";
 import { BladeProjectForm } from "./BPMenuTypes";
 import { validateBPForm } from "./ValidateBPForm";
-import './BPMenu.css';
 import { useQuery, useMutation } from "@apollo/client";
 import { GET_ALL_ENGINEERS, GET_ALL_BP } from "../../api/queryList";
 import { ADD_BP, UPDATE_BP } from "../../api/mutationList";
@@ -13,6 +12,8 @@ import EquipmentSelectionMenu from "../CreateBTMenu/EquipmentSelector";
 import { ResourceOrder } from "../CreateBTMenu/BTMenuTypes";
 import EquipmentList from "../CreateBTMenu/EquipmentList";
 import './EquipmentListBP.css';
+import './BPMenu.css';
+import './EquipmentSelectorBP.css'
 import { SetMealSharp } from "@mui/icons-material";
 
 interface BladeProjectMenuProps {
@@ -138,7 +139,7 @@ function BladeProjectMenu(props: BladeProjectMenuProps) {
                 <button className="bp_menu_cancel" onClick={handleCancel}>CANCEL</button>
                 <button className="bp_menu_submit" onClick={handleSubmit}>SUBMIT</button>
                 <ErrorMessageBox projectError={projectError} missingInput={missingInput} />
-                {equipmentMenuIsActive ? <EquipmentSelectionMenu setEquipmentActive={setEquipmentMenuIsActive} className="equipment_bp_menu" /> : <></>}
+                {equipmentMenuIsActive ? <EquipmentSelectionMenu setEquipmentActive={setEquipmentMenuIsActive} className="bp" /> : <></>}
             </ResourceOrderContext.Provider>
 
 
