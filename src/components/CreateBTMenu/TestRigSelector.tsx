@@ -4,7 +4,7 @@ import { useQuery } from "@apollo/client";
 
 function TestRigSelector({ testRig, setTestRig }: { testRig: number; setTestRig: Function }) {
     const { loading, error, data } = useQuery(GET_TEST_RIGS);
-    const [numberOfTestRigs, setNumberOfTestRigs] = useState<number>(0);
+    const [numberOfTestRigs, setNumberOfTestRigs] = useState<any>(0);
 
     useEffect(() => {
         //We get the number of test rigs as a string -> Converted into number

@@ -1,25 +1,25 @@
-import './BladeTaskMenu.css';
-import ProjectSelector from './ProjectSelector';
-import TaskNameSelector from './TaskNameSelector';
-import DurationSelector from './DurationSelecter';
-import StartDateSelector from './StartDateSelector';
-import TestRigSelector from './TestRigSelector';
-import AttachPeriodSelector from './AttachPeriodSelector';
-import DetachPeriodSelector from './DetachPeriodSelector';
-import EquipmentSelectionMenu from './EquipmentSelector';
-import EmployeesMenu from './EmployeesMenu';
-import { ResourceOrderContext } from './BladeTaskOrderContext';
-import { useState} from 'react';
+import "./BladeTaskMenu.css";
+import ProjectSelector from "./ProjectSelector";
+import TaskNameSelector from "./TaskNameSelector";
+import DurationSelector from "./DurationSelecter";
+import StartDateSelector from "./StartDateSelector";
+import TestRigSelector from "./TestRigSelector";
+import AttachPeriodSelector from "./AttachPeriodSelector";
+import DetachPeriodSelector from "./DetachPeriodSelector";
+import EquipmentSelectionMenu from "./EquipmentSelector";
+import EmployeesMenu from "./EmployeesMenu";
+import { ResourceOrderContext } from "./BladeTaskOrderContext";
+import { useState, useEffect } from "react";
 import { BTOrder, InErrorChart, ResourceOrder } from "./BTMenuTypes";
-import EquipmentList from './EquipmentList';
+import EquipmentList from "./EquipmentList";
 import { useMutation, useQuery } from "@apollo/client";
 import { ADD_BT, UPDATE_BT_INFO } from "../../api/mutationList";
 import { GET_ALL_BT } from "../../api/queryList";
-import { ValidateForm } from './ValidateForm';
-import { ComboBoxSelector } from '../RessourcesMenu/RessourcesUtils';
-import { GET_TEST_TYPES } from '../../api/queryList';
-import '../CreateBTMenu/TestTypeSelector.css';
-import '../CreateBTMenu/BladeTaskMenu.css'
+import { ValidateForm } from "./ValidateForm";
+import { ComboBoxSelector } from "../RessourcesMenu/RessourcesUtils";
+import { GET_TEST_TYPES } from "../../api/queryList";
+import "../CreateBTMenu/TestTypeSelector.css";
+import "../CreateBTMenu/BladeTaskMenu.css";
 
 export interface BladeTaskMenuProps {
     creator: boolean;
@@ -30,46 +30,23 @@ export interface BladeTaskMenuProps {
 function BladeTaskMenu(props: BladeTaskMenuProps) {
     const creator = props.creator; //true if creating a new blade task, false if editing an existing one
     //Apollo mutation setup:
-    const [addBT, { loading: addLoading, error: addError }] =
-        useMutation(ADD_BT);
-    const [updateBT, { loading: updateLoading, error: updateError }] =
-        useMutation(UPDATE_BT_INFO);
-    const {
-        loading: btLoading,
-        error: btError,
-        data: btData,
-        refetch,
-    } = useQuery(GET_ALL_BT);
+    const [addBT, { loading: addLoading, error: addError }] = useMutation(ADD_BT);
+    const [updateBT, { loading: updateLoading, error: updateError }] = useMutation(UPDATE_BT_INFO);
+    const { loading: btLoading, error: btError, data: btData, refetch } = useQuery(GET_ALL_BT);
 
     //All the states for the form -> Inserted into the BT-order as the user fills the form out
-    const [bladeProjectId, setBladeProjectId] = useState(
-        creator ? "" : props.inputs!.bladeProjectId
-    );
-    const [taskName, setTaskName] = useState(
-        creator ? "" : props.inputs!.taskName
-    );
-    const [testType, setTestType] = useState(
-        creator ? "" : props.inputs!.testType
-    );
+    const [bladeProjectId, setBladeProjectId] = useState(creator ? "" : props.inputs!.bladeProjectId);
+    const [taskName, setTaskName] = useState(creator ? "" : props.inputs!.taskName);
+    const [testType, setTestType] = useState(creator ? "" : props.inputs!.testType);
     const [startDate, setStartDate] = useState(
-        creator
-            ? new Date().toISOString().split("T")[0]
-            : (convertStartDateFromDB(props.inputs!.startDate, props.inputs!.attachPeriod))
+        creator ? new Date().toISOString().split("T")[0] : convertStartDateFromDB(props.inputs!.startDate, props.inputs!.attachPeriod)
     ); //Sets the date to be the current day as initial value;
-    const [duration, setDuration] = useState(
-        creator ? 0 : (props.inputs!.duration - props.inputs!.attachPeriod - props.inputs!.detachPeriod)
-    );
-    const [attachPeriod, setAttachPeriod] = useState(
-        creator ? 0 : props.inputs!.attachPeriod
-    );
-    const [detachPeriod, setDetachPeriod] = useState(
-        creator ? 0 : props.inputs!.detachPeriod
-    );
+    const [duration, setDuration] = useState(creator ? 0 : props.inputs!.duration - props.inputs!.attachPeriod - props.inputs!.detachPeriod);
+    const [attachPeriod, setAttachPeriod] = useState(creator ? 0 : props.inputs!.attachPeriod);
+    const [detachPeriod, setDetachPeriod] = useState(creator ? 0 : props.inputs!.detachPeriod);
     const [testRig, setTestRig] = useState(creator ? 0 : props.inputs!.testRig);
 
-    const [resourceOrders, setResourceOrder] = useState<ResourceOrder[]>( 
-        creator ? [] : props.inputs!.resourceOrders
-    );
+    const [resourceOrders, setResourceOrder] = useState<ResourceOrder[]>(creator ? [] : props.inputs!.resourceOrders);
 
     //Tracks which input fields are currently in an error state(Incorrect input has been provided)
     const [inErrorChart, setInErrorChart] = useState({
@@ -116,15 +93,12 @@ function BladeTaskMenu(props: BladeTaskMenuProps) {
         const submittedStartDate = new Date(startDate);
         const realStartDate = convertStartDateToDB(submittedStartDate, attachPeriod);
         const dbStartDate = new Date(realStartDate.getFullYear(), realStartDate.getMonth(), realStartDate.getDate() + 1).toISOString().split("T")[0];
-        const realEndDate = new Date(
-            realStartDate.getFullYear(),
-            realStartDate.getMonth(),
-            realStartDate.getDate() + duration + attachPeriod + detachPeriod
-        );
+        const realEndDate = new Date(realStartDate.getFullYear(), realStartDate.getMonth(), realStartDate.getDate() + duration + attachPeriod + detachPeriod);
         try {
             if (props.creator) {
                 if (
-                    !checkBTCreationOverlaps( //check if the created blade task overlaps with another blade task
+                    !checkBTCreationOverlaps(
+                        //check if the created blade task overlaps with another blade task
                         allBT,
                         realStartDate,
                         realEndDate,
@@ -154,13 +128,12 @@ function BladeTaskMenu(props: BladeTaskMenuProps) {
                         console.log("Required fields have not been filled out");
                     }
                 } else {
-                    alert(
-                        "The created Blade Task overlaps with another Blade Task either on the same rig or project"
-                    );
+                    alert("The created Blade Task overlaps with another Blade Task either on the same rig or project");
                 }
             } else {
                 if (
-                    !checkBTEditOverlaps( //check if the edited blade task overlaps with another blade task
+                    !checkBTEditOverlaps(
+                        //check if the edited blade task overlaps with another blade task
                         allBT,
                         realStartDate,
                         realEndDate,
@@ -184,9 +157,7 @@ function BladeTaskMenu(props: BladeTaskMenuProps) {
                                     testRig: testRig,
                                     resourceOrders: resourceOrders,
                                 },
-                                id: parseInt(
-                                    props.btId ? props.btId.toString() : "NaN"
-                                ),
+                                id: parseInt(props.btId ? props.btId.toString() : "NaN"),
                             },
                         });
                         console.log(response);
@@ -194,9 +165,7 @@ function BladeTaskMenu(props: BladeTaskMenuProps) {
                         console.log("Required fields have not been filled out");
                     }
                 } else {
-                    alert(
-                        "The edited Blade Task overlaps with another Blade Task either on the same rig or project"
-                    );
+                    alert("The edited Blade Task overlaps with another Blade Task either on the same rig or project");
                 }
             }
         } catch (error) {
@@ -210,11 +179,7 @@ function BladeTaskMenu(props: BladeTaskMenuProps) {
         setBladeProjectId(creator ? "" : props.inputs!.bladeProjectId);
         setTaskName(creator ? "" : props.inputs!.taskName);
         setTestType(creator ? "" : props.inputs!.testType);
-        setStartDate(
-            creator
-                ? new Date().toISOString().split("T")[0]
-                : props.inputs!.startDate
-        );
+        setStartDate(creator ? new Date().toISOString().split("T")[0] : props.inputs!.startDate);
         setDuration(creator ? 0 : props.inputs!.duration);
         setAttachPeriod(creator ? 0 : props.inputs!.attachPeriod);
         setDetachPeriod(creator ? 0 : props.inputs!.detachPeriod);
@@ -234,6 +199,7 @@ function BladeTaskMenu(props: BladeTaskMenuProps) {
         testRig: testRig,
         resourceOrders: resourceOrders,
     };
+    
 
     return (
         <div className="btmenu-container">
@@ -242,42 +208,24 @@ function BladeTaskMenu(props: BladeTaskMenuProps) {
 
             {/*Each selector is provided the state it controls*/}
             <div className="name_and_project_selection_wrapper">
-                <TaskNameSelector
-                    taskName={taskName}
-                    setTaskName={setTaskName}
-                    inErrorChart={inErrorChart}
-                    setInErrorChart={setInErrorChart}
-                />
-                <ProjectSelector
-                    bladeProjectId={bladeProjectId}
-                    setBladeProjectId={setBladeProjectId}
-                />
+                <TaskNameSelector taskName={taskName} setTaskName={setTaskName} inErrorChart={inErrorChart} setInErrorChart={setInErrorChart} />
+                <ProjectSelector bladeProjectId={bladeProjectId} setBladeProjectId={setBladeProjectId} />
             </div>
-            <div className= 'item testtype_wrapper'>
+            <div className="item testtype_wrapper">
                 <h2 className="title">Type</h2>
                 <ComboBoxSelector
-                    selectedValue = {testType}
-                    setSelectedValue = {(value: string) => setTestType(value)}
+                    selectedValue={testType}
+                    setSelectedValue={(value: string) => setTestType(value)}
                     setItemList={() => {}} //not used
-                    className='testtype_select input_sideborders'
+                    className="testtype_select input_sideborders"
                     query={GET_TEST_TYPES}
-                    dataKey='DictionaryAllByCategory'
+                    dataKey="DictionaryAllByCategory"
                     mappingFunction={({ label }: { label: string }) => label}
                 />
             </div>
             <div className="item date_selection_wrapper">
-                <StartDateSelector
-                    startDate={startDate}
-                    setStartDate={setStartDate}
-                    inErrorChart={inErrorChart}
-                    setInErrorChart={setInErrorChart}
-                />
-                <DurationSelector
-                    duration={duration}
-                    setDuration={setDuration}
-                    inErrorChart={inErrorChart}
-                    setInErrorChart={setInErrorChart}
-                />
+                <StartDateSelector startDate={startDate} setStartDate={setStartDate} inErrorChart={inErrorChart} setInErrorChart={setInErrorChart} />
+                <DurationSelector duration={duration} setDuration={setDuration} inErrorChart={inErrorChart} setInErrorChart={setInErrorChart} />
                 <AttachPeriodSelector
                     duration={duration}
                     detachPeriod={detachPeriod}
@@ -308,30 +256,18 @@ function BladeTaskMenu(props: BladeTaskMenuProps) {
                     <h2 className="title">Period</h2>
                 </div>
                 <ResourceOrderContext.Provider value={setResourceOrder}>
-                    <EquipmentList
-                        resourceOrders={resourceOrders}
-                        key={"Equipment_List"}
-                        classNameFor="bt"
-                    />
+                    <EquipmentList resourceOrders={resourceOrders} key={"Equipment_List"} classNameFor="bt" />
                 </ResourceOrderContext.Provider>
 
                 <div className="equipment_interaction">
-                    <button
-                        className="equipment_add"
-                        onClick={(e) => setEquipmentActive(true)}
-                    >
-                        <span className="material-symbols-outlined">
-                            add_circle
-                        </span>
+                    <button className="equipment_add" onClick={(e) => setEquipmentActive(true)}>
+                        <span className="material-symbols-outlined">add_circle</span>
                     </button>
                 </div>
 
                 {equipmentActive ? (
                     <ResourceOrderContext.Provider value={setResourceOrder}>
-                        <EquipmentSelectionMenu
-                            setEquipmentActive={setEquipmentActive}
-                            className="equipment_bt_menu"
-                        />
+                        <EquipmentSelectionMenu setEquipmentActive={setEquipmentActive} className="equipment_bt_menu" />
                     </ResourceOrderContext.Provider>
                 ) : (
                     <></>
@@ -357,75 +293,22 @@ function BladeTaskMenu(props: BladeTaskMenuProps) {
     );
 }
 
-function ErrorMessageContainer({
-    inErrorChart,
-}: {
-    inErrorChart: InErrorChart;
-}) {
+function ErrorMessageContainer({ inErrorChart }: { inErrorChart: InErrorChart }) {
     return (
         <div className="error_message_wrapper">
-            {inErrorChart.taskName ? (
-                <p className="error_message error_message_btname">
-                    Invalid Name - Task name exists in system
-                </p>
-            ) : (
-                <div></div>
-            )}
-            {inErrorChart.startDate ? (
-                <p className="error_message error_message_startdate">
-                    Invalid Date - Date is before current date
-                </p>
-            ) : (
-                <div></div>
-            )}
-            {inErrorChart.duration ? (
-                <p className="error_message error_message_duration">
-                    Invalid Duration - Cannot Be Negative
-                </p>
-            ) : (
-                <div></div>
-            )}
-            {inErrorChart.attachPeriod ? (
-                <p className="error_message error_message_attachPeriod">
-                    Invalid Attach Period - Cannot Be Negative
-                </p>
-            ) : (
-                <div></div>
-            )}
-            {inErrorChart.detachPeriod ? (
-                <p className="error_message error_message_detachPeriod">
-                    Invalid Detach Period - Cannot Be Negative
-                </p>
-            ) : (
-                <div></div>
-            )}
-            {inErrorChart.equipment ? (
-                <p className="error_message error_message_equipment">
-                    Invalid Equipment
-                </p>
-            ) : (
-                <div></div>
-            )}
-            {inErrorChart.employees ? (
-                <p className="error_message error_message_employee">
-                    Invalid Employee
-                </p>
-            ) : (
-                <div></div>
-            )}
+            {inErrorChart.taskName ? <p className="error_message error_message_btname">Invalid Name - Task name exists in system</p> : <div></div>}
+            {inErrorChart.startDate ? <p className="error_message error_message_startdate">Invalid Date - Date is before current date</p> : <div></div>}
+            {inErrorChart.duration ? <p className="error_message error_message_duration">Invalid Duration - Cannot Be Negative</p> : <div></div>}
+            {inErrorChart.attachPeriod ? <p className="error_message error_message_attachPeriod">Invalid Attach Period - Cannot Be Negative</p> : <div></div>}
+            {inErrorChart.detachPeriod ? <p className="error_message error_message_detachPeriod">Invalid Detach Period - Cannot Be Negative</p> : <div></div>}
+            {inErrorChart.equipment ? <p className="error_message error_message_equipment">Invalid Equipment</p> : <div></div>}
+            {inErrorChart.employees ? <p className="error_message error_message_employee">Invalid Employee</p> : <div></div>}
         </div>
     );
 }
 export default BladeTaskMenu;
 
-function checkBTEditOverlaps(
-    allBT: any,
-    startDate: Date,
-    endDate: Date,
-    btId: number,
-    projectId: string,
-    rig: number
-) {
+function checkBTEditOverlaps(allBT: any, startDate: Date, endDate: Date, btId: number, projectId: string, rig: number) {
     if (startDate > endDate) {
         console.log("Invalid Date: start date is after end date");
         return true;
@@ -442,23 +325,17 @@ function checkBTEditOverlaps(
         if (
             parseInt(bt.id) !== btId &&
             (bt.testRig === rig || bt.bladeProject.id === projectId) &&
-            (((btStartDate <= endDate && btStartDate >= startDate) ||
-                (btEndDate >= startDate && btEndDate <= endDate)) || 
-                ((startDate >= btStartDate && startDate <= btEndDate) || 
-                (endDate >= btStartDate && endDate <= btEndDate)))
+            ((btStartDate <= endDate && btStartDate >= startDate) ||
+                (btEndDate >= startDate && btEndDate <= endDate) ||
+                (startDate >= btStartDate && startDate <= btEndDate) ||
+                (endDate >= btStartDate && endDate <= btEndDate))
         ) {
             return true;
         }
     }
     return false;
 }
-function checkBTCreationOverlaps(
-    allBT: any,
-    startDate: Date,
-    endDate: Date,
-    projectId: string,
-    rig: number
-) {
+function checkBTCreationOverlaps(allBT: any, startDate: Date, endDate: Date, projectId: string, rig: number) {
     let overlaps = false;
     if (startDate > endDate) {
         return true;
@@ -470,10 +347,10 @@ function checkBTCreationOverlaps(
 
         if (
             (bt.testRig === rig || bt.bladeProject.id === projectId) &&
-            (((btStartDate <= endDate && btStartDate >= startDate) ||
-                (btEndDate >= startDate && btEndDate <= endDate)) || 
-                ((startDate >= btStartDate && startDate <= btEndDate) || 
-                (endDate >= btStartDate && endDate <= btEndDate)))
+            ((btStartDate <= endDate && btStartDate >= startDate) ||
+                (btEndDate >= startDate && btEndDate <= endDate) ||
+                (startDate >= btStartDate && startDate <= btEndDate) ||
+                (endDate >= btStartDate && endDate <= btEndDate))
         ) {
             return true;
         }
