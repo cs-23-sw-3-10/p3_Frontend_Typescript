@@ -66,7 +66,7 @@ function CreateAdditionalContent(){
                 </div>
             </div>
             {creationMenu === "createTask" && <BladeTaskMenu creator={true}/>}
-            {creationMenu ==="createProject" && <BladeProjectMenu creator={true}/>}
+            {creationMenu ==="createProject" && <BladeProjectMenu creator={true} popUpClass="bp"/>}
             {creationMenu === "replaceSchedule" && <ReplaceWarning openstate={setCreationMenu} mode={"replaceSchedule"}/>}
             {creationMenu === "discardChanges" &&  <ReplaceWarning openstate={setCreationMenu} mode={"discardChanges"}/>}
         </div>

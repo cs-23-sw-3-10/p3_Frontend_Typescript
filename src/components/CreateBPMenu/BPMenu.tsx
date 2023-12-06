@@ -18,6 +18,7 @@ import './EquipmentSelectorBP.css'
 interface BladeProjectMenuProps {
     creator: boolean;
     BPName?: string;
+    popUpClass: string;
 }
 
 function BladeProjectMenu(props: BladeProjectMenuProps) {
@@ -49,7 +50,10 @@ function BladeProjectMenu(props: BladeProjectMenuProps) {
 
     useEffect(() => {
         if (data && data.AllEngineers) {
+            //Extract the names of the engineers
             const engineerNamesArray: Array<string> = data.AllEngineers.map(({ name }: { name: string }) => name);
+            
+            //You wanted capitalized names so here you go :)
             const capitalizedNames: Array<string> = engineerNamesArray.map((name) => name.split(" ").map(first_lastname_array => first_lastname_array.charAt(0).toUpperCase() + first_lastname_array.slice(1)).join(" "));
             setLeaderOptions(capitalizedNames);
         }
@@ -143,7 +147,7 @@ function BladeProjectMenu(props: BladeProjectMenuProps) {
                 <button className="bp_menu_cancel" onClick={handleCancel}>CANCEL</button>
                 <button className="bp_menu_submit" onClick={handleSubmit}>SUBMIT</button>
                 <ErrorMessageBox projectError={projectError} missingInput={missingInput} />
-                {equipmentMenuIsActive ? <EquipmentSelectionMenu setEquipmentActive={setEquipmentMenuIsActive} className="bp" /> : <></>}
+                {equipmentMenuIsActive ? <EquipmentSelectionMenu setEquipmentActive={setEquipmentMenuIsActive} className={props.popUpClass} /> : <></>}
             </ResourceOrderContext.Provider>
 
 

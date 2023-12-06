@@ -12,6 +12,7 @@ import { useEditModeContext } from "../../EditModeContext";
 import { createRigs } from "../Schedule/Display";
 import PopupWindow from "../ui/PopupWindow";
 import BPMenu from "../CreateBPMenu/BPMenu";
+import './EquipmentSelectorBPEdit.css';
 
 
 /**
@@ -165,7 +166,7 @@ function BladeProjectPage() {
                 );
             }}
             />
-            {showPopup && <PopupWindow component={<BPMenu creator={false} BPName={choosenBP}/>} onClose={togglePopup}/>}
+            {showPopup && <PopupWindow component={<BPMenu creator={false} BPName={choosenBP} popUpClass="bp_edit"/>} onClose={togglePopup}/>}
         </>
     );
 }
