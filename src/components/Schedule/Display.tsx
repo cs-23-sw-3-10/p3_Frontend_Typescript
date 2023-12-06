@@ -1,7 +1,7 @@
 import "./Display.css";
 import CreateTestRigDivs from "./TestRigDivs";
 import CreateTimelineField from "./TimelineField";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import CreateAdditionalContent from "./AdditionalContent";
 import BladeTaskCard from "./BladeTaskCard";
 import { useQuery, useSubscription } from "@apollo/client";
@@ -47,6 +47,12 @@ function DisplayComponent(props: DisplayProps) {
         getMonthsInView(currentDate, numberOfMonths)
     ); // State to store the months to display
 
+    useEffect(() => {
+    if (editMode.isEditMode) {
+        props.setFilter("None");
+    }
+    }, [editMode.isEditMode]);
+    
     const handleViewChange = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         // Get the form element from the event
@@ -167,9 +173,7 @@ function DisplayComponent(props: DisplayProps) {
         setRigs(createRigs(numberOfRigs));
     }
 
-    if (editMode.isEditMode) {
-        props.setFilter("None");
-    }
+    
 
     //Making schedule BladeTaskCards
     let btCards: React.ReactNode[] = [];
