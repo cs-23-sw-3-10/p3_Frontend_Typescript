@@ -24,7 +24,12 @@ function PendingTasks(props: PendingTasksProps) {
     let projectsWithPendingTasks: String[] = [];
 
     //Populate proctsWithPendingTasks
-    const cards = props.bladeTaskHolder.getBladeTasks();
+    const cards = props.bladeTaskHolder.getBladeTasks().filter((card:any)=>{
+        if(card){
+            return card.props.rig===0
+        }
+        else {return true}
+    });
 
     cards.forEach((card: any) => {
         let isInProctsWithPendingTasks = false;
@@ -85,7 +90,7 @@ function PendingTasks(props: PendingTasksProps) {
                                     gridRow: `project-${projectName}`,
                                 }}
                             >
-                                {props.bladeTaskCards.filter((card: any) => {
+                                {cards.filter((card: any) => {
                                     if (card) {
                                         return card.props.projectName === projectName;
                                     } else {

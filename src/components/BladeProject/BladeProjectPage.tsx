@@ -157,11 +157,7 @@ function BladeProjectPage() {
                             rigs={rigs}
                             months={dates}
                             btCards={btCards}
-                            btCardsPending={[]}
-                            isPendingTasksIncluded={false}
                             isDragging={false}
-                          
-                       
                         />
                     </div>
                 );

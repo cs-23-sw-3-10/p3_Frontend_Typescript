@@ -17,6 +17,7 @@ import BladeTaskCardOverlay from "./BladeTaskCardOverlay";
 import { createPortal } from "react-dom";
 import { BladeTaskHolder } from "./BladeTaskHolder";
 import { UPDATE_BT } from "../../api/mutationList";
+import { TrendingUp } from "lucide-react";
 
 const currentDate = new Date(Date.now()); // Get the current date
 
@@ -37,6 +38,9 @@ function DisplayComponent(props: DisplayProps) {
     const [activeCard, setActiveCard] = useState<any>(null);
 
     const [isDragging, setDragging] = useState(false);
+
+    const[activeCards, setBtCards]=useState(null);
+    const[pendingCards, setBtCardsPending]=useState(null);
 
     const currentMonth = new Date().toISOString().slice(0, 7);
 
@@ -210,7 +214,7 @@ function DisplayComponent(props: DisplayProps) {
             btShown = true;
         }
 
-        btCardsPending.push(
+        btCards.push(
             <BladeTaskCard
                 key={bt.id}
                 duration={bt.duration}
@@ -225,6 +229,7 @@ function DisplayComponent(props: DisplayProps) {
                 shown={btShown}
                 enableDraggable={editMode.isEditMode}
                 inConflict={false}
+                rig={0}
             />
         );
     });
@@ -307,9 +312,7 @@ function DisplayComponent(props: DisplayProps) {
                         rigs={rigs}
                         months={dates}
                         btCards={btCards}
-                        btCardsPending={btCardsPending}
                         showPasswordPrompt={props.showPasswordPrompt}
-                        isPendingTasksIncluded={true}
                         setActiveCard={setActiveCard}
                         isDragging={isDragging}
                         setDragging={setDragging}
@@ -317,8 +320,8 @@ function DisplayComponent(props: DisplayProps) {
                 </div>
                 {
                     <PendingTasks
-                        bladeTaskHolder={bladeTasksPendingHolder}
-                        bladeTaskCards={bladeTasksPendingHolder.getBladeTasks()}
+                        bladeTaskHolder={bladeTasksHolder}
+                        bladeTaskCards={bladeTasksHolder.getBladeTasks()}
                         numberOfRigs={numberOfRigs}
                         showPasswordPrompt={props.showPasswordPrompt}
                     />
@@ -452,12 +455,12 @@ export function handleDragEnd(
 ) {
     const { active, over } = event; // active is the element being dragged, over is the element being dragged over
     const updatedBladeTaskCards = bladeTaskHolder.getBladeTasks(); // Get the blade tasks from the BladeTaskHolder
-    const updatedBladeTaskCardsPending = bladeTaskHolderPending.getBladeTasks(); // Get the pending blade tasks from the BladeTaskHolder
+    //const updatedBladeTaskCardsPending = bladeTaskHolderPending.getBladeTasks(); // Get the pending blade tasks from the BladeTaskHolder
 
     const { statusBT, indexBT } = findBTIndex(
         // Find the index of the blade task being dragged
         updatedBladeTaskCards,
-        updatedBladeTaskCardsPending,
+        //updatedBladeTaskCardsPending,
         active
     );
 
@@ -465,17 +468,21 @@ export function handleDragEnd(
 
     if (over !== null && indexBT !== -1) {
         //get dragged card
-        if (statusBT === "scheduled") {
+        if (true
+            //statusBT === "scheduled"
+            ) {
             // If the blade task is scheduled, get the blade task from the scheduled blade tasks
             draggedCard = updatedBladeTaskCards[indexBT] as React.ReactElement;
         } else {
             // Else, get the blade task from the pending blade tasks
-            draggedCard = updatedBladeTaskCardsPending[indexBT] as React.ReactElement;
+            //draggedCard = updatedBladeTaskCardsPending[indexBT] as React.ReactElement;
         }
 
         //Moving to pending tasks
         if (over.id === "droppablePendingTasksId") {
-            if (statusBT === "scheduled") {
+            if (true
+                //statusBT === "scheduled"
+                ) {
                 updateBT({
                     //update blade task in database
                     variables: {
@@ -486,7 +493,26 @@ export function handleDragEnd(
                     },
                 });
 
-                updatedBladeTaskCards.splice(indexBT, 1);
+                updatedBladeTaskCards[indexBT] = // Update the blade task in the scheduled blade tasks
+                (
+                    <BladeTaskCard
+                        key={draggedCard.key}
+                        id={draggedCard.props.id}
+                        duration={draggedCard.props.duration}
+                        projectColor={draggedCard.props.projectColor}
+                        projectId={draggedCard.props.projectId}
+                        customer={draggedCard.props.customer}
+                        taskName={draggedCard.props.taskName}
+                        rig={0}
+                        attachPeriod={draggedCard.props.attachPeriod}
+                        detachPeriod={draggedCard.props.detachPeriod}
+                        enableDraggable={draggedCard.props.enableDraggable}
+                        shown={draggedCard.props.shown}
+                    />
+                );
+
+
+                /*updatedBladeTaskCards.splice(indexBT, 1);
 
                 updatedBladeTaskCardsPending.push(
                     // Add the blade task to the pending blade tasks
@@ -506,12 +532,13 @@ export function handleDragEnd(
                         rig={undefined}
                     />
                 );
+                */
 
                 bladeTaskHolder.setBladeTasks(updatedBladeTaskCards); // Update the blade tasks in the BladeTaskHolder
-                bladeTaskHolderPending.setBladeTasks(
+                //bladeTaskHolderPending.setBladeTasks(
                     // Update the pending blade tasks in the BladeTaskHolder
-                    updatedBladeTaskCardsPending
-                );
+                //    updatedBladeTaskCardsPending
+                //);
             } else {
                 console.log("a pending BT was moved to pending");
             }
@@ -541,7 +568,9 @@ export function handleDragEnd(
                     },
                 });
 
-                if (statusBT === "scheduled") {
+                if (true
+                    //statusBT === "scheduled"
+                    ) {
                     updatedBladeTaskCards[indexBT] = // Update the blade task in the scheduled blade tasks
                         (
                             <BladeTaskCard
@@ -564,6 +593,7 @@ export function handleDragEnd(
 
                     bladeTaskHolder.setBladeTasks(updatedBladeTaskCards); // Update the scheduled blade tasks in the BladeTaskHolder
                 } else {
+                    /*
                     updatedBladeTaskCardsPending.splice(indexBT, 1);
 
                     updatedBladeTaskCards.push(
@@ -585,12 +615,35 @@ export function handleDragEnd(
                             rig={overRig}
                         />
                     );
+                    */
+
+                    updatedBladeTaskCards[indexBT] = // Update the blade task in the scheduled blade tasks
+                    (
+                        <BladeTaskCard
+                            key={draggedCard.key}
+                            id={draggedCard.props.id}
+                            duration={draggedCard.props.duration}
+                            projectColor={draggedCard.props.projectColor}
+                            projectId={draggedCard.props.projectId}
+                            customer={draggedCard.props.customer}
+                            taskName={draggedCard.props.taskName}
+                            startDate={new Date(overDate)}
+                            endDate={newEndDate}
+                            rig={overRig}
+                            attachPeriod={draggedCard.props.attachPeriod}
+                            detachPeriod={draggedCard.props.detachPeriod}
+                            enableDraggable={draggedCard.props.enableDraggable}
+                            shown={draggedCard.props.shown}
+                        />
+                    );
+                   
 
                     bladeTaskHolder.setBladeTasks(updatedBladeTaskCards); // Update the scheduled blade tasks in the BladeTaskHolder
-                    bladeTaskHolderPending.setBladeTasks(
+                    /*bladeTaskHolderPending.setBladeTasks(
                         // Update the pending blade tasks in the BladeTaskHolder
                         updatedBladeTaskCardsPending
                     );
+                    */
                 }
             } else {
                 console.log("Overlap detected. drag opreation cancelled");
@@ -602,17 +655,20 @@ export function handleDragEnd(
     }
 }
 
-export function findBTIndex(bladeTaskCards: any, bladeTaskCardsPending: any, activeComponent: any) {
+export function findBTIndex(bladeTaskCards: any, 
+    //bladeTaskCardsPending: any, 
+    activeComponent: any) {
     for (let i: number = 0; i < bladeTaskCards.length; i++) {
         if (bladeTaskCards[i] && activeComponent.id === bladeTaskCards[i].props.id) {
             return { statusBT: "scheduled", indexBT: i };
         }
     }
-    for (let i: number = 0; i < bladeTaskCardsPending.length; i++) {
+    /*for (let i: number = 0; i < bladeTaskCardsPending.length; i++) {
         if (bladeTaskCardsPending[i] && activeComponent.id === bladeTaskCardsPending[i].props.id) {
             return { statusBT: "pending", indexBT: i };
         }
-    }
+        
+    }*/
     console.log("blade task not found");
     return { statusBT: "not found", indexBT: -1 };
 }

@@ -9,9 +9,7 @@ type TimelineFieldProps = {
     rigs: { rigName: string; rigNumber: number }[];
     months: Date[];
     btCards: React.ReactNode[];
-    btCardsPending: React.ReactNode[];
     showPasswordPrompt?: boolean;
-    isPendingTasksIncluded: boolean;
     setActiveCard?: Dispatch<SetStateAction<BladeTaskCardProps | null>>,
     isDragging: boolean,
     setDragging?: Dispatch<SetStateAction<boolean>> | undefined
