@@ -97,7 +97,8 @@ function BladeProjectPage() {
         dataForScreen = dataForScreen[0].bladeProject
     }
     else {
-        dataForScreen = BPData
+        dataForScreen = ScheduleData.filter((scheduleIsActiveCheck: any) => scheduleIsActiveCheck.id === "2")
+        dataForScreen = dataForScreen[0].bladeProject
     }
 
     const togglePopup = () => {
