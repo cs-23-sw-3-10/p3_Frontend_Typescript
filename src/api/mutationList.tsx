@@ -178,3 +178,15 @@ mutation DeleteEngineer($name: String!) {
     }
 }
 `;
+
+export const DELETE_BP = gql`
+mutation DeleteBladeProject($id: ID!) {
+  deleteBladeProject(id: $id)
+}
+`;
+
+export const DELETE_BT = gql`
+mutation DeleteBladeTask($id: ID!) {
+  deleteBladeTask(id: $id)
+}
+`;

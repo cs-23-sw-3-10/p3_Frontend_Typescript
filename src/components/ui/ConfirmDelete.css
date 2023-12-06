@@ -1,0 +1,33 @@
+.confirm-delete {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    height: 200px;
+    width: 400px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    background-color: rgba(255, 255, 255, 1);
+    z-index: 10000;
+}
+
+.ConfirmDeleteButton {
+    margin: 10px;
+    border : 1px solid black;
+}
+
+.ConfirmDeleteButton:hover {
+    background-color: rgb(241, 238, 238);
+    color: black;
+}
+
+.CancelDeleteButton {
+    margin: 10px;
+    border : 1px solid black;
+}
+
+.CancelDeleteButton:hover {
+    background-color: rgb(63, 63, 63);
+    color: black;
+}

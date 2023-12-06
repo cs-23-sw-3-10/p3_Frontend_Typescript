@@ -11,7 +11,7 @@ import { ADD_BP, UPDATE_BP } from "../../api/mutationList";
 
 interface BladeProjectMenuProps {
     creator: boolean;
-    BPName?: string;
+    BPId?: string;
 }
 
 function BladeProjectMenu(props: BladeProjectMenuProps) {
@@ -21,7 +21,7 @@ function BladeProjectMenu(props: BladeProjectMenuProps) {
     const BPArray = BPData?.AllBladeProjects;
     let currentBP: any;
     if (!creator){
-        currentBP = BPArray?.find((element: any) => element.projectName === props.BPName);
+        currentBP = BPArray?.find((element: any) => element.id === props.BPId);
     }
     
     const [projectName, setProjectName] = useState<string>(creator ? '' : currentBP.projectName);
