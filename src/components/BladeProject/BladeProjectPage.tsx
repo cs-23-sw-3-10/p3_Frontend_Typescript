@@ -157,7 +157,6 @@ function BladeProjectPage() {
                             rigs={rigs}
                             months={dates}
                             btCards={btCards}
-                            isDragging={false}
                         />
                     </div>
                 );

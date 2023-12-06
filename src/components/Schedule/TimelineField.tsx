@@ -1,18 +1,24 @@
 import CreateMonthDateContainer from "./MonthDateContainer";
 import CreateRigFieldContainer from "./RigFieldContainer";
 import MonthLengths from "./MonthLengthsEnum";
-import React, { Dispatch,  SetStateAction, } from "react";
+import React, { Dispatch,  SetStateAction, useState, } from "react";
 import  { BladeTaskCardProps } from "./BladeTaskCard";
 import { BladeTaskHolder } from "./BladeTaskHolder";
+import PendingTasks from "./PendingTasks";
+import { DndContext, DragOverlay } from "@dnd-kit/core";
+import BladeTaskCardOverlay from "./BladeTaskCardOverlay";
+import { handleDragEnd, handleDragStart } from "./Display";
+import { UPDATE_BT } from "../../api/mutationList";
+import { useMutation } from "@apollo/client";
 
 type TimelineFieldProps = {
     rigs: { rigName: string; rigNumber: number }[];
     months: Date[];
     btCards: React.ReactNode[];
     showPasswordPrompt?: boolean;
-    setActiveCard?: Dispatch<SetStateAction<BladeTaskCardProps | null>>,
-    isDragging: boolean,
-    setDragging?: Dispatch<SetStateAction<boolean>> | undefined
+    //setActiveCard?: Dispatch<SetStateAction<BladeTaskCardProps | null>>,
+    //isDragging: boolean,
+    //setDragging?: Dispatch<SetStateAction<boolean>> | undefined
 };
 
 export const dateDivLength = 25; // px length of the dates in the schedule
@@ -27,6 +33,12 @@ function CreateTimelineField(props: TimelineFieldProps) {
             month.getFullYear()
         );
     });
+
+    const [activeCard, setActiveCard] = useState<any>(null);
+    
+    const [isDragging, setDragging] = useState(false);
+
+    const [updateBt, { error, data }] = useMutation(UPDATE_BT);
 
     let allDates: Date[] = []; // All dates to be displayed in the schedule
     props.months.forEach((month) => {
@@ -61,12 +73,27 @@ function CreateTimelineField(props: TimelineFieldProps) {
         minHeight: props.rigs.length * 50 + "px",
     };
 
-  
+    let bladeTasksHolder = new BladeTaskHolder(props.btCards);
+
 
     // Create a BladeTaskHolder object to store the blade tasks
     let bladeTasks = new BladeTaskHolder(props.btCards);
     return (
         <div className="TimelineFieldContainer">
+                        <DndContext // DndContext is used to enable drag and drop functionality
+                onDragStart={(event) => {
+                    handleDragStart(event, setDragging, setActiveCard);
+                }}
+                onDragEnd={(event) => {
+                    handleDragEnd(
+                        event,
+                        bladeTasksHolder,
+                        //bladeTasksPendingHolder,
+                        setDragging,
+                        updateBt
+                    );
+                }}
+            >
                 <div className="TimelineField" style={BTFieldStyle}>
                     {props.months.map((month) => (
                         <CreateMonthDateContainer key={getMonthContainerKey(month)} currentMonth={month} />
@@ -83,8 +110,8 @@ function CreateTimelineField(props: TimelineFieldProps) {
                                 allDates={allDates}
                                 fieldWidth={fieldWidth}
                                 columns={columnsOfSchedule}
-                                isDragging={props.isDragging}
-                                setDragging={props.setDragging}
+                                isDragging={isDragging}
+                                setDragging={setDragging}
                                 BladeTaskHolder={bladeTasks}
                                 BladeTaskCards={bladeTasks.getBladeTasks().filter((bladeTask: React.ReactNode) => {
                                     //Finds the blade tasks placed on the rig
@@ -96,8 +123,36 @@ function CreateTimelineField(props: TimelineFieldProps) {
                             />
                         ))}
                     </div>
+                    {
+                    <PendingTasks
+                        bladeTaskHolder={bladeTasksHolder}
+                        bladeTaskCards={bladeTasksHolder.getBladeTasks()}
+                        numberOfRigs={props.rigs.length}
+                        showPasswordPrompt={props.showPasswordPrompt}
+                    />
+                }
+
+                {
+                    <DragOverlay>
+                        {activeCard && (
+                            <BladeTaskCardOverlay
+                                duration={activeCard.duration}
+                                attachPeriod={activeCard.attachPeriod}
+                                detachPeriod={activeCard.detachPeriod}
+                                projectColor={activeCard.projectColor}
+                                projectName={activeCard.projectName}
+                                projectId={activeCard.projectId}
+                                customer={activeCard.customer}
+                                taskName={activeCard.taskName}
+                                id={activeCard.id}
+                                shown={activeCard.shown}
+                                enableDraggable={activeCard.enableDraggable}
+                            />
+                        )}
+                    </DragOverlay>}
 
                 </div>
+                </DndContext>
 
            
         </div>
