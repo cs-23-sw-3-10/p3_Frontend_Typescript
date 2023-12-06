@@ -16,7 +16,7 @@ import { useMutation, useQuery } from "@apollo/client";
 import { ADD_BT, UPDATE_BT_INFO } from "../../api/mutationList";
 import { GET_ALL_BT } from "../../api/queryList";
 import { ValidateForm } from "./ValidateForm";
-import { ComboBoxSelector } from "../RessourcesMenu/RessourcesUtils";
+import { ComboBoxSelector } from "../ResourcesMenu/ResourcesUtils";
 import { GET_TEST_TYPES } from "../../api/queryList";
 import "../CreateBTMenu/TestTypeSelector.css";
 import "../CreateBTMenu/BladeTaskMenu.css";
