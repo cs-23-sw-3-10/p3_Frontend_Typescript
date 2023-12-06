@@ -142,9 +142,9 @@ export function TableLogic<TData, TValue>({
                     {/* popover for changing column visibility*/}
                     <Popover>
                         <PopoverTrigger asChild>
-                            <StyledButton>
+                            <button className="bg-blue-500 text-white font-bold py-2 px-4 rounded capitalize hover:bg-blue-700">
                                 Change Filters
-                            </StyledButton>
+                            </button>
                         </PopoverTrigger>
                         <PopoverContent className="bg-white">
                             {/* renders a checkbox that changes the visibility of different columns in the table. 
