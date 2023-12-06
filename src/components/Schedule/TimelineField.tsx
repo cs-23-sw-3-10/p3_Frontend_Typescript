@@ -86,7 +86,9 @@ function CreateTimelineField(props: TimelineFieldProps) {
 
     return (
         <div className="TimelineFieldContainer" onScroll={handleScroll}>
-            <DndContext // DndContext is used to enable drag and drop functionality
+            
+                <div className="TimelineField" style={BTFieldStyle}>
+                <DndContext // DndContext is used to enable drag and drop functionality
                 onDragStart={(event) => {
                     handleDragStart(event, setDragging, setActiveCard);
                 }}
@@ -94,7 +96,6 @@ function CreateTimelineField(props: TimelineFieldProps) {
                     handleDragEnd(event, bladeTasks, bladeTasksPending, setDragging, updateBt);
                 }}
             >
-                <div className="TimelineField" style={BTFieldStyle}>
                     {props.months.map((month) => (
                         <CreateMonthDateContainer key={getMonthContainerKey(month)} currentMonth={month} />
                     ))}
@@ -156,8 +157,9 @@ function CreateTimelineField(props: TimelineFieldProps) {
                     </DragOverlay>,
                     document.body
                 )}
+                </DndContext>
                 </div>
-            </DndContext>
+            
         </div>
     );
 }
