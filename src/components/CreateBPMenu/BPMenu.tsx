@@ -142,7 +142,7 @@ function BladeProjectMenu(props: BladeProjectMenuProps) {
                 <div className="bp_menu_add_wrapper">
                     <button className="bp_menu_add" onClick={() => setEquipmentMenuIsActive(true)}>+</button>
                 </div>
-                <EquipmentList resourceOrders={resourceOrders} classNameFor="bp" />
+                <EquipmentList resourceOrders={resourceOrders} classNameFor={props.popUpClass} />
 
                 <button className="bp_menu_cancel" onClick={handleCancel}>CANCEL</button>
                 <button className="bp_menu_submit" onClick={handleSubmit}>SUBMIT</button>

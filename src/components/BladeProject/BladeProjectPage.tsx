@@ -13,6 +13,7 @@ import { createRigs } from "../Schedule/Display";
 import PopupWindow from "../ui/PopupWindow";
 import BPMenu from "../CreateBPMenu/BPMenu";
 import './EquipmentSelectorBPEdit.css';
+import './EquipmentListBPEdit.css';
 
 
 /**
