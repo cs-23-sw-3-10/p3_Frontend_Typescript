@@ -140,6 +140,8 @@ function BladeTaskCard(props: BladeTaskCardProps) {
             detachPeriod: props.detachPeriod ? props.detachPeriod : 0,
         };
 
+
+
         return (
             <>
                 <DraggableBladeTask {...droppableProps} />
@@ -210,8 +212,12 @@ function BladeTaskCard(props: BladeTaskCardProps) {
 export default BladeTaskCard;
 
 function DraggableBladeTask(props: BladeTaskDraggableProps) {
-    const { attributes, listeners, setNodeRef, transform } = useDraggable({
+    const { attributes, listeners, setNodeRef, transform , isDragging } = useDraggable({
         id: props.id,
+        data: {
+            type: "BladeTaskCardProps",
+            props: props,
+        },
         disabled: !props.enableDraggable,
     });
 
@@ -219,6 +225,22 @@ function DraggableBladeTask(props: BladeTaskDraggableProps) {
         ...props.style,
         transform: CSS.Translate.toString(transform),
     };
+
+    if (isDragging) {
+        return (
+            <div
+                className="bladeTaskCard"
+                style={{
+                    width: props.style.width,
+                    border: "2px dashed black",
+                    gridRow: props.style.gridRow,
+                    gridColumn: props.style.gridColumn,
+                    justifyContent: "left",
+                    backgroundColor: "grey",
+                }}
+            ></div>
+        );
+    }
 
     // Attach this handler to the window object to close the context menu
     return props.shown ? (

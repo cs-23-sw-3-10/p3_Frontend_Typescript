@@ -3,12 +3,14 @@ import { DragOverlay } from "@dnd-kit/core";
 import CreateMonthDateContainer from "./MonthDateContainer";
 import CreateRigFieldContainer from "./RigFieldContainer";
 import MonthLengths from "./MonthLengthsEnum";
-import React, { useState } from "react";
-import BladeTaskCard from "./BladeTaskCard";
+import React, { ReactEventHandler, useState } from "react";
+import BladeTaskCard, { BladeTaskCardProps } from "./BladeTaskCard";
 import { BladeTaskHolder } from "./BladeTaskHolder";
 import { useMutation } from "@apollo/client";
 import { UPDATE_BT } from "../../api/mutationList";
 import PendingTasks from "./PendingTasks";
+import BladeTaskCardOverlay from "./BladeTaskCardOverlay";
+import { createPortal } from "react-dom";
 
 type TimelineFieldProps = {
     rigs: { rigName: string; rigNumber: number }[];
@@ -23,6 +25,9 @@ export const dateDivLength = 25; // px length of the dates in the schedule
 
 function CreateTimelineField(props: TimelineFieldProps) {
     const [updateBt, { error, data }] = useMutation(UPDATE_BT);
+
+    const [activeCard, setActiveCard] = useState<any>(null);
+    const [scrollTranslation, setScrollTranslation] = useState<number>(0);
 
     let fieldWidth: number = 0; // px width of the field dynamically calculated from the number of months displayed
     props.months.forEach((month) => {
@@ -74,11 +79,16 @@ function CreateTimelineField(props: TimelineFieldProps) {
     // Create a BladeTaskHolder object to store the pending blade tasks
     let bladeTasksPending = new BladeTaskHolder(props.btCardsPending);
 
+    const handleScroll: ReactEventHandler<HTMLDivElement> = (event) => {
+        const { scrollLeft} = event.currentTarget;
+        setScrollTranslation(scrollLeft);
+      };
+
     return (
-        <div className="TimelineFieldContainer">
+        <div className="TimelineFieldContainer" onScroll={handleScroll}>
             <DndContext // DndContext is used to enable drag and drop functionality
                 onDragStart={(event) => {
-                    handleDragStart(event, setDragging);
+                    handleDragStart(event, setDragging, setActiveCard);
                 }}
                 onDragEnd={(event) => {
                     handleDragEnd(event, bladeTasks, bladeTasksPending, setDragging, updateBt);
@@ -113,16 +123,40 @@ function CreateTimelineField(props: TimelineFieldProps) {
                             />
                         ))}
                     </div>
+                    {props.isPendingTasksIncluded && (
+                    <PendingTasks
+                        bladeTaskHolder={bladeTasksPending}
+                        bladeTaskCards={bladeTasksPending.getBladeTasks()}
+                        numberOfRigs={props.rigs.length}
+                        showPasswordPrompt={props.showPasswordPrompt}
+                        transformStyle={{transform: `translateX(${scrollTranslation}px)`}}
+                    />
+                )}
+                
+                {createPortal(
+                    <DragOverlay>
+                        {activeCard && console.log("Drag overlay created for:", activeCard)}
+                        {activeCard && console.log("Drag overlay color", activeCard.duration)}
 
+                        {activeCard && (
+                            <BladeTaskCardOverlay
+                                duration={activeCard.duration}
+                                attachPeriod={activeCard.attachPeriod}
+                                detachPeriod={activeCard.detachPeriod}
+                                projectColor={activeCard.projectColor}
+                                projectName={activeCard.projectName}
+                                projectId={activeCard.projectId}
+                                customer={activeCard.customer}
+                                taskName={activeCard.taskName}
+                                id={activeCard.id}
+                                shown={activeCard.shown}
+                                enableDraggable={activeCard.enableDraggable}
+                            />
+                        )}
+                    </DragOverlay>,
+                    document.body
+                )}
                 </div>
-                {props.isPendingTasksIncluded && (
-                        <PendingTasks
-                            bladeTaskHolder={bladeTasksPending}
-                            bladeTaskCards={bladeTasksPending.getBladeTasks()}
-                            numberOfRigs={props.rigs.length}
-                            showPasswordPrompt={props.showPasswordPrompt}
-                        />
-                    )}
             </DndContext>
         </div>
     );
@@ -166,10 +200,18 @@ function getMonthContainerKey(month: Date) {
     return `month-${month.getFullYear()}-${month.getMonth()}-Container`;
 }
 
-export function handleDragStart(event: any, setDragging: React.Dispatch<React.SetStateAction<boolean>>) {
+export function handleDragStart(
+    event: any,
+    setDragging: React.Dispatch<React.SetStateAction<boolean>>,
+    setActiveCard: React.Dispatch<React.SetStateAction<BladeTaskCardProps | null>>
+) {
     const { active } = event;
     if (active !== null) {
         setDragging(true);
+    }
+
+    if (event.active.data.current.type === "BladeTaskCardProps") {
+        setActiveCard(event.active.data.current.props);
     }
 }
 

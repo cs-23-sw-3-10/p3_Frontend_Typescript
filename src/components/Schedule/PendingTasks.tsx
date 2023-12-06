@@ -13,6 +13,7 @@ interface PendingTasksProps {
     bladeTaskCards: React.ReactNode[];
     numberOfRigs: number
     showPasswordPrompt?: boolean
+    transformStyle: any;
 }
 
 function PendingTasks(props: PendingTasksProps) {
@@ -61,7 +62,7 @@ function PendingTasks(props: PendingTasksProps) {
 
 
             </div>
-            <div className="pendingTasksContainer" style={{top: `${containerOffSetFromTop}px`}}ref={setNodeRef}>
+            <div className="pendingTasksContainer" ref={setNodeRef} style={props.transformStyle} >
                 <h2>Pending Blade Tasks</h2>
                 <div
                     className="pendingTasksContainerInner"
