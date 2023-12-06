@@ -80,11 +80,13 @@ function BladeProjectPage() {
     if (deleteError) return <p> Error {deleteError.message}</p>;
 
     let dataForScreen;
-    if (editMode.isEditMode === false) {
-        dataForScreen = ScheduleData.filter((scheduleIsActiveCheck: any) => scheduleIsActiveCheck.id === "1");
-        dataForScreen = dataForScreen[0].bladeProject;
-    } else {
-        dataForScreen = BPData;
+    if(editMode.isEditMode === false){
+        dataForScreen = ScheduleData.filter((scheduleIsActiveCheck: any) => scheduleIsActiveCheck.id === "1")
+        dataForScreen = dataForScreen[0].bladeProject
+    }
+    else {
+        dataForScreen = ScheduleData.filter((scheduleIsActiveCheck: any) => scheduleIsActiveCheck.id === "2")
+        dataForScreen = dataForScreen[0].bladeProject
     }
 
     const togglePopup = () => {
