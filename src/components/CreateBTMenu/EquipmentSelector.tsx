@@ -62,9 +62,4 @@ function EquipmentMenuItemLogic(prevResourceOrder: ResourceOrder[], resourceName
     ];
 }
 
-function sanitize(input: string) {
-    const sanitizedString = input.replace(/[^a-zA-Z0-9_ -]/g, "");
-    return sanitizedString;
-}
-
 export default EquipmentSelectionMenu;

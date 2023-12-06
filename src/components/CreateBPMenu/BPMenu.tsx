@@ -14,7 +14,6 @@ import EquipmentList from "../CreateBTMenu/EquipmentList";
 import './EquipmentListBP.css';
 import './BPMenu.css';
 import './EquipmentSelectorBP.css'
-import { SetMealSharp } from "@mui/icons-material";
 
 interface BladeProjectMenuProps {
     creator: boolean;
@@ -51,7 +50,8 @@ function BladeProjectMenu(props: BladeProjectMenuProps) {
     useEffect(() => {
         if (data && data.AllEngineers) {
             const engineerNamesArray: Array<string> = data.AllEngineers.map(({ name }: { name: string }) => name);
-            setLeaderOptions(engineerNamesArray);
+            const capitalizedNames: Array<string> = engineerNamesArray.map((name) => name.split(" ").map(first_lastname_array => first_lastname_array.charAt(0).toUpperCase() + first_lastname_array.slice(1)).join(" "));
+            setLeaderOptions(capitalizedNames);
         }
     }, [data]);
 
@@ -67,6 +67,10 @@ function BladeProjectMenu(props: BladeProjectMenuProps) {
     useEffect(() => {
         console.log(currentForm);
     }, [projectName, customer, leader, resourceOrders])
+
+    useEffect(() => {
+        setProjectName(sanitize(projectName));
+    },[projectName])
 
     const handleSubmit = () => {
         if (creator) {
@@ -122,7 +126,7 @@ function BladeProjectMenu(props: BladeProjectMenuProps) {
                 {creator ? <h2 className="bp_menu_heading">Create Blade Project</h2> :
                     <h2 className="bp_menu_heading">Edit Blade Project</h2>}
                 <h2 className="bp_menu_title">Project Name</h2>
-                <InputField className="input_field" value={projectName} setState={setProjectName} />
+                <InputField className="input_field" value={projectName} setState={setProjectName}/>
 
                 <h2 className="bp_menu_title">Customer</h2>
                 <InputField className="input_field" value={customer} setState={setCustomer} />
@@ -154,6 +158,11 @@ function ErrorMessageBox({ projectError, missingInput }: { projectError: boolean
             {missingInput ? <p className="bp_menu_error_message">Please fill out the entire form</p> : <p></p>}
         </div>
     );
+}
+
+function sanitize(input: string) {
+    const sanitizedString = input.replace(/[^a-zA-Z0-9_ -]/g, "");
+    return sanitizedString;
 }
 
 export default BladeProjectMenu;
