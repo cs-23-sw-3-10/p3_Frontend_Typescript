@@ -6,14 +6,13 @@ import { monthHeaderHeight } from "./MonthHeader";
 import { dateElementHeight } from "./OverviewDate";
 import { passwordPromptHeight } from "./ScheduleComponent";
 
-const projectRowHeight=30;
+const projectRowHeight = 30;
 
 interface PendingTasksProps {
     bladeTaskHolder: BladeTaskHolder;
     bladeTaskCards: React.ReactNode[];
-    numberOfRigs: number
-    showPasswordPrompt?: boolean
-    transformStyle: any;
+    numberOfRigs: number;
+    showPasswordPrompt?: boolean;
 }
 
 function PendingTasks(props: PendingTasksProps) {
@@ -31,8 +30,7 @@ function PendingTasks(props: PendingTasksProps) {
         let isInProctsWithPendingTasks = false;
 
         for (let i = 0; i < projectsWithPendingTasks.length; i++) {
-            if (projectsWithPendingTasks[i] === card.props.projectName)
-                isInProctsWithPendingTasks = true;
+            if (projectsWithPendingTasks[i] === card.props.projectName) isInProctsWithPendingTasks = true;
         }
 
         if (!isInProctsWithPendingTasks) {
@@ -42,32 +40,27 @@ function PendingTasks(props: PendingTasksProps) {
 
     let rowString: string = "";
     for (let i = 0; i < projectsWithPendingTasks.length; i++) {
-        rowString += `[project-${projectsWithPendingTasks[i]}] auto`;
+        rowString += `[project-${projectsWithPendingTasks[i]}] max-content`;
     }
 
     const pendingTasksStyle = {
         gridTemplateRows: rowString,
     };
 
-    let containerOffSetFromTop=70+monthHeaderHeight+dateElementHeight+props.numberOfRigs*rigFieldHeight;
+    let containerOffSetFromTop = 70 + monthHeaderHeight + dateElementHeight + props.numberOfRigs * rigFieldHeight;
 
-    let whiteSpaceHeight=40+projectsWithPendingTasks.length*projectRowHeight;
-    if(props.showPasswordPrompt){
-        containerOffSetFromTop+=passwordPromptHeight;
+    let whiteSpaceHeight = 40 + projectsWithPendingTasks.length * projectRowHeight;
+    if (props.showPasswordPrompt) {
+        containerOffSetFromTop += passwordPromptHeight;
     }
+
 
     return (
         <>
-            <div className="whiteSpace" style={{height: `${whiteSpaceHeight}px`}}>
-
-
-            </div>
-            <div className="pendingTasksContainer" ref={setNodeRef} style={props.transformStyle} >
+            {/*<div className="whiteSpace" style={{ height: `${whiteSpaceHeight}px` }}></div>*/}
+            <div className="pendingTasksContainer" ref={setNodeRef} style={{top: `${0}px`}}>
                 <h2>Pending Blade Tasks</h2>
-                <div
-                    className="pendingTasksContainerInner"
-                    style={pendingTasksStyle}
-                >
+                <div className="pendingTasksContainerInner" style={pendingTasksStyle}>
                     {projectsWithPendingTasks.map((projectName) => {
                         return (
                             <div
@@ -75,8 +68,7 @@ function PendingTasks(props: PendingTasksProps) {
                                 className="projectLegend"
                                 style={{
                                     gridRow: `project-${projectName}`,
-                                    height: `${projectRowHeight}px`,
-                                    maxHeight: `${projectRowHeight}px`,
+                                    height: "auto"
                                 }}
                             >
                                 {projectName}
@@ -91,17 +83,11 @@ function PendingTasks(props: PendingTasksProps) {
                                 className="pendingTasksColumn"
                                 style={{
                                     gridRow: `project-${projectName}`,
-                                    height: `${projectRowHeight}px`,
-                                    maxHeight: `${projectRowHeight}px`,
-                                }
-                            }
+                                }}
                             >
                                 {props.bladeTaskCards.filter((card: any) => {
                                     if (card) {
-                                        return (
-                                            card.props.projectName ===
-                                            projectName
-                                        );
+                                        return card.props.projectName === projectName;
                                     } else {
                                         return false;
                                     }

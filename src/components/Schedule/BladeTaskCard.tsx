@@ -43,6 +43,8 @@ interface BladeTaskDraggableProps {
     inConflict?: boolean;
     shown?: boolean;
     setContextMenu?: (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => void;
+    duration: number;
+    projectColor: string;
 }
 
 function BladeTaskCard(props: BladeTaskCardProps) {
@@ -138,6 +140,8 @@ function BladeTaskCard(props: BladeTaskCardProps) {
             shown: props.shown,
             attachPeriod: props.attachPeriod ? props.attachPeriod : 0,
             detachPeriod: props.detachPeriod ? props.detachPeriod : 0,
+            duration: props.duration,
+            projectColor: props.projectColor
         };
 
 
@@ -172,9 +176,16 @@ function BladeTaskCard(props: BladeTaskCardProps) {
             </>
         );
     } else {
+        let widthString=`${props.duration * dateDivLength}px`
+        let taskName=props.taskName
+
+        if(props.duration >15){ //If BT is more than 15 days, make it shorter in pending. 
+            widthString=`${11 * dateDivLength}px`
+            taskName=`${props.taskName} (${props.duration -props.attachPeriod-props.detachPeriod})`
+        }
         const cardStyle = {
             backgroundColor: props.shown ? props.projectColor : "grey",
-            width: `${props.duration * dateDivLength}px`,
+            width: widthString,
             border: props.inConflict ? "2px dashed red" : "",
             gridRow: `project-${props.projectName}`,
             gridColumn: "2",
@@ -184,12 +195,14 @@ function BladeTaskCard(props: BladeTaskCardProps) {
         const droppableProps: BladeTaskDraggableProps = {
             style: cardStyle,
             id: props.id,
-            taskName: props.taskName,
+            taskName: taskName,
             enableDraggable: props.enableDraggable,
             setContextMenu: handleRightClick,
             shown: props.shown,
             attachPeriod: props.attachPeriod ? props.attachPeriod : 0,
             detachPeriod: props.detachPeriod ? props.detachPeriod : 0,
+            duration: props.duration,
+            projectColor: props.projectColor
         };
 
         return (

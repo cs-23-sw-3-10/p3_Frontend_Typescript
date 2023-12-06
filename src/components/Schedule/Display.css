@@ -122,6 +122,7 @@
   overflow-x: scroll;
   grid-column: 2/4;
   grid-row: 1;
+
   /* border: 1px solid black; */
 }
 .TimelineField {

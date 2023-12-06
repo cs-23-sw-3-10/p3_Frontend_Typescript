@@ -15,7 +15,7 @@ type RigFieldContainerProps = {
     BladeTaskHolder: BladeTaskHolder;
     BladeTaskCards: React.ReactNode[];
     isDragging: boolean;
-    setDragging: React.Dispatch<React.SetStateAction<boolean>>;
+    setDragging: React.Dispatch<React.SetStateAction<boolean>> | undefined;
 };
 
 function CreateRigFieldContainer(props: RigFieldContainerProps) {

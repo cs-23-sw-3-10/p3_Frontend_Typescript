@@ -159,6 +159,8 @@ function BladeProjectPage() {
                             btCards={btCards}
                             btCardsPending={[]}
                             isPendingTasksIncluded={false}
+                            isDragging={false}
+                          
                        
                         />
                     </div>
