@@ -19,6 +19,7 @@ import { BladeTaskHolder } from "./BladeTaskHolder";
 import { UPDATE_BT } from "../../api/mutationList";
 import { TrendingUp } from "lucide-react";
 
+
 const currentDate = new Date(Date.now()); // Get the current date
 
 type DisplayProps = {
@@ -35,11 +36,11 @@ function DisplayComponent(props: DisplayProps) {
     const [selectedDate, setSelectedDate] = useState(`${currentDate.getFullYear()}-${currentDate.getMonth() + 1}-${currentDate.getDate()}`); // State to store the selected date
     const [numberOfMonths, setNumberOfMonths] = useState(3); // State to store the number of months to display
 
-   // const [activeCard, setActiveCard] = useState<any>(null);
+    const [activeCard, setActiveCard] = useState<any>(null);
 
-    //const [isDragging, setDragging] = useState(false);
+    const [isDragging, setDragging] = useState(false);
 
-    const [activeCards, setBtCards] = useState(null);
+    const [updateBt, { error, data }] = useMutation(UPDATE_BT);
 
     const currentMonth = new Date().toISOString().slice(0, 7);
 
@@ -233,7 +234,7 @@ function DisplayComponent(props: DisplayProps) {
         );
     });
 
-    //let bladeTasksHolder = new BladeTaskHolder(btCards);
+    let bladeTasksHolder = new BladeTaskHolder(btCards);
 
     return (
         <div className="ScheduleContentContainer">
@@ -293,8 +294,24 @@ function DisplayComponent(props: DisplayProps) {
                     )}
                 </div>
             )}
+            <DndContext // DndContext is used to enable drag and drop functionality
+                onDragStart={(event) => {
+                    handleDragStart(event, setDragging, setActiveCard);
+                }}
+                onDragEnd={(event) => {
+                    handleDragEnd(
+                        event,
+                        bladeTasksHolder,
+                        //bladeTasksPendingHolder,
+                        setDragging,
+                        updateBt
+                    );
+                }}
+            >
 
                 <div className="ScheduleDisplay">
+                
+
                     <CreateTestRigDivs rigs={rigs} />
                     <CreateTimelineField
                         rigs={rigs}
@@ -302,8 +319,37 @@ function DisplayComponent(props: DisplayProps) {
                         btCards={btCards}
                         showPasswordPrompt={props.showPasswordPrompt}
                     />
-                    
+                                        
+                   
                 </div>
+                {<PendingTasks
+                bladeTaskHolder={bladeTasksHolder}
+                bladeTaskCards={bladeTasksHolder.getBladeTasks()}
+                numberOfRigs={numberOfRigs}
+                showPasswordPrompt={props.showPasswordPrompt}
+            />
+        }
+
+        {
+            <DragOverlay>
+                {activeCard && (
+                    <BladeTaskCardOverlay
+                        duration={activeCard.duration}
+                        attachPeriod={activeCard.attachPeriod}
+                        detachPeriod={activeCard.detachPeriod}
+                        projectColor={activeCard.projectColor}
+                        projectName={activeCard.projectName}
+                        projectId={activeCard.projectId}
+                        customer={activeCard.customer}
+                        taskName={activeCard.taskName}
+                        id={activeCard.id}
+                        shown={activeCard.shown}
+                        enableDraggable={activeCard.enableDraggable}
+                    />
+                )}
+            </DragOverlay>}
+
+        </DndContext>
                 
             
             {editMode.isEditMode ? <CreateAdditionalContent /> : null}

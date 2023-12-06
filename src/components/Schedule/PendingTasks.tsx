@@ -71,7 +71,6 @@ function PendingTasks(props: PendingTasksProps) {
 
     return (
         <>
-            {<div className="whiteSpace" style={{ height: `${whiteSpaceHeight}px` }}></div>}
             <div className="pendingTasksContainer" ref={setNodeRef} style={{top: `${containerOffSetFromTop }px`}}>
                 <h2>Pending Blade Tasks</h2>
                 <div className="pendingTasksContainerInner" style={pendingTasksStyle}>

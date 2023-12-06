@@ -7,9 +7,10 @@
     min-height: 100px;
     width: calc(90%);
     border: 2px solid rgba(0,0,0, 1);
+    grid-column: 1/3;
+    grid-row:3 ;
     margin: 10px;
     overflow-x: scroll;
-    position: absolute;
 }
 
 .whiteSpace{
