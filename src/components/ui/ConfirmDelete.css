@@ -1,33 +1,45 @@
 .confirm-delete {
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
     height: 200px;
     width: 400px;
     position: fixed;
-    top: 0;
-    left: 0;
-    background-color: rgba(255, 255, 255, 1);
+    top : 30vh;
+    left : 40vw;
+    background-color: rgb(241, 241, 241);
     z-index: 10000;
+    border-radius: 8px;
+}
+
+.confirmButtonContainer {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
 }
 
 .ConfirmDeleteButton {
     margin: 10px;
     border : 1px solid black;
+    border-radius: 8px;
+    min-width: 80px;
+    background-color: rgb(255, 255, 255);
 }
 
 .ConfirmDeleteButton:hover {
-    background-color: rgb(241, 238, 238);
-    color: black;
+    background-color: rgb(157, 157, 157);
 }
 
 .CancelDeleteButton {
     margin: 10px;
     border : 1px solid black;
+    background-color: rgb(169, 169, 169);
+    border-radius: 8px;
+    min-width: 80px;
 }
 
 .CancelDeleteButton:hover {
-    background-color: rgb(63, 63, 63);
-    color: black;
+    background-color: rgb(90, 90, 90);
 }
