@@ -190,12 +190,6 @@ export function TableLogic<TData, TValue>({
                         </PopoverContent>
                     </Popover>
                 </div>
-            {/* We do not use this ATM */}
-                <div className="ml-10">
-                    <StyledButton >
-                        Create {window.location.pathname.split("/")[1]}
-                    </StyledButton>
-                </div>
                 </div>
                 <div>
                     <SwitchComponent setShowPasswordPrompt={setShowPasswordPrompt}/>

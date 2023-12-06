@@ -8,11 +8,6 @@ export type BladeTaskQuery = {
     detachPeriod: number;
     taskName: string;
     testRig: string;
-    bladeProject: [
-        {
-            id: number;
-        }
-    ];
     bookings:[{
         engineer: [{
             name: string;
