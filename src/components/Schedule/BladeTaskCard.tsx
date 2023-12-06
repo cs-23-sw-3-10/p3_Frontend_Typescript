@@ -179,8 +179,8 @@ function BladeTaskCard(props: BladeTaskCardProps) {
         let widthString=`${props.duration * dateDivLength}px`
         let taskName=props.taskName
 
-        if(props.duration >15){ //If BT is more than 15 days, make it shorter in pending. 
-            widthString=`${11 * dateDivLength}px`
+        if(props.duration >30){ //If too long, make it shorter in pending. 
+            widthString=`${30 * dateDivLength}px`
             taskName=`${props.taskName} (${props.duration -props.attachPeriod-props.detachPeriod})`
         }
         const cardStyle = {

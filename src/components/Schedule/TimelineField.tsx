@@ -1,16 +1,9 @@
-import { DndContext } from "@dnd-kit/core";
-import { DragOverlay } from "@dnd-kit/core";
 import CreateMonthDateContainer from "./MonthDateContainer";
 import CreateRigFieldContainer from "./RigFieldContainer";
 import MonthLengths from "./MonthLengthsEnum";
-import React, { Dispatch, ReactEventHandler, SetStateAction, useState } from "react";
-import BladeTaskCard, { BladeTaskCardProps } from "./BladeTaskCard";
+import React, { Dispatch,  SetStateAction, } from "react";
+import  { BladeTaskCardProps } from "./BladeTaskCard";
 import { BladeTaskHolder } from "./BladeTaskHolder";
-import { useMutation } from "@apollo/client";
-import { UPDATE_BT } from "../../api/mutationList";
-import PendingTasks from "./PendingTasks";
-import BladeTaskCardOverlay from "./BladeTaskCardOverlay";
-import { createPortal } from "react-dom";
 
 type TimelineFieldProps = {
     rigs: { rigName: string; rigNumber: number }[];
@@ -26,10 +19,7 @@ type TimelineFieldProps = {
 
 export const dateDivLength = 25; // px length of the dates in the schedule
 
-function CreateTimelineField(props: TimelineFieldProps) {
-    const [updateBt, { error, data }] = useMutation(UPDATE_BT);
-
-    
+function CreateTimelineField(props: TimelineFieldProps) {    
     let fieldWidth: number = 0; // px width of the field dynamically calculated from the number of months displayed
     props.months.forEach((month) => {
         fieldWidth += getTotalWidth(
@@ -77,13 +67,7 @@ function CreateTimelineField(props: TimelineFieldProps) {
 
     // Create a BladeTaskHolder object to store the blade tasks
     let bladeTasks = new BladeTaskHolder(props.btCards);
-    // Create a BladeTaskHolder object to store the pending blade tasks
-    let bladeTasksPending = new BladeTaskHolder(props.btCardsPending);
-
     return (
-
-
-
         <div className="TimelineFieldContainer">
                 <div className="TimelineField" style={BTFieldStyle}>
                     {props.months.map((month) => (

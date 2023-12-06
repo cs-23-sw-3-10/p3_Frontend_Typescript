@@ -299,6 +299,22 @@ function DisplayComponent(props: DisplayProps) {
                     handleDragEnd(event, bladeTasksHolder, bladeTasksPendingHolder, setDragging, updateBt);
                 }}
             >
+
+
+                <div className="ScheduleDisplay">
+                    <CreateTestRigDivs rigs={rigs} />
+                    <CreateTimelineField
+                        rigs={rigs}
+                        months={dates}
+                        btCards={btCards}
+                        btCardsPending={btCardsPending}
+                        showPasswordPrompt={props.showPasswordPrompt}
+                        isPendingTasksIncluded={true}
+                        setActiveCard={setActiveCard}
+                        isDragging={isDragging}
+                        setDragging={setDragging}
+                    />
+                </div>
                 {
                     <PendingTasks
                         bladeTaskHolder={bladeTasksPendingHolder}
@@ -332,20 +348,6 @@ function DisplayComponent(props: DisplayProps) {
                     document.body
                 )}
 
-                <div className="ScheduleDisplay">
-                    <CreateTestRigDivs rigs={rigs} />
-                    <CreateTimelineField
-                        rigs={rigs}
-                        months={dates}
-                        btCards={btCards}
-                        btCardsPending={btCardsPending}
-                        showPasswordPrompt={props.showPasswordPrompt}
-                        isPendingTasksIncluded={true}
-                        setActiveCard={setActiveCard}
-                        isDragging={isDragging}
-                        setDragging={setDragging}
-                    />
-                </div>
             </DndContext>
             {editMode.isEditMode ? <CreateAdditionalContent /> : null}
         </div>
