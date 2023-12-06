@@ -1,6 +1,3 @@
-
-
-
 /* ResourceTable Component Styling */
 .resource-table-container {
     margin: 20px;
@@ -41,7 +38,9 @@
 }
 
 /* Individual table styling */
-.engineer-table, .technician-table, .equipment-table {
+.engineer-table,
+.technician-table,
+.equipment-table {
     flex: 1;
     min-width: 300px; /* Adjust based on your layout requirements */
     background-color: #f2f2f2;
@@ -57,7 +56,7 @@
     }
 }
 /* Input field styling */
-.text-input{
+.text-input {
     width: 100%;
     padding: 8px;
     margin-bottom: 20px;
@@ -107,7 +106,7 @@
 
 /* Submit button styling */
 .submit-button {
-    background-color: #4CAF50;
+    background-color: #4caf50;
     color: white;
     padding: 10px 15px;
     border: none;
@@ -115,7 +114,6 @@
     cursor: pointer;
     transition: background-color 0.1s ease;
     margin-right: 2px;
-
 }
 .submit-button:hover {
     background-color: #0f6313;
@@ -142,4 +140,14 @@
     text-align: center;
     border-width: 1px;
     border-color: gray;
+}
+
+.bold-text {
+    font-weight: bold;
+    color: #333;
+}
+.submit-text {
+    font-weight: bold;
+    color: #4caf50;
+
 }
