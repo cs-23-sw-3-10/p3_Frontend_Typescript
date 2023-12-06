@@ -11,6 +11,7 @@ const MessageBox: React.FC<MessageBoxProps> = ({
     messages,
     onClose,
 }) => {
+    console.log("Rendering MessageBox");
     return (
         <div
             style={{

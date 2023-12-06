@@ -1,8 +1,8 @@
 import { useQuery } from "@apollo/client";
 import React, { useEffect, useState } from "react";
 import { Combobox } from "react-widgets/cjs";
-import './Ressource.css';
-import '../../../node_modules/react-widgets/styles.css';
+import "./Resource.css";
+import "../../../node_modules/react-widgets/styles.css";
 
 /**
  * Props for the ComboBoxSelector component.
@@ -16,7 +16,6 @@ interface ComboBoxProps {
     queryVariables?: any; // includes the variables for the query
     dataKey: string; // New prop to specify the key in the data object
     mappingFunction: (data: any) => string;
-
 }
 
 /**
@@ -43,9 +42,9 @@ interface ComboBoxProps {
         mappingFunction = {({label} : {label : string}) => label}
     />
  */
-export function ComboBoxSelector(props : ComboBoxProps) {
-    const {selectedValue, setSelectedValue, setItemList, className, query, dataKey, queryVariables, mappingFunction} = props;
-    const { loading, error, data, refetch} = useQuery(query, {variables: queryVariables});
+export function ComboBoxSelector(props: ComboBoxProps) {
+    const { selectedValue, setSelectedValue, setItemList, className, query, dataKey, queryVariables, mappingFunction } = props;
+    const { loading, error, data, refetch } = useQuery(query, { variables: queryVariables });
     const [optionsList, setOptionsList] = useState<Array<string>>([]);
     //console.log(data);
 
@@ -57,18 +56,18 @@ export function ComboBoxSelector(props : ComboBoxProps) {
         }
     }, [data, selectedValue]);
 
-  if (loading) return <Combobox className={`${className}`} data={optionsList} />;
-  if (error) return <Combobox className={`${className}`} data={optionsList} />;
+    if (loading) return <Combobox className={`${className}`} data={optionsList} />;
+    if (error) return <Combobox className={`${className}`} data={optionsList} />;
 
     return (
         <>
-            <Combobox onChange={value => setSelectedValue(value)} value={selectedValue} data={optionsList} />
+            <Combobox onChange={(value) => setSelectedValue(value)} value={selectedValue} data={optionsList} />
         </>
     );
 }
 
-export function SanitizeString(str: string) : string {
+export function SanitizeString(str: string): string {
     //Accept only alphanumeric and space and - and _
-    let output : string = str.replace(/[^a-zA-Z0-9-_ ]/g, "")
+    let output: string = str.replace(/[^a-zA-Z0-9-_ ]/g, "");
     return output;
 }

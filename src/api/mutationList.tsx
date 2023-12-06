@@ -179,6 +179,7 @@ mutation DeleteEngineer($name: String!) {
 }
 `;
 
+
 export const CLONE_AND_REPLACE = gql`
 mutation CloneScheduleAndReplace {
         cloneScheduleAndReplace {
@@ -195,4 +196,17 @@ mutation discardEditChanges{
             isActive
         }
     }
+    `;
+    
+export const DELETE_BP = gql`
+mutation DeleteBladeProject($id: ID!) {
+  deleteBladeProject(id: $id)
+}
+`;
+
+export const DELETE_BT = gql`
+mutation DeleteBladeTask($id: ID!) {
+  deleteBladeTask(id: $id)
+}
+
 `;
