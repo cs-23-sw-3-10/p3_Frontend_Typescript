@@ -36,7 +36,6 @@ function BTPage() {
     //handle the data for the table regarding the view/edit mode
     let dataForScreen;
     if(editMode.isEditMode === false){
-        console.log("views", bladeTasks)
         dataForScreen = ScheduleDataBT.filter((scheduleIsActive: any) => scheduleIsActive.id === "1")
         dataForScreen = dataForScreen[0].bladeProject.map((bladeTasks: any) => bladeTasks.bladeTasks).flat()
     }
@@ -44,7 +43,6 @@ function BTPage() {
         dataForScreen = ScheduleDataBT.filter((scheduleIsActive: any) => scheduleIsActive.id === "2")
         dataForScreen = dataForScreen[0].bladeProject.map((bladeTasks: any) => bladeTasks.bladeTasks).flat()
     }
-
 
     /**
      * renders the table. The renderExpandedComponent prop is used to render the bookings table
