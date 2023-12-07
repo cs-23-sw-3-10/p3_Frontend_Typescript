@@ -96,16 +96,8 @@ export const GET_BT_WITH_ID = gql`
 `;
 
 export const GET_BT_IN_RANGE = gql`
-    query AllBladeTasksInRange(
-        $startDate: String!
-        $endDate: String!
-        $isActive: Boolean!
-    ) {
-        AllBladeTasksInRange(
-            startDate: $startDate
-            endDate: $endDate
-            isActive: $isActive
-        ) {
+    query AllBladeTasksInRange($startDate: String!, $endDate: String!, $isActive: Boolean!) {
+        AllBladeTasksInRange(startDate: $startDate, endDate: $endDate, isActive: $isActive) {
             id
             startDate
             endDate
@@ -126,16 +118,8 @@ export const GET_BT_IN_RANGE = gql`
 `;
 
 export const GET_BT_IN_RANGE_SUB = gql`
-    subscription AllBladeTasksInRangeSub(
-        $startDate: String!
-        $endDate: String!
-        $isActive: Boolean!
-    ) {
-        AllBladeTasksInRangeSub(
-            startDate: $startDate
-            endDate: $endDate
-            isActive: $isActive
-        ) {
+    subscription AllBladeTasksInRangeSub($startDate: String!, $endDate: String!, $isActive: Boolean!) {
+        AllBladeTasksInRangeSub(startDate: $startDate, endDate: $endDate, isActive: $isActive) {
             id
             startDate
             endDate
@@ -340,12 +324,12 @@ export const GET_ALL_EQUIPMENT_TYPES = gql`
     }
 `;
 export const GET_ALL_TECHNICIAN_TYPES = gql`
-query GetAllTechnicianTypes{
-    DictionaryAllByCategory(category:"technician"){
-      id
-    	label
+    query GetAllTechnicianTypes {
+        DictionaryAllByCategory(category: "technician") {
+            id
+            label
+        }
     }
-}
 `;
 
 export const GET_BT_DATE_INFO = gql`
@@ -401,33 +385,33 @@ export const GET_ALL_BLADE_PROJECTS = gql`
 `;
 
 export const ALL_EQUIPMENT = gql`
-query AllEquipment {
-    AllEquipment {
-        id
-        type
-        name
-        calibrationExpirationDate
+    query AllEquipment {
+        AllEquipment {
+            id
+            type
+            name
+            calibrationExpirationDate
+        }
     }
-}
 `;
 export const GET_EQUIPMENT_TYPES = gql`
-query GetEquipmentTypes {
-    GetEquipmentTypes
-}
+    query GetEquipmentTypes {
+        GetEquipmentTypes
+    }
 `;
 
 export const GET_AUTHENTICATION_TOKEN = gql`
-query Authenticate {
-    authenticate
-}
+    query Authenticate {
+        authenticate
+    }
 `;
 
-
-export const GET_CONFLICTS_FOR_BT= gql`
-    query findConflictsForBladeTask($id: ID!,$isActive: Boolean!) {
-        findConflictsForBladeTask(id: $id,isActive: $isActive) {
+export const GET_CONFLICTS_FOR_BT = gql`
+    query findConflictsForBladeTask($id: ID!, $isActive: Boolean!) {
+        findConflictsForBladeTask(id: $id, isActive: $isActive) {
             message
         }
     }
 `;
+
 
