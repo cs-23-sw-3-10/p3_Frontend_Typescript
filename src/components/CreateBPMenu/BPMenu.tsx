@@ -12,6 +12,7 @@ import EquipmentSelectionMenu from "../CreateBTMenu/EquipmentSelector";
 import { ResourceOrder } from "../CreateBTMenu/BTMenuTypes";
 import EquipmentList from "../CreateBTMenu/EquipmentList";
 import { capitalize, sanitize } from "../../utils/StringEditing";
+import { GET_BOOKING_BY_BP_ID } from "../../api/queryList"; 
 import "./EquipmentListBP.css";
 import "./BPMenu.css";
 import "./EquipmentSelectorBP.css";
@@ -28,14 +29,24 @@ interface BladeProjectMenuProps {
 
 function BladeProjectMenu(props: BladeProjectMenuProps) {
     const creator = props.creator; //Determines Creating or Editing
+    let currentBpResourceOrders:ResourceOrder[] = [];
     let currentBP: any;
 
     //In case of editing a BP -> Fetch all BP's -> Exract current BP
+    const { data: BPData } = useQuery(GET_ALL_BP); //Get All Blade Projects
+    currentBP = BPData?.AllBladeProjects?.find((element: any) => element.projectName === props.BPName);
+
+    const { data: currentBpBookings} = useQuery(GET_BOOKING_BY_BP_ID, {
+        variables:{
+            id: currentBP?.id
+        }
+    })
+    if(currentBpBookings?.BookingByBPId != null){
+        currentBpResourceOrders = currentBpBookings?.BookingByBPId?.map(({resourceName, resourceType, equipmentAssignmentStatus}:{resourceName:string, resourceType:string, equipmentAssignmentStatus: Array<boolean>}) => ({resourceType: capitalize(resourceType), resourceName:capitalize(resourceName), equipmentAssignmentStatus: [true,true]}));
+    }
+    console.log(currentBpResourceOrders);
     
-        const { data:BTData } = useQuery(GET_ALL_BP); //Get All Blade Projects
-        currentBP = BTData?.AllBladeProjects?.find((element: any) => element.projectName === props.BPName);
-        console.log(currentBP);
-    
+   
 
     //Create -> Set states to "empty"
     //Edit -> Set states to corresponding values in current BP
@@ -43,7 +54,7 @@ function BladeProjectMenu(props: BladeProjectMenuProps) {
     const [customer, setCustomer] = useState<string>(creator ? "" : capitalize(currentBP.customer));
     const [leader, setLeader] = useState<string>(creator ? "" : capitalize(currentBP.projectLeader));
     const [leaderOptions, setLeaderOptions] = useState<string[]>([]);
-    const [resourceOrders, setResourceOrders] = useState<ResourceOrder[]>([]);
+    const [resourceOrders, setResourceOrders] = useState<ResourceOrder[]>(creator ? [] : currentBpResourceOrders);
     const [currentBladeTasks, setCurrentBladeTasks] = useState(creator ? [] : currentBP.bladeTasks);
 
     const [projectError, setProjectError] = useState<boolean>(false);
@@ -164,7 +175,7 @@ function BladeProjectMenu(props: BladeProjectMenuProps) {
                 </button>
                 <ErrorMessageBox projectError={projectError} missingInput={missingInput} />
                 {equipmentMenuIsActive ? <EquipmentSelectionMenu setEquipmentActive={setEquipmentMenuIsActive} className={props.popUpClass} /> : <></>}
-            </ResourceOrderContext.Provider>                                    
+            </ResourceOrderContext.Provider>
         </div>
     );
 }
