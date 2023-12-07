@@ -63,7 +63,6 @@ function PendingTasks(props: PendingTasksProps) {
 
     let containerOffSetFromTop = 70 + monthHeaderHeight + dateElementHeight + props.numberOfRigs * rigFieldHeight;
 
-    let whiteSpaceHeight = 40 + projectsWithPendingTasks.length * projectRowHeight;
     if (props.showPasswordPrompt) {
         containerOffSetFromTop += passwordPromptHeight;
     }

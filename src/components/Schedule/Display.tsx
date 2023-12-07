@@ -14,11 +14,8 @@ import StyledButton from "../ui/styledButton";
 import PendingTasks from "./PendingTasks";
 import { DndContext, DragOverlay } from "@dnd-kit/core";
 import BladeTaskCardOverlay from "./BladeTaskCardOverlay";
-import { createPortal } from "react-dom";
 import { BladeTaskHolder } from "./BladeTaskHolder";
 import { UPDATE_BT } from "../../api/mutationList";
-import { TrendingUp } from "lucide-react";
-
 
 const currentDate = new Date(Date.now()); // Get the current date
 
@@ -36,19 +33,17 @@ function DisplayComponent(props: DisplayProps) {
     const [selectedDate, setSelectedDate] = useState(`${currentDate.getFullYear()}-${currentDate.getMonth() + 1}-${currentDate.getDate()}`); // State to store the selected date
     const [numberOfMonths, setNumberOfMonths] = useState(3); // State to store the number of months to display
 
-    const [activeCard, setActiveCard] = useState<any>(null);
-
-    const [isDragging, setDragging] = useState(false);
-
-    const [updateBt, { error, data }] = useMutation(UPDATE_BT);
-
     const currentMonth = new Date().toISOString().slice(0, 7);
 
     const [selectedMonth, setSelectedMonth] = useState(currentMonth);
 
     const [dates, setDates] = useState(getMonthsInView(currentDate, numberOfMonths)); // State to store the months to display
 
-    //const [updateBt, { error, data }] = useMutation(UPDATE_BT);
+    const [activeCard, setActiveCard] = useState<any>(null);
+
+    const [isDragging, setDragging] = useState(false);
+
+    const [updateBt, { error, data }] = useMutation(UPDATE_BT);
 
     useEffect(() => {
         if (editMode.isEditMode) {
@@ -206,8 +201,6 @@ function DisplayComponent(props: DisplayProps) {
         );
     });
 
-    //Making pending BladeTaskCards
-    //let btCardsPending: React.ReactNode[] = [];
     dataPendingBT["AllBladeTasksPendingSub"].forEach((bt: any) => {
         let btShown = false;
         if (bt.bladeProject.customer === props.filter || props.filter === "None" || editMode.isEditMode) {
@@ -308,50 +301,40 @@ function DisplayComponent(props: DisplayProps) {
                     );
                 }}
             >
-
                 <div className="ScheduleDisplay">
-                
-
                     <CreateTestRigDivs rigs={rigs} />
-                    <CreateTimelineField
-                        rigs={rigs}
-                        months={dates}
-                        btCards={btCards}
+                    <CreateTimelineField rigs={rigs} months={dates} btCards={btCards} showPasswordPrompt={props.showPasswordPrompt} />
+                </div>
+                {
+                    <PendingTasks
+                        bladeTaskHolder={bladeTasksHolder}
+                        bladeTaskCards={bladeTasksHolder.getBladeTasks()}
+                        numberOfRigs={numberOfRigs}
                         showPasswordPrompt={props.showPasswordPrompt}
                     />
-                                        
-                   
-                </div>
-                {<PendingTasks
-                bladeTaskHolder={bladeTasksHolder}
-                bladeTaskCards={bladeTasksHolder.getBladeTasks()}
-                numberOfRigs={numberOfRigs}
-                showPasswordPrompt={props.showPasswordPrompt}
-            />
-        }
+                }
 
-        {
-            <DragOverlay>
-                {activeCard && (
-                    <BladeTaskCardOverlay
-                        duration={activeCard.duration}
-                        attachPeriod={activeCard.attachPeriod}
-                        detachPeriod={activeCard.detachPeriod}
-                        projectColor={activeCard.projectColor}
-                        projectName={activeCard.projectName}
-                        projectId={activeCard.projectId}
-                        customer={activeCard.customer}
-                        taskName={activeCard.taskName}
-                        id={activeCard.id}
-                        shown={activeCard.shown}
-                        enableDraggable={activeCard.enableDraggable}
-                    />
-                )}
-            </DragOverlay>}
+                {
+                    <DragOverlay>
+                        {activeCard && (
+                            <BladeTaskCardOverlay
+                                duration={activeCard.duration}
+                                attachPeriod={activeCard.attachPeriod}
+                                detachPeriod={activeCard.detachPeriod}
+                                projectColor={activeCard.projectColor}
+                                projectName={activeCard.projectName}
+                                projectId={activeCard.projectId}
+                                customer={activeCard.customer}
+                                taskName={activeCard.taskName}
+                                id={activeCard.id}
+                                shown={activeCard.shown}
+                                enableDraggable={activeCard.enableDraggable}
+                            />
+                        )}
+                    </DragOverlay>
+                }
+            </DndContext>
 
-        </DndContext>
-                
-            
             {editMode.isEditMode ? <CreateAdditionalContent /> : null}
         </div>
     );
@@ -465,8 +448,6 @@ export function handleDragEnd(event: any, bladeTaskHolder: BladeTaskHolder, setD
 
         //Moving to pending tasks
         if (over.id === "droppablePendingTasksId") {
-
-
             updateBT({
                 //update blade task in database
                 variables: {
@@ -495,7 +476,7 @@ export function handleDragEnd(event: any, bladeTaskHolder: BladeTaskHolder, setD
                     />
                 );
 
-            //bladeTaskHolder.setBladeTasks(updatedBladeTaskCards); // Update the blade tasks in the BladeTaskHolder
+            bladeTaskHolder.setBladeTasks(updatedBladeTaskCards); // Update the blade tasks in the BladeTaskHolder
         } else {
             const overIdSlpit = over.id.split("-");
             const overRig = parseInt(overIdSlpit[0].split(" ")[1]); // Get the rig number of the column being dragged over
@@ -542,7 +523,7 @@ export function handleDragEnd(event: any, bladeTaskHolder: BladeTaskHolder, setD
                         />
                     );
 
-                //bladeTaskHolder.setBladeTasks(updatedBladeTaskCards); // Update the scheduled blade tasks in the BladeTaskHolder
+                bladeTaskHolder.setBladeTasks(updatedBladeTaskCards); // Update the scheduled blade tasks in the BladeTaskHolder
             } else {
                 console.log("Overlap detected. drag opreation cancelled");
             }

@@ -1,29 +1,19 @@
 import CreateMonthDateContainer from "./MonthDateContainer";
 import CreateRigFieldContainer from "./RigFieldContainer";
 import MonthLengths from "./MonthLengthsEnum";
-import React, { Dispatch,  SetStateAction, useState, } from "react";
-import  { BladeTaskCardProps } from "./BladeTaskCard";
+import React, { useState } from "react";
 import { BladeTaskHolder } from "./BladeTaskHolder";
-import PendingTasks from "./PendingTasks";
-import { DndContext, DragOverlay } from "@dnd-kit/core";
-import BladeTaskCardOverlay from "./BladeTaskCardOverlay";
-import { handleDragEnd, handleDragStart } from "./Display";
-import { UPDATE_BT } from "../../api/mutationList";
-import { useMutation } from "@apollo/client";
 
 type TimelineFieldProps = {
     rigs: { rigName: string; rigNumber: number }[];
     months: Date[];
     btCards: React.ReactNode[];
     showPasswordPrompt?: boolean;
-    //setActiveCard?: Dispatch<SetStateAction<BladeTaskCardProps | null>>,
-    //isDragging: boolean,
-    //setDragging?: Dispatch<SetStateAction<boolean>> | undefined
 };
 
 export const dateDivLength = 25; // px length of the dates in the schedule
 
-function CreateTimelineField(props: TimelineFieldProps) {    
+function CreateTimelineField(props: TimelineFieldProps) {
     let fieldWidth: number = 0; // px width of the field dynamically calculated from the number of months displayed
     props.months.forEach((month) => {
         fieldWidth += getTotalWidth(
@@ -34,11 +24,7 @@ function CreateTimelineField(props: TimelineFieldProps) {
         );
     });
 
-  
-    
     const [isDragging, setDragging] = useState(false);
-
-
 
     let allDates: Date[] = []; // All dates to be displayed in the schedule
     props.months.forEach((month) => {
@@ -73,48 +59,40 @@ function CreateTimelineField(props: TimelineFieldProps) {
         minHeight: props.rigs.length * 50 + "px",
     };
 
- 
-
-
     // Create a BladeTaskHolder object to store the blade tasks
     let bladeTasks = new BladeTaskHolder(props.btCards);
     return (
         <div className="TimelineFieldContainer">
+            <div className="TimelineField" style={BTFieldStyle}>
+                {props.months.map((month) => (
+                    <CreateMonthDateContainer key={getMonthContainerKey(month)} currentMonth={month} />
+                ))}
 
-                <div className="TimelineField" style={BTFieldStyle}>
-                    {props.months.map((month) => (
-                        <CreateMonthDateContainer key={getMonthContainerKey(month)} currentMonth={month} />
+                <div className="RigFieldContainer" style={rigFieldContainerStyle}>
+                    {props.rigs.map((rig) => (
+                        // Create a rig field for each rig
+                        <CreateRigFieldContainer
+                            key={rig.rigName}
+                            rig={rig.rigName}
+                            rigNumber={rig.rigNumber}
+                            viewMonths={props.months}
+                            allDates={allDates}
+                            fieldWidth={fieldWidth}
+                            columns={columnsOfSchedule}
+                            isDragging={isDragging}
+                            setDragging={setDragging}
+                            BladeTaskHolder={bladeTasks}
+                            BladeTaskCards={bladeTasks.getBladeTasks().filter((bladeTask: React.ReactNode) => {
+                                //Finds the blade tasks placed on the rig
+                                if (bladeTask) {
+                                    return (bladeTask as React.ReactElement<any>).props.rig === rig.rigNumber;
+                                }
+                                return false;
+                            })}
+                        />
                     ))}
-
-                    <div className="RigFieldContainer" style={rigFieldContainerStyle}>
-                        {props.rigs.map((rig) => (
-                            // Create a rig field for each rig
-                            <CreateRigFieldContainer
-                                key={rig.rigName}
-                                rig={rig.rigName}
-                                rigNumber={rig.rigNumber}
-                                viewMonths={props.months}
-                                allDates={allDates}
-                                fieldWidth={fieldWidth}
-                                columns={columnsOfSchedule}
-                                isDragging={isDragging}
-                                setDragging={setDragging}
-                                BladeTaskHolder={bladeTasks}
-                                BladeTaskCards={bladeTasks.getBladeTasks().filter((bladeTask: React.ReactNode) => {
-                                    //Finds the blade tasks placed on the rig
-                                    if (bladeTask) {
-                                        return (bladeTask as React.ReactElement<any>).props.rig === rig.rigNumber;
-                                    }
-                                    return false;
-                                })}
-                            />
-                        ))}
-                    </div>
-
                 </div>
-
-
-           
+            </div>
         </div>
     );
 }
@@ -156,5 +134,3 @@ export function createGridColumns(allDates: Date[]) {
 function getMonthContainerKey(month: Date) {
     return `month-${month.getFullYear()}-${month.getMonth()}-Container`;
 }
-
-
