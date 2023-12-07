@@ -7,6 +7,8 @@ function ProjectSelector({bladeProjectId,setBladeProjectId}:{bladeProjectId:stri
         variables: { isActive: true },
     });
 
+    console.log("kig lige her på data: ", data);
+
     //Whilst list is loading, the only element in the list is "LOADING"
     if (loading) return (<option value="LOADING">LOADING</option>);
 
@@ -17,14 +19,14 @@ function ProjectSelector({bladeProjectId,setBladeProjectId}:{bladeProjectId:stri
     
     //Set the default state to be the first option -> Only happens on initial render
     if(bladeProjectId === ""){
-        setBladeProjectId(data.AllBladeProjects[0].id);
+        setBladeProjectId(data.AllBladeProjectsBySchedule[0].id);
     }
 
     return (
         <div className='project_selection_wrapper'>
             <h2 className="title">Blade Project</h2>
             <select className="input_sideborders" id="blade_project" name="blade_project" onChange={(e) => setBladeProjectId(e.currentTarget.value)} value={bladeProjectId}>
-                <BladeProjectOptions AllBladeProjects={data.AllBladeProjects}/>
+                <BladeProjectOptions AllBladeProjects={data.AllBladeProjectsBySchedule}/>
             </select>
         </div>
         
