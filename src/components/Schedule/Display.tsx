@@ -48,6 +48,8 @@ function DisplayComponent(props: DisplayProps) {
     useEffect(() => {
         if (editMode.isEditMode) {
             props.setFilter("None");
+        } else {
+            refetchBP();
         }
     }, [editMode.isEditMode]);
 
@@ -105,6 +107,7 @@ function DisplayComponent(props: DisplayProps) {
         loading: loadingBP,
         error: errorBP,
         data: dataBP,
+        refetch: refetchBP,
     } = useQuery(GET_ALL_BLADE_PROJECTS, {
         variables: { isActive: true },
     });
