@@ -8,8 +8,10 @@ import { ResourceOrder } from "../CreateBTMenu/BTMenuTypes";
 import EditBTComponent from "../ui/EditBTComponent";
 import { dateDivLength } from "./TimelineField";
 import { GET_CONFLICTS_FOR_BT } from "../../api/queryList";
-import { useQuery } from "@apollo/client";
+import { useMutation, useQuery } from "@apollo/client";
 import { useEditModeContext } from "../../EditModeContext";
+import { DELETE_BT } from "../../api/mutationList";
+import ConfirmDelete from "../ui/ConfirmDelete";
 
 const durationCutoff = 30; // If a BT has duration more than durationCutoff, the total width of the BladeTaskCard will be set to `${durationCutoff * dateDivLength}px`
 
@@ -51,6 +53,7 @@ interface BladeTaskDraggableProps {
 
 function BladeTaskCard(props: BladeTaskCardProps) {
     const editMode = useEditModeContext();
+    const [deleteBT, { loading: deleteLoading, error: deleteError }] = useMutation(DELETE_BT);
     const [showContextMenu, setShowContextMenu] = useState(false);
     const [contextMenuPosition, setContextMenuPosition] = useState({
         x: 0,
@@ -58,6 +61,7 @@ function BladeTaskCard(props: BladeTaskCardProps) {
     });
     const [showMessageBox, setShowMessageBox] = useState(false); // Used to show the message box when the user clicks on a task card
     const [showPopup, setShowPopup] = useState(false); // Used to show the popup when the user clicks edit in a task card
+    const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
 
     const contextMenuRef = useRef<HTMLDivElement>(null);
     useEffect(() => {
@@ -95,6 +99,12 @@ function BladeTaskCard(props: BladeTaskCardProps) {
     if (errorConflicts) {
         return <p>Error {errorConflicts.message}</p>;
     }
+    if (deleteLoading) {
+        return <p>Loading...</p>;
+    }
+    if (deleteError) {
+        return <p>Error {deleteError.message}</p>;
+    }
 
     const handleMessageClose = () => {
         setShowMessageBox(false);
@@ -118,6 +128,20 @@ function BladeTaskCard(props: BladeTaskCardProps) {
         event.preventDefault();
         setShowContextMenu(true);
         setContextMenuPosition({ x: event.clientX, y: event.clientY });
+    };
+
+    const handleDeleteClick = (id: number, deleteConfirmed: boolean) => {
+        console.log("Delete clicked on BT with id: " + id);
+        if (deleteConfirmed) {
+            deleteBT({
+                variables: {
+                    id: id,
+                },
+            });
+            setShowContextMenu(false);
+        } else {
+            setShowDeleteConfirm(true);
+        }
     };
 
     const getMessages = () => {
@@ -162,6 +186,9 @@ function BladeTaskCard(props: BladeTaskCardProps) {
                             <li className="context-menu-item" onClick={handleEditClick}>
                                 Edit
                             </li>
+                            <li className="context-menu-item" onClick={() => handleDeleteClick(droppableProps.id, false)}>
+                                Delete
+                            </li>
                             {props.inConflict && (
                                 <li className="context-menu-item" onClick={handleConflictClick}>
                                     Conflict details
@@ -173,6 +200,7 @@ function BladeTaskCard(props: BladeTaskCardProps) {
                 )}
                 {showMessageBox && <MessageBox title={props.taskName} messages={getMessages()} onClose={handleMessageClose} />}
                 {showPopup && <PopupWindow onClose={togglePopup} component={<EditBTComponent bladeTaskID={props.id} />} />}
+                {showDeleteConfirm && <ConfirmDelete Id={props.id} delete={handleDeleteClick} close={() => setShowDeleteConfirm(false)} />}
             </>
         );
     } else {
@@ -291,11 +319,6 @@ interface ConflictProps {
 
 function extractConflictMessages(conflicts: ConflictProps[]) {
     const messages: string[] = [];
-
-    //For testeing
-    const loremIpsum =
-        "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque eu varius purus. Nunc laoreet neque eget porta ultricies. Nam diam enim, cursus id efficitur quis, efficitur eu ante. Integer dapibus, est non semper vehicula, quam mauris molestie nibh, a malesuada magna dui eu lectus. Donec porttitor consequat neque vitae condimentum. Praesent eleifend nisl sed odio pellentesque, in tristique lectus semper. Cras mollis, ligula sed consectetur iaculis, nisl justo ultrices nibh, vel condimentum mauris lacus non ante. Aliquam posuere eu nisl quis luctus. Vivamus mollis eu elit in mollis. Aenean ultrices porta mi nec volutpat. Fusce quis arcu venenatis, aliquet enim. ";
-
     for (let i = 0; i < conflicts.length; i++) {
         messages.push(conflicts[i].message);
     }

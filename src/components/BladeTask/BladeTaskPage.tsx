@@ -1,11 +1,12 @@
 import React from "react";
 
-import { columnBTID } from "./BladeTaskColumns";
+import { columnBT } from "./BladeTaskColumns";
 import { useQuery } from "@apollo/client";
 import { TableLogic } from "../TableLogic/TableLogic";
 import { TableLogicWOHeaders } from "../TableLogic/TableLogicWOHeader";
 import { columnBookings } from "../Resources/BookingsColumns";
-import { GET_ALL_BT_WITH_BOOKINGS_EQNAME } from "../../api/queryList";
+import { GET_ALL_BT_WITH_BOOKINGS_EQNAME, GET_ALL_BP_IN_DIFF_SCHEDULE } from "../../api/queryList";
+import { useEditModeContext } from "../../EditModeContext";
 
 /**
  * gets all bladetasks from the database and renders them in a table
@@ -13,19 +14,35 @@ import { GET_ALL_BT_WITH_BOOKINGS_EQNAME } from "../../api/queryList";
  * @returns the BTPage component
  */
 function BTPage() {
+    const editMode = useEditModeContext();
 
     // get data from the database
-    const { loading, error, data } = useQuery(GET_ALL_BT_WITH_BOOKINGS_EQNAME);
+    const { loading: loadingBT, error: errorBT, data: dataBT } = useQuery(GET_ALL_BT_WITH_BOOKINGS_EQNAME);
+    const {loading: loadingScheduleBT, error: errorScheduleBT, data: dataScheduleBT} = useQuery(GET_ALL_BP_IN_DIFF_SCHEDULE);
+
 
     //handle loading and error states for the used queries
-    if (loading) return <p>Loading...</p>;
-    if (error) return <p> Error {error.message}</p>;
+    if (loadingBT) return <p>Loading...</p>;
+    if (errorBT) return <p> Error {errorBT.message}</p>;
 
-    const bladeTasks = data["AllBladeTasks"];
+    const bladeTasks = dataBT["AllBladeTasks"];
   
     if (!bladeTasks) return <p> No data for {"AllBladeTasks"} </p>;
 
-   
+    if(loadingScheduleBT) return <p>Loading...</p>;
+    if(errorScheduleBT) return <p> Error {errorScheduleBT.message}</p>;
+    const ScheduleDataBT = dataScheduleBT["AllSchedules"];
+    
+    //handle the data for the table regarding the view/edit mode
+    let dataForScreen;
+    if(editMode.isEditMode === false){
+        dataForScreen = ScheduleDataBT.filter((scheduleIsActive: any) => scheduleIsActive.id === "1")
+        dataForScreen = dataForScreen[0].bladeProject.map((bladeTasks: any) => bladeTasks.bladeTasks).flat()
+    }
+    else{
+        dataForScreen = ScheduleDataBT.filter((scheduleIsActive: any) => scheduleIsActive.id === "2")
+        dataForScreen = dataForScreen[0].bladeProject.map((bladeTasks: any) => bladeTasks.bladeTasks).flat()
+    }
 
     /**
      * renders the table. The renderExpandedComponent prop is used to render the bookings table
@@ -33,11 +50,11 @@ function BTPage() {
      */
     return (
         <TableLogic
-            columns={columnBTID}
-            data={bladeTasks}
+            columns={columnBT}
+            data={dataForScreen}
             renderExpandedComponent={(row) => {
                 const bookingsDataForCurrentRow =
-                    data["AllBladeTasks"]
+                    dataBT["AllBladeTasks"]
                         .find((bladeTask: any) => bladeTask.id === row.id)
                         ?.bookings.map((booking: any) => ({
                             id: Number(booking.id),
