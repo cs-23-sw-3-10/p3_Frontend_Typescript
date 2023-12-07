@@ -3,7 +3,9 @@ import { useQuery } from '@apollo/client';
 
 
 function ProjectSelector({bladeProjectId,setBladeProjectId}:{bladeProjectId:string,setBladeProjectId:Function}) {
-    const { loading, error, data } = useQuery(GET_ALL_BLADE_PROJECTS);
+    const { loading, error, data } = useQuery(GET_ALL_BLADE_PROJECTS, {
+        variables: { isActive: true },
+    });
 
     //Whilst list is loading, the only element in the list is "LOADING"
     if (loading) return (<option value="LOADING">LOADING</option>);

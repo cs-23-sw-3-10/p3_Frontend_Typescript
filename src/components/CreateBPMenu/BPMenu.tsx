@@ -1,5 +1,4 @@
-import React, { useEffect, useState } from "react";
-import { BTOrder } from "../CreateBTMenu/BTMenuTypes";
+import { useEffect, useState } from "react";
 import { InputField } from "./Fields";
 import DropdownList from "react-widgets/DropdownList";
 import { BladeProjectForm } from "./BPMenuTypes";
@@ -16,7 +15,6 @@ interface BladeProjectMenuProps {
 
 function BladeProjectMenu(props: BladeProjectMenuProps) {
     const creator = props.creator; //true if creating a new blade project, false if editing an existing one
-
     const { data: BPData } = useQuery(GET_ALL_BP);
     const BPArray = BPData?.AllBladeProjects;
     let currentBP: any;
@@ -121,6 +119,7 @@ function BladeProjectMenu(props: BladeProjectMenuProps) {
         </div>
     );
 }
+export default BladeProjectMenu;
 
 function ErrorMessageBox({ projectError, missingInput }: { projectError: boolean; missingInput: boolean }) {
     return (
@@ -130,5 +129,3 @@ function ErrorMessageBox({ projectError, missingInput }: { projectError: boolean
         </div>
     );
 }
-
-export default BladeProjectMenu;

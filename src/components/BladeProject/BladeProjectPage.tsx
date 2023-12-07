@@ -1,5 +1,4 @@
-import React, { useState, useContext } from "react";
-
+import React, { useState } from "react";
 import { getColumns } from "./BladeProjectColumns";
 import { GET_ALL_BP, GET_ALL_BP_IN_DIFF_SCHEDULE, GET_TEST_RIGS } from "../../api/queryList";
 import { useMutation, useQuery } from "@apollo/client";
@@ -13,7 +12,6 @@ import { createRigs } from "../Schedule/Display";
 import PopupWindow from "../ui/PopupWindow";
 import { DELETE_BP } from "../../api/mutationList";
 import EditBPComponent from "./EditBPComponent";
-import ReplaceWarning from "../ui/ReplaceWarning";
 import ConfirmDelete from "../ui/ConfirmDelete";
 
 /**
@@ -44,7 +42,7 @@ function BladeProjectPage() {
     const [rigs, setRigs] = useState<{ rigName: string; rigNumber: number }[]>([{ rigName: "No Rigs", rigNumber: 0 }]);
     const [showPopup, setShowPopup] = useState(false); // Used to show the popup when the user clicks edit in a task card
     const [choosenBP, setChoosenBP] = useState<any>(null); // Used to store the choosen bladeproject when the user clicks edit in a task card
-    const [deleteBP, {loading: deleteLoading, error: deleteError}] = useMutation(DELETE_BP);
+    const [deleteBP, { loading: deleteLoading, error: deleteError }] = useMutation(DELETE_BP);
     const [showDeleteConfirm, setShowDeleteConfirm] = useState<boolean>(false);
 
     //get data from the database
@@ -80,13 +78,12 @@ function BladeProjectPage() {
     if (deleteError) return <p> Error {deleteError.message}</p>;
 
     let dataForScreen;
-    if(editMode.isEditMode === false){
-        dataForScreen = ScheduleData.filter((scheduleIsActiveCheck: any) => scheduleIsActiveCheck.id === "1")
-        dataForScreen = dataForScreen[0].bladeProject
-    }
-    else {
-        dataForScreen = ScheduleData.filter((scheduleIsActiveCheck: any) => scheduleIsActiveCheck.id === "2")
-        dataForScreen = dataForScreen[0].bladeProject
+    if (editMode.isEditMode === false) {
+        dataForScreen = ScheduleData.filter((scheduleIsActiveCheck: any) => scheduleIsActiveCheck.id === "1");
+        dataForScreen = dataForScreen[0].bladeProject;
+    } else {
+        dataForScreen = ScheduleData.filter((scheduleIsActiveCheck: any) => scheduleIsActiveCheck.id === "2");
+        dataForScreen = dataForScreen[0].bladeProject;
     }
 
     const togglePopup = () => {
@@ -95,25 +92,23 @@ function BladeProjectPage() {
 
     const deleteBladeProject = (bpId: number, deleteConfirmed: boolean) => {
         console.log("delete blade project with id: " + bpId);
-        if (deleteConfirmed){
+        if (deleteConfirmed) {
             deleteBP({
                 variables: {
-                    id: bpId
-                }
+                    id: bpId,
+                },
             }).then((result) => {
-                if (result.data.deleteBladeProject !== `BladeProject with id: ${bpId} has been deleted`){
-                    alert(result.data.deleteBladeProject)
-                }
-                else{
+                if (result.data.deleteBladeProject !== `BladeProject with id: ${bpId} has been deleted`) {
+                    alert(result.data.deleteBladeProject);
+                } else {
                     refetchBP();
                 }
             });
             setShowPopup(false);
-        }
-        else{
+        } else {
             setShowDeleteConfirm(true);
         }
-    }
+    };
 
     /* renders the table. The renderExpandedComponent prop is used to render the bladeTasks table
      * based on the current row.id which is equal to the bladeproject ID.
@@ -162,7 +157,9 @@ function BladeProjectPage() {
                     );
                 }}
             />
-            {showPopup && <PopupWindow component={<EditBPComponent choosenBP={choosenBP} deleteBProject={deleteBladeProject} Id={choosenBP} />} onClose={togglePopup} />}
+            {showPopup && (
+                <PopupWindow component={<EditBPComponent choosenBP={choosenBP} deleteBProject={deleteBladeProject} Id={choosenBP} />} onClose={togglePopup} />
+            )}
             {showDeleteConfirm && <ConfirmDelete delete={deleteBladeProject} close={() => setShowDeleteConfirm(false)} Id={choosenBP} />}
         </>
     );

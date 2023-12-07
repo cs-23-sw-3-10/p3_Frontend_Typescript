@@ -262,6 +262,7 @@ export const GET_EQUIPMENT_BY_TYPE = gql`
         }
     }
 `;
+
 export const GET_EQUIPMENT = gql`
     query AllEquipment {
         AllEquipment {
@@ -323,6 +324,7 @@ export const GET_ALL_EQUIPMENT_TYPES = gql`
         }
     }
 `;
+
 export const GET_ALL_TECHNICIAN_TYPES = gql`
     query GetAllTechnicianTypes {
         DictionaryAllByCategory(category: "technician") {
@@ -374,8 +376,8 @@ export const GET_ALL_TECHNICIANS = gql`
 `;
 
 export const GET_ALL_BLADE_PROJECTS = gql`
-    query GetAllBladeProjects {
-        AllBladeProjects {
+    query GetAllBladeProjects($isActive: Boolean!) {
+        AllBladeProjectsBySchedule(isActive: $isActive) {
             __typename
             id
             projectName
@@ -413,5 +415,3 @@ export const GET_CONFLICTS_FOR_BT = gql`
         }
     }
 `;
-
-
