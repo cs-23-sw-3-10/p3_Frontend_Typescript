@@ -431,3 +431,12 @@ export const GET_CONFLICTS_FOR_BT= gql`
     }
 `;
 
+export const GET_BOOKING_BY_BP_ID = gql`
+query BladeProjectById($id: ID!){
+    BookingByBPId(id:$id){
+      resourceType
+      resourceName
+    }
+  }
+  `;
+
