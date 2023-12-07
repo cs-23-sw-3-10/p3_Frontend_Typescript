@@ -6,8 +6,6 @@ import { monthHeaderHeight } from "./MonthHeader";
 import { dateElementHeight } from "./OverviewDate";
 import { passwordPromptHeight } from "./ScheduleComponent";
 
-const projectRowHeight = 30;
-
 interface PendingTasksProps {
     bladeTaskHolder: BladeTaskHolder;
     bladeTaskCards: React.ReactNode[];
@@ -61,16 +59,9 @@ function PendingTasks(props: PendingTasksProps) {
         gridTemplateRows: rowString,
     };
 
-    let containerOffSetFromTop = 70 + monthHeaderHeight + dateElementHeight + props.numberOfRigs * rigFieldHeight;
-
-    if (props.showPasswordPrompt) {
-        containerOffSetFromTop += passwordPromptHeight;
-    }
-
-
     return (
         <>
-            <div className="pendingTasksContainer" ref={setNodeRef} style={{top: `${containerOffSetFromTop }px`}}>
+            <div className="pendingTasksContainer" ref={setNodeRef}>
                 <h2>Pending Blade Tasks</h2>
                 <div className="pendingTasksContainerInner" style={pendingTasksStyle}>
                     {projectsWithPendingTasks.map((projectNameAndFilter) => {
