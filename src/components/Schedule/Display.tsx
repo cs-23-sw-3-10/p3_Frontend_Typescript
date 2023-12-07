@@ -105,7 +105,9 @@ function DisplayComponent(props: DisplayProps) {
         loading: loadingBP,
         error: errorBP,
         data: dataBP,
-    } = useQuery(GET_ALL_BLADE_PROJECTS);
+    } = useQuery(GET_ALL_BLADE_PROJECTS, {
+        variables: { isActive: true},
+        });
 
     const {
         // get blade tasks in range
@@ -151,7 +153,7 @@ function DisplayComponent(props: DisplayProps) {
     }
 
     const customers: string[] = [];
-    dataBP["AllBladeProjects"].forEach((bp: any) => {
+    dataBP["AllBladeProjectsBySchedule"].forEach((bp: any) => {
         if (!customers.includes(bp.customer)) {
             customers.push(bp.customer);
         }
