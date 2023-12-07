@@ -106,8 +106,8 @@ function DisplayComponent(props: DisplayProps) {
         error: errorBP,
         data: dataBP,
     } = useQuery(GET_ALL_BLADE_PROJECTS, {
-        variables: { isActive: true},
-        });
+        variables: { isActive: true },
+    });
 
     const {
         // get blade tasks in range
