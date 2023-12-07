@@ -4,8 +4,9 @@ import { useQuery } from '@apollo/client';
 
 function ProjectSelector({bladeProjectId,setBladeProjectId}:{bladeProjectId:string,setBladeProjectId:Function}) {
     const { loading, error, data } = useQuery(GET_ALL_BLADE_PROJECTS, {
-        variables: { isActive: true },
+        variables: { isActive: false },
     });
+    console.log(data);
 
     //Whilst list is loading, the only element in the list is "LOADING"
     if (loading) return (<option value="LOADING">LOADING</option>);
@@ -17,14 +18,14 @@ function ProjectSelector({bladeProjectId,setBladeProjectId}:{bladeProjectId:stri
     
     //Set the default state to be the first option -> Only happens on initial render
     if(bladeProjectId === ""){
-        setBladeProjectId(data.AllBladeProjects[0].id);
+        setBladeProjectId(data.AllBladeProjectsBySchedule[0].id);
     }
 
     return (
         <div className='project_selection_wrapper'>
             <h2 className="title">Blade Project</h2>
             <select className="input_sideborders" id="blade_project" name="blade_project" onChange={(e) => setBladeProjectId(e.currentTarget.value)} value={bladeProjectId}>
-                <BladeProjectOptions AllBladeProjects={data.AllBladeProjects}/>
+                <BladeProjectOptions AllBladeProjects={data.AllBladeProjectsBySchedule}/>
             </select>
         </div>
         
