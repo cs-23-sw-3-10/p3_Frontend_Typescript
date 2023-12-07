@@ -157,7 +157,7 @@ function BladeProjectPage() {
                     return (
                         <div className="flex flex rows">
                             <CreateTestRigDivs rigs={rigs} />
-                            <CreateTimelineField rigs={rigs} months={dates} btCards={btCards} btCardsPending={[]} isPendingTasksIncluded={false} />
+                            <CreateTimelineField rigs={rigs} months={dates} btCards={btCards} />
                         </div>
                     );
                 }}

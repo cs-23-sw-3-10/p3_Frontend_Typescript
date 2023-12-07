@@ -13,6 +13,8 @@ import { useEditModeContext } from "../../EditModeContext";
 import { DELETE_BT } from "../../api/mutationList";
 import ConfirmDelete from "../ui/ConfirmDelete";
 
+const durationCutoff = 30; // If a BT has duration more than durationCutoff, the total width of the BladeTaskCard will be set to `${durationCutoff * dateDivLength}px`
+
 //interface used to define the types of the props of BladeTaskCard
 export interface BladeTaskCardProps {
     startDate?: Date;
@@ -45,6 +47,8 @@ interface BladeTaskDraggableProps {
     inConflict?: boolean;
     shown?: boolean;
     setContextMenu?: (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => void;
+    duration: number;
+    projectColor: string;
 }
 
 function BladeTaskCard(props: BladeTaskCardProps) {
@@ -162,6 +166,8 @@ function BladeTaskCard(props: BladeTaskCardProps) {
             shown: props.shown,
             attachPeriod: props.attachPeriod ? props.attachPeriod : 0,
             detachPeriod: props.detachPeriod ? props.detachPeriod : 0,
+            duration: props.duration,
+            projectColor: props.projectColor,
         };
 
         return (
@@ -198,9 +204,17 @@ function BladeTaskCard(props: BladeTaskCardProps) {
             </>
         );
     } else {
+        let widthString = `${props.duration * dateDivLength}px`;
+        let taskName = props.taskName;
+
+        if (props.duration > durationCutoff) {
+            //If too long, make it shorter in pending.
+            widthString = `${durationCutoff * dateDivLength}px`;
+            taskName = `${props.taskName} (${props.duration - props.attachPeriod - props.detachPeriod})`;
+        }
         const cardStyle = {
             backgroundColor: props.shown ? props.projectColor : "grey",
-            width: `${props.duration * dateDivLength}px`,
+            width: widthString,
             border: props.inConflict ? "2px dashed red" : "",
             gridRow: `project-${props.projectName}`,
             gridColumn: "2",
@@ -210,12 +224,14 @@ function BladeTaskCard(props: BladeTaskCardProps) {
         const droppableProps: BladeTaskDraggableProps = {
             style: cardStyle,
             id: props.id,
-            taskName: props.taskName,
+            taskName: taskName,
             enableDraggable: props.enableDraggable,
             setContextMenu: handleRightClick,
             shown: props.shown,
             attachPeriod: props.attachPeriod ? props.attachPeriod : 0,
             detachPeriod: props.detachPeriod ? props.detachPeriod : 0,
+            duration: props.duration,
+            projectColor: props.projectColor,
         };
 
         return (
@@ -238,8 +254,12 @@ function BladeTaskCard(props: BladeTaskCardProps) {
 export default BladeTaskCard;
 
 function DraggableBladeTask(props: BladeTaskDraggableProps) {
-    const { attributes, listeners, setNodeRef, transform } = useDraggable({
+    const { attributes, listeners, setNodeRef, transform, isDragging } = useDraggable({
         id: props.id,
+        data: {
+            type: "BladeTaskCardProps",
+            props: props,
+        },
         disabled: !props.enableDraggable,
     });
 
@@ -247,6 +267,22 @@ function DraggableBladeTask(props: BladeTaskDraggableProps) {
         ...props.style,
         transform: CSS.Translate.toString(transform),
     };
+
+    if (isDragging) {
+        return (
+            <div
+                className="bladeTaskCard"
+                style={{
+                    width: props.style.width,
+                    border: "2px dashed black",
+                    gridRow: props.style.gridRow,
+                    gridColumn: props.style.gridColumn,
+                    justifyContent: "left",
+                    backgroundColor: "grey",
+                }}
+            ></div>
+        );
+    }
 
     // Attach this handler to the window object to close the context menu
     return props.shown ? (
