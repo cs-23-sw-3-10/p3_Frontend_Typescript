@@ -9,7 +9,7 @@ interface RigFieldDateDroppableProps {
     date: Date;
     style: RigFieldDateStyle;
     bladeTaskHolder: BladeTaskHolder;
-    setDragging: React.Dispatch<React.SetStateAction<boolean>>;
+    setDragging: React.Dispatch<React.SetStateAction<boolean>>|undefined;
 }
 
 interface RigFieldDateStyle {
@@ -22,7 +22,7 @@ type RigFieldDateProps = {
     rig: string;
     date: Date;
     bladeTaskHolder: BladeTaskHolder;
-    setDragging: React.Dispatch<React.SetStateAction<boolean>>; 
+    setDragging: React.Dispatch<React.SetStateAction<boolean>>|undefined; 
 };
 
 function CreateRigFieldDate(props: RigFieldDateProps) {
