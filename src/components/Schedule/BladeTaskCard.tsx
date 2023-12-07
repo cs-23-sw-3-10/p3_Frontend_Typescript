@@ -11,6 +11,8 @@ import { GET_CONFLICTS_FOR_BT } from "../../api/queryList";
 import { useQuery } from "@apollo/client";
 import { useEditModeContext } from "../../EditModeContext";
 
+const durationCutoff = 30; // If a BT has duration more than durationCutoff, the total width of the BladeTaskCard will be set to `${durationCutoff * dateDivLength}px`
+
 //interface used to define the types of the props of BladeTaskCard
 export interface BladeTaskCardProps {
     startDate?: Date;
@@ -141,10 +143,8 @@ function BladeTaskCard(props: BladeTaskCardProps) {
             attachPeriod: props.attachPeriod ? props.attachPeriod : 0,
             detachPeriod: props.detachPeriod ? props.detachPeriod : 0,
             duration: props.duration,
-            projectColor: props.projectColor
+            projectColor: props.projectColor,
         };
-
-
 
         return (
             <>
@@ -176,12 +176,13 @@ function BladeTaskCard(props: BladeTaskCardProps) {
             </>
         );
     } else {
-        let widthString=`${props.duration * dateDivLength}px`
-        let taskName=props.taskName
+        let widthString = `${props.duration * dateDivLength}px`;
+        let taskName = props.taskName;
 
-        if(props.duration >30){ //If too long, make it shorter in pending. 
-            widthString=`${30 * dateDivLength}px`
-            taskName=`${props.taskName} (${props.duration -props.attachPeriod-props.detachPeriod})`
+        if (props.duration > durationCutoff) {
+            //If too long, make it shorter in pending.
+            widthString = `${durationCutoff * dateDivLength}px`;
+            taskName = `${props.taskName} (${props.duration - props.attachPeriod - props.detachPeriod})`;
         }
         const cardStyle = {
             backgroundColor: props.shown ? props.projectColor : "grey",
@@ -202,7 +203,7 @@ function BladeTaskCard(props: BladeTaskCardProps) {
             attachPeriod: props.attachPeriod ? props.attachPeriod : 0,
             detachPeriod: props.detachPeriod ? props.detachPeriod : 0,
             duration: props.duration,
-            projectColor: props.projectColor
+            projectColor: props.projectColor,
         };
 
         return (
@@ -225,7 +226,7 @@ function BladeTaskCard(props: BladeTaskCardProps) {
 export default BladeTaskCard;
 
 function DraggableBladeTask(props: BladeTaskDraggableProps) {
-    const { attributes, listeners, setNodeRef, transform , isDragging } = useDraggable({
+    const { attributes, listeners, setNodeRef, transform, isDragging } = useDraggable({
         id: props.id,
         data: {
             type: "BladeTaskCardProps",
