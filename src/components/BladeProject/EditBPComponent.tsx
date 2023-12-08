@@ -10,7 +10,7 @@ interface EditBPComponentProps {
 function EditBPComponent(props: EditBPComponentProps) {
     return (
         <>
-            <BPMenu creator={false} BPId={props.choosenBP} popUpClass={props.popUpClass}/>
+            <BPMenu creator={false} BPId={String(props.choosenBP)} popUpClass={props.popUpClass}/>
             <button onClick={() => props.deleteBProject(props.Id, false)}>Delete</button>
         </>
     );

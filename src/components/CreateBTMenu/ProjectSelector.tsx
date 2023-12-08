@@ -7,19 +7,18 @@ function ProjectSelector({ bladeProjectId, setBladeProjectId }: { bladeProjectId
         variables: {isActive: false},
     });
     refetch(); //Forces refetch -> Otherwise shows cached results
-    const [projectList, setTypesList] = useState<{ id: string; projectName: string; customer: string }[]>([]);
 
+    const [projectList, setTypesList] = useState<{ id: string; projectName: string; customer: string }[]>([]);
     //Updates state of project list, on each fetch of new data -> Forces rerender of list
     useEffect(() => {
         //Set the default state to be the first option -> Only happens on initial render
-        if (bladeProjectId === "") {
-            setBladeProjectId(data.AllBladeProjectsBySchedule[0].id);
-        }
-        console.log(data);
-        if (data && data.AllBladeProjectsBySchedule) {
+        if (data && data.AllBladeProjectsBySchedule) 
+        {
+            if(bladeProjectId == ""){
+                setBladeProjectId(data.AllBladeProjectsBySchedule[0].id);
+            }
             setTypesList(data.AllBladeProjectsBySchedule);
         }
-        console.log(projectList);
     }, [data]);
 
     //Whilst list is loading, the only element in the list is "LOADING"
