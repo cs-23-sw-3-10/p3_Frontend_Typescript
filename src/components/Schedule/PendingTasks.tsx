@@ -71,7 +71,8 @@ function PendingTasks(props: PendingTasksProps) {
                                 className="projectLegend"
                                 style={{
                                     gridRow: `project-${projectNameAndFilter.projectName}`,
-                                    height: "auto"
+                                    height: "auto",
+                                    whiteSpace: "nowrap",
                                 }}
                             >
                                  {projectNameAndFilter.shown &&projectNameAndFilter.projectName}
@@ -87,6 +88,7 @@ function PendingTasks(props: PendingTasksProps) {
                                 className="pendingTasksColumn"
                                 style={{
                                     gridRow: `project-${projectNameAndFilter.projectName}`,
+                                    
                                 }}
                             >
                                 {cards.filter((card: any) => {
