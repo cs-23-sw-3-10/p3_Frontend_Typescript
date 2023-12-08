@@ -152,8 +152,13 @@ function BladeProjectPage() {
                     }
                     return (
                         <div className="flex flex rows">
+                            <div className="">
                             <CreateTestRigDivs rigs={rigs} />
+                            </div>
+                            <div className="max-w-5xl">
                             <CreateTimelineField rigs={rigs} months={dates} btCards={btCards} />
+
+                            </div>
                         </div>
                     );
                 }}
