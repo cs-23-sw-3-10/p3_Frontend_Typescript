@@ -111,9 +111,9 @@ function BladeProjectMenu(props: BladeProjectMenuProps) {
                 addBP({
                     //add blade project to database
                     variables: {
-                        name: projectName.toLowerCase(),
-                        customer: customer.toLowerCase(),
-                        projectLeader: leader.toLowerCase(),
+                        name: projectName.toLowerCase().trim(),
+                        customer: customer.toLowerCase().trim(),
+                        projectLeader: leader.toLowerCase().trim(),
                         resourceOrders: resourceOrders,
                     },
                 })
