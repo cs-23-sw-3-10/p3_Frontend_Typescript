@@ -1,33 +1,36 @@
-.equipment_list.bt{
+.equipment_list.bp_edit{
     display: grid;
     grid-template-columns: 1fr;
-    grid-row: 3 / 4;
     grid-column: 1 / 3;
     overflow: auto;
 }
 
-.equipment_entry.bt{
+.equipment_entry.bp_edit{
     grid-column: 1 / 2;
     display: grid;
-    grid-template-columns: 200px 1fr;
+    grid-template-columns: 1fr 2fr;
+    height: 30px;
 }
 
-.type.bt{
+.type.bp_edit{
     vertical-align: middle;
     grid-column: 1 / 2;
-    border-left: 2px solid;
     border-bottom: 2px solid;
 }
 
-.period.bt{
+.period.bp_edit{
     position: relative;
     grid-column: 2 / 3;
     border-left: 2px solid;
-    border-right: 2px solid;
     border-bottom: 2px solid;
 }
 
-.period_selector.bt{
+.title.bp_edit{
+    font-size: 12px
+}
+
+.period_selector.bp_edit{
+    display: none;
     text-align: center;
     border: none;
 }
@@ -38,23 +41,23 @@
     margin-right: 15px;
 }
 
-.remove_equipment_button.bt{
+.remove_equipment_button.bp_edit{
     position: absolute;
-    transform: translate(420px, -23px);
+    transform: translate(100px, -1px);
     background-color: red;
-    width: 27px;
-    height: 27px;
+    width: 50px;
+    height: 24px;
     border-radius: 10px;
     display: inline;
     box-shadow: 0 3px #999;
 }
 
-.remove_equipment_button.bt:hover{
+.remove_equipment_button.bp_edit:hover{
     background-color: rgb(191, 0, 0);
 }
 
-.remove_equipment_button.bt:active{
+.remove_equipment_button.bp_edit:active{
     background-color: red;
     box-shadow: 0 1px #666;
-    transform: translate(420px, -23px);
+    transform: translate(100px, -1px);
 }

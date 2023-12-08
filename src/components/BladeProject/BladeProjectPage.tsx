@@ -12,6 +12,9 @@ import { getMonthsInView } from "../Schedule/Display";
 import { useEditModeContext } from "../../EditModeContext";
 import { createRigs } from "../Schedule/Display";
 import PopupWindow from "../ui/PopupWindow";
+import BPMenu from "../CreateBPMenu/BPMenu";
+import './EquipmentSelectorBPEdit.css';
+import './EquipmentListBPEdit.css';
 import { DELETE_BP } from "../../api/mutationList";
 import EditBPComponent from "./EditBPComponent";
 import ConfirmDelete from "../ui/ConfirmDelete";
@@ -171,8 +174,10 @@ function BladeProjectPage() {
                     );
                 }}
             />
+            {/*showPopup && <PopupWindow component={<BPMenu creator={false} BPName={choosenBP} popUpClass="bp_edit"/>} onClose={togglePopup}/>*/}
+            
             {showPopup && (
-                <PopupWindow component={<EditBPComponent choosenBP={choosenBP} deleteBProject={deleteBladeProject} Id={choosenBP} />} onClose={togglePopup} />
+                <PopupWindow component={<EditBPComponent choosenBP={choosenBP} deleteBProject={deleteBladeProject} Id={choosenBP} popUpClass="bp_edit"/>} onClose={togglePopup} />
             )}
             {showDeleteConfirm && <ConfirmDelete delete={deleteBladeProject} close={() => setShowDeleteConfirm(false) } Id={choosenBP} />}
         </>

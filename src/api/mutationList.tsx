@@ -124,8 +124,8 @@ mutation CreateBladeTask($bladeTask: BladeTaskInput!) {
 `;
 
 export const ADD_BP = gql`
-mutation CreateBladeProject($name: String, $customer: String, $projectLeader: String){
-  createBladeProject(name: $name, customer: $customer, projectLeader: $projectLeader ){
+mutation CreateBladeProject($name: String, $customer: String, $projectLeader: String, $resourceOrders:[ResourceOrderInput]){
+  createBladeProject(name: $name, customer: $customer, projectLeader: $projectLeader, resourceOrders:$resourceOrders){
     id
     projectName
     customer

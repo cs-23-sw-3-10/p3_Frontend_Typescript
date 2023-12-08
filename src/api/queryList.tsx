@@ -415,3 +415,22 @@ export const GET_CONFLICTS_FOR_BT = gql`
         }
     }
 `;
+
+export const GET_BOOKING_BY_BP_ID = gql`
+query BladeProjectById($id: ID!){
+    BookingByBPId(id:$id){
+      resourceType
+      resourceName
+    }
+  }
+  `;
+
+export const GET_RESOURCE_ORDER_BY_BP_ID = gql`
+query ResourceOrderByBPId($id: ID!){
+    ResourceOrderByBPId(id:$id){
+      resourceName
+      resourceType
+    }
+  }
+`;
+

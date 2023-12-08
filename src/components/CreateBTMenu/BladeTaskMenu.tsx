@@ -9,7 +9,7 @@ import DetachPeriodSelector from "./DetachPeriodSelector";
 import EquipmentSelectionMenu from "./EquipmentSelector";
 import EmployeesMenu from "./EmployeesMenu";
 import { ResourceOrderContext } from "./BladeTaskOrderContext";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { BTOrder, InErrorChart, ResourceOrder } from "./BTMenuTypes";
 import EquipmentList from "./EquipmentList";
 import { useMutation, useQuery } from "@apollo/client";
@@ -199,6 +199,7 @@ function BladeTaskMenu(props: BladeTaskMenuProps) {
         testRig: testRig,
         resourceOrders: resourceOrders,
     };
+    
 
     return (
         <div className="btmenu-container">
@@ -255,7 +256,7 @@ function BladeTaskMenu(props: BladeTaskMenuProps) {
                     <h2 className="title">Period</h2>
                 </div>
                 <ResourceOrderContext.Provider value={setResourceOrder}>
-                    <EquipmentList resourceOrders={resourceOrders} key={"Equipment_List"} />
+                    <EquipmentList resourceOrders={resourceOrders} key={"Equipment_List"} classNameFor="bt" />
                 </ResourceOrderContext.Provider>
 
                 <div className="equipment_interaction">
@@ -266,7 +267,7 @@ function BladeTaskMenu(props: BladeTaskMenuProps) {
 
                 {equipmentActive ? (
                     <ResourceOrderContext.Provider value={setResourceOrder}>
-                        <EquipmentSelectionMenu setEquipmentActive={setEquipmentActive} />
+                        <EquipmentSelectionMenu setEquipmentActive={setEquipmentActive} className="bt" />
                     </ResourceOrderContext.Provider>
                 ) : (
                     <></>
