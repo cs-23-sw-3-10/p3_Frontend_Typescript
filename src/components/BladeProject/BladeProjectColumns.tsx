@@ -14,12 +14,7 @@ export function getColumns(setShowPopup: Function, setChoosenBP: Function) {
                     <>
                         {row.getCanExpand() ? (
                             <button
-                                {...{
-                                    onClick: () => {
-                                        console.log("headingdf.name");
-                                    },
-                                    style: { cursor: "pointer" },
-                                }}
+                               
                             >
                                 {row.getIsExpanded() ? "▲" : "▼"}
                             </button>

@@ -79,8 +79,6 @@ function BTPage() {
                                 booking.technician?.type
                             ].filter(value => value !== undefined)
                         })) || [];
-
-                        console.log(bookingsDataForCurrentRow)
                 return (
                     <TableLogicWOHeaders
                         columns={columnBookings}
