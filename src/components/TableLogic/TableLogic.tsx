@@ -125,6 +125,9 @@ export function TableLogic<TData, TValue>({
         }
     };
 
+    // <SwitchComponent setShowPasswordPrompt={setShowPasswordPrompt}/>
+    // {localStorage.getItem('token') && <StyledButton onClick={()=>{localStorage.removeItem('token'); window.location.reload();}}> Logout </StyledButton>}
+                
     return (
         <div>
             {/* global filtering textfield*/}
@@ -191,12 +194,7 @@ export function TableLogic<TData, TValue>({
                     </Popover>
                 </div>
                 </div>
-                <div>
-                    <SwitchComponent setShowPasswordPrompt={setShowPasswordPrompt}/>
-                    {localStorage.getItem('token') && <StyledButton onClick={()=>{localStorage.removeItem('token'); window.location.reload();}}> Logout </StyledButton>}
-                </div>
             </div>
-
             {/* the actual table that is rendered */}
             <div className="rounded-md border">
                 <Table>
@@ -267,7 +265,6 @@ export function TableLogic<TData, TValue>({
                                             </TableCell>
                                         </TableRow>
                                     );
-                                    console.log(row.original);
                                 }
                                 return rowElements;
                             })
