@@ -22,7 +22,7 @@ import "./EquipmentSelectorBP.css";
 //popUpClass -> Allows for different styling of identical component
 interface BladeProjectMenuProps {
     creator: boolean;
-    BPName?: string;
+    BPId?: string;
     popUpClass: string;
 }
 
@@ -30,10 +30,13 @@ function BladeProjectMenu(props: BladeProjectMenuProps) {
     const creator = props.creator; //Determines Creating or Editing
     let currentBpResourceOrders:ResourceOrder[] = [];
     let currentBP: any;
+    console.log(props.BPId);
 
     //In case of editing a BP -> Fetch all BP's -> Exract current BP
     const { data: BPData } = useQuery(GET_ALL_BP); //Get All Blade Projects
-    currentBP = BPData?.AllBladeProjects?.find((element: any) => element.projectName === props.BPName);
+    console.log(BPData);
+    currentBP = BPData?.AllBladeProjects?.find((element: any) => element.id === props.BPId);
+    console.log(currentBP);
     
    
 

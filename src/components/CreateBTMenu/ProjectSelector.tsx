@@ -3,7 +3,9 @@ import { useState, useEffect } from "react";
 import { useQuery } from "@apollo/client";
 
 function ProjectSelector({ bladeProjectId, setBladeProjectId }: { bladeProjectId: string; setBladeProjectId: Function }) {
-    const { refetch, loading, error, data } = useQuery(GET_ALL_BLADE_PROJECTS);
+    const { refetch, loading, error, data } = useQuery(GET_ALL_BLADE_PROJECTS,{
+        variables: {isActive: false},
+    });
     refetch(); //Forces refetch -> Otherwise shows cached results
     const [projectList, setTypesList] = useState<{ id: string; projectName: string; customer: string }[]>([]);
 
@@ -11,11 +13,11 @@ function ProjectSelector({ bladeProjectId, setBladeProjectId }: { bladeProjectId
     useEffect(() => {
         //Set the default state to be the first option -> Only happens on initial render
         if (bladeProjectId === "") {
-            setBladeProjectId(data.AllBladeProjects[0].id);
+            setBladeProjectId(data.AllBladeProjectsBySchedule[0].id);
         }
         console.log(data);
-        if (data && data.AllBladeProjects) {
-            setTypesList(data.AllBladeProjects);
+        if (data && data.AllBladeProjectsBySchedule) {
+            setTypesList(data.AllBladeProjectsBySchedule);
         }
         console.log(projectList);
     }, [data]);

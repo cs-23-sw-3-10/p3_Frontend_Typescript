@@ -160,9 +160,10 @@ function BladeProjectPage() {
                     );
                 }}
             />
-            {showPopup && <PopupWindow component={<BPMenu creator={false} BPName={choosenBP} popUpClass="bp_edit"/>} onClose={togglePopup}/>}
+            {/*showPopup && <PopupWindow component={<BPMenu creator={false} BPName={choosenBP} popUpClass="bp_edit"/>} onClose={togglePopup}/>*/}
+            
             {showPopup && (
-                <PopupWindow component={<EditBPComponent choosenBP={choosenBP} deleteBProject={deleteBladeProject} Id={choosenBP} />} onClose={togglePopup} />
+                <PopupWindow component={<EditBPComponent choosenBP={choosenBP} deleteBProject={deleteBladeProject} Id={choosenBP} popUpClass="bp_edit"/>} onClose={togglePopup} />
             )}
             {showDeleteConfirm && <ConfirmDelete delete={deleteBladeProject} close={() => setShowDeleteConfirm(false)} Id={choosenBP} />}
         </>
