@@ -50,7 +50,7 @@ function BTPage() {
     //Set correct durations, start- and end dates such that it is only for the test. 
     dataForScreen = dataForScreen.map((task: any) => {
         let newStartDate = new Date(task.startDate);
-        let newEndDate=new Date(task.startDate);
+        let newEndDate=new Date(task.endDate);
         newStartDate.setDate(newStartDate.getDate() + task.attachPeriod);
         newEndDate.setDate(newEndDate.getDate() - task.detachPeriod);
         const newDuration=task.duration-task.attachPeriod-task.detachPeriod;
