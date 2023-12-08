@@ -20,14 +20,7 @@ export const columnBT: ColumnDef<BladeTaskQuery>[] = [
             return (
                 <>
                     {row.getCanExpand() ? (
-                        <button
-                            {...{
-                                onClick: () => {
-                                    console.log("headingdf.name");
-                                },
-                                style: { cursor: "pointer" },
-                            }}
-                        >
+                        <button>
                             {row.getIsExpanded() ? "▲" : "▼"}
                         </button>
                     ) : (

@@ -267,7 +267,6 @@ export function TableLogic<TData, TValue>({
                                             </TableCell>
                                         </TableRow>
                                     );
-                                    console.log(row.original);
                                 }
                                 return rowElements;
                             })

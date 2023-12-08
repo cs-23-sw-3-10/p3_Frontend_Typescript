@@ -88,6 +88,7 @@ function BladeProjectPage() {
 
     const togglePopup = () => {
         setShowPopup(!showPopup);
+        setShowDeleteConfirm(false);
     };
 
     const deleteBladeProject = (bpId: number, deleteConfirmed: boolean) => {
@@ -117,7 +118,7 @@ function BladeProjectPage() {
     return (
         <>
             <TableLogic
-                columns={getColumns(setShowPopup, setChoosenBP)}
+                columns={getColumns(setShowPopup, setChoosenBP, editMode.isEditMode)}
                 data={dataForScreen}
                 renderExpandedComponent={(row) => {
                     let btCards: React.ReactNode[] = [];
@@ -160,7 +161,7 @@ function BladeProjectPage() {
             {showPopup && (
                 <PopupWindow component={<EditBPComponent choosenBP={choosenBP} deleteBProject={deleteBladeProject} Id={choosenBP} />} onClose={togglePopup} />
             )}
-            {showDeleteConfirm && <ConfirmDelete delete={deleteBladeProject} close={() => setShowDeleteConfirm(false)} Id={choosenBP} />}
+            {showDeleteConfirm && <ConfirmDelete delete={deleteBladeProject} close={() => setShowDeleteConfirm(false) } Id={choosenBP} />}
         </>
     );
 }
