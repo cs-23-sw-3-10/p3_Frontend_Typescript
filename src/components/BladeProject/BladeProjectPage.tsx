@@ -164,7 +164,7 @@ function BladeProjectPage() {
                         });
                     }
                     return (
-                        <div className="ScheduleDisplay max-w-5xl">
+                        <div className="ScheduleDisplay">
                             <CreateTestRigDivs rigs={rigs} />
                             <CreateTimelineField rigs={rigs} months={dates} btCards={btCards} />
                         </div>
