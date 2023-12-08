@@ -21,6 +21,7 @@ import { GET_TEST_TYPES } from "../../api/queryList";
 import "../CreateBTMenu/TestTypeSelector.css";
 import "../CreateBTMenu/BladeTaskMenu.css";
 
+
 export interface BladeTaskMenuProps {
     creator: boolean;
     inputs?: BTOrder;
@@ -107,6 +108,12 @@ function BladeTaskMenu(props: BladeTaskMenuProps) {
                     )
                 ) {
                     if (ValidateForm(currentOrder)) {
+
+                        resourceOrders.forEach((order: ResourceOrder)=>{
+                            order.resourceType=order.resourceType.toLowerCase();
+                            order.resourceName=order.resourceName.toLowerCase();
+                        })
+
                         const response = await addBT({
                             //add blade task to database
                             variables: {
@@ -143,6 +150,10 @@ function BladeTaskMenu(props: BladeTaskMenuProps) {
                     )
                 ) {
                     if (ValidateForm(currentOrder)) {
+                        resourceOrders.forEach((order: ResourceOrder)=>{
+                            order.resourceType=order.resourceType.toLowerCase();
+                            order.resourceName=order.resourceName.toLowerCase();
+                        })
                         const response = await updateBT({
                             //update blade task in database
                             variables: {
