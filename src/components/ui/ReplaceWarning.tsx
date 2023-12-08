@@ -49,7 +49,7 @@ function ReplaceWarning({ mode, openstate }: ReplaceWarningProps) {
             <label>Type "I Agree" and press submit to confirm </label>
             <form>
                 <input type="text" placeholder="I Agree" value={Confirmation} onChange={(e) => setConfirmation(e.target.value)}></input>
-                <div>
+                <div className="button-container">
                     <button className="submit-button" onClick={(e) => handleReplaceScheduleSubmit(e)}>
                         Submit
                     </button>
