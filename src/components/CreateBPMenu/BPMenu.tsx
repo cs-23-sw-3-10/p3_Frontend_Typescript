@@ -1,5 +1,4 @@
-import React, { useEffect, useState } from "react";
-import { BTOrder } from "../CreateBTMenu/BTMenuTypes";
+import { useEffect, useState } from "react";
 import { InputField } from "./Fields";
 import DropdownList from "react-widgets/DropdownList";
 import { BladeProjectForm } from "./BPMenuTypes";

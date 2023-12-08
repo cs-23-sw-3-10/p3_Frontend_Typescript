@@ -8,8 +8,12 @@ import { ResourceOrder } from "../CreateBTMenu/BTMenuTypes";
 import EditBTComponent from "../ui/EditBTComponent";
 import { dateDivLength } from "./TimelineField";
 import { GET_CONFLICTS_FOR_BT } from "../../api/queryList";
-import { useQuery } from "@apollo/client";
+import { useMutation, useQuery } from "@apollo/client";
 import { useEditModeContext } from "../../EditModeContext";
+import { DELETE_BT } from "../../api/mutationList";
+import ConfirmDelete from "../ui/ConfirmDelete";
+
+const durationCutoff = 30; // If a BT has duration more than durationCutoff, the total width of the BladeTaskCard will be set to `${durationCutoff * dateDivLength}px`
 
 //interface used to define the types of the props of BladeTaskCard
 export interface BladeTaskCardProps {
@@ -43,10 +47,13 @@ interface BladeTaskDraggableProps {
     inConflict?: boolean;
     shown?: boolean;
     setContextMenu?: (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => void;
+    duration: number;
+    projectColor: string;
 }
 
 function BladeTaskCard(props: BladeTaskCardProps) {
     const editMode = useEditModeContext();
+    const [deleteBT, { loading: deleteLoading, error: deleteError }] = useMutation(DELETE_BT);
     const [showContextMenu, setShowContextMenu] = useState(false);
     const [contextMenuPosition, setContextMenuPosition] = useState({
         x: 0,
@@ -54,15 +61,13 @@ function BladeTaskCard(props: BladeTaskCardProps) {
     });
     const [showMessageBox, setShowMessageBox] = useState(false); // Used to show the message box when the user clicks on a task card
     const [showPopup, setShowPopup] = useState(false); // Used to show the popup when the user clicks edit in a task card
+    const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
 
     const contextMenuRef = useRef<HTMLDivElement>(null);
     useEffect(() => {
         // Function to check if click is outside the context menu
         const handleClickOutside = (event: MouseEvent) => {
-            if (
-                contextMenuRef.current &&
-                !contextMenuRef.current.contains(event.target as Node)
-            ) {
+            if (contextMenuRef.current && !contextMenuRef.current.contains(event.target as Node)) {
                 setShowContextMenu(false);
             }
         };
@@ -80,6 +85,7 @@ function BladeTaskCard(props: BladeTaskCardProps) {
         loading: loadingConflicts,
         error: errorConflicts,
         data: dataConflicts,
+        refetch: refetchConflicts,
     } = useQuery(GET_CONFLICTS_FOR_BT, {
         variables: {
             id: props.id,
@@ -92,6 +98,12 @@ function BladeTaskCard(props: BladeTaskCardProps) {
     }
     if (errorConflicts) {
         return <p>Error {errorConflicts.message}</p>;
+    }
+    if (deleteLoading) {
+        return <p>Loading...</p>;
+    }
+    if (deleteError) {
+        return <p>Error {deleteError.message}</p>;
     }
 
     const handleMessageClose = () => {
@@ -118,13 +130,30 @@ function BladeTaskCard(props: BladeTaskCardProps) {
         setContextMenuPosition({ x: event.clientX, y: event.clientY });
     };
 
+    const handleDeleteClick = (id: number, deleteConfirmed: boolean) => {
+        console.log("Delete clicked on BT with id: " + id);
+        if (deleteConfirmed) {
+            deleteBT({
+                variables: {
+                    id: id,
+                },
+            });
+            setShowContextMenu(false);
+        } else {
+            setShowDeleteConfirm(true);
+        }
+    };
+
+    const getMessages = () => {
+        refetchConflicts();
+        return extractConflictMessages(dataConflicts.findConflictsForBladeTask);
+    };
+
     //Dynamic styling based on props values
     if (props.startDate) {
         const cardStyle = {
             backgroundColor: props.shown ? props.projectColor : "grey",
-            gridColumn: `date-${props.startDate.getFullYear()}-${props.startDate.getMonth()}-${props.startDate.getDate()} / span ${
-                props.duration
-            }`,
+            gridColumn: `date-${props.startDate.getFullYear()}-${props.startDate.getMonth()}-${props.startDate.getDate()} / span ${props.duration}`,
             border: props.inConflict ? "2px dashed red" : "",
         };
 
@@ -137,92 +166,100 @@ function BladeTaskCard(props: BladeTaskCardProps) {
             shown: props.shown,
             attachPeriod: props.attachPeriod ? props.attachPeriod : 0,
             detachPeriod: props.detachPeriod ? props.detachPeriod : 0,
+            duration: props.duration,
+            projectColor: props.projectColor,
         };
 
-    return (
-        <>
-            <DraggableBladeTask {...droppableProps} />
-            {showContextMenu && editMode.isEditMode && (
-                <div
-                    ref={contextMenuRef}
-                    className="context-menu"
-                    style={{
-                        left: `${contextMenuPosition.x}px`,
-                        top: `${contextMenuPosition.y}px`,
-                    }}
-                >
-                    <ul className="context-menu-list">
-                        <li
-                            className="context-menu-item"
-                            onClick={handleEditClick}
-                        >
-                            Edit
-                        </li>
-                        {props.inConflict && (
-                            <li
-                                className="context-menu-item"
-                                onClick={handleConflictClick}
-                            >
-                                Conflict details
+        return (
+            <>
+                <DraggableBladeTask {...droppableProps} />
+                {showContextMenu && editMode.isEditMode && (
+                    <div
+                        ref={contextMenuRef}
+                        className="context-menu"
+                        style={{
+                            left: `${contextMenuPosition.x}px`,
+                            top: `${contextMenuPosition.y}px`,
+                        }}
+                    >
+                        <ul className="context-menu-list">
+                            <li className="context-menu-item" onClick={handleEditClick}>
+                                Edit
                             </li>
-                        )}
-                        {/* Add more items as needed */}
-                    </ul>
-                </div>
-            )}
-            {showMessageBox && (
-                <MessageBox
-                    title={props.taskName}
-                    messages={extractConflictMessages(
-                    dataConflicts.findConflictsForBladeTask
+                            <li className="context-menu-item" onClick={() => handleDeleteClick(droppableProps.id, false)}>
+                                Delete
+                            </li>
+                            {props.inConflict && (
+                                <li className="context-menu-item" onClick={handleConflictClick}>
+                                    Conflict details
+                                </li>
+                            )}
+                            {/* Add more items as needed */}
+                        </ul>
+                    </div>
                 )}
-                    onClose={handleMessageClose}
-                />
-            )}
-            {showPopup && <PopupWindow onClose={togglePopup} component={<EditBTComponent bladeTaskID={props.id}/>}/>}
+                {showMessageBox && <MessageBox title={props.taskName} messages={getMessages()} onClose={handleMessageClose} />}
+                {showPopup && <PopupWindow onClose={togglePopup} component={<EditBTComponent bladeTaskID={props.id} />} />}
+                {showDeleteConfirm && <ConfirmDelete Id={props.id} delete={handleDeleteClick} close={() => setShowDeleteConfirm(false)} />}
+            </>
+        );
+    } else {
+        let widthString = `${props.duration * dateDivLength}px`;
+        let taskName = props.taskName;
 
-        </>
-    );
-}else{
-    const cardStyle = {
-      backgroundColor: props.shown ? props.projectColor : "grey",
-      width: `${props.duration*dateDivLength}px`,
-      border: props.inConflict ? '2px dashed red' : '', 
-      gridRow: `project-${props.projectName}`,
-      gridColumn: "2",
-      justifyContent: "left"
-    };
-  
-    const droppableProps: BladeTaskDraggableProps = {
-      style: cardStyle,
-      id: props.id,
-      taskName: props.taskName,
-      enableDraggable: props.enableDraggable,
-      setContextMenu: handleRightClick,
-      shown: props.shown,
-      attachPeriod: props.attachPeriod ? props.attachPeriod : 0,
-      detachPeriod: props.detachPeriod ? props.detachPeriod : 0,
-    };
-  
-    return(<>
-      <DraggableBladeTask {...droppableProps} />
-      {showContextMenu && (
-          <div ref={contextMenuRef} className="context-menu" style={{ left: `${contextMenuPosition.x}px`, top: `${contextMenuPosition.y}px` }}>
-            <ul className="context-menu-list">
-                <li className="context-menu-item" onClick={handleEditClick}>Edit</li>
-                {/* Add more items as needed */}
-            </ul>
-        </div>    
-    )}
-      </>
-      );
-  }
+        if (props.duration > durationCutoff) {
+            //If too long, make it shorter in pending.
+            widthString = `${durationCutoff * dateDivLength}px`;
+            taskName = `${props.taskName} (${props.duration - props.attachPeriod - props.detachPeriod})`;
+        }
+        const cardStyle = {
+            backgroundColor: props.shown ? props.projectColor : "grey",
+            width: widthString,
+            border: props.inConflict ? "2px dashed red" : "",
+            gridRow: `project-${props.projectName}`,
+            gridColumn: "2",
+            justifyContent: "left",
+        };
+
+        const droppableProps: BladeTaskDraggableProps = {
+            style: cardStyle,
+            id: props.id,
+            taskName: taskName,
+            enableDraggable: props.enableDraggable,
+            setContextMenu: handleRightClick,
+            shown: props.shown,
+            attachPeriod: props.attachPeriod ? props.attachPeriod : 0,
+            detachPeriod: props.detachPeriod ? props.detachPeriod : 0,
+            duration: props.duration,
+            projectColor: props.projectColor,
+        };
+
+        return (
+            <>
+                <DraggableBladeTask {...droppableProps} />
+                {showContextMenu && (
+                    <div ref={contextMenuRef} className="context-menu" style={{ left: `${contextMenuPosition.x}px`, top: `${contextMenuPosition.y}px` }}>
+                        <ul className="context-menu-list">
+                            <li className="context-menu-item" onClick={handleEditClick}>
+                                Edit
+                            </li>
+                            {/* Add more items as needed */}
+                        </ul>
+                    </div>
+                )}
+            </>
+        );
+    }
 }
 export default BladeTaskCard;
 
 function DraggableBladeTask(props: BladeTaskDraggableProps) {
-    const { attributes, listeners, setNodeRef, transform } = useDraggable({
+    const { attributes, listeners, setNodeRef, transform, isDragging } = useDraggable({
         id: props.id,
+        data: {
+            type: "BladeTaskCardProps",
+            props: props,
+        },
         disabled: !props.enableDraggable,
     });
 
@@ -231,17 +268,25 @@ function DraggableBladeTask(props: BladeTaskDraggableProps) {
         transform: CSS.Translate.toString(transform),
     };
 
+    if (isDragging) {
+        return (
+            <div
+                className="bladeTaskCard"
+                style={{
+                    width: props.style.width,
+                    border: "2px dashed black",
+                    gridRow: props.style.gridRow,
+                    gridColumn: props.style.gridColumn,
+                    justifyContent: "left",
+                    backgroundColor: "grey",
+                }}
+            ></div>
+        );
+    }
+
     // Attach this handler to the window object to close the context menu
     return props.shown ? (
-        <div
-            className="bladeTaskCard"
-            style={style}
-            id={`${props.id}`}
-            ref={setNodeRef}
-            {...listeners}
-            {...attributes}
-            onContextMenu={props.setContextMenu}
-        >
+        <div className="bladeTaskCard" style={style} id={`${props.id}`} ref={setNodeRef} {...listeners} {...attributes} onContextMenu={props.setContextMenu}>
             {/* {used to visualize the attach period} */}
             <div
                 className="attachPeriod"
@@ -261,15 +306,7 @@ function DraggableBladeTask(props: BladeTaskDraggableProps) {
             ></div>
         </div>
     ) : (
-        <div
-            className="bladeTaskCard"
-            style={style}
-            id={`${props.id}`}
-            ref={setNodeRef}
-            {...listeners}
-            {...attributes}
-            onContextMenu={props.setContextMenu}
-        >
+        <div className="bladeTaskCard" style={style} id={`${props.id}`} ref={setNodeRef} {...listeners} {...attributes} onContextMenu={props.setContextMenu}>
             <div className="BT-Name"></div>
         </div>
     );
@@ -282,14 +319,8 @@ interface ConflictProps {
 
 function extractConflictMessages(conflicts: ConflictProps[]) {
     const messages: string[] = [];
-
-    //For testeing
-    const loremIpsum="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque eu varius purus. Nunc laoreet neque eget porta ultricies. Nam diam enim, cursus id efficitur quis, efficitur eu ante. Integer dapibus, est non semper vehicula, quam mauris molestie nibh, a malesuada magna dui eu lectus. Donec porttitor consequat neque vitae condimentum. Praesent eleifend nisl sed odio pellentesque, in tristique lectus semper. Cras mollis, ligula sed consectetur iaculis, nisl justo ultrices nibh, vel condimentum mauris lacus non ante. Aliquam posuere eu nisl quis luctus. Vivamus mollis eu elit in mollis. Aenean ultrices porta mi nec volutpat. Fusce quis arcu venenatis, aliquet enim. "
-
     for (let i = 0; i < conflicts.length; i++) {
-        messages.push(
-            conflicts[i].message 
-        );
+        messages.push(conflicts[i].message);
     }
     return messages;
 }
