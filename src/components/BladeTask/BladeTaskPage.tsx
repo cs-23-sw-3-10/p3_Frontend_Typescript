@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 
 import { columnBT } from "./BladeTaskColumns";
 import { useQuery } from "@apollo/client";
@@ -7,6 +7,8 @@ import { TableLogicWOHeaders } from "../TableLogic/TableLogicWOHeader";
 import { columnBookings } from "../Resources/BookingsColumns";
 import { GET_ALL_BT_WITH_BOOKINGS_EQNAME, GET_ALL_BP_IN_DIFF_SCHEDULE } from "../../api/queryList";
 import { useEditModeContext } from "../../EditModeContext";
+import SwitchComponent from "../TableLogic/SwitchComponent";
+import StyledButton from "../ui/styledButton";
 
 /**
  * gets all bladetasks from the database and renders them in a table
@@ -15,6 +17,7 @@ import { useEditModeContext } from "../../EditModeContext";
  */
 function BTPage() {
     const editMode = useEditModeContext();
+    const [showPasswordPrompt, setShowPasswordPrompt] = useState(false);
 
     // get data from the database
     const { loading: loadingBT, error: errorBT, data: dataBT } = useQuery(GET_ALL_BT_WITH_BOOKINGS_EQNAME);
@@ -49,6 +52,14 @@ function BTPage() {
      * based on the current row.id which is equal to the bladetask ID.
      */
     return (
+        <>
+        <div className="flex flex-row justify-between items-center">
+            <h1 className="text-left mb-4 text-xl">Blade Tasks</h1>
+            <div className="">
+                <SwitchComponent setShowPasswordPrompt={setShowPasswordPrompt}/>
+                {localStorage.getItem('token') && <StyledButton onClick={()=>{localStorage.removeItem('token'); window.location.reload();}}> Logout </StyledButton>}
+            </div>
+        </div>
         <TableLogic
             columns={columnBT}
             data={dataForScreen}
@@ -79,8 +90,6 @@ function BTPage() {
                                 booking.technician?.type
                             ].filter(value => value !== undefined)
                         })) || [];
-
-                        console.log(bookingsDataForCurrentRow)
                 return (
                     <TableLogicWOHeaders
                         columns={columnBookings}
@@ -89,7 +98,9 @@ function BTPage() {
                 );
             }}
         />
+    </>
     );
+
 }
 
 export default BTPage;

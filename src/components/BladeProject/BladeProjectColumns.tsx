@@ -2,7 +2,8 @@
 import { ColumnDef } from "@tanstack/react-table";
 import { BladeProjectDataQuery } from "./BladeProjectData";
 
-export function getColumns(setShowPopup: Function, setChoosenBP: Function) {
+export function getColumns(setShowPopup: Function, setChoosenBP: Function, editMode: Boolean) {
+
     const columnBP: ColumnDef<BladeProjectDataQuery>[] = [
         {
             header: ({ column }) => {
@@ -13,14 +14,7 @@ export function getColumns(setShowPopup: Function, setChoosenBP: Function) {
                 return (
                     <>
                         {row.getCanExpand() ? (
-                            <button
-                                {...{
-                                    onClick: () => {
-                                        console.log("headingdf.name");
-                                    },
-                                    style: { cursor: "pointer" },
-                                }}
-                            >
+                            <button>
                                 {row.getIsExpanded() ? "▲" : "▼"}
                             </button>
                         ) : (
@@ -35,15 +29,6 @@ export function getColumns(setShowPopup: Function, setChoosenBP: Function) {
                                 {row.getIsExpanded() ? "▲" : "▼"}
                             </button>
                         )}
-                        <button
-                            className="bg-gray-200 hover:bg-gray-500 rounded"
-                            onClick={() => {
-                                setChoosenBP(row.original.id);
-                                setShowPopup(true);
-                            }}
-                        >
-                            Edit
-                        </button>
                         {getValue()}
                     </>
                 );
@@ -74,6 +59,31 @@ export function getColumns(setShowPopup: Function, setChoosenBP: Function) {
             },
             accessorKey: "endDate",
         },
+        {
+            accessorKey: " ",
+            cell: ({row, getValue}) => {
+                if(editMode === true)
+                {
+                    return (
+                        <>
+                         <button
+                                className="bg-gray-300 hover:bg-gray-500 w-10 rounded"
+                                onClick={() => {
+                                    setChoosenBP(row.original.id);
+                                    setShowPopup(true);
+                                }}
+                            >
+                                Edit
+                            </button>
+                            {getValue()}
+                        </>
+                    )
+                }
+                }
+                    
+        
+            
+        }
     ];
     return columnBP;
 }

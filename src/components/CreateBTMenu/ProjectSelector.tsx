@@ -8,6 +8,8 @@ function ProjectSelector({bladeProjectId,setBladeProjectId}:{bladeProjectId:stri
     });
     console.log(data);
 
+    console.log("kig lige her på data: ", data);
+
     //Whilst list is loading, the only element in the list is "LOADING"
     if (loading) return (<option value="LOADING">LOADING</option>);
 

@@ -52,6 +52,8 @@ function DisplayComponent(props: DisplayProps) {
     useEffect(() => {
         if (editMode.isEditMode) {
             props.setFilter("None");
+        } else {
+            refetchBP();
         }
     }, [editMode.isEditMode]);
 
@@ -109,6 +111,7 @@ function DisplayComponent(props: DisplayProps) {
         loading: loadingBP,
         error: errorBP,
         data: dataBP,
+        refetch: refetchBP,
     } = useQuery(GET_ALL_BLADE_PROJECTS, {
         variables: { isActive: true },
     });
@@ -240,22 +243,10 @@ function DisplayComponent(props: DisplayProps) {
     let bladeTasksHolder = new BladeTaskHolder(btCards);
 
     return (
-        <div className="ScheduleContentContainer">
-            <div className="ScheduleViewControl">
-                <form
-                    onSubmit={(e) => {
-                        handleViewChange(e);
-                    }}
-                >
-                    <input name="monthInput" type="month" defaultValue={selectedMonth} />
-                    <label htmlFor="numberInput" className="text-sm">
-                        Months shown:
-                    </label>
-                    <input className="numberMonthsInput" name="numberInput" type="number" defaultValue={numberOfMonths} min="2" max="24" />
-                    <input className="goButton" type="submit" value={"Go To"} />
-                </form>
-            </div>
-            {editMode.isEditMode ? (
+        <>
+        <div className="flex flex-row justify-between items-center">
+        <h1 className="text-left mb-4 text-xl">Schedule</h1>
+        {editMode.isEditMode ? (
                 <div className="ScheduleFilterAndMode">
                     <SwitchComponent setShowPasswordPrompt={props.setShowPasswordPrompt} />
                     {localStorage.getItem("token") && (
@@ -272,17 +263,6 @@ function DisplayComponent(props: DisplayProps) {
                 </div>
             ) : (
                 <div className="ScheduleFilterAndMode">
-                    <label>Filter:</label>
-                    <select
-                        name="customerFilter"
-                        id="customerFilter"
-                        onChange={(e) => {
-                            props.setFilter(e.target.value);
-                        }}
-                    >
-                        <option value="None">None</option>
-                        {customers.map((customer) => FilterCustomers(customer))}
-                    </select>
                     <SwitchComponent setShowPasswordPrompt={props.setShowPasswordPrompt} />
                     {localStorage.getItem("token") && (
                         <StyledButton
@@ -297,6 +277,38 @@ function DisplayComponent(props: DisplayProps) {
                     )}
                 </div>
             )}
+        </div>
+        <div className="ScheduleContentContainer">
+            <div className="ScheduleViewControl">
+                <form
+                    onSubmit={(e) => {
+                        handleViewChange(e);
+                    }}
+                >
+                    <input name="monthInput" type="month" defaultValue={selectedMonth} />
+                    <label htmlFor="numberInput" className="text-sm">
+                        Months shown:
+                    </label>
+                    <input className="numberMonthsInput" name="numberInput" type="number" defaultValue={numberOfMonths} min="2" max="24" />
+                    <input className="goButton" type="submit" value={"Go To"} />
+                </form>
+                
+                {editMode.isEditMode ? null : 
+                    (<div className="ml-20">
+                        <label>Filter:</label>
+                        <select
+                            name="customerFilter"
+                            id="customerFilter"
+                            onChange={(e) => {
+                                props.setFilter(e.target.value);
+                            }}
+                        >
+                    <option value="None">None</option>
+                    {customers.map((customer) => FilterCustomers(customer))}
+                    </select>        
+                </div>      
+                )}               
+            </div>
             <DndContext // DndContext is used to enable drag and drop functionality
                 onDragStart={(event) => {
                     handleDragStart(event, setDragging, setActiveCard);
@@ -348,6 +360,7 @@ function DisplayComponent(props: DisplayProps) {
 
             {editMode.isEditMode ? <CreateAdditionalContent /> : null}
         </div>
+        </>
     );
 }
 export default DisplayComponent;

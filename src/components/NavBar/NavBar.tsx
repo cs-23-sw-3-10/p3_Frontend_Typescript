@@ -48,15 +48,15 @@ export const NavBar = () => {
                     <Link to="/projects">
                         <button type="button" className="navBarButton">
                             <span className="material-symbols-outlined">
-                                data_table
+                                folder_open
                             </span>
-                            <p>Projects</p>
+                            <p>Blade Projects</p>
                         </button>
                     </Link>
                     <Link to="/bladetask">
                         <button type="button" className="navBarButton">
                             <span className="material-symbols-outlined">
-                                air
+                                description
                             </span>
                             <p>Blade Tasks</p>
                         </button>

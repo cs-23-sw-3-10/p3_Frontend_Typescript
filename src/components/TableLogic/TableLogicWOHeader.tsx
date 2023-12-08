@@ -156,7 +156,6 @@ export function TableLogicWOHeaders<TData, TValue>({
                                             </TableCell>
                                         </TableRow>
                                     );
-                                    console.log(row.original);
                                 }
                                 return rowElements;
                             })
