@@ -10,8 +10,9 @@ export const columnBT: ColumnDef<BladeTaskQuery>[] = [
                     onClick={() =>
                         column.toggleSorting(column.getIsSorted() === "asc")
                     }
+                    style={{ fontWeight: 'bold' }}
                 >
-                    BladeTask Name
+                    BT Name
                 </button>
             );
         },
@@ -47,6 +48,7 @@ export const columnBT: ColumnDef<BladeTaskQuery>[] = [
                     onClick={() =>
                         column.toggleSorting(column.getIsSorted() === "asc")
                     }
+                    style={{ fontWeight: 'bold' }}
                 >
                     Test Type
                 </button>
@@ -61,6 +63,7 @@ export const columnBT: ColumnDef<BladeTaskQuery>[] = [
                     onClick={() =>
                         column.toggleSorting(column.getIsSorted() === "asc")
                     }
+                    style={{ fontWeight: 'bold' }}
                 >
                     Start Date
                 </button>
@@ -75,6 +78,7 @@ export const columnBT: ColumnDef<BladeTaskQuery>[] = [
                     onClick={() =>
                         column.toggleSorting(column.getIsSorted() === "asc")
                     }
+                    style={{ fontWeight: 'bold' }}
                 >
                     End Date
                 </button>
@@ -89,6 +93,7 @@ export const columnBT: ColumnDef<BladeTaskQuery>[] = [
                     onClick={() =>
                         column.toggleSorting(column.getIsSorted() === "asc")
                     }
+                    style={{ fontWeight: 'bold' }}
                 >
                     Duration
                 </button>
@@ -103,6 +108,7 @@ export const columnBT: ColumnDef<BladeTaskQuery>[] = [
                     onClick={() =>
                         column.toggleSorting(column.getIsSorted() === "asc")
                     }
+                    style={{ fontWeight: 'bold' }}
                 >
                     Attach Period
                 </button>
@@ -117,6 +123,7 @@ export const columnBT: ColumnDef<BladeTaskQuery>[] = [
                     onClick={() =>
                         column.toggleSorting(column.getIsSorted() === "asc")
                     }
+                    style={{ fontWeight: 'bold' }}
                 >
                     Detach Period
                 </button>
@@ -131,8 +138,9 @@ export const columnBT: ColumnDef<BladeTaskQuery>[] = [
                     onClick={() =>
                         column.toggleSorting(column.getIsSorted() === "asc")
                     }
+                    style={{ fontWeight: 'bold' }}
                 >
-                    Test Rig
+                    Test Rig 
                 </button>
             );
         },

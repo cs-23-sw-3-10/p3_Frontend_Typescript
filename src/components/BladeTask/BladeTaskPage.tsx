@@ -95,6 +95,7 @@ function BTPage() {
                 {localStorage.getItem('token') && <StyledButton onClick={()=>{localStorage.removeItem('token'); window.location.reload();}}> Logout </StyledButton>}
             </div>
         </div>
+        <p style={{paddingBottom: "20px" }}>Duration, attach period and detach period are given in <b>days</b>.</p>
         <TableLogic
             columns={columnBT}
             data={dataForScreen}
