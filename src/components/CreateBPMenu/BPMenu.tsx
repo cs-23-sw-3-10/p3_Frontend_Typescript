@@ -12,7 +12,7 @@ import EquipmentSelectionMenu from "../CreateBTMenu/EquipmentSelector";
 import { ResourceOrder } from "../CreateBTMenu/BTMenuTypes";
 import EquipmentList from "../CreateBTMenu/EquipmentList";
 import { capitalize, sanitize } from "../../utils/StringEditing";
-import { GET_BOOKING_BY_BP_ID } from "../../api/queryList"; 
+import { GET_RESOURCE_ORDER_BY_BP_ID } from "../../api/queryList"; 
 import "./EquipmentListBP.css";
 import "./BPMenu.css";
 import "./EquipmentSelectorBP.css";
@@ -35,16 +35,6 @@ function BladeProjectMenu(props: BladeProjectMenuProps) {
     //In case of editing a BP -> Fetch all BP's -> Exract current BP
     const { data: BPData } = useQuery(GET_ALL_BP); //Get All Blade Projects
     currentBP = BPData?.AllBladeProjects?.find((element: any) => element.projectName === props.BPName);
-
-    const { data: currentBpBookings} = useQuery(GET_BOOKING_BY_BP_ID, {
-        variables:{
-            id: currentBP?.id
-        }
-    })
-    if(currentBpBookings?.BookingByBPId != null){
-        currentBpResourceOrders = currentBpBookings?.BookingByBPId?.map(({resourceName, resourceType, equipmentAssignmentStatus}:{resourceName:string, resourceType:string, equipmentAssignmentStatus: Array<boolean>}) => ({resourceType: capitalize(resourceType), resourceName:capitalize(resourceName), equipmentAssignmentStatus: [true,true]}));
-    }
-    console.log(currentBpResourceOrders);
     
    
 
@@ -54,7 +44,7 @@ function BladeProjectMenu(props: BladeProjectMenuProps) {
     const [customer, setCustomer] = useState<string>(creator ? "" : capitalize(currentBP.customer));
     const [leader, setLeader] = useState<string>(creator ? "" : capitalize(currentBP.projectLeader));
     const [leaderOptions, setLeaderOptions] = useState<string[]>([]);
-    const [resourceOrders, setResourceOrders] = useState<ResourceOrder[]>(creator ? [] : currentBpResourceOrders);
+    const [resourceOrders, setResourceOrders] = useState<ResourceOrder[]>([]);
     const [currentBladeTasks, setCurrentBladeTasks] = useState(creator ? [] : currentBP.bladeTasks);
 
     const [projectError, setProjectError] = useState<boolean>(false);
@@ -65,6 +55,24 @@ function BladeProjectMenu(props: BladeProjectMenuProps) {
     const [addBP, { loading, error }] = useMutation(ADD_BP);
     const { data } = useQuery(GET_ALL_ENGINEERS);
     const [updateBP, { loading: updateLoading, error: updateError }] = useMutation(UPDATE_BP);
+
+    const { data: currentBpBookings, refetch} = useQuery(GET_RESOURCE_ORDER_BY_BP_ID, {
+        variables:{
+            id: currentBP?.id
+        }
+    });
+    refetch();
+
+    useEffect(() => {
+        if(currentBpBookings && currentBpBookings.ResourceOrderByBPId){
+            currentBpResourceOrders = currentBpBookings.ResourceOrderByBPId.map((
+                {resourceName, resourceType, equipmentAssignmentStatus}:
+                {resourceName:string, resourceType:string, equipmentAssignmentStatus: Array<boolean>}) => 
+                ({resourceType: capitalize(resourceType), resourceName:capitalize(resourceName), equipmentAssignmentStatus: [true,true]}));
+            console.log(currentBpBookings);
+            setResourceOrders(currentBpResourceOrders);
+        }
+    },[currentBpBookings]);
 
     useEffect(() => {
         if (data && data.AllEngineers) {
@@ -119,7 +127,7 @@ function BladeProjectMenu(props: BladeProjectMenuProps) {
         } else {
             if (validateBPForm(currentForm)) {
                 updateBP({
-                    //update blade project in database
+                    //Update blade project in database
                     variables: {
                         bpId: parseInt(currentBP.id),
                         updates: {
@@ -127,6 +135,7 @@ function BladeProjectMenu(props: BladeProjectMenuProps) {
                             projectName: projectName,
                             customer: customer,
                             projectLeader: leader,
+                            resourceOrders: resourceOrders,
                         },
                     },
                 }).then((result) => console.log(result));

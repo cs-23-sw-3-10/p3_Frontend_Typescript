@@ -440,3 +440,12 @@ query BladeProjectById($id: ID!){
   }
   `;
 
+export const GET_RESOURCE_ORDER_BY_BP_ID = gql`
+query ResourceOrderByBPId($id: ID!){
+    ResourceOrderByBPId(id:$id){
+      resourceName
+      resourceType
+    }
+  }
+`;
+
