@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import "../Schedule/Display.css";
+
 import { getColumns } from "./BladeProjectColumns";
 import { GET_ALL_BP, GET_ALL_BP_IN_DIFF_SCHEDULE, GET_TEST_RIGS } from "../../api/queryList";
 import { useMutation, useQuery } from "@apollo/client";
@@ -13,6 +15,8 @@ import PopupWindow from "../ui/PopupWindow";
 import { DELETE_BP } from "../../api/mutationList";
 import EditBPComponent from "./EditBPComponent";
 import ConfirmDelete from "../ui/ConfirmDelete";
+import SwitchComponent from "../TableLogic/SwitchComponent";
+import StyledButton from "../ui/styledButton";
 
 /**
  * Calculates the number of months between start and enddate of a bladeproject,
@@ -39,6 +43,8 @@ function countMonthsIncludingStartAndEnd(startDate: Date, endDate: Date) {
 
 function BladeProjectPage() {
     const editMode = useEditModeContext();
+    const [showPasswordPrompt, setShowPasswordPrompt] = useState(false);
+
     const [rigs, setRigs] = useState<{ rigName: string; rigNumber: number }[]>([{ rigName: "No Rigs", rigNumber: 0 }]);
     const [showPopup, setShowPopup] = useState(false); // Used to show the popup when the user clicks edit in a task card
     const [choosenBP, setChoosenBP] = useState<any>(null); // Used to store the choosen bladeproject when the user clicks edit in a task card
@@ -117,6 +123,13 @@ function BladeProjectPage() {
      */
     return (
         <>
+        <div className="flex flex-row justify-between items-center">
+            <h1 className="text-left mb-4 text-xl">Blade Projects</h1>
+            <div className="">
+                <SwitchComponent setShowPasswordPrompt={setShowPasswordPrompt}/>
+                {localStorage.getItem('token') && <StyledButton onClick={()=>{localStorage.removeItem('token'); window.location.reload();}}> Logout </StyledButton>}
+            </div>
+        </div>
             <TableLogic
                 columns={getColumns(setShowPopup, setChoosenBP, editMode.isEditMode)}
                 data={dataForScreen}
@@ -151,14 +164,9 @@ function BladeProjectPage() {
                         });
                     }
                     return (
-                        <div className="flex flex rows">
-                            <div className="">
+                        <div className="ScheduleDisplay max-w-5xl">
                             <CreateTestRigDivs rigs={rigs} />
-                            </div>
-                            <div className="max-w-5xl">
                             <CreateTimelineField rigs={rigs} months={dates} btCards={btCards} />
-
-                            </div>
                         </div>
                     );
                 }}
