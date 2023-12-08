@@ -12,8 +12,8 @@
   z-index: 10000; /* Ensure it's above other elements */
   background-color: #ffffff;
   font-family: Arial, sans-serif;
-  top: 20%;
-  left: 40%;
+  top : 30vh;
+  left : 40vw;
 
   border-radius: 10px;
 }
