@@ -60,7 +60,7 @@ function BTPage() {
         return {
             ...task,
             startDate: newStartDate.toISOString().split('T')[0],
-            endDate: newStartDate.toISOString().split('T')[0],
+            endDate: newEndDate.toISOString().split('T')[0],
             duration: newDuration
         };
     });
