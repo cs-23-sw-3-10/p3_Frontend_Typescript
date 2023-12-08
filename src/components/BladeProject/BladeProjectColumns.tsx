@@ -35,15 +35,6 @@ export function getColumns(setShowPopup: Function, setChoosenBP: Function) {
                                 {row.getIsExpanded() ? "▲" : "▼"}
                             </button>
                         )}
-                        <button
-                            className="bg-gray-200 hover:bg-gray-500 rounded"
-                            onClick={() => {
-                                setChoosenBP(row.original.id);
-                                setShowPopup(true);
-                            }}
-                        >
-                            Edit
-                        </button>
                         {getValue()}
                     </>
                 );
@@ -74,6 +65,25 @@ export function getColumns(setShowPopup: Function, setChoosenBP: Function) {
             },
             accessorKey: "endDate",
         },
+        {
+            accessorKey: " ",
+            cell: ({row, getValue}) => {
+                return (
+                    <>
+                     <button
+                            className="bg-gray-300 hover:bg-gray-500 w-10 rounded"
+                            onClick={() => {
+                                setChoosenBP(row.original.id);
+                                setShowPopup(true);
+                            }}
+                        >
+                            Edit
+                        </button>
+                        {getValue()}
+                    </>
+                )
+        }
+    }
     ];
     return columnBP;
 }
