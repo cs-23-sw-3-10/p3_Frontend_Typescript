@@ -45,6 +45,10 @@ function DisplayComponent(props: DisplayProps) {
 
     const [updateBt, { error, data }] = useMutation(UPDATE_BT);
 
+    const [dataBT, setDataBT] = useState<{ AllBladeTasksInRangeSub: any[] } | null>(null);
+    const [dataPendingBT, setDataPendingBT] = useState<{ AllBladeTasksPendingSub: any[] } | null>(null);
+
+
     useEffect(() => {
         if (editMode.isEditMode) {
             props.setFilter("None");
@@ -109,12 +113,7 @@ function DisplayComponent(props: DisplayProps) {
         variables: { isActive: true },
     });
 
-    const {
-        // get blade tasks in range
-        loading: loadingBT,
-        error: errorBT,
-        data: dataBT,
-    } = useSubscription(GET_BT_IN_RANGE_SUB, {
+    const inRangeSubscription = useSubscription(GET_BT_IN_RANGE_SUB, {
         variables: {
             startDate: queryDates.startDate,
             endDate: queryDates.endDate,
@@ -122,7 +121,22 @@ function DisplayComponent(props: DisplayProps) {
         },
     });
 
-    const { loading: loadingPendingBT, error: errorPendingBT, data: dataPendingBT } = useSubscription(GET_BT_PENDING_SUB);
+    const pendingSubscription = useSubscription(GET_BT_PENDING_SUB);
+
+    useEffect(() => {
+        if (!inRangeSubscription.loading) {
+            setDataBT(inRangeSubscription.data);
+        }
+    }, [inRangeSubscription.loading, inRangeSubscription.data]);
+
+    useEffect(() => {
+        if (!pendingSubscription.loading) {
+            setDataPendingBT(pendingSubscription.data);
+        }
+    }, [pendingSubscription.loading, pendingSubscription.data]);
+
+    console.log(dataBT);
+    console.log(dataPendingBT);
 
     if (loadingRigs) {
         return <p>Loading...</p>;
@@ -133,18 +147,7 @@ function DisplayComponent(props: DisplayProps) {
         localStorage.removeItem("token");
         return <p>Error {errorRigs.message} </p>;
     }
-    if (loadingBT) {
-        return <p>Loading...</p>;
-    }
-    if (errorBT) {
-        return <p>Error {errorBT.message}</p>;
-    }
-    if (loadingPendingBT) {
-        return <p>Loading...</p>;
-    }
-    if (errorPendingBT) {
-        return <p>Error {errorPendingBT.message}</p>;
-    }
+   
     if (loadingBP) {
         return <p>Loading...</p>;
     }
@@ -167,6 +170,11 @@ function DisplayComponent(props: DisplayProps) {
 
     //Making schedule BladeTaskCards
     let btCards: React.ReactNode[] = [];
+
+    if (dataBT === null || dataPendingBT === null) {
+        return <p>Loading...</p>;
+    }
+    
     dataBT["AllBladeTasksInRangeSub"].forEach((bt: any) => {
         let btShown = false;
         if (bt.bladeProject.customer === props.filter || props.filter === "None" || editMode.isEditMode) {
@@ -308,6 +316,7 @@ function DisplayComponent(props: DisplayProps) {
                     <CreateTimelineField rigs={rigs} months={dates} btCards={btCards} showPasswordPrompt={props.showPasswordPrompt} />
                 </div>
                 {
+                    
                     <PendingTasks
                         bladeTaskHolder={bladeTasksHolder}
                         bladeTaskCards={bladeTasksHolder.getBladeTasks()}

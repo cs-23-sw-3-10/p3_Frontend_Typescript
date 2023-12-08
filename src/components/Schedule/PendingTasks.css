@@ -29,6 +29,35 @@
 .pendingTasksColumn{
     display: flex;
     flex-direction: row;
+    align-items: center;
     grid-column: 2;
     gap: 5px;
+}
+
+.pendingTasksContainer {
+    /* Container styles */
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+}
+
+.pendingTasksContainer h2 {
+    /* Heading styles */
+    margin-bottom: 10px;
+    color: #333;
+    font-size: 1.5em;
+}
+
+
+.projectLegend {
+    /* Project legend styles */
+    justify-content: center;
+    text-align: center;
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #fff;
 }
