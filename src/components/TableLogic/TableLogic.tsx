@@ -205,7 +205,7 @@ export function TableLogic<TData, TValue>({
                             <TableRow key={headerGroup.id}>
                                 {headerGroup.headers.map((header) => {
                                     return (
-                                        <TableHead key={header.id}>
+                                        <TableHead key={header.id} style={{fontWeight:"bold"}}>
                                             {header.isPlaceholder
                                                 ? null
                                                 : flexRender( //renders the header by using the columnDef.header function and the header context
