@@ -118,7 +118,7 @@ function BladeProjectPage() {
     return (
         <>
             <TableLogic
-                columns={getColumns(setShowPopup, setChoosenBP)}
+                columns={getColumns(setShowPopup, setChoosenBP, editMode.isEditMode)}
                 data={dataForScreen}
                 renderExpandedComponent={(row) => {
                     let btCards: React.ReactNode[] = [];

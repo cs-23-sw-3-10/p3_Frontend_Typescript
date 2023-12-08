@@ -2,7 +2,8 @@
 import { ColumnDef } from "@tanstack/react-table";
 import { BladeProjectDataQuery } from "./BladeProjectData";
 
-export function getColumns(setShowPopup: Function, setChoosenBP: Function) {
+export function getColumns(setShowPopup: Function, setChoosenBP: Function, editMode: Boolean) {
+
     const columnBP: ColumnDef<BladeProjectDataQuery>[] = [
         {
             header: ({ column }) => {
@@ -13,9 +14,7 @@ export function getColumns(setShowPopup: Function, setChoosenBP: Function) {
                 return (
                     <>
                         {row.getCanExpand() ? (
-                            <button
-                               
-                            >
+                            <button>
                                 {row.getIsExpanded() ? "▲" : "▼"}
                             </button>
                         ) : (
@@ -63,22 +62,28 @@ export function getColumns(setShowPopup: Function, setChoosenBP: Function) {
         {
             accessorKey: " ",
             cell: ({row, getValue}) => {
-                return (
-                    <>
-                     <button
-                            className="bg-gray-300 hover:bg-gray-500 w-10 rounded"
-                            onClick={() => {
-                                setChoosenBP(row.original.id);
-                                setShowPopup(true);
-                            }}
-                        >
-                            Edit
-                        </button>
-                        {getValue()}
-                    </>
-                )
+                if(editMode === true)
+                {
+                    return (
+                        <>
+                         <button
+                                className="bg-gray-300 hover:bg-gray-500 w-10 rounded"
+                                onClick={() => {
+                                    setChoosenBP(row.original.id);
+                                    setShowPopup(true);
+                                }}
+                            >
+                                Edit
+                            </button>
+                            {getValue()}
+                        </>
+                    )
+                }
+                }
+                    
+        
+            
         }
-    }
     ];
     return columnBP;
 }
