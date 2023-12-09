@@ -1,5 +1,5 @@
 .bladeTaskCard {
-    height: 20px;
+    height: 25px;
     z-index: 1; /* stacks bladeTaskCards on top of the date tiles  */
     grid-row: 1;
     display: flex;

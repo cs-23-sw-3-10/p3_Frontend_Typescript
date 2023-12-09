@@ -285,7 +285,7 @@ function DisplayComponent(props: DisplayProps) {
                         handleViewChange(e);
                     }}
                 >
-                    <input name="monthInput" type="month" defaultValue={selectedMonth} />
+                    <input className="monthInput" name="monthInput" type="month" defaultValue={selectedMonth} />
                     <label htmlFor="numberInput" className="text-sm">
                         Months shown:
                     </label>
@@ -294,7 +294,7 @@ function DisplayComponent(props: DisplayProps) {
                 </form>
                 
                 {editMode.isEditMode ? null : 
-                    (<div className="ml-20">
+                    (<div className="filterContainer">
                         <label>Filter:</label>
                         <select
                             name="customerFilter"

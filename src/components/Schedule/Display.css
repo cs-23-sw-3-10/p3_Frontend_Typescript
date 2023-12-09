@@ -1,3 +1,5 @@
+
+
 .ScheduleContentContainer {
   display: grid;
   grid-template-columns: auto auto;
@@ -15,7 +17,11 @@
   height: 100%;
   grid-column: 1;
   grid-row: 1;
-  min-width: 450px;
+  min-width: 402px;
+  background-color: #f7fafc; /* bg-gray-100 */
+  border: 1px solid #e2e8f0; /* border-t */
+  border-radius: 5px;
+  border-bottom: 1px solid #e2e8f0; /* border-b */
 }
 .ScheduleFilterAndMode {
   position: static;
@@ -33,8 +39,11 @@
   background-color: #4299e1; /* bg-blue-500 */
   color: white; /* text-white */
   font-weight: bold; /* font-bold */
-  padding-top: 0.5rem; /* py-2 */
-  padding-bottom: 0.5rem; /* py-2 */
+  margin-left: 5px;
+  margin-right: 5px;
+  text-align: center;
+
+  border: 1px solid #4299e1; /* border border-transparent */
   padding-left: 1rem; /* px-4 */
   padding-right: 1rem; /* px-4 */
   border-radius: 0.25rem; /* rounded */
@@ -157,6 +166,7 @@
 }
 .MonthHeader p {
   font-size: 15px; /* Adjust the font size as needed */
+  font-weight: bold;
 }
 
 .DateContainer {
@@ -195,7 +205,32 @@
   justify-content: flex-start; /* Aligns items from the start of the container. For flex-direction: row, this corresponds to aligning to the left*/
 }
 
+
+.monthInput{
+  margin-left: 5px;
+  margin-right: 5px;
+  text-align: center;
+  max-width: 160px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
 .numberMonthsInput{
-  width : 50px;
-  max-width: 50px;
+  margin: 5px;
+
+  text-align: center;
+  max-width: 30px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+.filterContainer{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  margin-left: 5px;
+  margin-right: 5px;
+  text-align: center;
+  max-width: 160px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
 }
