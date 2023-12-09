@@ -307,8 +307,6 @@ function BladeTaskMenu(props: BladeTaskMenuProps) {
 function ErrorMessageContainer({ inErrorChart }: { inErrorChart: InErrorChart }) {
     return (
         <div className="error_message_wrapper">
-            {inErrorChart.taskName[0] ? <p className="error_message error_message_btname">Invalid Name - Task name exists in system</p> : <div></div>}
-            {inErrorChart.taskName[1] ? <p className="error_message error_message_btname">Illegal characters removed: Only letters, and special characters {'"-_"'} allowed</p> : <div></div>}
             {inErrorChart.testType ? <p className="error_message error_message_test_type">Please provide a test type</p> : <div></div>}
             {inErrorChart.startDate ? <p className="error_message error_message_startdate">Invalid Date - Date is before current date</p> : <div></div>}
             {inErrorChart.duration ? <p className="error_message error_message_duration">Invalid Duration - Cannot Be Negative</p> : <div></div>}

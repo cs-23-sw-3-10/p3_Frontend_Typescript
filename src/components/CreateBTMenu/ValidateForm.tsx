@@ -6,7 +6,7 @@ import { InErrorChart } from "./BTMenuTypes";
 //Required Fields: taskName, testType, bladeProjectID, duration, attachPeriod, detachPeriod
 export function ValidateForm(currentOrder:BTOrder, inErrorChart:InErrorChart, setInErrorChart:Function){
     let newInErrorChart = {...inErrorChart};
-    newInErrorChart.taskName[0] = (currentOrder.taskName === "");
+    newInErrorChart.taskName[1] = (currentOrder.taskName === "");
     newInErrorChart.testType = (currentOrder.testType === "");
     newInErrorChart.bladeProjectId = (currentOrder.bladeProjectId === "");
     newInErrorChart.duration = (currentOrder.duration >= 0);
@@ -14,7 +14,7 @@ export function ValidateForm(currentOrder:BTOrder, inErrorChart:InErrorChart, se
     newInErrorChart.detachPeriod = (currentOrder.detachPeriod >= 0);
     setInErrorChart(newInErrorChart)
     
-    if(newInErrorChart.taskName[0] || newInErrorChart.testType ||  
+    if(newInErrorChart.taskName[1] || newInErrorChart.testType ||  
         newInErrorChart.bladeProjectId ||   newInErrorChart.duration || 
         newInErrorChart.attachPeriod  ||  newInErrorChart.detachPeriod)
     {

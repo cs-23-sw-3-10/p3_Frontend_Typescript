@@ -1,7 +1,7 @@
 import { useQuery } from "@apollo/client";
 import { GET_ALL_BT_NAMES } from "../../api/queryList";
 import { InErrorChart } from "./BTMenuTypes";
-import {sanitize} from '../../utils/StringEditing';
+import { sanitize } from '../../utils/StringEditing';
 
 
 function TaskNameSelector({ taskName, setTaskName, inErrorChart, setInErrorChart }: { taskName: string, setTaskName: Function, setInErrorChart: Function, inErrorChart: InErrorChart }) {
@@ -18,6 +18,10 @@ function TaskNameSelector({ taskName, setTaskName, inErrorChart, setInErrorChart
 }
 
 function InputComponent({ taskName, setTaskName, existingNames, inErrorChart, setInErrorChart }: { taskName: string, setTaskName: Function, existingNames: string[], inErrorChart: InErrorChart, setInErrorChart: Function }) {
+    let errorMessages: Array<string> =
+        ['Invalid Name - Task name exists in system',
+         'Please provide a Task Name',
+        ];
 
     const handleNameInput = (e: React.FormEvent<HTMLInputElement>) => {
         let userInput = e.currentTarget.value;
@@ -25,11 +29,8 @@ function InputComponent({ taskName, setTaskName, existingNames, inErrorChart, se
         let santizedName = sanitize(userInput);
         let newInErrorChart = { ...inErrorChart };
 
-        //Check for illegal characters -> Inform user if any are present
+        //Check for illegal characters -> Sanitize
         setTaskName(sanitize(userInput));
-        if (nonSanitizedName !== santizedName) {
-            newInErrorChart.taskName[1] = true;
-        } else newInErrorChart.taskName[1] = false;
 
         //Check if Blade Task name already exists in DB
         if (!existingNames.includes(userInput)) {
@@ -58,7 +59,7 @@ function InputComponent({ taskName, setTaskName, existingNames, inErrorChart, se
             className={(inErrorChart.taskName[0] || inErrorChart.taskName[1]) ? "error id_select input" : 'id_select input_sideborders'}
             type="text"
             placeholder='Select Task Name'
-            value={taskName}
+            value={(inErrorChart.taskName[1]) ? errorMessages[0] : taskName}
             onChange={handleChange}
             onBlur={handleNameInput}
             onSelect={hideErrorMessages}
