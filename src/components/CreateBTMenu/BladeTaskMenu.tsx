@@ -29,7 +29,7 @@ export interface BladeTaskMenuProps {
 }
 
 function BladeTaskMenu(props: BladeTaskMenuProps) {
-    const creator = props.creator; //true if creating a new blade task, false if editing an existing one
+    const creator = props.creator; //True if creating a new blade task, false if editing an existing one
     //Apollo mutation setup:
     const [addBT, { loading: addLoading, error: addError }] = useMutation(ADD_BT);
     const [updateBT, { loading: updateLoading, error: updateError }] = useMutation(UPDATE_BT_INFO);
@@ -52,7 +52,7 @@ function BladeTaskMenu(props: BladeTaskMenuProps) {
     //Tracks which input fields are currently in an error state(Incorrect input has been provided)
     const [inErrorChart, setInErrorChart] = useState({
         bladeProjectId: false,
-        taskName: false,
+        taskName: [false,false], //[0]: Taskname exists in the system ; [1]: Used unsuitable character
         testType: false,
         startDate: false,
         duration: false,
@@ -307,7 +307,8 @@ function BladeTaskMenu(props: BladeTaskMenuProps) {
 function ErrorMessageContainer({ inErrorChart }: { inErrorChart: InErrorChart }) {
     return (
         <div className="error_message_wrapper">
-            {inErrorChart.taskName ? <p className="error_message error_message_btname">Invalid Name - Task name exists in system</p> : <div></div>}
+            {inErrorChart.taskName[0] ? <p className="error_message error_message_btname">Invalid Name - Task name exists in system</p> : <div></div>}
+            {inErrorChart.taskName[1] ? <p className="error_message error_message_btname">Illegal characters removed: Only letters, and special characters {'"-_"'} allowed</p> : <div></div>}
             {inErrorChart.startDate ? <p className="error_message error_message_startdate">Invalid Date - Date is before current date</p> : <div></div>}
             {inErrorChart.duration ? <p className="error_message error_message_duration">Invalid Duration - Cannot Be Negative</p> : <div></div>}
             {inErrorChart.attachPeriod ? <p className="error_message error_message_attachPeriod">Invalid Attach Period - Cannot Be Negative</p> : <div></div>}

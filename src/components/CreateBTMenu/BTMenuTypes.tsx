@@ -1,6 +1,6 @@
 export type InErrorChart = {
     bladeProjectId: boolean;
-    taskName: boolean;
+    taskName: Array<boolean>;
     testType: boolean;
     startDate: boolean;
     duration: boolean;
