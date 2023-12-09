@@ -25,8 +25,6 @@ function InputComponent({ taskName, setTaskName, existingNames, inErrorChart, se
 
     const handleNameInput = (e: React.FormEvent<HTMLInputElement>) => {
         let userInput = e.currentTarget.value;
-        let nonSanitizedName = taskName;
-        let santizedName = sanitize(userInput);
         let newInErrorChart = { ...inErrorChart };
 
         //Check for illegal characters -> Sanitize
@@ -59,7 +57,7 @@ function InputComponent({ taskName, setTaskName, existingNames, inErrorChart, se
             className={(inErrorChart.taskName[0] || inErrorChart.taskName[1]) ? "error id_select input" : 'id_select input_sideborders'}
             type="text"
             placeholder='Select Task Name'
-            value={(inErrorChart.taskName[1]) ? errorMessages[0] : taskName}
+            value={(inErrorChart.taskName[0] || inErrorChart.taskName[1]) ? errorMessages[1] : taskName}
             onChange={handleChange}
             onBlur={handleNameInput}
             onSelect={hideErrorMessages}
