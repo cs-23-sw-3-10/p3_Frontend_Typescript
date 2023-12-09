@@ -55,9 +55,9 @@ function BladeProjectPage() {
     const [showDeleteConfirm, setShowDeleteConfirm] = useState<boolean>(false);
 
     //get data from the database
-    const { loading: loadingBP, error: errorBP, data: dataBP, refetch: refetchBP } = useQuery(GET_ALL_BP);
+    const { loading: loadingBP, error: errorBP, data: dataBP, refetch: refetchBP} = useQuery(GET_ALL_BP);
 
-    const { loading: loadingSchedule, error: errorSchedule, data: dataSchedule, } = useQuery(GET_ALL_BP_IN_DIFF_SCHEDULE);
+    const { loading: loadingSchedule, error: errorSchedule, data: dataSchedule} = useQuery(GET_ALL_BP_IN_DIFF_SCHEDULE);
 
     const { loading: loadingRigs, error: errorRigs, data: dataRigs } = useQuery(GET_TEST_RIGS);
 
