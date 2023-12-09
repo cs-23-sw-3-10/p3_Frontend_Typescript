@@ -11,6 +11,22 @@ export type InErrorChart = {
     employees: boolean;
 }
 
+export function createEmptyInErrorChart(): InErrorChart {
+    return {
+        bladeProjectId: false,
+        taskName: [false,false],
+        testType: false,
+        startDate: false,
+        duration: false,
+        attachPeriod: false,
+        detachPeriod: false,
+        testRig: false,
+        equipment: false,
+        employees: false,
+    };
+}
+
+
 export type BTOrder = {
     bladeProjectId: string;
     taskName: string;

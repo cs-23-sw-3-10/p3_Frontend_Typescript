@@ -16,8 +16,7 @@ import { useMutation, useQuery } from "@apollo/client";
 import { ADD_BT, UPDATE_BT_INFO } from "../../api/mutationList";
 import { GET_ALL_BT } from "../../api/queryList";
 import { ValidateForm } from "./ValidateForm";
-import { ComboBoxSelector } from "../ResourcesMenu/ResourcesUtils";
-import { GET_TEST_TYPES } from "../../api/queryList";
+import { createEmptyInErrorChart } from "./BTMenuTypes";
 import "../CreateBTMenu/TestTypeSelector.css";
 import "../CreateBTMenu/BladeTaskMenu.css";
 import TestTypeSelector from "./TestTypeSelector";
@@ -197,6 +196,8 @@ function BladeTaskMenu(props: BladeTaskMenuProps) {
         setDetachPeriod(creator ? 0 : props.inputs!.detachPeriod);
         setTestRig(creator ? 0 : props.inputs!.testRig);
         setResourceOrder(creator ? [] : props.inputs!.resourceOrders);
+
+        setInErrorChart(createEmptyInErrorChart());
     };
 
     //The BTOrder object sent to the server -> Is created as a new Blade Tasks instance in DB and displayed in schedule
