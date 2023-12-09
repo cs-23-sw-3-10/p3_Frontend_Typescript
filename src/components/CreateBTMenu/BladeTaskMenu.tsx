@@ -20,6 +20,7 @@ import { ComboBoxSelector } from "../ResourcesMenu/ResourcesUtils";
 import { GET_TEST_TYPES } from "../../api/queryList";
 import "../CreateBTMenu/TestTypeSelector.css";
 import "../CreateBTMenu/BladeTaskMenu.css";
+import TestTypeSelector from "./TestTypeSelector";
 
 
 export interface BladeTaskMenuProps {
@@ -107,7 +108,7 @@ function BladeTaskMenu(props: BladeTaskMenuProps) {
                         testRig
                     )
                 ) {
-                    if (ValidateForm(currentOrder)) {
+                    if (ValidateForm(currentOrder, inErrorChart, setInErrorChart)) {
 
                         resourceOrders.forEach((order: ResourceOrder)=>{
                             order.resourceType=order.resourceType.toLowerCase();
@@ -149,7 +150,7 @@ function BladeTaskMenu(props: BladeTaskMenuProps) {
                         testRig
                     )
                 ) {
-                    if (ValidateForm(currentOrder)) {
+                    if (ValidateForm(currentOrder, inErrorChart, setInErrorChart)) {
                         resourceOrders.forEach((order: ResourceOrder)=>{
                             order.resourceType=order.resourceType.toLowerCase();
                             order.resourceName=order.resourceName.toLowerCase();
@@ -224,14 +225,12 @@ function BladeTaskMenu(props: BladeTaskMenuProps) {
             </div>
             <div className="item testtype_wrapper">
                 <h2 className="title">Type</h2>
-                <ComboBoxSelector
-                    selectedValue={testType}
-                    setSelectedValue={(value: string) => setTestType(value)}
-                    setItemList={() => {}} //not used
+                <TestTypeSelector 
+                    testType={testType} 
+                    setTestType={setTestType} 
                     className="testtype_select input_sideborders"
-                    query={GET_TEST_TYPES}
-                    dataKey="DictionaryAllByCategory"
-                    mappingFunction={({ label }: { label: string }) => label}
+                    inErrorChart={inErrorChart}
+                    setInErrorChart={setInErrorChart}
                 />
             </div>
             <div className="item date_selection_wrapper">
@@ -294,7 +293,7 @@ function BladeTaskMenu(props: BladeTaskMenuProps) {
                         handleCancellation(creator);
                     }}
                 >
-                    Cancel
+                    Clear
                 </button>
                 <button className="submit_BT" onClick={handleSubmit}>
                     Submit
@@ -309,6 +308,7 @@ function ErrorMessageContainer({ inErrorChart }: { inErrorChart: InErrorChart })
         <div className="error_message_wrapper">
             {inErrorChart.taskName[0] ? <p className="error_message error_message_btname">Invalid Name - Task name exists in system</p> : <div></div>}
             {inErrorChart.taskName[1] ? <p className="error_message error_message_btname">Illegal characters removed: Only letters, and special characters {'"-_"'} allowed</p> : <div></div>}
+            {inErrorChart.testType ? <p className="error_message error_message_test_type">Please provide a test type</p> : <div></div>}
             {inErrorChart.startDate ? <p className="error_message error_message_startdate">Invalid Date - Date is before current date</p> : <div></div>}
             {inErrorChart.duration ? <p className="error_message error_message_duration">Invalid Duration - Cannot Be Negative</p> : <div></div>}
             {inErrorChart.attachPeriod ? <p className="error_message error_message_attachPeriod">Invalid Attach Period - Cannot Be Negative</p> : <div></div>}

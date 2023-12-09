@@ -18,8 +18,8 @@ function AttachPeriodSelector(
                 type="number"
                 className={inErrorChart.attachPeriod ? "error" : "item attach_period_select input"}
                 name="attach_period_select"
-                placeholder='Days'
-                value={attachPeriod}
+                placeholder='Select Attach Period'
+                value={(attachPeriod === 0) ? "" : attachPeriod}
                 onChange={(e) => setAttachPeriod(parseInt(e.currentTarget.value))}
                 onBlur={(e) => handleAttachPeriodValidation(e, duration, detachPeriod, setAttachPeriod, inErrorChart, setInErrorChart)}
             />
@@ -29,17 +29,15 @@ function AttachPeriodSelector(
 
 //Checks if:
 // 1) The attach period is non-negative
-// 2) The sum of the provided attach period and existing detach period is not bigger than the total duration of the Blade Task
 function handleAttachPeriodValidation(e: React.FormEvent<HTMLInputElement>, duration:number, detachPeriod:number, setAttachPeriod:Function, inErrorChart:InErrorChart, setInErrorChart:Function){
     const newInErrorChart:InErrorChart = {...inErrorChart};
     const userInput = Number(e.currentTarget.value);
-    if((userInput > 0) && (detachPeriod + userInput) <= duration){
+    if((userInput >= 0)){
         //Valid input
         newInErrorChart.attachPeriod = false;
         setInErrorChart(newInErrorChart);
         setAttachPeriod(userInput);
     }else{
-        //Invalid input
         newInErrorChart.attachPeriod = true;
         setInErrorChart(newInErrorChart);
         //Reset input field to 0

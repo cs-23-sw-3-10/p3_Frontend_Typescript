@@ -10,8 +10,8 @@ function DetachPeriodSelector(
                 type="number"
                 className={inErrorChart.detachPeriod ? "error" : "item detach_period_select input"}
                 name="detach_period_select"
-                placeholder='Days'
-                value={detachPeriod}
+                placeholder='Select Detach Period'
+                value={(detachPeriod === 0) ? "" : detachPeriod}
                 onChange={(e) => setDetachPeriod(parseInt(e.currentTarget.value))}
                 onBlur={(e) => handleDetachPeriodValidation(e, duration, attachPeriod, setDetachPeriod, inErrorChart, setInErrorChart)}
             />
@@ -22,7 +22,7 @@ function DetachPeriodSelector(
 function handleDetachPeriodValidation(e: React.FormEvent<HTMLInputElement>, duration:number, attachPeriod:number, setDetachPeriod:Function, inErrorChart:InErrorChart, setInErrorChart:Function){
     const newInErrorChart:InErrorChart = {...inErrorChart};
     const userInput = Number(e.currentTarget.value);
-    if((userInput > 0) && (attachPeriod + userInput) <= duration){
+    if((userInput >= 0)){
         newInErrorChart.detachPeriod = false;
         setInErrorChart(newInErrorChart);
         setDetachPeriod(userInput);
