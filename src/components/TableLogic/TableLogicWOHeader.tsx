@@ -105,7 +105,7 @@ export function TableLogicWOHeaders<TData, TValue>({
                             <TableRow key={headerGroup.id}>
                                 {headerGroup.headers.map((header) => {
                                     return (
-                                        <TableHead key={header.id}>
+                                        <TableHead key={header.id} style={{fontWeight: 'bold'}}>
                                             {header.isPlaceholder
                                                 ? null
                                                 : flexRender(

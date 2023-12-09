@@ -47,6 +47,41 @@ function BTPage() {
         dataForScreen = dataForScreen[0].bladeProject.map((bladeTasks: any) => bladeTasks.bladeTasks).flat()
     }
 
+    //Set correct durations, start- and end dates such that it is only for the test. 
+    dataForScreen = dataForScreen.map((task: any) => {
+        let newStartDate = new Date(task.startDate);
+        let newEndDate=new Date(task.endDate);
+        newStartDate.setDate(newStartDate.getDate() + task.attachPeriod);
+        newEndDate.setDate(newEndDate.getDate() - task.detachPeriod);
+        const newDuration=task.duration-task.attachPeriod-task.detachPeriod;
+    
+    
+        // Create a new object with the updated startDate
+        return {
+            ...task,
+            startDate: newStartDate.toISOString().split('T')[0],
+            endDate: newEndDate.toISOString().split('T')[0],
+            duration: newDuration
+        };
+    });
+    
+
+    /*
+    dataForScreen.forEach( (task:any) => {
+        console.log("sstartDate bef: ",task.startDate)
+        let newStartDate = new Date(task.startDate);
+
+        newStartDate.setDate(
+            // Set the end date of the blade task
+            newStartDate.getDate() + task.attachPeriod 
+        );
+
+        task.startDate=newStartDate
+
+        console.log("sstartDate af: ",task.startDate)
+    });
+    */
+
     /**
      * renders the table. The renderExpandedComponent prop is used to render the bookings table
      * based on the current row.id which is equal to the bladetask ID.
@@ -60,6 +95,7 @@ function BTPage() {
                 {localStorage.getItem('token') && <StyledButton onClick={()=>{localStorage.removeItem('token'); window.location.reload();}}> Logout </StyledButton>}
             </div>
         </div>
+        <p style={{paddingBottom: "20px" }}>Duration, attach period and detach period are given in <b>days</b>.</p>
         <TableLogic
             columns={columnBT}
             data={dataForScreen}
