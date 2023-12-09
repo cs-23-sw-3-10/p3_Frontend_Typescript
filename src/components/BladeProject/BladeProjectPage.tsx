@@ -57,7 +57,7 @@ function BladeProjectPage() {
     //get data from the database
     const { loading: loadingBP, error: errorBP, data: dataBP, refetch: refetchBP} = useQuery(GET_ALL_BP);
 
-    const { loading: loadingSchedule, error: errorSchedule, data: dataSchedule} = useQuery(GET_ALL_BP_IN_DIFF_SCHEDULE);
+    const { loading: loadingSchedule, error: errorSchedule, data: dataSchedule, refetch: refetchBPdif} = useQuery(GET_ALL_BP_IN_DIFF_SCHEDULE);
 
     const { loading: loadingRigs, error: errorRigs, data: dataRigs } = useQuery(GET_TEST_RIGS);
 
@@ -120,6 +120,7 @@ function BladeProjectPage() {
         }
     };
     refetchBP();
+    refetchBPdif();
 
     /* renders the table. The renderExpandedComponent prop is used to render the bladeTasks table
      * based on the current row.id which is equal to the bladeproject ID.
@@ -145,6 +146,7 @@ function BladeProjectPage() {
                         new Date(bladeProjectIndex.startDate),
                         countMonthsIncludingStartAndEnd(new Date(bladeProjectIndex.startDate), new Date(bladeProjectIndex.endDate))
                     );
+
 
                     if (bladeProjectIndex && bladeProjectIndex.bladeTasks) {
                         bladeProjectIndex.bladeTasks.forEach((bladeTask: any) => {
