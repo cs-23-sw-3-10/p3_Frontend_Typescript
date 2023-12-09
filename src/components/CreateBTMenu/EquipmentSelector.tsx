@@ -1,6 +1,6 @@
 import "./EquipmentSelector.css";
 import { useQuery } from "@apollo/client";
-import { GET_ALL_EQUIPMENT_TYPES } from "../../api/queryList";
+import { GET_EQUIPMENT_TYPES } from "../../api/queryList";
 import { useState } from "react";
 import { ResourceOrder } from "./BTMenuTypes";
 import { useResourceOrderContext } from "./BladeTaskOrderContext";
@@ -20,7 +20,7 @@ function EquipmentSelectionMenu({ setEquipmentActive, className }: { setEquipmen
 }
 
 function EquipmentListGenerator({ className }: { className: string }) {
-    const { loading, error, data } = useQuery(GET_ALL_EQUIPMENT_TYPES);
+    const { loading, error, data } = useQuery(GET_EQUIPMENT_TYPES);
 
     if (loading) return <div className="equipment_menu_item">LOADING</div>;
 
@@ -30,13 +30,13 @@ function EquipmentListGenerator({ className }: { className: string }) {
     }
 
     //Returns a dropdown of all the test types present in DB
-    return data.DictionaryAllByCategory.map(({ id, label }: { id: string; label: string }) => (
-        <EquipmentMenuItem resourceName={label} key={Number(id)} className={className} />
-    ));
+    return data.GetEquipmentTypes.map((type: string) =>
+    (<EquipmentMenuItem resourceName={type} className={className} />));
 }
 
 function EquipmentMenuItem({ resourceName, className }: { resourceName: string; className: string }) {
     const changeResourceOrder = useResourceOrderContext();
+    console.log(resourceName);
     return (
         <div className={"equipment_menu_item " + className}>
             <button

@@ -316,15 +316,6 @@ export const GET_TEST_RIGS = gql`
     }
 `;
 
-export const GET_ALL_EQUIPMENT_TYPES = gql`
-    query GetAllEquipmentTypes {
-        DictionaryAllByCategory(category: "equipmentType") {
-            id
-            label
-        }
-    }
-`;
-
 export const GET_ALL_TECHNICIAN_TYPES = gql`
     query GetAllTechnicianTypes {
         DictionaryAllByCategory(category: "technician") {
