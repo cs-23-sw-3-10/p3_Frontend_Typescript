@@ -33,6 +33,7 @@ export function getColumns(setShowPopup: Function, setChoosenBP: Function, editM
                     </>
                 );
             },
+            sortingFn: "alphanumeric",
         },
 
         {
