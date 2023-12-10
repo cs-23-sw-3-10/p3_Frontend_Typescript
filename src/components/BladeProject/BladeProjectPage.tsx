@@ -64,26 +64,30 @@ function BladeProjectPage() {
     //handle loading and error states for the used queries
 
     if (loadingBP) return <p>Loading Blade Projects...</p>;
-    if (errorBP)
+    if (errorBP) {
+        localStorage.removeItem("token");
         return (
             <>
                 <p>Error: {errorBP.message}.</p>
                 <p>Please reload the page or contact adminitrator</p>
             </>
         );
+    }
     const BPData = dataBP["AllBladeProjects"];
     if (!BPData) {
         return <p> No data for {"AllBladeProjects"} </p>;
     }
 
     if (loadingSchedule) return <p>Loading Schedule...</p>;
-    if (errorSchedule)
+    if (errorSchedule) {
+        localStorage.removeItem("token");
         return (
             <>
                 <p>Error: {errorSchedule.message}.</p>
                 <p>Please reload the page or contact adminitrator</p>
             </>
         );
+    }
     const ScheduleData = dataSchedule["AllSchedules"];
     if (!ScheduleData) {
         return <p> No data for {"AllSchedules"} </p>;

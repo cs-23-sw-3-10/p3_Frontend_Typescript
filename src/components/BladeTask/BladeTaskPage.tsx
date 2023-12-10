@@ -25,26 +25,30 @@ function BTPage() {
 
     //handle loading and error states for the used queries
     if (loadingBT) return <p>Loading...</p>;
-    if (errorBT)
+    if (errorBT) {
+        localStorage.removeItem("token");
         return (
             <>
                 <p>Error: {errorBT.message}.</p>
                 <p>Please reload the page or contact adminitrator</p>
             </>
         );
+    }
 
     const bladeTasks = dataBT["AllBladeTasks"];
 
     if (!bladeTasks) return <p> No data for {"AllBladeTasks"} </p>;
 
     if (loadingScheduleBT) return <p>Loading...</p>;
-    if (errorScheduleBT)
+    if (errorScheduleBT) {
+        localStorage.removeItem("token");
         return (
             <>
                 <p>Error: {errorScheduleBT.message}.</p>
                 <p>Please reload the page or contact adminitrator</p>
             </>
         );
+    }
     const ScheduleDataBT = dataScheduleBT["AllSchedules"];
 
     //handle the data for the table regarding the view/edit mode
