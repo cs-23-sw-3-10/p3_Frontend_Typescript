@@ -127,7 +127,7 @@ function BladeTaskMenu(props: BladeTaskMenuProps) {
                         testRig
                     )
                 ) {
-                    if (ValidateForm(currentOrder, inErrorChart, setInErrorChart, BTNames)) {
+                    if (ValidateForm(currentOrder, inErrorChart, setInErrorChart, BTNames, creator)) {
 
                         resourceOrders.forEach((order: ResourceOrder) => {
                             order.resourceType = order.resourceType.toLowerCase();
@@ -169,7 +169,7 @@ function BladeTaskMenu(props: BladeTaskMenuProps) {
                         testRig
                     )
                 ) {
-                    if (ValidateForm(currentOrder, inErrorChart, setInErrorChart, BTNames)) {
+                    if (ValidateForm(currentOrder, inErrorChart, setInErrorChart, BTNames, creator)) {
                         resourceOrders.forEach((order: ResourceOrder) => {
                             order.resourceType = order.resourceType.toLowerCase();
                             order.resourceName = order.resourceName.toLowerCase();

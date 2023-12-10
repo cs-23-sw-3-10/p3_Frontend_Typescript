@@ -4,9 +4,11 @@ import { InErrorChart } from "./BTMenuTypes";
 //ValidateForm checks if the required fields have been filled out
 //The validation of the individual input fields happen in their respective components
 //Required Fields: taskName, testType, bladeProjectID, duration, attachPeriod, detachPeriod
-export function ValidateForm(currentOrder:BTOrder, inErrorChart:InErrorChart, setInErrorChart:Function, BTNames:Array<string>){
+export function ValidateForm(currentOrder:BTOrder, inErrorChart:InErrorChart, setInErrorChart:Function, BTNames:Array<string>, create:boolean){
     let newInErrorChart = {...inErrorChart};
-    newInErrorChart.taskName[0] = (BTNames.includes(currentOrder.taskName)); //Checks if Task Name exist in BP already
+    if(create){
+        newInErrorChart.taskName[0] = (BTNames.includes(currentOrder.taskName)); //Checks if Task Name exist in BP already
+    }
     newInErrorChart.taskName[1] = (currentOrder.taskName === ""); //Checks if Task Name is not empty
     newInErrorChart.testType = (currentOrder.testType === ""); //Cheks if Test Type is not empty
     newInErrorChart.bladeProjectId = (currentOrder.bladeProjectId === ""); //Cheks if BP id is provided
