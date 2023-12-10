@@ -124,7 +124,11 @@ function DisplayComponent(props: DisplayProps) {
         },
     });
 
-    const pendingSubscription = useSubscription(GET_BT_PENDING_SUB);
+    const pendingSubscription = useSubscription(GET_BT_PENDING_SUB, {
+        variables: {
+            isActive: !editMode.isEditMode,
+        },
+    })
 
     useEffect(() => {
         if (!inRangeSubscription.loading) {
@@ -138,8 +142,6 @@ function DisplayComponent(props: DisplayProps) {
         }
     }, [pendingSubscription.loading, pendingSubscription.data]);
 
-    //console.log(dataBT);
-    //console.log(dataPendingBT);
 
     if (loadingRigs) {
         return <p>Loading...</p>;
