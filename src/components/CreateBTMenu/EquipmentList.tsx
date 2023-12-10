@@ -16,37 +16,23 @@ function EquipmentList({ resourceOrders, classNameFor }: { resourceOrders: Resou
     return (
         <div className={"equipment_list " + classNameFor}>
             {resourceOrders.map((order) => (
-                <React.Fragment key={resourceOrders.indexOf(order)}>
-                    {order.resourceType !== "Engineer" && order.resourceType !== "Technician" ? (
-                        <div className={"equipment_entry " + classNameFor}>
-                            <div className={"type " + classNameFor}>
-                                <h2 className={"title " + classNameFor}>{order.resourceName}</h2>
-                            </div>
-                            <div className={"period " + classNameFor}>
-                                <fieldset className={"period_selector " + classNameFor}>
-                                    <CheckBox
-                                        key={resourceOrders.indexOf(order) + "a"}
-                                        name="attachPeriod"
-                                        resource={order}
-                                        resourceIndex={resourceOrders.indexOf(order)}
-                                        title="Attach"
-                                    />
-                                    <CheckBox
-                                        key={resourceOrders.indexOf(order) + "b"}
-                                        name="detachPeriod"
-                                        resource={order}
-                                        resourceIndex={resourceOrders.indexOf(order)}
-                                        title="Detach"
-                                    />
-                                </fieldset>
-                                <button className={"remove_equipment_button " + classNameFor} onClick={() => handleOrderRemoval(resourceOrders.indexOf(order))}>
-                                    <span className="material-symbols-outlined">cancel</span>
-                                </button>
-                            </div>
-                        </div>
-                    ) : (
-                        <></>
-                    )}
+                <React.Fragment key={resourceOrders.indexOf(order)}> 
+                {((order.resourceType.toLowerCase() !== "engineer") && (order.resourceType.toLowerCase() !== "technician")) ?
+                <div className={'equipment_entry ' + classNameFor}>
+                    <div className={'type ' + classNameFor}>
+                        <h2 className={'title ' + classNameFor}>{order.resourceName}</h2>
+                    </div>
+                    <div className={"period " + classNameFor}>
+                        <fieldset className={'period_selector ' + classNameFor}>
+                            <CheckBox key={resourceOrders.indexOf(order) + "a"} name="attachPeriod" resource={order} resourceIndex={resourceOrders.indexOf(order)} title="Attach"/>
+                            <CheckBox key={resourceOrders.indexOf(order) + "b"} name="detachPeriod" resource={order} resourceIndex={resourceOrders.indexOf(order)} title="Detach"/>
+                        </fieldset>
+                        <button className={'remove_equipment_button ' + classNameFor} onClick={() => handleOrderRemoval(resourceOrders.indexOf(order))}><span className="material-symbols-outlined">cancel</span></button>
+                    </div>
+                </div>
+                :
+                <></>
+                }
                 </React.Fragment>
             ))}
         </div>
