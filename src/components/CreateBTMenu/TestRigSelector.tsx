@@ -12,11 +12,11 @@ function TestRigSelector({ testRig, setTestRig }: { testRig: number; setTestRig:
     }, [data]);
 
     //Whilst list is loading -> Return empty selector menu
-    if (loading) return <select className="input_sideborders" id="testrig" name="testrig"></select>
+    if (loading) return <select className="input_sideborders" id="testrig" name="testrig" value="Loading...">  </select>
 
     //Error -> return empty selector menu
     if (error) {
-        return <select className="input_sideborders" id="testrig" name="testrig"></select>
+        return <select className="input_sideborders" id="testrig" name="testrig" value={error.message}> </select>
     }
 
     return (

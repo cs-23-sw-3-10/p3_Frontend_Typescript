@@ -143,7 +143,7 @@ function BladeTaskMenu(props: BladeTaskMenuProps) {
                                     bladeProjectId: bladeProjectId,
                                     taskName: taskName,
                                     testType: testType,
-                                    startDate: dbStartDate,
+                                    startDate: {dbStartDate},
                                     duration: duration,
                                     attachPeriod: attachPeriod,
                                     detachPeriod: detachPeriod,
