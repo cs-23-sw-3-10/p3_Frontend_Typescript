@@ -90,3 +90,7 @@
     grid-template-rows: 61px 130px;
     grid-template-columns: 1fr;
 }
+
+.bp_feedback_msg{
+    color: green;
+}
