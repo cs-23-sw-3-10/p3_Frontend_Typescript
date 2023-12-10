@@ -48,7 +48,6 @@ function DisplayComponent(props: DisplayProps) {
     const [dataBT, setDataBT] = useState<{ AllBladeTasksInRangeSub: any[] } | null>(null);
     const [dataPendingBT, setDataPendingBT] = useState<{ AllBladeTasksPendingSub: any[] } | null>(null);
 
-
     useEffect(() => {
         if (editMode.isEditMode) {
             props.setFilter("None");
@@ -128,7 +127,7 @@ function DisplayComponent(props: DisplayProps) {
         variables: {
             isActive: !editMode.isEditMode,
         },
-    })
+    });
 
     useEffect(() => {
         if (!inRangeSubscription.loading) {
@@ -142,22 +141,31 @@ function DisplayComponent(props: DisplayProps) {
         }
     }, [pendingSubscription.loading, pendingSubscription.data]);
 
-
     if (loadingRigs) {
-        return <p>Loading...</p>;
+        return <p>Loading Schedule. Please wait...</p>;
     }
     if (errorRigs) {
         //TDOO: Find better way to handle timesout token
         console.log(errorRigs);
         localStorage.removeItem("token");
-        return <p>Error {errorRigs.message} </p>;
+        return (
+            <>
+                <p>Error: {errorRigs.message}.</p>
+                <p>Please reload the page or contact adminitrator</p>
+            </>
+        );
     }
-   
+
     if (loadingBP) {
-        return <p>Loading...</p>;
+        return <p>Loading Blade Projects. Please wait...</p>;
     }
     if (errorBP) {
-        return <p>Error {errorBP.message}</p>;
+        return (
+            <>
+                <p>Error: {errorBP.message}.</p>
+                <p>Please reload the page or contact adminitrator</p>
+            </>
+        );
     }
 
     const customers: string[] = [];
@@ -179,7 +187,7 @@ function DisplayComponent(props: DisplayProps) {
     if (dataBT === null || dataPendingBT === null) {
         return <p>Loading...</p>;
     }
-    
+
     dataBT["AllBladeTasksInRangeSub"].forEach((bt: any) => {
         let btShown = false;
         if (bt.bladeProject.customer === props.filter || props.filter === "None" || editMode.isEditMode) {
@@ -246,122 +254,121 @@ function DisplayComponent(props: DisplayProps) {
 
     return (
         <>
-        <div className="flex flex-row justify-between items-center">
-        <h1 className="text-left mb-4 text-xl">Schedule</h1>
-        {editMode.isEditMode ? (
-                <div className="ScheduleFilterAndMode">
-                    <SwitchComponent setShowPasswordPrompt={props.setShowPasswordPrompt} />
-                    {localStorage.getItem("token") && (
-                        <StyledButton
-                            onClick={() => {
-                                localStorage.removeItem("token");
-                                window.location.reload();
-                            }}
-                        >
-                            {" "}
-                            Logout{" "}
-                        </StyledButton>
+            <div className="flex flex-row justify-between items-center">
+                <h1 className="text-left mb-4 text-xl">Schedule</h1>
+                {editMode.isEditMode ? (
+                    <div className="ScheduleFilterAndMode">
+                        <SwitchComponent setShowPasswordPrompt={props.setShowPasswordPrompt} />
+                        {localStorage.getItem("token") && (
+                            <StyledButton
+                                onClick={() => {
+                                    localStorage.removeItem("token");
+                                    window.location.reload();
+                                }}
+                            >
+                                {" "}
+                                Logout{" "}
+                            </StyledButton>
+                        )}
+                    </div>
+                ) : (
+                    <div className="ScheduleFilterAndMode">
+                        <SwitchComponent setShowPasswordPrompt={props.setShowPasswordPrompt} />
+                        {localStorage.getItem("token") && (
+                            <StyledButton
+                                onClick={() => {
+                                    localStorage.removeItem("token");
+                                    window.location.reload();
+                                }}
+                            >
+                                {" "}
+                                Logout{" "}
+                            </StyledButton>
+                        )}
+                    </div>
+                )}
+            </div>
+            <div className="ScheduleContentContainer">
+                <div className="ScheduleViewControl">
+                    <form
+                        onSubmit={(e) => {
+                            handleViewChange(e);
+                        }}
+                    >
+                        <input className="monthInput" name="monthInput" type="month" defaultValue={selectedMonth} />
+                        <label htmlFor="numberInput" className="text-sm">
+                            Months shown:
+                        </label>
+                        <input className="numberMonthsInput" name="numberInput" type="number" defaultValue={numberOfMonths} min="2" max="24" />
+                        <input className="goButton" type="submit" value={"Go To"} />
+                    </form>
+
+                    {editMode.isEditMode ? null : (
+                        <div className="filterContainer">
+                            <label>Filter:</label>
+                            <select
+                                name="customerFilter"
+                                id="customerFilter"
+                                onChange={(e) => {
+                                    props.setFilter(e.target.value);
+                                }}
+                            >
+                                <option value="None">None</option>
+                                {customers.map((customer) => FilterCustomers(customer))}
+                            </select>
+                        </div>
                     )}
                 </div>
-            ) : (
-                <div className="ScheduleFilterAndMode">
-                    <SwitchComponent setShowPasswordPrompt={props.setShowPasswordPrompt} />
-                    {localStorage.getItem("token") && (
-                        <StyledButton
-                            onClick={() => {
-                                localStorage.removeItem("token");
-                                window.location.reload();
-                            }}
-                        >
-                            {" "}
-                            Logout{" "}
-                        </StyledButton>
-                    )}
-                </div>
-            )}
-        </div>
-        <div className="ScheduleContentContainer">
-            <div className="ScheduleViewControl">
-                <form
-                    onSubmit={(e) => {
-                        handleViewChange(e);
+                <DndContext // DndContext is used to enable drag and drop functionality
+                    onDragStart={(event) => {
+                        handleDragStart(event, setDragging, setActiveCard);
+                    }}
+                    onDragEnd={(event) => {
+                        handleDragEnd(
+                            event,
+                            bladeTasksHolder,
+                            //bladeTasksPendingHolder,
+                            setDragging,
+                            updateBt
+                        );
                     }}
                 >
-                    <input className="monthInput" name="monthInput" type="month" defaultValue={selectedMonth} />
-                    <label htmlFor="numberInput" className="text-sm">
-                        Months shown:
-                    </label>
-                    <input className="numberMonthsInput" name="numberInput" type="number" defaultValue={numberOfMonths} min="2" max="24" />
-                    <input className="goButton" type="submit" value={"Go To"} />
-                </form>
-                
-                {editMode.isEditMode ? null : 
-                    (<div className="filterContainer">
-                        <label>Filter:</label>
-                        <select
-                            name="customerFilter"
-                            id="customerFilter"
-                            onChange={(e) => {
-                                props.setFilter(e.target.value);
-                            }}
-                        >
-                    <option value="None">None</option>
-                    {customers.map((customer) => FilterCustomers(customer))}
-                    </select>        
-                </div>      
-                )}               
+                    <div className="ScheduleDisplay">
+                        <CreateTestRigDivs rigs={rigs} />
+                        <CreateTimelineField rigs={rigs} months={dates} btCards={btCards} showPasswordPrompt={props.showPasswordPrompt} />
+                    </div>
+                    {
+                        <PendingTasks
+                            bladeTaskHolder={bladeTasksHolder}
+                            bladeTaskCards={bladeTasksHolder.getBladeTasks()}
+                            numberOfRigs={numberOfRigs}
+                            showPasswordPrompt={props.showPasswordPrompt}
+                        />
+                    }
+
+                    {
+                        <DragOverlay>
+                            {activeCard && (
+                                <BladeTaskCardOverlay
+                                    duration={activeCard.duration}
+                                    attachPeriod={activeCard.attachPeriod}
+                                    detachPeriod={activeCard.detachPeriod}
+                                    projectColor={activeCard.projectColor}
+                                    projectName={activeCard.projectName}
+                                    projectId={activeCard.projectId}
+                                    customer={activeCard.customer}
+                                    taskName={activeCard.taskName}
+                                    id={activeCard.id}
+                                    shown={activeCard.shown}
+                                    enableDraggable={activeCard.enableDraggable}
+                                />
+                            )}
+                        </DragOverlay>
+                    }
+                </DndContext>
+
+                {editMode.isEditMode ? <CreateAdditionalContent /> : null}
             </div>
-            <DndContext // DndContext is used to enable drag and drop functionality
-                onDragStart={(event) => {
-                    handleDragStart(event, setDragging, setActiveCard);
-                }}
-                onDragEnd={(event) => {
-                    handleDragEnd(
-                        event,
-                        bladeTasksHolder,
-                        //bladeTasksPendingHolder,
-                        setDragging,
-                        updateBt
-                    );
-                }}
-            >
-                <div className="ScheduleDisplay">
-                    <CreateTestRigDivs rigs={rigs} />
-                    <CreateTimelineField rigs={rigs} months={dates} btCards={btCards} showPasswordPrompt={props.showPasswordPrompt} />
-                </div>
-                {
-                    
-                    <PendingTasks
-                        bladeTaskHolder={bladeTasksHolder}
-                        bladeTaskCards={bladeTasksHolder.getBladeTasks()}
-                        numberOfRigs={numberOfRigs}
-                        showPasswordPrompt={props.showPasswordPrompt}
-                    />
-                }
-
-                {
-                    <DragOverlay>
-                        {activeCard && (
-                            <BladeTaskCardOverlay
-                                duration={activeCard.duration}
-                                attachPeriod={activeCard.attachPeriod}
-                                detachPeriod={activeCard.detachPeriod}
-                                projectColor={activeCard.projectColor}
-                                projectName={activeCard.projectName}
-                                projectId={activeCard.projectId}
-                                customer={activeCard.customer}
-                                taskName={activeCard.taskName}
-                                id={activeCard.id}
-                                shown={activeCard.shown}
-                                enableDraggable={activeCard.enableDraggable}
-                            />
-                        )}
-                    </DragOverlay>
-                }
-            </DndContext>
-
-            {editMode.isEditMode ? <CreateAdditionalContent /> : null}
-        </div>
         </>
     );
 }
@@ -391,10 +398,9 @@ export function getMonthsInView(startDate: Date, numberOfMonths: number) {
 
     let checkedMonth;
 
-    if(numberOfMonths < 2){
+    if (numberOfMonths < 2) {
         checkedMonth = 2;
-    }
-    else{
+    } else {
         checkedMonth = numberOfMonths;
     }
 
