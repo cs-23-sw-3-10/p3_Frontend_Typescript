@@ -41,7 +41,7 @@ function TestRigOptions({numberOfTestRigs}: { numberOfTestRigs: number }) {
     return (
         <>
             {TestRigArray.map((testRigNum) => (
-                <option value={testRigNum} key={testRigNum}>
+                <option value={testRigNum} key={testRigNum} className="selector_option">
                     {(testRigNum === 0) ? "Pending" : ("Test Rig " + testRigNum) }
                 </option>
             ))}

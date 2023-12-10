@@ -33,8 +33,7 @@ function ProjectSelector({ bladeProjectId, setBladeProjectId }: { bladeProjectId
         <div className="project_selection_wrapper">
             <h2 className="title">Blade Project</h2>
             <select
-                className="input_sideborders"
-                id="blade_project"
+                className="blade_project_select"
                 name="blade_project"
                 onChange={(e) => setBladeProjectId(e.currentTarget.value)}
                 value={bladeProjectId}
@@ -51,7 +50,7 @@ function BladeProjectOptions({ AllBladeProjects }: { AllBladeProjects: { id: str
     return (
         <>
             {AllBladeProjects.map((BladeProject) => (
-                <option value={BladeProject.id} key={BladeProject.id}>
+                <option value={BladeProject.id} key={BladeProject.id} className="selector_option">
                     {BladeProject.projectName}
                     {"("}
                     {BladeProject.customer}

@@ -245,6 +245,7 @@ function BladeTaskMenu(props: BladeTaskMenuProps) {
                 {/*Each selector is provided the state it controls*/}
                 <div className="name_and_project_selection_wrapper">
                     <TaskNameSelector taskName={taskName} setTaskName={setTaskName} inErrorChart={inErrorChart} setInErrorChart={setInErrorChart} />
+                    <div className="id_select_border"></div>
                     <ProjectSelector bladeProjectId={bladeProjectId} setBladeProjectId={setBladeProjectId} />
                 </div>
                 <div className="item testtype_wrapper">

@@ -43,7 +43,7 @@ function InputComponent({ taskName, setTaskName, existingNames, inErrorChart, se
     //Classname dictates style of component
     return (
         <input
-            className={(inErrorChart.taskName[0] || inErrorChart.taskName[1]) ? "error id_select input" : 'id_select input_sideborders'}
+            className={(inErrorChart.taskName[0] || inErrorChart.taskName[1]) ? "error id_select input" : 'id_select'}
             type="text"
             placeholder='Select Task Name'
             value={(inErrorChart.taskName[0] || inErrorChart.taskName[1]) ? (inErrorChart.taskName[0] ? errorMessages[0] : errorMessages[1]) : taskName}
