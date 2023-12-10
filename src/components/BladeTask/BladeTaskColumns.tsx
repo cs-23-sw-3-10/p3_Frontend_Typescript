@@ -33,6 +33,7 @@ export const columnBT: ColumnDef<BladeTaskQuery>[] = [
                 </>
             );
         },
+        sortingFn: "alphanumeric",
     },
     {
         header: ({ column }) => {
