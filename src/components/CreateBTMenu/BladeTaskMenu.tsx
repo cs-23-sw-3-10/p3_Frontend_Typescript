@@ -51,18 +51,7 @@ function BladeTaskMenu(props: BladeTaskMenuProps) {
     const [resourceOrders, setResourceOrder] = useState<ResourceOrder[]>(creator ? [] : props.inputs!.resourceOrders);
 
     //Tracks which input fields are currently in an error state(Incorrect input has been provided)
-    const [inErrorChart, setInErrorChart] = useState({
-        bladeProjectId: false,
-        taskName: [false, false], //[0]: Taskname exists in the system ; [1]: Used unsuitable character
-        testType: false,
-        startDate: false,
-        duration: false,
-        attachPeriod: false,
-        detachPeriod: false,
-        testRig: false,
-        equipment: false,
-        employees: false,
-    });
+    const [inErrorChart, setInErrorChart] = useState(createEmptyInErrorChart());
 
     //State for the equipment selection menu
     const [equipmentActive, setEquipmentActive] = useState(false);

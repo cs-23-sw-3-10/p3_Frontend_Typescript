@@ -42,7 +42,7 @@ function TestTypeSelector({ testType, setTestType, className, inErrorChart, setI
                 onChange={value => handleChange(value)} 
                 value={testType} 
                 data={typesList}
-                onSelect={hideErrorMessages} 
+                onClick={hideErrorMessages}
                 placeholder={inErrorChart.testType ? "Please provide a test type" : ""}
             />
         </>

@@ -10,14 +10,14 @@ export function ValidateForm(currentOrder:BTOrder, inErrorChart:InErrorChart, se
     newInErrorChart.taskName[1] = (currentOrder.taskName === "");
     newInErrorChart.testType = (currentOrder.testType === "");
     newInErrorChart.bladeProjectId = (currentOrder.bladeProjectId === "");
-    newInErrorChart.duration = (currentOrder.duration >= 0);
-    newInErrorChart.attachPeriod = (currentOrder.attachPeriod >= 0);
-    newInErrorChart.detachPeriod = (currentOrder.detachPeriod >= 0);
+    newInErrorChart.duration[1] = (currentOrder.duration >= 0);
+    newInErrorChart.attachPeriod[1] = (currentOrder.attachPeriod >= 0);
+    newInErrorChart.detachPeriod[1] = (currentOrder.detachPeriod >= 0);
     setInErrorChart(newInErrorChart)
     
     if(newInErrorChart.taskName[0] || newInErrorChart.taskName[1] || newInErrorChart.testType ||  
-        newInErrorChart.bladeProjectId ||   newInErrorChart.duration || 
-        newInErrorChart.attachPeriod  ||  newInErrorChart.detachPeriod)
+        newInErrorChart.bladeProjectId ||    newInErrorChart.duration[1] || 
+        newInErrorChart.attachPeriod[1]  ||  newInErrorChart.detachPeriod[1])
     {
         return false;
     }else return true;

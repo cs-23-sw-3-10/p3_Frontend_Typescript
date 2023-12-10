@@ -3,9 +3,9 @@ export type InErrorChart = {
     taskName: Array<boolean>;
     testType: boolean;
     startDate: boolean;
-    duration: boolean;
-    attachPeriod: boolean;
-    detachPeriod: boolean;
+    duration: Array<boolean>;
+    attachPeriod: Array<boolean>;
+    detachPeriod: Array<boolean>;
     testRig: boolean;
     equipment: boolean;
     employees: boolean;
@@ -17,9 +17,9 @@ export function createEmptyInErrorChart(): InErrorChart {
         taskName: [false, false],
         testType: false,
         startDate: false,
-        duration: false,
-        attachPeriod: false,
-        detachPeriod: false,
+        duration: [false, false],
+        attachPeriod: [false, false],
+        detachPeriod: [false, false],
         testRig: false,
         equipment: false,
         employees: false,
