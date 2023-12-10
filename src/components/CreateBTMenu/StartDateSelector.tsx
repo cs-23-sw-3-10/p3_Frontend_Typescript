@@ -1,17 +1,29 @@
-import React from 'react';
-import { InErrorChart } from './BTMenuTypes';
+import React from "react";
+import { InErrorChart } from "./BTMenuTypes";
 
-function StartDateSelector({startDate,setStartDate, inErrorChart, setInErrorChart}: {startDate:string,setStartDate:Function, inErrorChart:InErrorChart, setInErrorChart:Function}) {
-
+function StartDateSelector({
+    startDate,
+    setStartDate,
+    inErrorChart,
+    setInErrorChart,
+}: {
+    startDate: string;
+    setStartDate: Function;
+    inErrorChart: InErrorChart;
+    setInErrorChart: Function;
+}) {
     //Finds the current date in the format 'dd-mm-yyyy'
     return (
         <>
-            <h2 className='title'>Start Date</h2>
+            <h2 className="title">Start Date</h2>
             <input
                 type="date"
                 className={inErrorChart.startDate ? "error" : "startdate_select input"}
                 value={startDate}
-                onChange={(e) => {console.log("setting Date :", e.currentTarget.value); setStartDate(e.currentTarget.value)}}
+                onChange={(e) => {
+                    console.log("setting Date :", e.currentTarget.value);
+                    setStartDate(e.currentTarget.value);
+                }}
                 onBlur={(e) => handleDateValidation(e, setStartDate, setInErrorChart, inErrorChart)}
             />
         </>
@@ -20,7 +32,7 @@ function StartDateSelector({startDate,setStartDate, inErrorChart, setInErrorChar
 
 function handleDateValidation(e: React.FormEvent<HTMLInputElement>, setDate: Function, setInErrorChart: Function, inErrorChart: InErrorChart) {
     let inputFromForm: string = e.currentTarget.value;
-    let currentDate: Date = new Date()
+    let currentDate: Date = new Date();
     let inputDate: Date = new Date(inputFromForm);
 
     //Granularity of days -> Set hour to the same value for both dates
@@ -28,8 +40,8 @@ function handleDateValidation(e: React.FormEvent<HTMLInputElement>, setDate: Fun
     inputDate.setHours(1, 0, 0, 0);
 
     //Setting the date in input element requires date to be in string format
-    let currentDateString: string = currentDate.toISOString().split('T')[0];
-    const newErrorChart:InErrorChart = {...inErrorChart};
+    let currentDateString: string = currentDate.toISOString().split("T")[0];
+    const newErrorChart: InErrorChart = { ...inErrorChart };
 
     if (inputDate >= currentDate) {
         newErrorChart.startDate = false;

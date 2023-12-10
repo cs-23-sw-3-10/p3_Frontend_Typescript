@@ -1,11 +1,6 @@
 import CreateMonthHeader from "./MonthHeader";
 import CreateDatesContainer from "./DatesContainer";
-import {
-    capitalizeFirstLetter,
-    getMonthLength,
-    getTotalWidth,
-    dateDivLength,
-} from "./TimelineField";
+import { capitalizeFirstLetter, getMonthLength, getTotalWidth, dateDivLength } from "./TimelineField";
 
 type MonthDateContainerProps = {
     currentMonth: Date;
@@ -14,36 +9,29 @@ type MonthDateContainerProps = {
 function CreateMonthDateContainer(props: MonthDateContainerProps) {
     let year = props.currentMonth.getFullYear();
     let monthNumber = props.currentMonth.getMonth();
-    let month = capitalizeFirstLetter(
-        props.currentMonth.toLocaleString("default", { month: "long" })
-    );
+    let month = capitalizeFirstLetter(props.currentMonth.toLocaleString("default", { month: "long" }));
     let idSTR = `${year}-${month}Container`; // id for the container div
 
     let monthDates: Date[] = []; // All dates in the month
 
-    for ( // Create an array of all dates in the month
+    for (
+        // Create an array of all dates in the month
         let i = 1;
         i <= getMonthLength(month, year);
         i++
     ) {
-        let date = new Date(
-            props.currentMonth.getFullYear(),
-            props.currentMonth.getMonth(),
-            i
-        );
+        let date = new Date(props.currentMonth.getFullYear(), props.currentMonth.getMonth(), i);
         monthDates.push(date);
     }
-    
 
     const columnTemplate = monthDates // Create the grid columns for the month
         .map(
             (
                 date // Create a labeled column for each date
-            ) =>
-                `[date-${date.getFullYear()}-${date.getMonth()}-${date.getDate()}] ${dateDivLength}px`
+            ) => `[date-${date.getFullYear()}-${date.getMonth()}-${date.getDate()}] ${dateDivLength}px`
         )
         .join(" "); // Join the columns into a string
-        
+
     let firstDay = `date-${year}-${monthNumber}-1`; // Get the first day of the month
 
     let lastDay = `date-${year}-${monthNumber}-${getMonthLength(month, year)}`; // Get the last day of the month
@@ -58,18 +46,9 @@ function CreateMonthDateContainer(props: MonthDateContainerProps) {
     };
 
     return (
-        <div
-            key={idSTR}
-            className="MonthDateContainer"
-            id={idSTR}
-            style={MonthDateContainerStyle}
-        >
+        <div key={idSTR} className="MonthDateContainer" id={idSTR} style={MonthDateContainerStyle}>
             <CreateMonthHeader currentMonth={props.currentMonth} />
-            <CreateDatesContainer
-                currentMonth={props.currentMonth}
-                monthDates={monthDates}
-                columnTemplate={columnTemplate}
-            />
+            <CreateDatesContainer currentMonth={props.currentMonth} monthDates={monthDates} columnTemplate={columnTemplate} />
         </div>
     );
 }

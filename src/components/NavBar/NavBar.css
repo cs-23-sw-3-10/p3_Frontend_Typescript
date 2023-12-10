@@ -1,55 +1,54 @@
-*{
+* {
     box-sizing: border-box;
 }
 
-body{
-    margin:0;
+body {
+    margin: 0;
     background: white;
 }
 
-button{
+button {
     background-color: transparent;
     border: 0;
     padding: 0;
     cursor: pointer;
 }
 
-.navBar{
+.navBar {
     position: static;
     overflow: hidden;
     top: 0;
     left: 0;
     width: 60px;
     min-width: 60px;
-    height:100%;
-    background: #92DCE5;
+    height: 100%;
+    background: #92dce5;
     transition: width 0.2s;
-    grid-column: 1 ;
+    grid-column: 1;
     grid-row: 1 / 4;
 }
 
-.navBar.open{
+.navBar.open {
     width: 240px;
     min-width: 240px;
 }
 
-.navBarInner{
+.navBarInner {
     position: static;
-    top:0;
-    left:0;
+    top: 0;
+    left: 0;
     width: 240px;
     min-width: 240px;
 }
 
-.navbarHeader{
+.navbarHeader {
     display: flex;
     align-items: center;
     height: 72px;
-    background: rgb(0,0,0 /15%);
+    background: rgb(0, 0, 0 /15%);
 }
 
-
-.navBarHeaderBurger{
+.navBarHeaderBurger {
     width: 60px;
     height: 20px;
     display: grid;
@@ -57,26 +56,24 @@ button{
     color: black;
 }
 
-.navLogo{
+.navLogo {
     height: 200px;
     width: 200px;
     text-align: center;
     border-radius: 50%;
-    
 }
 
-.navBarMenuItems{
+.navBarMenuItems {
     display: grid;
     padding: 10px;
 }
 
-a{
+a {
     text-decoration: none;
     color: black;
-
 }
 
-.navBarButton{
+.navBarButton {
     display: flex;
     gap: 16px;
     align-items: center;
@@ -88,15 +85,15 @@ a{
     line-height: 1;
     padding: 0 10px;
     border-radius: 8px;
-    color:black;
+    color: black;
     opacity: 0.8;
 }
 
-.navBarButton:hover > span{
+.navBarButton:hover > span {
     opacity: 1;
 }
 
-.navBar.open :is(.navBarButton p, .navLogo){
+.navBar.open :is(.navBarButton p, .navLogo) {
     opacity: 1;
 }
 
@@ -105,6 +102,6 @@ a{
     height: 24px;
 }
 
-.navBarButton > span{
+.navBarButton > span {
     opacity: 0.5s;
 }

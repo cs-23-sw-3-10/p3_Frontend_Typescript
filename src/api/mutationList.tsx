@@ -1,6 +1,4 @@
-
-import {gql} from '@apollo/client';
-
+import { gql } from "@apollo/client";
 
 export const CREATE_EQUIPMENT_MUTATION = gql`
     mutation CreateEquipment($type: String!, $calibrationExpirationDate: String!, $name: String!) {
@@ -23,7 +21,7 @@ export const CREATE_ENGINEER_MUTATION = gql`
 `;
 export const CREATE_TECHNICIAN_MUTATION = gql`
     mutation CreateTechnician($type: String!, $maxWorkHours: Int!, $count: Int!) {
-        CreateTechnician(type: $type, maxWorkHours: $maxWorkHours, count: $count,) {
+        CreateTechnician(type: $type, maxWorkHours: $maxWorkHours, count: $count) {
             id
             type
             workHours
@@ -33,45 +31,40 @@ export const CREATE_TECHNICIAN_MUTATION = gql`
     }
 `;
 export const UPDATE_BT = gql`
-    mutation updateStartAndDurationBladeTask(
-        $id: ID!
-        $startDate: String!
-        $duration: Int!
-        $rig: Int!
-    ) {
+    mutation updateStartAndDurationBladeTask($id: ID!, $startDate: String!, $duration: Int!, $rig: Int!) {
         updateStartAndDurationBladeTask(id: $id, startDate: $startDate, duration: $duration, testRig: $rig) {
             id
-                    }
+        }
     }
 `;
 
 export const UPDATE_BT_INFO = gql`
-  mutation updateBTInfo($updates: BladeTaskInput!, $id: Int!) {
-      updateBTInfo(updates: $updates, btId: $id) {
-        id
-        startDate
-        endDate
-        duration
-        testType
-        attachPeriod
-        detachPeriod
-        taskName
-        testRig
-    
-      resourceOrders {
-        id
-        resourceName
-        resourceType
-        workHours
-        equipmentAssignmentStatus
-      }
+    mutation updateBTInfo($updates: BladeTaskInput!, $id: Int!) {
+        updateBTInfo(updates: $updates, btId: $id) {
+            id
+            startDate
+            endDate
+            duration
+            testType
+            attachPeriod
+            detachPeriod
+            taskName
+            testRig
+
+            resourceOrders {
+                id
+                resourceName
+                resourceType
+                workHours
+                equipmentAssignmentStatus
+            }
+        }
     }
-  }
 `;
 
 export const CREATE_BP = gql`
-    mutation CreateBladeProject{
-        createBladeProject{
+    mutation CreateBladeProject {
+        createBladeProject {
             id
             projectName
             customer
@@ -81,107 +74,106 @@ export const CREATE_BP = gql`
 `;
 
 export const ADD_BT = gql`
-mutation CreateBladeTask($bladeTask: BladeTaskInput!) {
-    createBladeTask(bladeTask: $bladeTask){
-      id
-      startDate
-      endDate
-      duration
-      testType
-      attachPeriod
-      detachPeriod
-      taskName
-      testRig
-      bookings {
-        id
-        startDate
-        endDate
-        duration
-        resourceType
-        workHours
-        task {
-          id
+    mutation CreateBladeTask($bladeTask: BladeTaskInput!) {
+        createBladeTask(bladeTask: $bladeTask) {
+            id
+            startDate
+            endDate
+            duration
+            testType
+            attachPeriod
+            detachPeriod
+            taskName
+            testRig
+            bookings {
+                id
+                startDate
+                endDate
+                duration
+                resourceType
+                workHours
+                task {
+                    id
+                }
+                equipment {
+                    id
+                }
+                engineer {
+                    id
+                }
+                technician {
+                    id
+                }
+            }
+            resourceOrders {
+                id
+                resourceName
+                resourceType
+                workHours
+                equipmentAssignmentStatus
+            }
         }
-        equipment {
-          id
-        }
-        engineer {
-          id
-        }
-        technician {
-          id
-        }
-      }
-      resourceOrders {
-        id
-        resourceName
-        resourceType
-        workHours
-        equipmentAssignmentStatus
-      }
     }
-  }
 `;
 
 export const ADD_BP = gql`
-mutation CreateBladeProject($name: String, $customer: String, $projectLeader: String, $resourceOrders:[ResourceOrderInput]){
-  createBladeProject(name: $name, customer: $customer, projectLeader: $projectLeader, resourceOrders:$resourceOrders){
-    id
-    projectName
-    customer
-    projectLeader
-    startDate
-    endDate
-  }
-}
+    mutation CreateBladeProject($name: String, $customer: String, $projectLeader: String, $resourceOrders: [ResourceOrderInput]) {
+        createBladeProject(name: $name, customer: $customer, projectLeader: $projectLeader, resourceOrders: $resourceOrders) {
+            id
+            projectName
+            customer
+            projectLeader
+            startDate
+            endDate
+        }
+    }
 `;
 
 export const UPDATE_BP = gql`
-mutation UpdateBladeProject($bpId: Int!, $updates: BladeProjectInput!){
-  updateBladeProject(bpId: $bpId, updates: $updates){
-    projectName
-    customer
-    projectLeader
-    startDate
-    endDate
-  }
-}
+    mutation UpdateBladeProject($bpId: Int!, $updates: BladeProjectInput!) {
+        updateBladeProject(bpId: $bpId, updates: $updates) {
+            projectName
+            customer
+            projectLeader
+            startDate
+            endDate
+        }
+    }
 `;
 export const DELETE_EQUIPMENT = gql`
-mutation DeleteEquipment($name: String!) {
-    DeleteEquipment(name: $name) {
-        id
-        type
-        name
-        calibrationExpirationDate
+    mutation DeleteEquipment($name: String!) {
+        DeleteEquipment(name: $name) {
+            id
+            type
+            name
+            calibrationExpirationDate
+        }
     }
-}
 `;
 export const DELETE_TECHNICIAN = gql`
-mutation DeleteTechnician($type: String!) {
-    DeleteTechnician(type: $type) {
-        id
-        type
-        workHours
-        maxWorkHours
-        count
+    mutation DeleteTechnician($type: String!) {
+        DeleteTechnician(type: $type) {
+            id
+            type
+            workHours
+            maxWorkHours
+            count
+        }
     }
-}
 `;
 export const DELETE_ENGINEER = gql`
-mutation DeleteEngineer($name: String!) {
-    DeleteEngineer(name: $name) {
-        id
-        name
-        workHours
-        maxWorkHours
+    mutation DeleteEngineer($name: String!) {
+        DeleteEngineer(name: $name) {
+            id
+            name
+            workHours
+            maxWorkHours
+        }
     }
-}
 `;
 
-
 export const CLONE_AND_REPLACE = gql`
-mutation CloneScheduleAndReplace {
+    mutation CloneScheduleAndReplace {
         cloneScheduleAndReplace {
             id
             isActive
@@ -190,23 +182,22 @@ mutation CloneScheduleAndReplace {
 `;
 
 export const DISCARD_EDIT_CHANGES = gql`
-mutation discardEditChanges{
-  discardEditChanges{
+    mutation discardEditChanges {
+        discardEditChanges {
             id
             isActive
         }
     }
-    `;
-    
+`;
+
 export const DELETE_BP = gql`
-mutation DeleteBladeProject($id: ID!) {
-  deleteBladeProject(id: $id)
-}
+    mutation DeleteBladeProject($id: ID!) {
+        deleteBladeProject(id: $id)
+    }
 `;
 
 export const DELETE_BT = gql`
-mutation DeleteBladeTask($id: ID!) {
-  deleteBladeTask(id: $id)
-}
-
+    mutation DeleteBladeTask($id: ID!) {
+        deleteBladeTask(id: $id)
+    }
 `;

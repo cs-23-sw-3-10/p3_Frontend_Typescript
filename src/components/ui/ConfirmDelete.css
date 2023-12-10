@@ -6,8 +6,8 @@
     height: 200px;
     width: 400px;
     position: fixed;
-    top : 30vh;
-    left : 40vw;
+    top: 30vh;
+    left: 40vw;
     background-color: rgb(241, 241, 241);
     z-index: 10000;
     border-radius: 8px;
@@ -21,7 +21,7 @@
 }
 
 .ConfirmDeleteButton {
-    background-color: #4CAF50;
+    background-color: #4caf50;
     color: white;
     padding: 10px 15px;
     border: none;
@@ -43,7 +43,6 @@
     border-radius: 4px;
     cursor: pointer;
     transition: background-color 0.1s ease;
-
 }
 
 .CancelDeleteButton:hover {

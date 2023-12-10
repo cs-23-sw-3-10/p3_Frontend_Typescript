@@ -1,236 +1,233 @@
-
-
 .ScheduleContentContainer {
-  display: grid;
-  grid-template-columns: auto auto;
-  grid-template-rows: auto auto auto;
-  grid-gap: 10px;
-  width: 100%;
-  height: 100%;
+    display: grid;
+    grid-template-columns: auto auto;
+    grid-template-rows: auto auto auto;
+    grid-gap: 10px;
+    width: 100%;
+    height: 100%;
 }
 .ScheduleViewControl {
-  position: static;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  width: 100%;
-  height: 100%;
-  grid-column: 1;
-  grid-row: 1;
-  min-width: 402px;
-  background-color: #f7fafc; /* bg-gray-100 */
-  border: 1px solid #e2e8f0; /* border-t */
-  border-radius: 5px;
-  border-bottom: 1px solid #e2e8f0; /* border-b */
+    position: static;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    grid-column: 1;
+    grid-row: 1;
+    min-width: 402px;
+    background-color: #f7fafc; /* bg-gray-100 */
+    border: 1px solid #e2e8f0; /* border-t */
+    border-radius: 5px;
+    border-bottom: 1px solid #e2e8f0; /* border-b */
 }
 .ScheduleFilterAndMode {
-  position: static;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: right;
-  width: 100%;
-  height: 100%;
-  grid-column: 2;
-  grid-row: 1;
+    position: static;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: right;
+    width: 100%;
+    height: 100%;
+    grid-column: 2;
+    grid-row: 1;
 }
 
 .goButton {
-  background-color: #4299e1; /* bg-blue-500 */
-  color: white; /* text-white */
-  font-weight: bold; /* font-bold */
-  margin-left: 5px;
-  margin-right: 5px;
-  text-align: center;
+    background-color: #4299e1; /* bg-blue-500 */
+    color: white; /* text-white */
+    font-weight: bold; /* font-bold */
+    margin-left: 5px;
+    margin-right: 5px;
+    text-align: center;
 
-  border: 1px solid #4299e1; /* border border-transparent */
-  padding-left: 1rem; /* px-4 */
-  padding-right: 1rem; /* px-4 */
-  border-radius: 0.25rem; /* rounded */
-  text-transform: capitalize; /* capitalize */
+    border: 1px solid #4299e1; /* border border-transparent */
+    padding-left: 1rem; /* px-4 */
+    padding-right: 1rem; /* px-4 */
+    border-radius: 0.25rem; /* rounded */
+    text-transform: capitalize; /* capitalize */
 }
 
 .goButton:hover {
-  background-color: #2b6cb0; /* hover:bg-blue-700 */
+    background-color: #2b6cb0; /* hover:bg-blue-700 */
 }
 
 .ScheduleDisplay {
-  display: flex;
-  flex-direction: row;
-  align-items: left;
-  justify-content: left;
-  grid-column: 1/3;
-  grid-row: 2;
-  width: 100%;
-  height: 100%;
-  overflow-x: hidden;
-  border : 1px solid #ccc;
+    display: flex;
+    flex-direction: row;
+    align-items: left;
+    justify-content: left;
+    grid-column: 1/3;
+    grid-row: 2;
+    width: 100%;
+    height: 100%;
+    overflow-x: hidden;
+    border: 1px solid #ccc;
     border-radius: 5px;
 }
 
 .TestRigOverviewContainer {
-  position: static;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  width: 100px;
-  grid-column: 1;
-  grid-row: 1;
-  margin-top: 1px;
-  border-right: 1px solid black;
-  min-width: 75px
-  /* border-bottom: 1px solid black; */
+    position: static;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100px;
+    grid-column: 1;
+    grid-row: 1;
+    margin-top: 1px;
+    border-right: 1px solid black;
+    min-width: 75px;
+    /* border-bottom: 1px solid black; */
 }
 .TestRigOverviewElement {
-  position: static;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
-  height: 50px;
-  border-bottom: 1px solid black;
+    position: static;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 50px;
+    border-bottom: 1px solid black;
 }
 .TestRigDateHeaderSpace {
-  position: static;
-  height: 59px;
-  max-height: 59px;
-  min-height: 59px;
-  width: 100%;
-  border-bottom: 1px solid black;
+    position: static;
+    height: 59px;
+    max-height: 59px;
+    min-height: 59px;
+    width: 100%;
+    border-bottom: 1px solid black;
 }
 
 .RigFieldContainer {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  height: 100%;
-  /* border: 1px solid black; */
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    /* border: 1px solid black; */
 }
 
 .RigField {
-  display: grid;
-  align-items: center;
-  justify-content: left;
-  width: 100%;
-  border-bottom: 1px solid black;
+    display: grid;
+    align-items: center;
+    justify-content: left;
+    width: 100%;
+    border-bottom: 1px solid black;
 }
 
 .RigFieldDate {
-  position: relative;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: center;
-  height: 30px;
-  max-height: 30px;
-  border-right: 1px dashed black;
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    height: 30px;
+    max-height: 30px;
+    border-right: 1px dashed black;
 }
 
 .TimelineFieldContainer {
-  overflow-x: scroll;
-  grid-column: 2/4;
-  grid-row: 1;
+    overflow-x: scroll;
+    grid-column: 2/4;
+    grid-row: 1;
 
-  /* border: 1px solid black; */
+    /* border: 1px solid black; */
 }
 .TimelineField {
-  display: grid;
-  width: 100%;
-  height: 100%;
-  /* border: 1px solid black; */
+    display: grid;
+    width: 100%;
+    height: 100%;
+    /* border: 1px solid black; */
 }
 
 .MonthDateContainer {
-  position: relative;
-  display: grid;
-  align-items: center;
-  justify-content: center;
-  height: 100%;
-  max-height: 60px;
-  min-height: 60px;
-  /* border: 1px solid black; */
-  grid-row: 1/2;
-  grid-column: 1/-1;
+    position: relative;
+    display: grid;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    max-height: 60px;
+    min-height: 60px;
+    /* border: 1px solid black; */
+    grid-row: 1/2;
+    grid-column: 1/-1;
 }
 
 .MonthHeader {
-  position: relative;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: center;
-  border-right: 1px solid black;
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    border-right: 1px solid black;
 }
 .MonthHeader p {
-  font-size: 15px; /* Adjust the font size as needed */
-  font-weight: bold;
+    font-size: 15px; /* Adjust the font size as needed */
+    font-weight: bold;
 }
 
 .DateContainer {
-  position: relative;
-  display: grid;
-  flex-direction: row;
-  align-items: center;
-  justify-content: center;
-  height: 30px;
-  max-height: 30px;
-  /* border: 1px solid black; */
-  grid-column: 1/-1;
-  grid-row: 2;
+    position: relative;
+    display: grid;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    height: 30px;
+    max-height: 30px;
+    /* border: 1px solid black; */
+    grid-column: 1/-1;
+    grid-row: 2;
 }
 
 .DateElement {
-  position: static;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  width: 25px;
-  max-width: 25px;
-  border-top: 1px solid black;
-  border-right: 1px solid black;
-  border-bottom: 1px solid black;
+    position: static;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 25px;
+    max-width: 25px;
+    border-top: 1px solid black;
+    border-right: 1px solid black;
+    border-bottom: 1px solid black;
 }
 .DateElement p {
-  font-size: 12px; /* Adjust the font size as needed */
+    font-size: 12px; /* Adjust the font size as needed */
 }
 
 .AdditionalContent {
-  position: static;
-  display: flex;
-  flex-direction: row;
-  justify-content: flex-start; /* Aligns items from the start of the container. For flex-direction: row, this corresponds to aligning to the left*/
+    position: static;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start; /* Aligns items from the start of the container. For flex-direction: row, this corresponds to aligning to the left*/
 }
 
-
-.monthInput{
-  margin-left: 5px;
-  margin-right: 5px;
-  text-align: center;
-  max-width: 160px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
+.monthInput {
+    margin-left: 5px;
+    margin-right: 5px;
+    text-align: center;
+    max-width: 160px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
 }
-.numberMonthsInput{
-  margin: 5px;
+.numberMonthsInput {
+    margin: 5px;
 
-  text-align: center;
-  max-width: 30px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
+    text-align: center;
+    max-width: 30px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
 }
-.filterContainer{
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: center;
-  margin-left: 5px;
-  margin-right: 5px;
-  text-align: center;
-  max-width: 160px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
+.filterContainer {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    margin-left: 5px;
+    margin-right: 5px;
+    text-align: center;
+    max-width: 160px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
 }

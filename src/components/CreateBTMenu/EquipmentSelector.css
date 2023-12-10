@@ -1,5 +1,5 @@
 /* EQUIPMENT MENU */
-.bt.equipment_menu_wrapper{
+.bt.equipment_menu_wrapper {
     position: absolute;
     width: 350px;
     background-color: white;
@@ -10,7 +10,7 @@
     grid-template-columns: 1fr;
 }
 
-.bt.equipment_menu_close{
+.bt.equipment_menu_close {
     grid-row: 1 / 2;
     grid-column: 1 / -1;
     background-color: red;
@@ -19,30 +19,30 @@
     height: 25px;
 }
 
-.bt.equipment_menu_close:hover{
+.bt.equipment_menu_close:hover {
     background-color: rgb(190, 0, 0);
 }
 
-.bt.equipment_menu_close:active{
+.bt.equipment_menu_close:active {
     background-color: red;
 }
 
-.bt.equipment_menu_title{
+.bt.equipment_menu_title {
     grid-row: 1 / 2;
     grid-column: 1 / -1;
     text-align: center;
     margin: 5px;
-    background-color: #EF5B5B;
+    background-color: #ef5b5b;
     font-size: 30px;
-    width : 97%;
+    width: 97%;
 }
 
-.bt.equipment_menu_items_wrapper{
+.bt.equipment_menu_items_wrapper {
     grid-row: 2 / 3;
     grid-column: 1 / 2;
     overflow: auto;
 }
-.bt.equipment_menu_item{
+.bt.equipment_menu_item {
     display: grid;
     grid-template-rows: 1fr;
     grid-template-columns: 30px auto;
@@ -51,35 +51,35 @@
     border-width: 1px;
 }
 
-.bt.equipment_menu_item_button{
-    background-color: #20A39E;
+.bt.equipment_menu_item_button {
+    background-color: #20a39e;
     height: 50px;
     border-radius: 5px;
 }
 
-.bt.equipment_menu_item_button:hover{
+.bt.equipment_menu_item_button:hover {
     background-color: #197774;
 }
 
-.bt.equipment_menu_item_button:active{
-    background-color: #20A39E;
+.bt.equipment_menu_item_button:active {
+    background-color: #20a39e;
 }
 
-.bt.equipment_menu_item_title{
+.bt.equipment_menu_item_title {
     font-size: 15px;
     text-align: right;
     margin-right: 10px;
 }
 
-.bt.custom_item_title{
-    grid-row: 3 /  4;
+.bt.custom_item_title {
+    grid-row: 3 / 4;
     grid-column: 1 / 2;
     border-top: 5px solid black;
-    background-color: #FFBA49;
+    background-color: #ffba49;
     text-align: center;
 }
 
-.bt.custom_menu_item{
+.bt.custom_menu_item {
     grid-row: 4 / 5;
     grid-column: 1 / 2;
     border-top: 3px solid black;
@@ -88,8 +88,7 @@
     grid-template-rows: 1fr;
 }
 
-.bt.custom_menu_item_input{
+.bt.custom_menu_item_input {
     grid-row: 1 / 2;
     grid-column: 2 / 3;
 }
-

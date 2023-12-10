@@ -9,7 +9,7 @@ export type InErrorChart = {
     testRig: boolean;
     equipment: boolean;
     employees: boolean;
-}
+};
 
 export function createEmptyInErrorChart(): InErrorChart {
     return {
@@ -26,7 +26,6 @@ export function createEmptyInErrorChart(): InErrorChart {
     };
 }
 
-
 export type BTOrder = {
     bladeProjectId: string;
     taskName: string;
@@ -37,14 +36,14 @@ export type BTOrder = {
     detachPeriod: number;
     testRig: number;
     resourceOrders: Array<ResourceOrder>;
-}
+};
 
 export type ResourceOrder = {
     resourceType: string;
     resourceName: string;
     equipmentAssignmentStatus: Array<boolean>;
     workHours: number;
-}
+};
 
 export type BladeProjectByIdResult = {
     data: {
@@ -58,9 +57,6 @@ export type BladeProjectByIdResult = {
 };
 
 export type BladeTask = {
-        __typename: string;
-        taskName: string;
-}
-
-
-
+    __typename: string;
+    taskName: string;
+};
