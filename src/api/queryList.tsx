@@ -141,8 +141,8 @@ export const GET_BT_IN_RANGE_SUB = gql`
 `;
 
 export const GET_BT_PENDING_SUB = gql`
-    subscription AllBladeTasksPendingSub {
-        AllBladeTasksPendingSub {
+    subscription AllBladeTasksPendingSub( $isActive: Boolean!) {
+        AllBladeTasksPendingSub(isActive: $isActive) {
             id
             duration
             testType
