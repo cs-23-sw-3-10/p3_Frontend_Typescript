@@ -9,7 +9,7 @@
 .equipment_entry.bt{
     grid-column: 1 / 2;
     display: grid;
-    grid-template-columns: 200px 1fr;
+    grid-template-columns: 1fr 2fr;
 }
 
 .type.bt{
@@ -40,13 +40,23 @@
 
 .remove_equipment_button.bt{
     position: absolute;
-    transform: translate(420px, -23px);
-    background-color: red;
-    width: 27px;
-    height: 27px;
+    transform: translate(800%, -110%);
+    width: 25px;
+    height: 25px;
     border-radius: 10px;
     display: inline;
     box-shadow: 0 3px #999;
+}
+
+.material-symbols-outlined.cancel{
+    font-size: 20px;
+    background-color: red;
+    border-radius: 5px solid black;
+    font-variation-settings:
+      'FILL' 0,
+      'wght' 400,
+      'GRAD' 0,
+      'opsz' 20
 }
 
 .remove_equipment_button.bt:hover{
@@ -56,5 +66,5 @@
 .remove_equipment_button.bt:active{
     background-color: red;
     box-shadow: 0 1px #666;
-    transform: translate(420px, -23px);
+    transform: translate(800%, -110%);
 }
