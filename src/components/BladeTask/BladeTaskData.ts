@@ -8,9 +8,13 @@ export type BladeTaskQuery = {
     detachPeriod: number;
     taskName: string;
     testRig: string;
-    bookings:[{
-        engineer: [{
-            name: string;
-        }],
-    }]
+    bookings: [
+        {
+            engineer: [
+                {
+                    name: string;
+                }
+            ];
+        }
+    ];
 };

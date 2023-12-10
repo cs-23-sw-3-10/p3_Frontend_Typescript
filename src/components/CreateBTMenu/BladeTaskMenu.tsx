@@ -21,7 +21,6 @@ import "../CreateBTMenu/TestTypeSelector.css";
 import "../CreateBTMenu/BladeTaskMenu.css";
 import TestTypeSelector from "./TestTypeSelector";
 
-
 export interface BladeTaskMenuProps {
     creator: boolean;
     inputs?: BTOrder;
@@ -34,8 +33,12 @@ function BladeTaskMenu(props: BladeTaskMenuProps) {
     const [addBT, { loading: addLoading, error: addError }] = useMutation(ADD_BT);
     const [updateBT, { loading: updateLoading, error: updateError }] = useMutation(UPDATE_BT_INFO);
     const { loading: btLoading, error: btError, data: btData, refetch } = useQuery(GET_ALL_BT);
-    const [getBPById, { error, data: BPInfo }] = useLazyQuery(GET_BP_BY_ID,); //Used to query for BP on submit to check existing BT names
-    const { loading: bpEditLoading, error: bpEditError, data: bpEditData } = useQuery(GET_ALL_BLADE_PROJECTS, {
+    const [getBPById, { error, data: BPInfo }] = useLazyQuery(GET_BP_BY_ID); //Used to query for BP on submit to check existing BT names
+    const {
+        loading: bpEditLoading,
+        error: bpEditError,
+        data: bpEditData,
+    } = useQuery(GET_ALL_BLADE_PROJECTS, {
         variables: { isActive: false },
     });
 
@@ -58,7 +61,6 @@ function BladeTaskMenu(props: BladeTaskMenuProps) {
 
     //Tracks which input fields are currently in an error state(Incorrect input has been provided)
     const [inErrorChart, setInErrorChart] = useState(createEmptyInErrorChart());
-
 
     //State for the equipment selection menu
     const [equipmentActive, setEquipmentActive] = useState(false);
@@ -97,7 +99,7 @@ function BladeTaskMenu(props: BladeTaskMenuProps) {
         let bpInEdit = bpEdit[i];
         console.log("bpInEdit :", bpInEdit.id);
         for (let j = 0; j < allBT.length; j++) {
-            console.log(allBT[j].bladeProject.id === bpInEdit.id)
+            console.log(allBT[j].bladeProject.id === bpInEdit.id);
             if (allBT[j].bladeProject.id === bpInEdit.id) {
                 allBtEdit.push(allBT[j]);
             }
@@ -135,7 +137,7 @@ function BladeTaskMenu(props: BladeTaskMenuProps) {
                         resourceOrders.forEach((order: ResourceOrder) => {
                             order.resourceType = order.resourceType.toLowerCase();
                             order.resourceName = order.resourceName.toLowerCase();
-                        })
+                        });
                         const response = await addBT({
                             //add blade task to database
                             variables: {
@@ -176,7 +178,7 @@ function BladeTaskMenu(props: BladeTaskMenuProps) {
                         resourceOrders.forEach((order: ResourceOrder) => {
                             order.resourceType = order.resourceType.toLowerCase();
                             order.resourceName = order.resourceName.toLowerCase();
-                        })
+                        });
                         const response = await updateBT({
                             //update blade task in database
                             variables: {
@@ -238,8 +240,8 @@ function BladeTaskMenu(props: BladeTaskMenuProps) {
     };
 
     if (submitted) {
-        return (<div className="bt_creation_success">Blade Task Creation Successful</div>);
-    }else {
+        return <div className="bt_creation_success">Blade Task Creation Successful</div>;
+    } else {
         return (
             <div className="btmenu-container">
                 {/*Each selector is provided the state it controls*/}
@@ -326,7 +328,6 @@ function BladeTaskMenu(props: BladeTaskMenuProps) {
             </div>
         );
     }
-
 }
 
 export default BladeTaskMenu;
@@ -368,7 +369,7 @@ function checkBTCreationOverlaps(allBT: any, startDate: Date, endDate: Date, pro
         return true;
     }
     if (rig === 0) {
-        return false
+        return false;
     }
     for (let i = 0; i < allBT.length; i++) {
         const bt = allBT[i];

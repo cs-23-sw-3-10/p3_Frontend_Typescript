@@ -3,7 +3,6 @@ import { ColumnDef } from "@tanstack/react-table";
 import { BladeProjectDataQuery } from "./BladeProjectData";
 
 export function getColumns(setShowPopup: Function, setChoosenBP: Function, editMode: Boolean) {
-
     const columnBP: ColumnDef<BladeProjectDataQuery>[] = [
         {
             header: ({ column }) => {
@@ -14,9 +13,7 @@ export function getColumns(setShowPopup: Function, setChoosenBP: Function, editM
                 return (
                     <>
                         {row.getCanExpand() ? (
-                            <button>
-                                {row.getIsExpanded() ? "▲" : "▼"}
-                            </button>
+                            <button>{row.getIsExpanded() ? "▲" : "▼"}</button>
                         ) : (
                             <button
                                 {...{
@@ -62,12 +59,11 @@ export function getColumns(setShowPopup: Function, setChoosenBP: Function, editM
         },
         {
             accessorKey: " ",
-            cell: ({row, getValue}) => {
-                if(editMode === true)
-                {
+            cell: ({ row, getValue }) => {
+                if (editMode === true) {
                     return (
                         <>
-                         <button
+                            <button
                                 className="bg-gray-300 hover:bg-gray-500 w-10 rounded"
                                 onClick={() => {
                                     setChoosenBP(row.original.id);
@@ -78,13 +74,10 @@ export function getColumns(setShowPopup: Function, setChoosenBP: Function, editM
                             </button>
                             {getValue()}
                         </>
-                    )
+                    );
                 }
-                }
-                    
-        
-            
-        }
+            },
+        },
     ];
     return columnBP;
 }

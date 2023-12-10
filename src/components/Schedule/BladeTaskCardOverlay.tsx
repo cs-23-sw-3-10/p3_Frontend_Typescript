@@ -3,9 +3,7 @@ import React from "react";
 import { dateDivLength } from "./TimelineField";
 import { BladeTaskCardProps } from "./BladeTaskCard";
 
-
 function BladeTaskCardOverlay(props: BladeTaskCardProps) {
-
     let cardStyle: React.CSSProperties;
     //Dynamic styling based on props values
     cardStyle = {
@@ -14,13 +12,8 @@ function BladeTaskCardOverlay(props: BladeTaskCardProps) {
         border: props.inConflict ? "2px dashed red" : "",
     };
 
-
-        return (
-            <div
-            className="bladeTaskCard"
-            style={cardStyle}
-            id={`Overlay-id-${props.id}`}
-        >
+    return (
+        <div className="bladeTaskCard" style={cardStyle} id={`Overlay-id-${props.id}`}>
             {/* {used to visualize the attach period} */}
             <div
                 className="attachPeriod"
@@ -39,9 +32,7 @@ function BladeTaskCardOverlay(props: BladeTaskCardProps) {
                 }}
             ></div>
         </div>
-        );
-    } 
+    );
+}
 
 export default BladeTaskCardOverlay;
-
-

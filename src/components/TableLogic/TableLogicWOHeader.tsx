@@ -18,14 +18,7 @@ import {
     ExpandedState,
 } from "@tanstack/react-table";
 
-import {
-    Table,
-    TableBody,
-    TableCell,
-    TableHead,
-    TableHeader,
-    TableRow,
-} from "../ui/table";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "../ui/table";
 
 interface DataTableProps<TData, TValue> {
     columns: ColumnDef<TData, TValue>[];
@@ -43,19 +36,13 @@ const defaultPagination: PaginationState = {
     pageSize: 10,
 };
 
-export function TableLogicWOHeaders<TData, TValue>({
-    columns,
-    data,
-    renderExpandedComponent,
-}: DataTableProps<TData, TValue>) {
+export function TableLogicWOHeaders<TData, TValue>({ columns, data, renderExpandedComponent }: DataTableProps<TData, TValue>) {
     const [sorting, setSorting] = React.useState<SortingState>([]);
     const [columnVisibility, setColumnVisibility] = React.useState({});
-    const [columnFilters, setColumnFilters] =
-        React.useState<ColumnFiltersState>([]);
+    const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
     const [filtering, setFiltering] = React.useState("");
     const [expanded, setExpanded] = React.useState<ExpandedState>({});
     const [inputValue, setInputValue] = React.useState("");
-
 
     const table = useReactTable({
         data,
@@ -86,12 +73,11 @@ export function TableLogicWOHeaders<TData, TValue>({
 
     const handlePageSizeChange = () => {
         const pageSize = Number(inputValue);
-        if (!isNaN(pageSize) && pageSize >0) {
+        if (!isNaN(pageSize) && pageSize > 0) {
             table.setPageSize(pageSize);
-        } else if(pageSize===0){
-            alert("Page size can not be zero")
-        }
-            else {
+        } else if (pageSize === 0) {
+            alert("Page size can not be zero");
+        } else {
             alert("Please enter a valid number");
         }
     };
@@ -105,14 +91,8 @@ export function TableLogicWOHeaders<TData, TValue>({
                             <TableRow key={headerGroup.id}>
                                 {headerGroup.headers.map((header) => {
                                     return (
-                                        <TableHead key={header.id} style={{fontWeight: 'bold'}}>
-                                            {header.isPlaceholder
-                                                ? null
-                                                : flexRender(
-                                                      header.column.columnDef
-                                                          .header,
-                                                      header.getContext()
-                                                  )}
+                                        <TableHead key={header.id} style={{ fontWeight: "bold" }}>
+                                            {header.isPlaceholder ? null : flexRender(header.column.columnDef.header, header.getContext())}
                                         </TableHead>
                                     );
                                 })}
@@ -125,35 +105,16 @@ export function TableLogicWOHeaders<TData, TValue>({
                                 const rowElements = [];
 
                                 rowElements.push(
-                                    <TableRow
-                                        key={row.id}
-                                        data-state={
-                                            row.getIsSelected()
-                                                ? "selected"
-                                                : undefined
-                                        }
-                                    >
-                                        {row
-                                            .getVisibleCells()
-                                            .map((cell: any) => (
-                                                <TableCell key={cell.id}>
-                                                    {flexRender(
-                                                        cell.column.columnDef
-                                                            .cell,
-                                                        cell.getContext()
-                                                    )}
-                                                </TableCell>
-                                            ))}
+                                    <TableRow key={row.id} data-state={row.getIsSelected() ? "selected" : undefined}>
+                                        {row.getVisibleCells().map((cell: any) => (
+                                            <TableCell key={cell.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</TableCell>
+                                        ))}
                                     </TableRow>
                                 );
                                 if (row.getIsExpanded()) {
                                     rowElements.push(
                                         <TableRow key={`extra ${row.id}`}>
-                                            <TableCell colSpan={columns.length}>
-                                                {renderExpandedComponent
-                                                    ? renderExpandedComponent()
-                                                    : null}
-                                            </TableCell>
+                                            <TableCell colSpan={columns.length}>{renderExpandedComponent ? renderExpandedComponent() : null}</TableCell>
                                         </TableRow>
                                     );
                                 }
@@ -161,43 +122,35 @@ export function TableLogicWOHeaders<TData, TValue>({
                             })
                         ) : (
                             <TableRow>
-                                <TableCell colSpan={columns.length}>
-                                    No data available
-                                </TableCell>
+                                <TableCell colSpan={columns.length}>No data available</TableCell>
                             </TableRow>
                         )}
                     </TableBody>
                 </Table>
             </div>
             <div className="flex items-center justify-start space-x-2 py-4">
-                <StyledButton
-                    onClick={() => table.previousPage()}
-                    disabled={!table.getCanPreviousPage()}
-                >
+                <StyledButton onClick={() => table.previousPage()} disabled={!table.getCanPreviousPage()}>
                     Prev
                 </StyledButton>
-                <StyledButton
-                    onClick={() => table.nextPage()}
-                    disabled={!table.getCanNextPage()}
-                >
+                <StyledButton onClick={() => table.nextPage()} disabled={!table.getCanNextPage()}>
                     Next
                 </StyledButton>
                 <div>
-                 <button
-                 className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-3 r-100 capitalize"
-                    onClick={handlePageSizeChange}
-                    disabled={!table.getCanNextPage()}
-                >
-                    Set Page Size
-                </button>
-                <input
-                    className="border border-gray-300 w-20 m-0 py-2 px-3 font-sm shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500"
-                    type="text"
-                    value={inputValue}
-                    onKeyDown={(e) => (e.key === "Enter" ? handlePageSizeChange() : null)}
-                    onChange={(e) => setInputValue(e.target.value)}
-                    ref={inputRef}
-                />
+                    <button
+                        className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-3 r-100 capitalize"
+                        onClick={handlePageSizeChange}
+                        disabled={!table.getCanNextPage()}
+                    >
+                        Set Page Size
+                    </button>
+                    <input
+                        className="border border-gray-300 w-20 m-0 py-2 px-3 font-sm shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500"
+                        type="text"
+                        value={inputValue}
+                        onKeyDown={(e) => (e.key === "Enter" ? handlePageSizeChange() : null)}
+                        onChange={(e) => setInputValue(e.target.value)}
+                        ref={inputRef}
+                    />
                 </div>
             </div>
         </div>

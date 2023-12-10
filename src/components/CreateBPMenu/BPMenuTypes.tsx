@@ -7,4 +7,4 @@ export type BladeProjectForm = {
     leader: string; //Changed in menu
     equipmentList: Array<ResourceOrder>; //Changed in menu
     bladeTaskList: Array<BTOrder>; //Used by menu to display existing tasks in editing mode
-}
+};

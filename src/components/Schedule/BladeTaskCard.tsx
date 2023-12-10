@@ -150,7 +150,7 @@ function BladeTaskCard(props: BladeTaskCardProps) {
     };
 
     //Dynamic styling based on props values
-    if (props.rig &&props.startDate) {
+    if (props.rig && props.startDate) {
         const cardStyle = {
             backgroundColor: props.shown ? props.projectColor : "grey",
             gridColumn: `date-${props.startDate.getFullYear()}-${props.startDate.getMonth()}-${props.startDate.getDate()} / span ${props.duration}`,

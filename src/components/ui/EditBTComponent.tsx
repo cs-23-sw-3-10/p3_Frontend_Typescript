@@ -54,11 +54,7 @@ function EditBTComponent(BT: EditBTComponentProps) {
 
     return (
         <div className="EditBTComponent">
-            <BladeTaskMenu
-                creator={false}
-                inputs={inputs}
-                btId={BT.bladeTaskID}
-            />
+            <BladeTaskMenu creator={false} inputs={inputs} btId={BT.bladeTaskID} />
         </div>
     );
 }

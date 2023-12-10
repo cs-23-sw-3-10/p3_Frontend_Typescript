@@ -36,15 +36,18 @@ function AttachPeriodSelector({
             {/*Changes the style based on user input - error is defined in BladeTaskMenu.css*/}
             <input
                 type="number"
-                className={inErrorChart.attachPeriod[0] || inErrorChart.attachPeriod[1] || inErrorChart.attachPeriod[2] ? "error" : "item attach_period_select input"}
+                className={
+                    inErrorChart.attachPeriod[0] || inErrorChart.attachPeriod[1] || inErrorChart.attachPeriod[2] ? "error" : "item attach_period_select input"
+                }
                 name="attach_period_select"
-                placeholder={ // check for 0, 1 and 2
+                placeholder={
+                    // check for 0, 1 and 2
                     inErrorChart.attachPeriod[0] || inErrorChart.attachPeriod[1] || inErrorChart.attachPeriod[2]
                         ? inErrorChart.attachPeriod[0]
                             ? "Attach period cannot be negative"
                             : inErrorChart.attachPeriod[1]
-                                ? "Please provide attach period"
-                                : "Attach period cannot be in the past"
+                            ? "Please provide attach period"
+                            : "Attach period cannot be in the past"
                         : "Select Attach Period"
                 }
                 value={inErrorChart.attachPeriod[0] || inErrorChart.attachPeriod[1] || inErrorChart.attachPeriod[2] ? "" : attachPeriod}

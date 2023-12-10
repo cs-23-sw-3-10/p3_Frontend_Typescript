@@ -31,8 +31,7 @@ function EquipmentListGenerator({ className }: { className: string }) {
     }
 
     //Returns a dropdown of all the test types present in DB
-    return data.GetEquipmentTypes.map((type: string) =>
-    (<EquipmentMenuItem resourceName={type} className={className} />));
+    return data.GetEquipmentTypes.map((type: string) => <EquipmentMenuItem resourceName={type} className={className} />);
 }
 
 function EquipmentMenuItem({ resourceName, className }: { resourceName: string; className: string }) {

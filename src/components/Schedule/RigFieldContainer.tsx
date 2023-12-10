@@ -31,17 +31,13 @@ function CreateRigFieldContainer(props: RigFieldContainerProps) {
     let BTsEndInView: React.ReactNode[] = []; // BladeTaskCards that end in the view
     props.BladeTaskCards.forEach((bladeTask) => {
         if (
-            (bladeTask as React.ReactElement<any>).props.startDate >=
-                props.viewMonths[0] &&
-            (bladeTask as React.ReactElement<any>).props.startDate <=
-                props.viewMonths[props.viewMonths.length - 1]
+            (bladeTask as React.ReactElement<any>).props.startDate >= props.viewMonths[0] &&
+            (bladeTask as React.ReactElement<any>).props.startDate <= props.viewMonths[props.viewMonths.length - 1]
         ) {
             BTsStartInView.push(bladeTask); // Add the BladeTaskCard to the array if the startDate is in the view
         } else if (
-            (bladeTask as React.ReactElement<any>).props.endDate >=
-                props.viewMonths[0] &&
-            (bladeTask as React.ReactElement<any>).props.endDate <=
-                props.viewMonths[props.viewMonths.length - 1]
+            (bladeTask as React.ReactElement<any>).props.endDate >= props.viewMonths[0] &&
+            (bladeTask as React.ReactElement<any>).props.endDate <= props.viewMonths[props.viewMonths.length - 1]
         ) {
             BTsEndInView.push(bladeTask); // Add the BladeTaskCard to the array if the endDate is in the view
         }
@@ -49,43 +45,27 @@ function CreateRigFieldContainer(props: RigFieldContainerProps) {
 
     let renderEndInView: React.ReactNode[] = []; // place holder for the BladeTaskCards that end in the view
     BTsEndInView.forEach((bladeTask) => {
-        renderEndInView.push( // Add the BladeTaskCard to the array if the endDate is in the view
+        renderEndInView.push(
+            // Add the BladeTaskCard to the array if the endDate is in the view
             <BladeTaskCard
                 key={(bladeTask as React.ReactElement<any>).props.id + 11111111}
                 id={(bladeTask as React.ReactElement<any>).props.id}
                 rig={(bladeTask as React.ReactElement<any>).props.rig}
                 startDate={props.viewMonths[0]}
                 endDate={(bladeTask as React.ReactElement<any>).props.endDate}
-                duration={
-                    (
-                        bladeTask as React.ReactElement<any>
-                    ).props.endDate.getDate() - 1
-                }
-                projectColor={
-                    (bladeTask as React.ReactElement<any>).props.projectColor
-                }
-                projectId={
-                    (bladeTask as React.ReactElement<any>).props.projectId
-                }
+                duration={(bladeTask as React.ReactElement<any>).props.endDate.getDate() - 1}
+                projectColor={(bladeTask as React.ReactElement<any>).props.projectColor}
+                projectId={(bladeTask as React.ReactElement<any>).props.projectId}
                 customer={(bladeTask as React.ReactElement<any>).props.customer}
                 taskName={(bladeTask as React.ReactElement<any>).props.taskName}
-                attachPeriod={
-                    (bladeTask as React.ReactElement<any>).props.attachPeriod
-                }
-                detachPeriod={
-                    (bladeTask as React.ReactElement<any>).props.detachPeriod
-                }
+                attachPeriod={(bladeTask as React.ReactElement<any>).props.attachPeriod}
+                detachPeriod={(bladeTask as React.ReactElement<any>).props.detachPeriod}
             />
         );
     });
 
     return (
-        <div
-            key={props.rig}
-            className="RigField"
-            style={rigStyle}
-            id="rigFieldContainerId"
-        >
+        <div key={props.rig} className="RigField" style={rigStyle} id="rigFieldContainerId">
             {props.allDates.map(
                 (date) => (
                     <CreateRigFieldDate
