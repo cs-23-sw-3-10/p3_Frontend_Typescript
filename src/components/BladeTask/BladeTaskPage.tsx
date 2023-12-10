@@ -20,8 +20,8 @@ function BTPage() {
     const [showPasswordPrompt, setShowPasswordPrompt] = useState(false);
 
     // get data from the database
-    const { loading: loadingBT, error: errorBT, data: dataBT } = useQuery(GET_ALL_BT_WITH_BOOKINGS_EQNAME);
-    const {loading: loadingScheduleBT, error: errorScheduleBT, data: dataScheduleBT} = useQuery(GET_ALL_BP_IN_DIFF_SCHEDULE);
+    const { loading: loadingBT, error: errorBT, data: dataBT,  refetch: refetchBT } = useQuery(GET_ALL_BT_WITH_BOOKINGS_EQNAME);
+    const {loading: loadingScheduleBT, error: errorScheduleBT, data:dataScheduleBT ,  refetch: refetchBP} = useQuery(GET_ALL_BP_IN_DIFF_SCHEDULE);
 
 
     //handle loading and error states for the used queries
@@ -64,23 +64,9 @@ function BTPage() {
             duration: newDuration
         };
     });
-    
+    refetchBT();
+    refetchBP();
 
-    /*
-    dataForScreen.forEach( (task:any) => {
-        console.log("sstartDate bef: ",task.startDate)
-        let newStartDate = new Date(task.startDate);
-
-        newStartDate.setDate(
-            // Set the end date of the blade task
-            newStartDate.getDate() + task.attachPeriod 
-        );
-
-        task.startDate=newStartDate
-
-        console.log("sstartDate af: ",task.startDate)
-    });
-    */
 
     /**
      * renders the table. The renderExpandedComponent prop is used to render the bookings table

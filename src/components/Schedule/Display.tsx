@@ -138,8 +138,8 @@ function DisplayComponent(props: DisplayProps) {
         }
     }, [pendingSubscription.loading, pendingSubscription.data]);
 
-    console.log(dataBT);
-    console.log(dataPendingBT);
+    //console.log(dataBT);
+    //console.log(dataPendingBT);
 
     if (loadingRigs) {
         return <p>Loading...</p>;
@@ -285,7 +285,7 @@ function DisplayComponent(props: DisplayProps) {
                         handleViewChange(e);
                     }}
                 >
-                    <input name="monthInput" type="month" defaultValue={selectedMonth} />
+                    <input className="monthInput" name="monthInput" type="month" defaultValue={selectedMonth} />
                     <label htmlFor="numberInput" className="text-sm">
                         Months shown:
                     </label>
@@ -294,7 +294,7 @@ function DisplayComponent(props: DisplayProps) {
                 </form>
                 
                 {editMode.isEditMode ? null : 
-                    (<div className="ml-20">
+                    (<div className="filterContainer">
                         <label>Filter:</label>
                         <select
                             name="customerFilter"
@@ -387,18 +387,27 @@ export function getMonthsInView(startDate: Date, numberOfMonths: number) {
     let month = startDate.getMonth();
     let viewMonths: Date[] = [new Date(year, month, 1)];
 
+    let checkedMonth;
+
+    if(numberOfMonths < 2){
+        checkedMonth = 2;
+    }
+    else{
+        checkedMonth = numberOfMonths;
+    }
+
     if (!isNaN(startDate.valueOf())) {
-        for (let i = 1; i < numberOfMonths; i++) {
+        for (let i = 1; i < checkedMonth; i++) {
             let newDate = new Date(year, month + i);
             let lastDay = getMonthLength(capitalizeFirstLetter(newDate.toLocaleString("default", { month: "long" })), startDate.getFullYear());
             viewMonths.push(new Date(year, month + i, lastDay));
         }
     } else {
-        if (numberOfMonths < 1) {
+        if (checkedMonth < 1) {
             viewMonths = [];
             return viewMonths;
         }
-        viewMonths = getMonthsInView(currentDate, numberOfMonths - 1);
+        viewMonths = getMonthsInView(currentDate, checkedMonth - 1);
     }
     return viewMonths;
 }

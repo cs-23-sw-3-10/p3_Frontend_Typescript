@@ -14,7 +14,7 @@ import { BTOrder, InErrorChart, ResourceOrder, BladeProjectByIdResult, BladeTask
 import EquipmentList from "./EquipmentList";
 import { useMutation, useQuery, useLazyQuery } from "@apollo/client";
 import { ADD_BT, UPDATE_BT_INFO } from "../../api/mutationList";
-import { GET_ALL_BT, GET_BP_BY_ID } from "../../api/queryList";
+import { GET_ALL_BT, GET_BP_BY_ID, GET_ALL_BLADE_PROJECTS} from "../../api/queryList";
 import { ValidateForm } from "./ValidateForm";
 import { createEmptyInErrorChart } from "./BTMenuTypes";
 import "../CreateBTMenu/TestTypeSelector.css";
@@ -33,8 +33,11 @@ function BladeTaskMenu(props: BladeTaskMenuProps) {
     //Apollo mutation setup:
     const [addBT, { loading: addLoading, error: addError }] = useMutation(ADD_BT);
     const [updateBT, { loading: updateLoading, error: updateError }] = useMutation(UPDATE_BT_INFO);
-    const { loading: btLoading, error: btError, data: btData, refetch } = useQuery(GET_ALL_BT);
+    const {loading: btLoading, error: btError, data: btData, refetch } = useQuery(GET_ALL_BT);
     const [getBPById, { error, data: BPInfo }] = useLazyQuery(GET_BP_BY_ID,); //Used to query for BP on submit to check existing BT names
+    const {loading: bpEditLoading, error: bpEditError, data: bpEditData}=useQuery(GET_ALL_BLADE_PROJECTS,{
+        variables: {isActive: false},
+    });
 
     //All the states for the form -> Inserted into the BT-order as the user fills the form out
     const [bladeProjectId, setBladeProjectId] = useState(creator ? "" : props.inputs!.bladeProjectId);
@@ -74,8 +77,28 @@ function BladeTaskMenu(props: BladeTaskMenuProps) {
     if (btError) {
         return <p>Error {btError.message}</p>;
     }
+    if(bpEditLoading){
+        return <p>Loading...</p>;
+    }
+    if (bpEditError) {
+        return <p>Error {bpEditError.message}</p>;
+    }
 
     const allBT = btData["AllBladeTasks"];
+
+    //get all BTs in edit view
+    const bpEdit=bpEditData.AllBladeProjectsBySchedule;
+    const allBtEdit: any=[];
+    for(let i=0; i<bpEdit.length; i++){
+        let bpInEdit=bpEdit[i];
+        console.log("bpInEdit :",bpInEdit.id);
+        for(let j=0; j<allBT.length; j++){
+            console.log(allBT[j].bladeProject.id===bpInEdit.id)
+            if(allBT[j].bladeProject.id===bpInEdit.id){
+                allBtEdit.push(allBT[j]);
+            }
+        }
+    }
 
     //Creates mutation based on the provided input
     //Only triggers when following fields are provided: duration, attachPeriod, detachPeriod, bladeProjectId, taskName, testType
@@ -97,7 +120,7 @@ function BladeTaskMenu(props: BladeTaskMenuProps) {
                 if (
                     !checkBTCreationOverlaps(
                         //check if the created blade task overlaps with another blade task
-                        allBT,
+                        allBtEdit,
                         realStartDate,
                         realEndDate,
                         bladeProjectId,
@@ -138,7 +161,7 @@ function BladeTaskMenu(props: BladeTaskMenuProps) {
                 if (
                     !checkBTEditOverlaps(
                         //check if the edited blade task overlaps with another blade task
-                        allBT,
+                        allBtEdit,
                         realStartDate,
                         realEndDate,
                         parseInt(props.btId ? props.btId.toString() : "NaN"),
@@ -309,6 +332,9 @@ function checkBTEditOverlaps(allBT: any, startDate: Date, endDate: Date, btId: n
         console.log("Invalid ID: id is NaN");
         return true;
     }
+    if(rig===0){
+        return false;
+    }
     for (let i = 0; i < allBT.length; i++) {
         const bt = allBT[i];
         let btStartDate = new Date(bt.startDate);
@@ -316,6 +342,7 @@ function checkBTEditOverlaps(allBT: any, startDate: Date, endDate: Date, btId: n
 
         if (
             parseInt(bt.id) !== btId &&
+            bt.testRig!== 0 &&
             (bt.testRig === rig || bt.bladeProject.id === projectId) &&
             ((btStartDate <= endDate && btStartDate >= startDate) ||
                 (btEndDate >= startDate && btEndDate <= endDate) ||
@@ -332,6 +359,9 @@ function checkBTCreationOverlaps(allBT: any, startDate: Date, endDate: Date, pro
     if (startDate > endDate) {
         return true;
     }
+    if(rig===0){
+        return false
+    }
     for (let i = 0; i < allBT.length; i++) {
         const bt = allBT[i];
         let btStartDate = new Date(bt.startDate);
@@ -339,6 +369,7 @@ function checkBTCreationOverlaps(allBT: any, startDate: Date, endDate: Date, pro
 
         if (
             (bt.testRig === rig || bt.bladeProject.id === projectId) &&
+            bt.testRig!== 0 &&
             ((btStartDate <= endDate && btStartDate >= startDate) ||
                 (btEndDate >= startDate && btEndDate <= endDate) ||
                 (startDate >= btStartDate && startDate <= btEndDate) ||
