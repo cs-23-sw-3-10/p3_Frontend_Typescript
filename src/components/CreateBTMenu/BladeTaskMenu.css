@@ -169,6 +169,11 @@
     border-style: solid;
     border-color: red;
     border-width: 2px;
+    color: red;
+}
+
+.error::placeholder{
+    color: red;
 }
 
 .error_message_wrapper{
@@ -185,3 +190,8 @@
 .error_message{
     color: red;
 }
+
+.bt_creation_success{
+    color: green;
+}
+

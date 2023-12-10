@@ -252,6 +252,18 @@ export const GET_ALL_BP = gql`
     }
 `;
 
+export const GET_BP_BY_ID = gql`
+query BladeProjectById($id: ID!){
+    BladeProjectById(id:$id){
+    	id
+    	projectName
+    	bladeTasks{
+        taskName
+      }
+    }
+  }
+`;
+
 export const GET_EQUIPMENT_BY_TYPE = gql`
     query EquipmentByType($type: String!) {
         EquipmentByType(type: $type) {

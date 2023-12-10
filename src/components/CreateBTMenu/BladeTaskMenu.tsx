@@ -10,16 +10,16 @@ import EquipmentSelectionMenu from "./EquipmentSelector";
 import EmployeesMenu from "./EmployeesMenu";
 import { ResourceOrderContext } from "./BladeTaskOrderContext";
 import { useState, useEffect } from "react";
-import { BTOrder, InErrorChart, ResourceOrder } from "./BTMenuTypes";
+import { BTOrder, InErrorChart, ResourceOrder, BladeProjectByIdResult, BladeTask } from "./BTMenuTypes";
 import EquipmentList from "./EquipmentList";
-import { useMutation, useQuery } from "@apollo/client";
+import { useMutation, useQuery, useLazyQuery } from "@apollo/client";
 import { ADD_BT, UPDATE_BT_INFO } from "../../api/mutationList";
-import { GET_ALL_BT, GET_ALL_BLADE_PROJECTS} from "../../api/queryList";
+import { GET_ALL_BT, GET_BP_BY_ID, GET_ALL_BLADE_PROJECTS } from "../../api/queryList";
 import { ValidateForm } from "./ValidateForm";
-import { ComboBoxSelector } from "../ResourcesMenu/ResourcesUtils";
-import { GET_TEST_TYPES } from "../../api/queryList";
+import { createEmptyInErrorChart } from "./BTMenuTypes";
 import "../CreateBTMenu/TestTypeSelector.css";
 import "../CreateBTMenu/BladeTaskMenu.css";
+import TestTypeSelector from "./TestTypeSelector";
 
 
 export interface BladeTaskMenuProps {
@@ -29,13 +29,14 @@ export interface BladeTaskMenuProps {
 }
 
 function BladeTaskMenu(props: BladeTaskMenuProps) {
-    const creator = props.creator; //true if creating a new blade task, false if editing an existing one
+    const creator = props.creator; //True if creating a new blade task, false if editing an existing one
     //Apollo mutation setup:
     const [addBT, { loading: addLoading, error: addError }] = useMutation(ADD_BT);
     const [updateBT, { loading: updateLoading, error: updateError }] = useMutation(UPDATE_BT_INFO);
     const { loading: btLoading, error: btError, data: btData, refetch } = useQuery(GET_ALL_BT);
-    const {loading: bpEditLoading, error: bpEditError, data: bpEditData}=useQuery(GET_ALL_BLADE_PROJECTS,{
-        variables: {isActive: false},
+    const [getBPById, { error, data: BPInfo }] = useLazyQuery(GET_BP_BY_ID,); //Used to query for BP on submit to check existing BT names
+    const { loading: bpEditLoading, error: bpEditError, data: bpEditData } = useQuery(GET_ALL_BLADE_PROJECTS, {
+        variables: { isActive: false },
     });
 
     //All the states for the form -> Inserted into the BT-order as the user fills the form out
@@ -50,21 +51,14 @@ function BladeTaskMenu(props: BladeTaskMenuProps) {
     const [detachPeriod, setDetachPeriod] = useState(creator ? 0 : props.inputs!.detachPeriod);
     const [testRig, setTestRig] = useState(creator ? 0 : props.inputs!.testRig);
 
+    //State to check if form has been submitted
+    const [submitted, setSubmitted] = useState<boolean>(false);
+
     const [resourceOrders, setResourceOrder] = useState<ResourceOrder[]>(creator ? [] : props.inputs!.resourceOrders);
 
     //Tracks which input fields are currently in an error state(Incorrect input has been provided)
-    const [inErrorChart, setInErrorChart] = useState({
-        bladeProjectId: false,
-        taskName: false,
-        testType: false,
-        startDate: false,
-        duration: false,
-        attachPeriod: false,
-        detachPeriod: false,
-        testRig: false,
-        equipment: false,
-        employees: false,
-    });
+    const [inErrorChart, setInErrorChart] = useState(createEmptyInErrorChart());
+
 
     //State for the equipment selection menu
     const [equipmentActive, setEquipmentActive] = useState(false);
@@ -87,7 +81,7 @@ function BladeTaskMenu(props: BladeTaskMenuProps) {
     if (btError) {
         return <p>Error {btError.message}</p>;
     }
-    if(bpEditLoading){
+    if (bpEditLoading) {
         return <p>Loading...</p>;
     }
     if (bpEditError) {
@@ -97,14 +91,14 @@ function BladeTaskMenu(props: BladeTaskMenuProps) {
     const allBT = btData["AllBladeTasks"];
 
     //get all BTs in edit view
-    const bpEdit=bpEditData.AllBladeProjectsBySchedule;
-    const allBtEdit: any=[];
-    for(let i=0; i<bpEdit.length; i++){
-        let bpInEdit=bpEdit[i];
-        console.log("bpInEdit :",bpInEdit.id);
-        for(let j=0; j<allBT.length; j++){
-            console.log(allBT[j].bladeProject.id===bpInEdit.id)
-            if(allBT[j].bladeProject.id===bpInEdit.id){
+    const bpEdit = bpEditData.AllBladeProjectsBySchedule;
+    const allBtEdit: any = [];
+    for (let i = 0; i < bpEdit.length; i++) {
+        let bpInEdit = bpEdit[i];
+        console.log("bpInEdit :", bpInEdit.id);
+        for (let j = 0; j < allBT.length; j++) {
+            console.log(allBT[j].bladeProject.id === bpInEdit.id)
+            if (allBT[j].bladeProject.id === bpInEdit.id) {
                 allBtEdit.push(allBT[j]);
             }
         }
@@ -114,6 +108,13 @@ function BladeTaskMenu(props: BladeTaskMenuProps) {
     //Only triggers when following fields are provided: duration, attachPeriod, detachPeriod, bladeProjectId, taskName, testType
     //Other fields are optional
     const handleSubmit = async () => {
+        const result: BladeProjectByIdResult = await getBPById({ variables: { id: currentOrder.bladeProjectId } });
+        let BTarray = result.data.BladeProjectById.bladeTasks;
+        let BTNames: Array<string> = [];
+        if (BTarray.length > 0) {
+            BTNames = BTarray.map((BladeTask: BladeTask) => BladeTask.taskName);
+        }
+
         const submittedStartDate = new Date(startDate);
         const realStartDate = convertStartDateToDB(submittedStartDate, attachPeriod);
         const dbStartDate = new Date(realStartDate.getFullYear(), realStartDate.getMonth(), realStartDate.getDate() + 1).toISOString().split("T")[0];
@@ -130,13 +131,11 @@ function BladeTaskMenu(props: BladeTaskMenuProps) {
                         testRig
                     )
                 ) {
-                    if (ValidateForm(currentOrder)) {
-
-                        resourceOrders.forEach((order: ResourceOrder)=>{
-                            order.resourceType=order.resourceType.toLowerCase();
-                            order.resourceName=order.resourceName.toLowerCase();
+                    if (ValidateForm(currentOrder, inErrorChart, setInErrorChart, BTNames, creator)) {
+                        resourceOrders.forEach((order: ResourceOrder) => {
+                            order.resourceType = order.resourceType.toLowerCase();
+                            order.resourceName = order.resourceName.toLowerCase();
                         })
-
                         const response = await addBT({
                             //add blade task to database
                             variables: {
@@ -154,6 +153,7 @@ function BladeTaskMenu(props: BladeTaskMenuProps) {
                             },
                         });
                         console.log(response);
+                        setSubmitted(true);
                     } else {
                         console.log("Required fields have not been filled out");
                     }
@@ -172,10 +172,10 @@ function BladeTaskMenu(props: BladeTaskMenuProps) {
                         testRig
                     )
                 ) {
-                    if (ValidateForm(currentOrder)) {
-                        resourceOrders.forEach((order: ResourceOrder)=>{
-                            order.resourceType=order.resourceType.toLowerCase();
-                            order.resourceName=order.resourceName.toLowerCase();
+                    if (ValidateForm(currentOrder, inErrorChart, setInErrorChart, BTNames, creator)) {
+                        resourceOrders.forEach((order: ResourceOrder) => {
+                            order.resourceType = order.resourceType.toLowerCase();
+                            order.resourceName = order.resourceName.toLowerCase();
                         })
                         const response = await updateBT({
                             //update blade task in database
@@ -195,6 +195,7 @@ function BladeTaskMenu(props: BladeTaskMenuProps) {
                             },
                         });
                         console.log(response);
+                        setSubmitted(true);
                     } else {
                         console.log("Required fields have not been filled out");
                     }
@@ -219,6 +220,8 @@ function BladeTaskMenu(props: BladeTaskMenuProps) {
         setDetachPeriod(creator ? 0 : props.inputs!.detachPeriod);
         setTestRig(creator ? 0 : props.inputs!.testRig);
         setResourceOrder(creator ? [] : props.inputs!.resourceOrders);
+
+        setInErrorChart(createEmptyInErrorChart());
     };
 
     //The BTOrder object sent to the server -> Is created as a new Blade Tasks instance in DB and displayed in schedule
@@ -233,113 +236,99 @@ function BladeTaskMenu(props: BladeTaskMenuProps) {
         testRig: testRig,
         resourceOrders: resourceOrders,
     };
-    
 
-    return (
-        <div className="btmenu-container">
-            {/*ErrorMessageContainer is a menu next to the BT-Menu displaying error messages*/}
-            <ErrorMessageContainer inErrorChart={inErrorChart} />
-
-            {/*Each selector is provided the state it controls*/}
-            <div className="name_and_project_selection_wrapper">
-                <TaskNameSelector taskName={taskName} setTaskName={setTaskName} inErrorChart={inErrorChart} setInErrorChart={setInErrorChart} />
-                <ProjectSelector bladeProjectId={bladeProjectId} setBladeProjectId={setBladeProjectId} />
-            </div>
-            <div className="item testtype_wrapper">
-                <h2 className="title">Type</h2>
-                <ComboBoxSelector
-                    selectedValue={testType}
-                    setSelectedValue={(value: string) => setTestType(value)}
-                    setItemList={() => {}} //not used
-                    className="testtype_select input_sideborders"
-                    query={GET_TEST_TYPES}
-                    dataKey="DictionaryAllByCategory"
-                    mappingFunction={({ label }: { label: string }) => label}
-                />
-            </div>
-            <div className="item date_selection_wrapper">
-                <StartDateSelector startDate={startDate} setStartDate={setStartDate} inErrorChart={inErrorChart} setInErrorChart={setInErrorChart} />
-                <DurationSelector duration={duration} setDuration={setDuration} inErrorChart={inErrorChart} setInErrorChart={setInErrorChart} />
-                <AttachPeriodSelector
-                    duration={duration}
-                    detachPeriod={detachPeriod}
-                    attachPeriod={attachPeriod}
-                    setAttachPeriod={setAttachPeriod}
-                    inErrorChart={inErrorChart}
-                    setInErrorChart={setInErrorChart}
-                />
-                <DetachPeriodSelector
-                    duration={duration}
-                    attachPeriod={attachPeriod}
-                    detachPeriod={detachPeriod}
-                    setDetachPeriod={setDetachPeriod}
-                    inErrorChart={inErrorChart}
-                    setInErrorChart={setInErrorChart}
-                />
-                <TestRigSelector testRig={testRig} setTestRig={setTestRig} />
-            </div>
-
-            <div className="item equipment_wrapper">
-                <h2 className="title equipment">Equipment</h2>
-
-                <div className="title equipment_type">
-                    <h2 className="title">Equipment Type</h2>
+    if (submitted) {
+        return (<div className="bt_creation_success">Blade Task Creation Successful</div>);
+    }else {
+        return (
+            <div className="btmenu-container">
+                {/*Each selector is provided the state it controls*/}
+                <div className="name_and_project_selection_wrapper">
+                    <TaskNameSelector taskName={taskName} setTaskName={setTaskName} inErrorChart={inErrorChart} setInErrorChart={setInErrorChart} />
+                    <ProjectSelector bladeProjectId={bladeProjectId} setBladeProjectId={setBladeProjectId} />
+                </div>
+                <div className="item testtype_wrapper">
+                    <h2 className="title">Type</h2>
+                    <TestTypeSelector
+                        testType={testType}
+                        setTestType={setTestType}
+                        className="testtype_select input_sideborders"
+                        inErrorChart={inErrorChart}
+                        setInErrorChart={setInErrorChart}
+                    />
+                </div>
+                <div className="item date_selection_wrapper">
+                    <StartDateSelector startDate={startDate} setStartDate={setStartDate} inErrorChart={inErrorChart} setInErrorChart={setInErrorChart} />
+                    <DurationSelector duration={duration} setDuration={setDuration} inErrorChart={inErrorChart} setInErrorChart={setInErrorChart} />
+                    <AttachPeriodSelector
+                        duration={duration}
+                        detachPeriod={detachPeriod}
+                        attachPeriod={attachPeriod}
+                        setAttachPeriod={setAttachPeriod}
+                        inErrorChart={inErrorChart}
+                        setInErrorChart={setInErrorChart}
+                    />
+                    <DetachPeriodSelector
+                        duration={duration}
+                        attachPeriod={attachPeriod}
+                        detachPeriod={detachPeriod}
+                        setDetachPeriod={setDetachPeriod}
+                        inErrorChart={inErrorChart}
+                        setInErrorChart={setInErrorChart}
+                    />
+                    <TestRigSelector testRig={testRig} setTestRig={setTestRig} />
                 </div>
 
-                <div className="title equipment_amount">
-                    <h2 className="title">Period</h2>
+                <div className="item equipment_wrapper">
+                    <h2 className="title equipment">Equipment</h2>
+
+                    <div className="title equipment_type">
+                        <h2 className="title">Equipment Type</h2>
+                    </div>
+
+                    <div className="title equipment_amount">
+                        <h2 className="title">Period</h2>
+                    </div>
+                    <ResourceOrderContext.Provider value={setResourceOrder}>
+                        <EquipmentList resourceOrders={resourceOrders} key={"Equipment_List"} classNameFor="bt" />
+                    </ResourceOrderContext.Provider>
+
+                    <div className="equipment_interaction">
+                        <button className="equipment_add" onClick={(e) => setEquipmentActive(true)}>
+                            <span className="material-symbols-outlined">add_circle</span>
+                        </button>
+                    </div>
+
+                    {equipmentActive ? (
+                        <ResourceOrderContext.Provider value={setResourceOrder}>
+                            <EquipmentSelectionMenu setEquipmentActive={setEquipmentActive} className="bt" />
+                        </ResourceOrderContext.Provider>
+                    ) : (
+                        <></>
+                    )}
                 </div>
                 <ResourceOrderContext.Provider value={setResourceOrder}>
-                    <EquipmentList resourceOrders={resourceOrders} key={"Equipment_List"} classNameFor="bt" />
+                    <EmployeesMenu resourceOrders={resourceOrders} />
                 </ResourceOrderContext.Provider>
-
-                <div className="equipment_interaction">
-                    <button className="equipment_add" onClick={(e) => setEquipmentActive(true)}>
-                        <span className="material-symbols-outlined">add_circle</span>
+                <div className="submit_cancel_wrapper">
+                    <button
+                        className="cancel_BT"
+                        onClick={() => {
+                            handleCancellation(creator);
+                        }}
+                    >
+                        Clear
+                    </button>
+                    <button className="submit_BT" onClick={handleSubmit}>
+                        Submit
                     </button>
                 </div>
+            </div>
+        );
+    }
 
-                {equipmentActive ? (
-                    <ResourceOrderContext.Provider value={setResourceOrder}>
-                        <EquipmentSelectionMenu setEquipmentActive={setEquipmentActive} className="bt" />
-                    </ResourceOrderContext.Provider>
-                ) : (
-                    <></>
-                )}
-            </div>
-            <ResourceOrderContext.Provider value={setResourceOrder}>
-                <EmployeesMenu resourceOrders={resourceOrders} />
-            </ResourceOrderContext.Provider>
-            <div className="submit_cancel_wrapper">
-                <button
-                    className="cancel_BT"
-                    onClick={() => {
-                        handleCancellation(creator);
-                    }}
-                >
-                    Cancel
-                </button>
-                <button className="submit_BT" onClick={handleSubmit}>
-                    Submit
-                </button>
-            </div>
-        </div>
-    );
 }
 
-function ErrorMessageContainer({ inErrorChart }: { inErrorChart: InErrorChart }) {
-    return (
-        <div className="error_message_wrapper">
-            {inErrorChart.taskName ? <p className="error_message error_message_btname">Invalid Name - Task name exists in system</p> : <div></div>}
-            {inErrorChart.startDate ? <p className="error_message error_message_startdate">Invalid Date - Date is before current date</p> : <div></div>}
-            {inErrorChart.duration ? <p className="error_message error_message_duration">Invalid Duration - Cannot Be Negative</p> : <div></div>}
-            {inErrorChart.attachPeriod ? <p className="error_message error_message_attachPeriod">Invalid Attach Period - Cannot Be Negative</p> : <div></div>}
-            {inErrorChart.detachPeriod ? <p className="error_message error_message_detachPeriod">Invalid Detach Period - Cannot Be Negative</p> : <div></div>}
-            {inErrorChart.equipment ? <p className="error_message error_message_equipment">Invalid Equipment</p> : <div></div>}
-            {inErrorChart.employees ? <p className="error_message error_message_employee">Invalid Employee</p> : <div></div>}
-        </div>
-    );
-}
 export default BladeTaskMenu;
 
 function checkBTEditOverlaps(allBT: any, startDate: Date, endDate: Date, btId: number, projectId: string, rig: number) {
@@ -351,7 +340,7 @@ function checkBTEditOverlaps(allBT: any, startDate: Date, endDate: Date, btId: n
         console.log("Invalid ID: id is NaN");
         return true;
     }
-    if(rig===0){
+    if (rig === 0) {
         return false;
     }
     for (let i = 0; i < allBT.length; i++) {
@@ -361,7 +350,7 @@ function checkBTEditOverlaps(allBT: any, startDate: Date, endDate: Date, btId: n
 
         if (
             parseInt(bt.id) !== btId &&
-            bt.testRig!== 0 &&
+            bt.testRig !== 0 &&
             (bt.testRig === rig || bt.bladeProject.id === projectId) &&
             ((btStartDate <= endDate && btStartDate >= startDate) ||
                 (btEndDate >= startDate && btEndDate <= endDate) ||
@@ -378,7 +367,7 @@ function checkBTCreationOverlaps(allBT: any, startDate: Date, endDate: Date, pro
     if (startDate > endDate) {
         return true;
     }
-    if(rig===0){
+    if (rig === 0) {
         return false
     }
     for (let i = 0; i < allBT.length; i++) {
@@ -388,7 +377,7 @@ function checkBTCreationOverlaps(allBT: any, startDate: Date, endDate: Date, pro
 
         if (
             (bt.testRig === rig || bt.bladeProject.id === projectId) &&
-            bt.testRig!== 0 &&
+            bt.testRig !== 0 &&
             ((btStartDate <= endDate && btStartDate >= startDate) ||
                 (btEndDate >= startDate && btEndDate <= endDate) ||
                 (startDate >= btStartDate && startDate <= btEndDate) ||

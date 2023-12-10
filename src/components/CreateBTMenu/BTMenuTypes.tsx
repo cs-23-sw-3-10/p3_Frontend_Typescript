@@ -1,15 +1,31 @@
 export type InErrorChart = {
     bladeProjectId: boolean;
-    taskName: boolean;
+    taskName: Array<boolean>;
     testType: boolean;
     startDate: boolean;
-    duration: boolean;
-    attachPeriod: boolean;
-    detachPeriod: boolean;
+    duration: Array<boolean>;
+    attachPeriod: Array<boolean>;
+    detachPeriod: Array<boolean>;
     testRig: boolean;
     equipment: boolean;
     employees: boolean;
 }
+
+export function createEmptyInErrorChart(): InErrorChart {
+    return {
+        bladeProjectId: false,
+        taskName: [false, false],
+        testType: false,
+        startDate: false,
+        duration: [false, false],
+        attachPeriod: [false, false],
+        detachPeriod: [false, false],
+        testRig: false,
+        equipment: false,
+        employees: false,
+    };
+}
+
 
 export type BTOrder = {
     bladeProjectId: string;
@@ -29,5 +45,22 @@ export type ResourceOrder = {
     equipmentAssignmentStatus: Array<boolean>;
     workHours: number;
 }
+
+export type BladeProjectByIdResult = {
+    data: {
+        BladeProjectById: {
+            __typename: string;
+            id: string;
+            projectName: string;
+            bladeTasks: BladeTask[];
+        };
+    };
+};
+
+export type BladeTask = {
+        __typename: string;
+        taskName: string;
+}
+
 
 

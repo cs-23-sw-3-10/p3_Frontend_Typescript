@@ -3,6 +3,7 @@ import { useQuery } from '@apollo/client';
 import { GET_ALL_ENGINEERS, GET_ALL_TECHNICIANS } from '../../api/queryList';
 import { ResourceOrder } from './BTMenuTypes';
 import { useResourceOrderContext } from './BladeTaskOrderContext';
+import { capitalize } from '../../utils/StringEditing';
 import { ActiveEmployeesContext, useActiveEmployeesContext } from './EmployeesActiveContext';
 import './EmployeesMenu.css';
 
@@ -89,9 +90,9 @@ function EmployeeEntrySelectorMenu({ name, typeName, activeEmployeesList}: {name
         <button className='employee_selector_menu_entry_button' onClick={handleResourceCreation}>
             <div className='employee_selector_menu_entry'>
                 <div className='employee_initials_profile'>
-                    <h2 className='employee_initials'>{initials}</h2>
+                    <h2 className='employee_initials'>{initials.toUpperCase()}</h2>
                 </div>
-                <h2 className='employee_selector_menu_entry_name'>{name}</h2>
+                <h2 className='employee_selector_menu_entry_name'>{capitalize(name)}</h2>
             </div>
         </button>}
         </>
@@ -139,10 +140,10 @@ function EmployeeEntry({name, initials, resourceOrders, activeEmployeesList}:{na
                 <span className="material-symbols-outlined">chips</span>
             </button>
             <div className='employee_entry_icon'>
-                <h2 className='employee_entry_initials'>{initials}</h2>
+                <h2 className='employee_entry_initials'>{initials.toUpperCase()}</h2>
             </div>
             <div className='employee_entry_name_wrapper'>
-                <h2 className='employee_entry_name'>{name}</h2>
+                <h2 className='employee_entry_name'>{capitalize(name)}</h2>
             </div>
             <div className='employee_entry_hours'>
                 <input
