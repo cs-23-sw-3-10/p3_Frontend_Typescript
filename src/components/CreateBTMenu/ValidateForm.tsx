@@ -12,9 +12,9 @@ export function ValidateForm(currentOrder:BTOrder, inErrorChart:InErrorChart, se
     newInErrorChart.taskName[1] = (currentOrder.taskName === ""); //Checks if Task Name is not empty
     newInErrorChart.testType = (currentOrder.testType === ""); //Cheks if Test Type is not empty
     newInErrorChart.bladeProjectId = (currentOrder.bladeProjectId === ""); //Cheks if BP id is provided
-    newInErrorChart.duration[1] = (currentOrder.duration <= 0); //Checks if durations is provided and not negative
-    newInErrorChart.attachPeriod[1] = (currentOrder.attachPeriod <= 0); //Checks if attach period is provided and not negative
-    newInErrorChart.detachPeriod[1] = (currentOrder.detachPeriod <= 0); //Checks if detach period is provided and not negative
+    newInErrorChart.duration[1] = (currentOrder.duration < 1); //Checks if durations is provided and not negative
+    newInErrorChart.attachPeriod[1] = (currentOrder.attachPeriod < 0); //Checks if attach period is provided and not negative
+    newInErrorChart.detachPeriod[1] = (currentOrder.detachPeriod < 0); //Checks if detach period is provided and not negative
     setInErrorChart(newInErrorChart) //Update error chart
     
     //If all statements above are false -> Create BT

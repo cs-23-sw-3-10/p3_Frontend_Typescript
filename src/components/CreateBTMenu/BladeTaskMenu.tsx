@@ -51,10 +51,14 @@ function BladeTaskMenu(props: BladeTaskMenuProps) {
     const [detachPeriod, setDetachPeriod] = useState(creator ? 0 : props.inputs!.detachPeriod);
     const [testRig, setTestRig] = useState(creator ? 0 : props.inputs!.testRig);
 
+    //State to check if form has been submitted
+    const [submitted, setSubmitted] = useState<boolean>(false);
+
     const [resourceOrders, setResourceOrder] = useState<ResourceOrder[]>(creator ? [] : props.inputs!.resourceOrders);
 
     //Tracks which input fields are currently in an error state(Incorrect input has been provided)
     const [inErrorChart, setInErrorChart] = useState(createEmptyInErrorChart());
+    
 
     //State for the equipment selection menu
     const [equipmentActive, setEquipmentActive] = useState(false);
@@ -128,12 +132,10 @@ function BladeTaskMenu(props: BladeTaskMenuProps) {
                     )
                 ) {
                     if (ValidateForm(currentOrder, inErrorChart, setInErrorChart, BTNames, creator)) {
-
                         resourceOrders.forEach((order: ResourceOrder) => {
                             order.resourceType = order.resourceType.toLowerCase();
                             order.resourceName = order.resourceName.toLowerCase();
                         })
-
                         const response = await addBT({
                             //add blade task to database
                             variables: {
