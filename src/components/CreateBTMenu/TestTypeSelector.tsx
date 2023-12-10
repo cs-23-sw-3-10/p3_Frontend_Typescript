@@ -32,14 +32,19 @@ function TestTypeSelector({ testType, setTestType, className, inErrorChart, setI
 
     const handleChange = (value:string) => {
         let santizedInput = sanitize(value);
-        if(inErrorChart.testType){
-            setTestType("Please Provide A Test Type");
-        }else setTestType(santizedInput);
+        setTestType(santizedInput);
     }
 
     return (
         <>
-            <Combobox className={className} onChange={value => handleChange(value)} value={testType} data={typesList} onSelect={hideErrorMessages}/>
+            <Combobox 
+                className={className} 
+                onChange={value => handleChange(value)} 
+                value={testType} 
+                data={typesList}
+                onSelect={hideErrorMessages} 
+                placeholder={inErrorChart.testType ? "Please provide a test type" : ""}
+            />
         </>
     );
 }

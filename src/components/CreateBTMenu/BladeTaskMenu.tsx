@@ -224,9 +224,6 @@ function BladeTaskMenu(props: BladeTaskMenuProps) {
 
     return (
         <div className="btmenu-container">
-            {/*ErrorMessageContainer is a menu next to the BT-Menu displaying error messages*/}
-            <ErrorMessageContainer inErrorChart={inErrorChart} />
-
             {/*Each selector is provided the state it controls*/}
             <div className="name_and_project_selection_wrapper">
                 <TaskNameSelector taskName={taskName} setTaskName={setTaskName} inErrorChart={inErrorChart} setInErrorChart={setInErrorChart} />
@@ -312,13 +309,6 @@ function BladeTaskMenu(props: BladeTaskMenuProps) {
     );
 }
 
-function ErrorMessageContainer({ inErrorChart }: { inErrorChart: InErrorChart }) {
-    return (
-        <div className="error_message_wrapper">
-            {inErrorChart.testType ? <p className="error_message error_message_test_type">Please provide a test type</p> : <div></div>}
-        </div>
-    );
-}
 export default BladeTaskMenu;
 
 function checkBTEditOverlaps(allBT: any, startDate: Date, endDate: Date, btId: number, projectId: string, rig: number) {
