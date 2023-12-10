@@ -172,6 +172,10 @@
     color: red;
 }
 
+.error::placeholder{
+    color: red;
+}
+
 .error_message_wrapper{
     position: absolute;
     transform: translate(693px,-7px);

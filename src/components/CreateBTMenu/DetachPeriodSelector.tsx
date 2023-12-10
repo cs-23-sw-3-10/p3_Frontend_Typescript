@@ -10,7 +10,7 @@ function DetachPeriodSelector(
                 type="number"
                 className={inErrorChart.detachPeriod ? "error" : "item detach_period_select input"}
                 name="detach_period_select"
-                placeholder='Select Detach Period'
+                placeholder={inErrorChart.detachPeriod ? "Detach period cannot be negative" :'Select Detach Period'}
                 value={(detachPeriod === 0) ? "" : detachPeriod}
                 onChange={(e) => setDetachPeriod(parseInt(e.currentTarget.value))}
                 onBlur={(e) => handleDetachPeriodValidation(e, duration, attachPeriod, setDetachPeriod, inErrorChart, setInErrorChart)}

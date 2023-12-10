@@ -15,7 +15,7 @@ function DurationSelector({duration, setDuration, inErrorChart, setInErrorChart}
                 type="number"
                 className={inErrorChart.duration ? "error" : "item duration_select input"}
                 name="duration_select"
-                placeholder='Select Duration'
+                placeholder={inErrorChart.duration ? "Duration cannot be negative" : "Select Duration"}
                 value={(duration === 0) ? "" : duration}
                 onChange={(e) => setDuration(parseInt(e.currentTarget.value))}
                 onBlur={(e) => handleDurationValidation(e, setDuration, inErrorChart, setInErrorChart)}

@@ -316,12 +316,6 @@ function ErrorMessageContainer({ inErrorChart }: { inErrorChart: InErrorChart })
     return (
         <div className="error_message_wrapper">
             {inErrorChart.testType ? <p className="error_message error_message_test_type">Please provide a test type</p> : <div></div>}
-            {inErrorChart.startDate ? <p className="error_message error_message_startdate">Invalid Date - Date is before current date</p> : <div></div>}
-            {inErrorChart.duration ? <p className="error_message error_message_duration">Invalid Duration - Cannot Be Negative</p> : <div></div>}
-            {inErrorChart.attachPeriod ? <p className="error_message error_message_attachPeriod">Invalid Attach Period - Cannot Be Negative</p> : <div></div>}
-            {inErrorChart.detachPeriod ? <p className="error_message error_message_detachPeriod">Invalid Detach Period - Cannot Be Negative</p> : <div></div>}
-            {inErrorChart.equipment ? <p className="error_message error_message_equipment">Invalid Equipment</p> : <div></div>}
-            {inErrorChart.employees ? <p className="error_message error_message_employee">Invalid Employee</p> : <div></div>}
         </div>
     );
 }

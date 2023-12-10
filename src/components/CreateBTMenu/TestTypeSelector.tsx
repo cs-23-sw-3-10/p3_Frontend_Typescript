@@ -32,7 +32,9 @@ function TestTypeSelector({ testType, setTestType, className, inErrorChart, setI
 
     const handleChange = (value:string) => {
         let santizedInput = sanitize(value);
-        setTestType(value);
+        if(inErrorChart.testType){
+            setTestType("Please Provide A Test Type");
+        }else setTestType(santizedInput);
     }
 
     return (
