@@ -18,7 +18,7 @@ export function createEmptyInErrorChart(): InErrorChart {
         testType: false,
         startDate: false,
         duration: [false, false],
-        attachPeriod: [false, false],
+        attachPeriod: [false, false, false],
         detachPeriod: [false, false],
         testRig: false,
         equipment: false,

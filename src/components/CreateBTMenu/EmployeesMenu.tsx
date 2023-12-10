@@ -126,6 +126,8 @@ function EmployeeEntry({name, initials, resourceOrders, activeEmployeesList}:{na
     }
 
     const handleEmployeeHours = (hours:number) => {
+        if (hours < 0)
+            hours = 0;
         setEmployeeHours(hours);
         const updatedOrders = [...resourceOrders];
         const currentOrder = updatedOrders.filter((order) => order.resourceName === name)[0];
