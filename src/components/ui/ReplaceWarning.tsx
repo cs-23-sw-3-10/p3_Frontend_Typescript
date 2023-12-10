@@ -20,11 +20,13 @@ function ReplaceWarning({ mode, openstate }: ReplaceWarningProps) {
         if (Confirmation === "I Agree") {
             if (mode === "replaceSchedule"){ 
                 cloneScheduleAndReplace();
+                alert("Schedule replaced");
             }
             else
             {
              console.log("Discard changes");
              discardEditChanges();
+             alert("Changes discarded");
             }
             openstate("");
         } else {
