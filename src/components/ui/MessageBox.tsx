@@ -6,11 +6,7 @@ interface MessageBoxProps {
     onClose: () => void;
 }
 
-const MessageBox: React.FC<MessageBoxProps> = ({
-    title,
-    messages,
-    onClose,
-}) => {
+const MessageBox: React.FC<MessageBoxProps> = ({ title, messages, onClose }) => {
     console.log("Rendering MessageBox");
     return (
         <div
@@ -27,7 +23,7 @@ const MessageBox: React.FC<MessageBoxProps> = ({
                 width: "auto",
                 zIndex: 100,
                 maxHeight: "80%",
-                overflowY: "auto"
+                overflowY: "auto",
             }}
         >
             <h1 style={{ marginBottom: "10px", fontWeight: "bold" }}>{title}</h1>

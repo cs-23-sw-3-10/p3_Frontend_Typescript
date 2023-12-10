@@ -12,11 +12,11 @@ function TestRigSelector({ testRig, setTestRig }: { testRig: number; setTestRig:
     }, [data]);
 
     //Whilst list is loading -> Return empty selector menu
-    if (loading) return <select className="input_sideborders" id="testrig" name="testrig"></select>
+    if (loading) return <select className="input_sideborders" id="testrig" name="testrig"></select>;
 
     //Error -> return empty selector menu
     if (error) {
-        return <select className="input_sideborders" id="testrig" name="testrig"></select>
+        return <select className="input_sideborders" id="testrig" name="testrig"></select>;
     }
 
     return (
@@ -30,7 +30,7 @@ function TestRigSelector({ testRig, setTestRig }: { testRig: number; setTestRig:
 }
 
 //Queries test types and insert them into the BT-Menu
-function TestRigOptions({numberOfTestRigs}: { numberOfTestRigs: number }) {
+function TestRigOptions({ numberOfTestRigs }: { numberOfTestRigs: number }) {
     //Number of test rigs converted into an array [1..NumberOfTestRigs]
     let TestRigArray = Array(numberOfTestRigs);
     for (let i = 0; i <= numberOfTestRigs; i++) {
@@ -42,7 +42,7 @@ function TestRigOptions({numberOfTestRigs}: { numberOfTestRigs: number }) {
         <>
             {TestRigArray.map((testRigNum) => (
                 <option value={testRigNum} key={testRigNum}>
-                    {(testRigNum === 0) ? "Pending" : ("Test Rig " + testRigNum) }
+                    {testRigNum === 0 ? "Pending" : "Test Rig " + testRigNum}
                 </option>
             ))}
         </>

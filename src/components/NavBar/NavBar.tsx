@@ -13,66 +13,52 @@ export const NavBar = () => {
         <nav className={`navBar ${isOpen ? "open" : ""}`}>
             <div className="navBarInner">
                 <header className="navBarHeader">
-                    <button
-                        type="button"
-                        className="navBarHeaderBurger"
-                        onClick={() => setIsOpen(!isOpen)}
-                    >
-                        <span className="material-symbols-outlined">
-                            {" "}
-                            {isOpen ? "close" : "menu"}
-                        </span>
+                    <button type="button" className="navBarHeaderBurger" onClick={() => setIsOpen(!isOpen)}>
+                        <span className="material-symbols-outlined"> {isOpen ? "close" : "menu"}</span>
                     </button>
                 </header>
                 <nav className="navBarMenuItems">
                     <span>
                         {isOpen ? (
-                            <img 
-                                src="https://cdn.kualo.com/website/icon_windfarm.png"
-                                alt="blaestLogo"
-                                className="navLogo"
-                            />
+                            <img src="https://cdn.kualo.com/website/icon_windfarm.png" alt="blaestLogo" className="navLogo" />
                         ) : (
                             <h2 className="text-2xl h-48 transform -rotate-90 text-center mr-5">BLAEST</h2>
                         )}
                     </span>
                     <Link to="/">
                         <button type="button" className="navBarButton">
-                            <span className="material-symbols-outlined">
-                                calendar_month
-                            </span>
+                            <span className="material-symbols-outlined">calendar_month</span>
                             <p>Schedule</p>
                         </button>
                     </Link>
 
                     <Link to="/projects">
                         <button type="button" className="navBarButton">
-                            <span className="material-symbols-outlined">
-                                folder_open
-                            </span>
+                            <span className="material-symbols-outlined">folder_open</span>
                             <p>Blade Projects</p>
                         </button>
                     </Link>
                     <Link to="/bladetask">
                         <button type="button" className="navBarButton">
-                            <span className="material-symbols-outlined">
-                                description
-                            </span>
+                            <span className="material-symbols-outlined">description</span>
                             <p>Blade Tasks</p>
                         </button>
                     </Link>
-                    {editMode.isEditMode ?
-                    <Link to="/resources">
-                        <button type="button" className="navBarButton">
-                            <span className="material-symbols-outlined">
-                                manufacturing
-                            </span>
-                            <p>Resources</p>
-                        </button>
-
-                    </Link>: null}
-                <button onClick={()=>{localStorage.clear()}}>Clear auth</button>
-
+                    {editMode.isEditMode ? (
+                        <Link to="/resources">
+                            <button type="button" className="navBarButton">
+                                <span className="material-symbols-outlined">manufacturing</span>
+                                <p>Resources</p>
+                            </button>
+                        </Link>
+                    ) : null}
+                    <button
+                        onClick={() => {
+                            localStorage.clear();
+                        }}
+                    >
+                        Clear auth
+                    </button>
                 </nav>
             </div>
         </nav>

@@ -141,7 +141,7 @@ export const GET_BT_IN_RANGE_SUB = gql`
 `;
 
 export const GET_BT_PENDING_SUB = gql`
-    subscription AllBladeTasksPendingSub( $isActive: Boolean!) {
+    subscription AllBladeTasksPendingSub($isActive: Boolean!) {
         AllBladeTasksPendingSub(isActive: $isActive) {
             id
             duration
@@ -253,15 +253,15 @@ export const GET_ALL_BP = gql`
 `;
 
 export const GET_BP_BY_ID = gql`
-query BladeProjectById($id: ID!){
-    BladeProjectById(id:$id){
-    	id
-    	projectName
-    	bladeTasks{
-        taskName
-      }
+    query BladeProjectById($id: ID!) {
+        BladeProjectById(id: $id) {
+            id
+            projectName
+            bladeTasks {
+                taskName
+            }
+        }
     }
-  }
 `;
 
 export const GET_EQUIPMENT_BY_TYPE = gql`
@@ -420,20 +420,19 @@ export const GET_CONFLICTS_FOR_BT = gql`
 `;
 
 export const GET_BOOKING_BY_BP_ID = gql`
-query BladeProjectById($id: ID!){
-    BookingByBPId(id:$id){
-      resourceType
-      resourceName
+    query BladeProjectById($id: ID!) {
+        BookingByBPId(id: $id) {
+            resourceType
+            resourceName
+        }
     }
-  }
-  `;
-
-export const GET_RESOURCE_ORDER_BY_BP_ID = gql`
-query ResourceOrderByBPId($id: ID!){
-    ResourceOrderByBPId(id:$id){
-      resourceName
-      resourceType
-    }
-  }
 `;
 
+export const GET_RESOURCE_ORDER_BY_BP_ID = gql`
+    query ResourceOrderByBPId($id: ID!) {
+        ResourceOrderByBPId(id: $id) {
+            resourceName
+            resourceType
+        }
+    }
+`;

@@ -1,5 +1,5 @@
 type TestRigDivsProps = {
-    rigs: { rigName: string; rigNumber: number }[]
+    rigs: { rigName: string; rigNumber: number }[];
 };
 
 function CreateTestRigDivs(props: TestRigDivsProps) {

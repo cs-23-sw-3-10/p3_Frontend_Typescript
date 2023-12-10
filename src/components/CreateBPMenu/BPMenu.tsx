@@ -11,7 +11,7 @@ import EquipmentSelectionMenu from "../CreateBTMenu/EquipmentSelector";
 import { ResourceOrder } from "../CreateBTMenu/BTMenuTypes";
 import EquipmentList from "../CreateBTMenu/EquipmentList";
 import { capitalize, sanitize } from "../../utils/StringEditing";
-import { GET_RESOURCE_ORDER_BY_BP_ID } from "../../api/queryList"; 
+import { GET_RESOURCE_ORDER_BY_BP_ID } from "../../api/queryList";
 import "./EquipmentListBP.css";
 import "./BPMenu.css";
 import "./EquipmentSelectorBP.css";
@@ -28,7 +28,7 @@ interface BladeProjectMenuProps {
 
 function BladeProjectMenu(props: BladeProjectMenuProps) {
     const creator = props.creator; //Determines Creating or Editing
-    let currentBpResourceOrders:ResourceOrder[] = [];
+    let currentBpResourceOrders: ResourceOrder[] = [];
     let currentBP: any;
     console.log(props.BPId);
 
@@ -37,8 +37,6 @@ function BladeProjectMenu(props: BladeProjectMenuProps) {
     console.log(BPData);
     currentBP = BPData?.AllBladeProjects?.find((element: any) => element.id === props.BPId);
     console.log(currentBP);
-    
-   
 
     //Create -> Set states to "empty"
     //Edit -> Set states to corresponding values in current BP
@@ -59,23 +57,30 @@ function BladeProjectMenu(props: BladeProjectMenuProps) {
     const { data } = useQuery(GET_ALL_ENGINEERS);
     const [updateBP, { loading: updateLoading, error: updateError }] = useMutation(UPDATE_BP);
 
-    const { data: currentBpBookings, refetch} = useQuery(GET_RESOURCE_ORDER_BY_BP_ID, {
-        variables:{
-            id: currentBP?.id
-        }
+    const { data: currentBpBookings, refetch } = useQuery(GET_RESOURCE_ORDER_BY_BP_ID, {
+        variables: {
+            id: currentBP?.id,
+        },
     });
     refetch();
 
     useEffect(() => {
-        if(currentBpBookings && currentBpBookings.ResourceOrderByBPId){
-            currentBpResourceOrders = currentBpBookings.ResourceOrderByBPId.map((
-                {resourceName, resourceType, equipmentAssignmentStatus}:
-                {resourceName:string, resourceType:string, equipmentAssignmentStatus: Array<boolean>}) => 
-                ({resourceType: capitalize(resourceType), resourceName:capitalize(resourceName), equipmentAssignmentStatus: [true,true]}));
+        if (currentBpBookings && currentBpBookings.ResourceOrderByBPId) {
+            currentBpResourceOrders = currentBpBookings.ResourceOrderByBPId.map(
+                ({
+                    resourceName,
+                    resourceType,
+                    equipmentAssignmentStatus,
+                }: {
+                    resourceName: string;
+                    resourceType: string;
+                    equipmentAssignmentStatus: Array<boolean>;
+                }) => ({ resourceType: capitalize(resourceType), resourceName: capitalize(resourceName), equipmentAssignmentStatus: [true, true] })
+            );
             console.log(currentBpBookings);
             setResourceOrders(currentBpResourceOrders);
         }
-    },[currentBpBookings]);
+    }, [currentBpBookings]);
 
     useEffect(() => {
         if (data && data.AllEngineers) {
@@ -143,11 +148,11 @@ function BladeProjectMenu(props: BladeProjectMenuProps) {
                         },
                     },
                 })
-                .then((result) => console.log(result))
-                .then(() => setMissingInput(false))
-                .then(() => setProjectError(false))
-                .then(() => handleCancel())
-                .then(() => setSubmitted(true));
+                    .then((result) => console.log(result))
+                    .then(() => setMissingInput(false))
+                    .then(() => setProjectError(false))
+                    .then(() => handleCancel())
+                    .then(() => setSubmitted(true));
             } else {
                 setMissingInput(true);
             }
@@ -161,26 +166,26 @@ function BladeProjectMenu(props: BladeProjectMenuProps) {
         setResourceOrders([]);
     };
 
-    if(submitted){
-        if(creator){return(<div className="bp_feedback_msg">Project Created</div>)
-        }else{
-            return (<div className="bp_feedback_msg">Project Updated</div>);
+    if (submitted) {
+        if (creator) {
+            return <div className="bp_feedback_msg">Project Created</div>;
+        } else {
+            return <div className="bp_feedback_msg">Project Updated</div>;
         }
-        
-    }else{
+    } else {
         return (
             <div className="bp_menu_wrapper">
                 <ResourceOrderContext.Provider value={setResourceOrders}>
                     {creator ? <h2 className="bp_menu_heading">Create Blade Project</h2> : <h2 className="bp_menu_heading">Edit Blade Project</h2>}
                     <h2 className="bp_menu_title">Project Name</h2>
                     <InputField className="input_field" value={projectName} setState={setProjectName} />
-    
+
                     <h2 className="bp_menu_title">Customer</h2>
                     <InputField className="input_field" value={customer} setState={setCustomer} />
-    
+
                     <h2 className="bp_menu_title">Project Leader</h2>
                     <DropdownList className="input_field" value={leader} data={leaderOptions} onChange={(value) => setLeader(value)} />
-    
+
                     <h2 className="bp_menu_title">Equipment</h2>
                     <div className="bp_menu_add_wrapper">
                         <button className="bp_menu_add" onClick={() => setEquipmentMenuIsActive(true)}>
@@ -188,7 +193,7 @@ function BladeProjectMenu(props: BladeProjectMenuProps) {
                         </button>
                     </div>
                     <EquipmentList resourceOrders={resourceOrders} classNameFor={props.popUpClass} />
-    
+
                     <button className="bp_menu_cancel" onClick={handleCancel}>
                         CLEAR
                     </button>

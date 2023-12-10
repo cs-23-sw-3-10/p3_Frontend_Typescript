@@ -3,8 +3,7 @@ import "./EquipmentList.css";
 import { ResourceOrder } from "./BTMenuTypes";
 import { useResourceOrderContext } from "./BladeTaskOrderContext";
 
-
-function EquipmentList({ resourceOrders, classNameFor}: { resourceOrders: ResourceOrder[], classNameFor:string}) {
+function EquipmentList({ resourceOrders, classNameFor }: { resourceOrders: ResourceOrder[]; classNameFor: string }) {
     const changeResourceOrder = useResourceOrderContext();
 
     const handleOrderRemoval = (index: number) => {
@@ -40,17 +39,7 @@ function EquipmentList({ resourceOrders, classNameFor}: { resourceOrders: Resour
     );
 }
 
-function CheckBox({
-    name,
-    resource,
-    resourceIndex,
-    title,
-}: {
-    name: string;
-    resource: ResourceOrder;
-    resourceIndex: number;
-    title: string;
-}) {
+function CheckBox({ name, resource, resourceIndex, title }: { name: string; resource: ResourceOrder; resourceIndex: number; title: string }) {
     const [checked, setChecked] = useState(true);
     const changeResourceOrder = useResourceOrderContext();
 
@@ -58,16 +47,14 @@ function CheckBox({
         setChecked(!checked);
         changeResourceOrder((prevResourceOrders: ResourceOrder[]) => {
             let newResourceOrders = [...prevResourceOrders];
-            let currentAssignmentStatus: Array<boolean> =
-                newResourceOrders[resourceIndex].equipmentAssignmentStatus;
+            let currentAssignmentStatus: Array<boolean> = newResourceOrders[resourceIndex].equipmentAssignmentStatus;
             if (title === "Attach") {
                 currentAssignmentStatus[0] = !checked;
             }
             if (title === "Detach") {
                 currentAssignmentStatus[1] = !checked;
             }
-            newResourceOrders[resourceIndex].equipmentAssignmentStatus =
-                currentAssignmentStatus;
+            newResourceOrders[resourceIndex].equipmentAssignmentStatus = currentAssignmentStatus;
             return newResourceOrders;
         });
     };

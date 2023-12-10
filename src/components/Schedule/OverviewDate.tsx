@@ -1,4 +1,4 @@
-export const dateElementHeight=30
+export const dateElementHeight = 30;
 
 type OverviewDateProps = {
     currentDate: Date;
@@ -14,7 +14,7 @@ function CreateOverviewDate(props: OverviewDateProps) {
     const todayColour = "rgba(50, 128, 128, 0.6)";
     let todayDateSTR = `${todayDate.getFullYear()}-${todayDate.getMonth()}-${todayDate.getDate()}`;
     // marking the current date with a different colour
-    const colour = idSTR === todayDateSTR ? todayColour : "white"; 
+    const colour = idSTR === todayDateSTR ? todayColour : "white";
 
     return (
         <div
@@ -26,7 +26,7 @@ function CreateOverviewDate(props: OverviewDateProps) {
                 gridColumn: `date-${year}-${monthNumber}-${date}`, // The date is placed in the column corresponding to its date
                 gridRow: "1",
                 height: `${dateElementHeight}px`,
-                maxHeight: `${dateElementHeight}px`
+                maxHeight: `${dateElementHeight}px`,
             }}
         >
             <p>{date}</p>

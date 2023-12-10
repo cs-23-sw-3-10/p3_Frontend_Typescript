@@ -1,6 +1,6 @@
 import "./PendingTasks.css";
 import { BladeTaskHolder } from "./BladeTaskHolder";
-import { useDroppable } from "@dnd-kit/core"
+import { useDroppable } from "@dnd-kit/core";
 
 interface PendingTasksProps {
     bladeTaskHolder: BladeTaskHolder;
@@ -9,10 +9,10 @@ interface PendingTasksProps {
     showPasswordPrompt?: boolean;
 }
 
-type projectNameAndFilterInfo={
+type projectNameAndFilterInfo = {
     projectName: string;
-    shown: boolean
-}
+    shown: boolean;
+};
 
 function PendingTasks(props: PendingTasksProps) {
     const { setNodeRef } = useDroppable({
@@ -23,11 +23,12 @@ function PendingTasks(props: PendingTasksProps) {
     let projectsWithPendingTasks: projectNameAndFilterInfo[] = [];
 
     //Populate proctsWithPendingTasks
-    const cards = props.bladeTaskHolder.getBladeTasks().filter((card:any)=>{
-        if(card){
-            return card.props.rig===0
+    const cards = props.bladeTaskHolder.getBladeTasks().filter((card: any) => {
+        if (card) {
+            return card.props.rig === 0;
+        } else {
+            return true;
         }
-        else {return true}
     });
 
     cards.forEach((card: any) => {
@@ -38,7 +39,7 @@ function PendingTasks(props: PendingTasksProps) {
         }
 
         if (!isInProctsWithPendingTasks) {
-            projectsWithPendingTasks.push({projectName: card.props.projectName,shown: card.props.shown});
+            projectsWithPendingTasks.push({ projectName: card.props.projectName, shown: card.props.shown });
         }
     });
 
@@ -69,8 +70,8 @@ function PendingTasks(props: PendingTasksProps) {
                                     whiteSpace: "nowrap",
                                 }}
                             >
-                                 {projectNameAndFilter.shown &&projectNameAndFilter.projectName}
-                                 {!projectNameAndFilter.shown && "Hidden BP"}
+                                {projectNameAndFilter.shown && projectNameAndFilter.projectName}
+                                {!projectNameAndFilter.shown && "Hidden BP"}
                             </div>
                         );
                     })}
@@ -82,7 +83,6 @@ function PendingTasks(props: PendingTasksProps) {
                                 className="pendingTasksColumn"
                                 style={{
                                     gridRow: `project-${projectNameAndFilter.projectName}`,
-                                    
                                 }}
                             >
                                 {cards.filter((card: any) => {

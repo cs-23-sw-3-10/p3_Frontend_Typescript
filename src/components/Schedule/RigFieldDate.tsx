@@ -9,7 +9,7 @@ interface RigFieldDateDroppableProps {
     date: Date;
     style: RigFieldDateStyle;
     bladeTaskHolder: BladeTaskHolder;
-    setDragging: React.Dispatch<React.SetStateAction<boolean>>|undefined;
+    setDragging: React.Dispatch<React.SetStateAction<boolean>> | undefined;
 }
 
 interface RigFieldDateStyle {
@@ -22,7 +22,7 @@ type RigFieldDateProps = {
     rig: string;
     date: Date;
     bladeTaskHolder: BladeTaskHolder;
-    setDragging: React.Dispatch<React.SetStateAction<boolean>>|undefined; 
+    setDragging: React.Dispatch<React.SetStateAction<boolean>> | undefined;
 };
 
 function CreateRigFieldDate(props: RigFieldDateProps) {
@@ -39,15 +39,16 @@ function CreateRigFieldDate(props: RigFieldDateProps) {
     };
 
     const dateProps: RigFieldDateDroppableProps = useMemo(() => {
-        return{className: "RigFieldDate",
-        id: idSTR,
-        rig: props.rig,
-        date: props.date,
-        style: dateStyle,
-        bladeTaskHolder: props.bladeTaskHolder,
-        setDragging: props.setDragging,
-    };
-}, [props.rig, props.date]);//only render when these props change
+        return {
+            className: "RigFieldDate",
+            id: idSTR,
+            rig: props.rig,
+            date: props.date,
+            style: dateStyle,
+            bladeTaskHolder: props.bladeTaskHolder,
+            setDragging: props.setDragging,
+        };
+    }, [props.rig, props.date]); //only render when these props change
 
     return Droppable(dateProps); // Create a droppable date
 }
@@ -58,13 +59,8 @@ function Droppable(props: RigFieldDateDroppableProps) {
         id: props.id,
     });
 
-    return ( // Create a droppable date
-        <div
-            ref={setNodeRef}
-            key={props.id}
-            className="RigFieldDate"
-            id={props.id}
-            style={props.style}
-        ></div>
+    return (
+        // Create a droppable date
+        <div ref={setNodeRef} key={props.id} className="RigFieldDate" id={props.id} style={props.style}></div>
     );
 }

@@ -23,10 +23,7 @@ function CreateDatesContainer(props: DatesContainerProps) {
         >
             {
                 props.monthDates.map((date) => (
-                    <CreateOverviewDate
-                        key={getDateKey(date)}
-                        currentDate={date}
-                    />
+                    <CreateOverviewDate key={getDateKey(date)} currentDate={date} />
                 )) /* Create a date for each day in the month */
             }
         </div>
@@ -34,6 +31,7 @@ function CreateDatesContainer(props: DatesContainerProps) {
 }
 export default CreateDatesContainer;
 
-function getDateKey(date: Date) { // Get the key for a date
+function getDateKey(date: Date) {
+    // Get the key for a date
     return `date-${date.getFullYear()}-${date.getMonth()}-${date.getDate()}`;
 }

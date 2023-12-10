@@ -1,15 +1,15 @@
 .styledButton {
-  background-color: #4299e1; /* bg-blue-500 */
-  color: white; /* text-white */
-  font-weight: bold; /* font-bold */
-  padding-top: 0.5rem; /* py-2 */
-  padding-bottom: 0.5rem; /* py-2 */
-  padding-left: 1rem; /* px-4 */
-  padding-right: 1rem; /* px-4 */
-  border-radius: 0.25rem; /* rounded */
-  text-transform: capitalize; /* capitalize */
+    background-color: #4299e1; /* bg-blue-500 */
+    color: white; /* text-white */
+    font-weight: bold; /* font-bold */
+    padding-top: 0.5rem; /* py-2 */
+    padding-bottom: 0.5rem; /* py-2 */
+    padding-left: 1rem; /* px-4 */
+    padding-right: 1rem; /* px-4 */
+    border-radius: 0.25rem; /* rounded */
+    text-transform: capitalize; /* capitalize */
 }
 
 .styledButton:hover {
-  background-color: #2b6cb0; /* hover:bg-blue-700 */
+    background-color: #2b6cb0; /* hover:bg-blue-700 */
 }

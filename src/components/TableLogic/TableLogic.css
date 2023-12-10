@@ -1,16 +1,14 @@
 .tableButtons {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 1rem;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
 }
 
-.tableButtonsleft
-{
-  display: flex;
-  flex-direction: row;
-  justify-content: flex-start;
-  align-items: center;
-
+.tableButtonsleft {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
 }

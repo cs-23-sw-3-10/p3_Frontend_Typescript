@@ -7,14 +7,18 @@ export type BookingDataQuery = {
     workHours: string;
     equipment: [
         {
-        name: string;
-    }
-    ],
-    engineer: [{
-        name: string;
-    }],
-    technician: [{
-        type: string;}]
-        ,
-    combined:string;
+            name: string;
+        }
+    ];
+    engineer: [
+        {
+            name: string;
+        }
+    ];
+    technician: [
+        {
+            type: string;
+        }
+    ];
+    combined: string;
 };

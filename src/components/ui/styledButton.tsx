@@ -7,10 +7,7 @@ type StyledButtonProps = {
 
 const StyledButton: React.FC<StyledButtonProps> = ({ children, ...props }) => {
     return (
-        <button
-            className="styledButton"
-            {...props}
-        >
+        <button className="styledButton" {...props}>
             {children}
         </button>
     );
