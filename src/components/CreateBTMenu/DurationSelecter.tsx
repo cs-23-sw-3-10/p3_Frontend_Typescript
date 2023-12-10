@@ -17,7 +17,7 @@ function DurationSelector({duration, setDuration, inErrorChart, setInErrorChart}
                 className={(inErrorChart.duration[0] || inErrorChart.duration[1]) ? "error" : "item duration_select input"}
                 name="duration_select"
                 placeholder={(inErrorChart.duration[0] || inErrorChart.duration[1]) ? (inErrorChart.duration[0] ? "Duration cannot be negative" : "Please provide duration") : "Select Duration"}
-                value={duration}
+                value={(inErrorChart.duration[0] || inErrorChart.duration[1]) ? "" : duration}
                 onChange={(e) => setDuration(parseInt(e.currentTarget.value))}
                 onBlur={(e) => handleDurationValidation(e, setDuration, inErrorChart, setInErrorChart)}
                 onSelect={hideErrorMessages}
@@ -37,7 +37,7 @@ function handleDurationValidation(e: React.FormEvent<HTMLInputElement>, setDurat
     }else{
         newInErrorChart.duration[0] = true;
         setInErrorChart(newInErrorChart);
-        setDuration(0);
+        setDuration("");
     }
 }
 

@@ -27,7 +27,7 @@ function AttachPeriodSelector(
                 className={(inErrorChart.attachPeriod[0] || inErrorChart.attachPeriod[1]) ? "error" : "item attach_period_select input"}
                 name="attach_period_select"
                 placeholder={(inErrorChart.attachPeriod[0] || inErrorChart.attachPeriod[1]) ? (inErrorChart.attachPeriod[0] ? "Attach period cannot be negative" : "Please provide attach period") : 'Select Attach Period'}
-                value={attachPeriod}
+                value={(inErrorChart.attachPeriod[0] || inErrorChart.attachPeriod[1]) ? "" : attachPeriod}
                 onChange={(e) => setAttachPeriod(parseInt(e.currentTarget.value))}
                 onBlur={(e) => handleAttachPeriodValidation(e, duration, detachPeriod, setAttachPeriod, inErrorChart, setInErrorChart)}
                 onSelect={hideErrorMessages}
@@ -50,7 +50,7 @@ function handleAttachPeriodValidation(e: React.FormEvent<HTMLInputElement>, dura
         newInErrorChart.attachPeriod[0] = true;
         setInErrorChart(newInErrorChart);
         //Reset input field to 0
-        setAttachPeriod(0);
+        setAttachPeriod("");
     }
 }
 
