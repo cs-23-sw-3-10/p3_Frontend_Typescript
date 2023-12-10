@@ -10,11 +10,11 @@ import EquipmentSelectionMenu from "./EquipmentSelector";
 import EmployeesMenu from "./EmployeesMenu";
 import { ResourceOrderContext } from "./BladeTaskOrderContext";
 import { useState, useEffect } from "react";
-import { BTOrder, InErrorChart, ResourceOrder } from "./BTMenuTypes";
+import { BTOrder, InErrorChart, ResourceOrder, BladeProjectByIdResult, BladeTask} from "./BTMenuTypes";
 import EquipmentList from "./EquipmentList";
-import { useMutation, useQuery } from "@apollo/client";
+import { useMutation, useQuery, useLazyQuery } from "@apollo/client";
 import { ADD_BT, UPDATE_BT_INFO } from "../../api/mutationList";
-import { GET_ALL_BT } from "../../api/queryList";
+import { GET_ALL_BT, GET_BP_BY_ID } from "../../api/queryList";
 import { ValidateForm } from "./ValidateForm";
 import { createEmptyInErrorChart } from "./BTMenuTypes";
 import "../CreateBTMenu/TestTypeSelector.css";
@@ -34,6 +34,7 @@ function BladeTaskMenu(props: BladeTaskMenuProps) {
     const [addBT, { loading: addLoading, error: addError }] = useMutation(ADD_BT);
     const [updateBT, { loading: updateLoading, error: updateError }] = useMutation(UPDATE_BT_INFO);
     const { loading: btLoading, error: btError, data: btData, refetch } = useQuery(GET_ALL_BT);
+    const [getBPById, { error, data: BPInfo }] = useLazyQuery(GET_BP_BY_ID,); //Used to query for BP on submit to check existing BT names
 
     //All the states for the form -> Inserted into the BT-order as the user fills the form out
     const [bladeProjectId, setBladeProjectId] = useState(creator ? "" : props.inputs!.bladeProjectId);
@@ -52,7 +53,7 @@ function BladeTaskMenu(props: BladeTaskMenuProps) {
     //Tracks which input fields are currently in an error state(Incorrect input has been provided)
     const [inErrorChart, setInErrorChart] = useState({
         bladeProjectId: false,
-        taskName: [false,false], //[0]: Taskname exists in the system ; [1]: Used unsuitable character
+        taskName: [false, false], //[0]: Taskname exists in the system ; [1]: Used unsuitable character
         testType: false,
         startDate: false,
         duration: false,
@@ -91,6 +92,13 @@ function BladeTaskMenu(props: BladeTaskMenuProps) {
     //Only triggers when following fields are provided: duration, attachPeriod, detachPeriod, bladeProjectId, taskName, testType
     //Other fields are optional
     const handleSubmit = async () => {
+        const result:BladeProjectByIdResult = await getBPById({ variables: { id: currentOrder.bladeProjectId}});
+        let BTarray = result.data.BladeProjectById.bladeTasks;
+        let BTNames:Array<string> = [];
+        if(BTarray.length > 0){
+            BTNames = BTarray.map((BladeTask:BladeTask) => BladeTask.taskName);
+        }
+
         const submittedStartDate = new Date(startDate);
         const realStartDate = convertStartDateToDB(submittedStartDate, attachPeriod);
         const dbStartDate = new Date(realStartDate.getFullYear(), realStartDate.getMonth(), realStartDate.getDate() + 1).toISOString().split("T")[0];
@@ -107,11 +115,11 @@ function BladeTaskMenu(props: BladeTaskMenuProps) {
                         testRig
                     )
                 ) {
-                    if (ValidateForm(currentOrder, inErrorChart, setInErrorChart)) {
+                    if (ValidateForm(currentOrder, inErrorChart, setInErrorChart, BTNames)) {
 
-                        resourceOrders.forEach((order: ResourceOrder)=>{
-                            order.resourceType=order.resourceType.toLowerCase();
-                            order.resourceName=order.resourceName.toLowerCase();
+                        resourceOrders.forEach((order: ResourceOrder) => {
+                            order.resourceType = order.resourceType.toLowerCase();
+                            order.resourceName = order.resourceName.toLowerCase();
                         })
 
                         const response = await addBT({
@@ -149,10 +157,10 @@ function BladeTaskMenu(props: BladeTaskMenuProps) {
                         testRig
                     )
                 ) {
-                    if (ValidateForm(currentOrder, inErrorChart, setInErrorChart)) {
-                        resourceOrders.forEach((order: ResourceOrder)=>{
-                            order.resourceType=order.resourceType.toLowerCase();
-                            order.resourceName=order.resourceName.toLowerCase();
+                    if (ValidateForm(currentOrder, inErrorChart, setInErrorChart, BTNames)) {
+                        resourceOrders.forEach((order: ResourceOrder) => {
+                            order.resourceType = order.resourceType.toLowerCase();
+                            order.resourceName = order.resourceName.toLowerCase();
                         })
                         const response = await updateBT({
                             //update blade task in database
@@ -212,7 +220,7 @@ function BladeTaskMenu(props: BladeTaskMenuProps) {
         testRig: testRig,
         resourceOrders: resourceOrders,
     };
-    
+
 
     return (
         <div className="btmenu-container">
@@ -226,9 +234,9 @@ function BladeTaskMenu(props: BladeTaskMenuProps) {
             </div>
             <div className="item testtype_wrapper">
                 <h2 className="title">Type</h2>
-                <TestTypeSelector 
-                    testType={testType} 
-                    setTestType={setTestType} 
+                <TestTypeSelector
+                    testType={testType}
+                    setTestType={setTestType}
                     className="testtype_select input_sideborders"
                     inErrorChart={inErrorChart}
                     setInErrorChart={setInErrorChart}

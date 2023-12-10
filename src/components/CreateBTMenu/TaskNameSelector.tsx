@@ -19,25 +19,14 @@ function TaskNameSelector({ taskName, setTaskName, inErrorChart, setInErrorChart
 
 function InputComponent({ taskName, setTaskName, existingNames, inErrorChart, setInErrorChart }: { taskName: string, setTaskName: Function, existingNames: string[], inErrorChart: InErrorChart, setInErrorChart: Function }) {
     let errorMessages: Array<string> =
-        ['Invalid Name - Task name exists in system',
+        ['Invalid Name - Task name exists in Blade Project ',
          'Please provide a Task Name',
         ];
 
     const handleNameInput = (e: React.FormEvent<HTMLInputElement>) => {
         let userInput = e.currentTarget.value;
-        let newInErrorChart = { ...inErrorChart };
-
         //Check for illegal characters -> Sanitize
-        setTaskName(sanitize(userInput));
-
-        //Check if Blade Task name already exists in DB
-        if (!existingNames.includes(userInput)) {
-            newInErrorChart.taskName[0] = false;
-        } else {
-            setTaskName(" ");
-            newInErrorChart.taskName[0] = true;
-        }
-        setInErrorChart(newInErrorChart);
+        setTaskName(sanitize(userInput).trim());
     }
 
     const handleChange = (e: React.FormEvent<HTMLInputElement>) => {
@@ -57,7 +46,7 @@ function InputComponent({ taskName, setTaskName, existingNames, inErrorChart, se
             className={(inErrorChart.taskName[0] || inErrorChart.taskName[1]) ? "error id_select input" : 'id_select input_sideborders'}
             type="text"
             placeholder='Select Task Name'
-            value={(inErrorChart.taskName[0] || inErrorChart.taskName[1]) ? errorMessages[1] : taskName}
+            value={(inErrorChart.taskName[0] || inErrorChart.taskName[1]) ? (inErrorChart.taskName[0] ? errorMessages[0] : errorMessages[1]) : taskName}
             onChange={handleChange}
             onBlur={handleNameInput}
             onSelect={hideErrorMessages}
