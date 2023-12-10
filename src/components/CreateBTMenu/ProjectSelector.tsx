@@ -12,7 +12,7 @@ function ProjectSelector({ bladeProjectId, setBladeProjectId }: { bladeProjectId
     //Updates state of project list, on each fetch of new data -> Forces rerender of list
     useEffect(() => {
         //Set the default state to be the first option -> Only happens on initial render
-        if (data && data.AllBladeProjectsBySchedule) 
+        if (data && data.AllBladeProjectsBySchedule[0]) 
         {
             if(bladeProjectId == ""){
                 setBladeProjectId(data.AllBladeProjectsBySchedule[0].id);
