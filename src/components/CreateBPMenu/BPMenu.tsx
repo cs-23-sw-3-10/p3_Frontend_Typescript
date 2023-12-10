@@ -51,6 +51,7 @@ function BladeProjectMenu(props: BladeProjectMenuProps) {
 
     const [projectError, setProjectError] = useState<boolean>(false);
     const [missingInput, setMissingInput] = useState<boolean>(false);
+    const [submitted, setSubmitted] = useState<boolean>(false);
 
     const [equipmentMenuIsActive, setEquipmentMenuIsActive] = useState<boolean>(false);
 
@@ -122,7 +123,8 @@ function BladeProjectMenu(props: BladeProjectMenuProps) {
                     .then((result) => console.log(result))
                     .then(() => setMissingInput(false))
                     .then(() => setProjectError(false))
-                    .then(() => handleCancel()); //Clears fields
+                    .then(() => handleCancel()) //Clears fields
+                    .then(() => setSubmitted(true));
             } else {
                 setMissingInput(true);
             }
@@ -140,10 +142,12 @@ function BladeProjectMenu(props: BladeProjectMenuProps) {
                             resourceOrders: resourceOrders,
                         },
                     },
-                }).then((result) => console.log(result));
-                setMissingInput(false);
-                setProjectError(false);
-                handleCancel();
+                })
+                .then((result) => console.log(result))
+                .then(() => setMissingInput(false))
+                .then(() => setProjectError(false))
+                .then(() => handleCancel())
+                .then(() => setSubmitted(true));
             } else {
                 setMissingInput(true);
             }
@@ -157,38 +161,46 @@ function BladeProjectMenu(props: BladeProjectMenuProps) {
         setResourceOrders([]);
     };
 
-    return (
-        <div className="bp_menu_wrapper">
-            <ResourceOrderContext.Provider value={setResourceOrders}>
-                {creator ? <h2 className="bp_menu_heading">Create Blade Project</h2> : <h2 className="bp_menu_heading">Edit Blade Project</h2>}
-                <h2 className="bp_menu_title">Project Name</h2>
-                <InputField className="input_field" value={projectName} setState={setProjectName} />
-
-                <h2 className="bp_menu_title">Customer</h2>
-                <InputField className="input_field" value={customer} setState={setCustomer} />
-
-                <h2 className="bp_menu_title">Project Leader</h2>
-                <DropdownList className="input_field" value={leader} data={leaderOptions} onChange={(value) => setLeader(value)} />
-
-                <h2 className="bp_menu_title">Equipment</h2>
-                <div className="bp_menu_add_wrapper">
-                    <button className="bp_menu_add" onClick={() => setEquipmentMenuIsActive(true)}>
-                        +
+    if(submitted){
+        if(creator){return(<div className="bp_feedback_msg">Project Created</div>)
+        }else{
+            return (<div className="bp_feedback_msg">Project Updated</div>);
+        }
+        
+    }else{
+        return (
+            <div className="bp_menu_wrapper">
+                <ResourceOrderContext.Provider value={setResourceOrders}>
+                    {creator ? <h2 className="bp_menu_heading">Create Blade Project</h2> : <h2 className="bp_menu_heading">Edit Blade Project</h2>}
+                    <h2 className="bp_menu_title">Project Name</h2>
+                    <InputField className="input_field" value={projectName} setState={setProjectName} />
+    
+                    <h2 className="bp_menu_title">Customer</h2>
+                    <InputField className="input_field" value={customer} setState={setCustomer} />
+    
+                    <h2 className="bp_menu_title">Project Leader</h2>
+                    <DropdownList className="input_field" value={leader} data={leaderOptions} onChange={(value) => setLeader(value)} />
+    
+                    <h2 className="bp_menu_title">Equipment</h2>
+                    <div className="bp_menu_add_wrapper">
+                        <button className="bp_menu_add" onClick={() => setEquipmentMenuIsActive(true)}>
+                            +
+                        </button>
+                    </div>
+                    <EquipmentList resourceOrders={resourceOrders} classNameFor={props.popUpClass} />
+    
+                    <button className="bp_menu_cancel" onClick={handleCancel}>
+                        CLEAR
                     </button>
-                </div>
-                <EquipmentList resourceOrders={resourceOrders} classNameFor={props.popUpClass} />
-
-                <button className="bp_menu_cancel" onClick={handleCancel}>
-                    CANCEL
-                </button>
-                <button className="bp_menu_submit" onClick={handleSubmit}>
-                    SUBMIT
-                </button>
-                <ErrorMessageBox projectError={projectError} missingInput={missingInput} />
-                {equipmentMenuIsActive ? <EquipmentSelectionMenu setEquipmentActive={setEquipmentMenuIsActive} className={props.popUpClass} /> : <></>}
-            </ResourceOrderContext.Provider>
-        </div>
-    );
+                    <button className="bp_menu_submit" onClick={handleSubmit}>
+                        SUBMIT
+                    </button>
+                    <ErrorMessageBox projectError={projectError} missingInput={missingInput} />
+                    {equipmentMenuIsActive ? <EquipmentSelectionMenu setEquipmentActive={setEquipmentMenuIsActive} className={props.popUpClass} /> : <></>}
+                </ResourceOrderContext.Provider>
+            </div>
+        );
+    }
 }
 
 function ErrorMessageBox({ projectError, missingInput }: { projectError: boolean; missingInput: boolean }) {
