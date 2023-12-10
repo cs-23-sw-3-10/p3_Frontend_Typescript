@@ -2,6 +2,7 @@ import "./EquipmentSelector.css";
 import { useQuery } from "@apollo/client";
 import { GET_EQUIPMENT_TYPES } from "../../api/queryList";
 import { useState } from "react";
+import { capitalize } from "../../utils/StringEditing";
 import { ResourceOrder } from "./BTMenuTypes";
 import { useResourceOrderContext } from "./BladeTaskOrderContext";
 
@@ -45,7 +46,7 @@ function EquipmentMenuItem({ resourceName, className }: { resourceName: string; 
             >
                 <span className={"equipment_menu_item_icon material-symbols-outlined " + className}>add_circle</span>
             </button>
-            <h2 className={"equipment_menu_item_title " + className}>{resourceName}</h2>
+            <h2 className={"equipment_menu_item_title " + className}>{capitalize(resourceName)}</h2>
         </div>
     );
 }
