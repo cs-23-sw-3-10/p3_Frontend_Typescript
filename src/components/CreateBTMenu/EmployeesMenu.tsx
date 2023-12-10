@@ -65,14 +65,17 @@ function EmployeeEntrySelectorMenu({ name, typeName, activeEmployeesList}: {name
     const changeResourceOrders = useResourceOrderContext();
     const changeActiveEmployees = useActiveEmployeesContext();
 
-    let initials: string = '';
-    if (typeName === "Engineer") {
+    let initials: string = "";
+    if (typeName === "engineer") {
         initials = GetInitials(name);
     }
 
     const handleResourceCreation = () => {
         changeResourceOrders((prevResourceOrders: ResourceOrder[]) => {
-            let newResourceOrders = [...prevResourceOrders, {resourceType:typeName, resourceName:name, equipmentAssignmentStatus:[true,true], workHours:0}];
+            let newResourceOrders = [
+                ...prevResourceOrders,
+                {resourceType: typeName, resourceName: name, equipmentAssignmentStatus: [true, true], workHours: 0},
+            ];
             return newResourceOrders;
         });
         changeActiveEmployees((currentList:{name:string, active:boolean}[]) => {
@@ -101,15 +104,27 @@ function EmployeeEntrySelectorMenu({ name, typeName, activeEmployeesList}: {name
 
 function GetInitials(name:string){
     let nameArray: Array<string> = name.split(' ');
-    let initials: string = nameArray[0][0] + nameArray[1][0];
+    let initials: string = nameArray[0][0].toUpperCase() + nameArray[1][0].toUpperCase();
     return initials;
     
 }
 
-function EmployeeEntry({name, initials, resourceOrders, activeEmployeesList}:{name:string, initials:string, resourceOrders:ResourceOrder[], activeEmployeesList: {name: string, active: boolean}[]}) {
+function EmployeeEntry({
+    name,
+    initials,
+    resourceOrders,
+    activeEmployeesList,
+    existingHours,
+}: {
+    name: string
+    initials: string;
+    resourceOrders: ResourceOrder[]
+    activeEmployeesList: { name: string; active: boolean }[]
+    existingHours?: number
+}) {
     const changeResourceOrders = useResourceOrderContext();
     const changeActiveEmployees = useActiveEmployeesContext();
-    const [employeeHours, setEmployeeHours] = useState(0);
+    const [employeeHours, setEmployeeHours] = useState(existingHours ? existingHours : 0);
 
     const handleRemoval = () => {
         const updatedOrders = [...resourceOrders];
@@ -193,14 +208,15 @@ function TechnicianList({activeEmployeesList}:{activeEmployeesList: {name: strin
 
 function EmployeeList({resourceOrders, activeEmployeesList}:{resourceOrders:ResourceOrder[], activeEmployeesList: {name: string, active: boolean}[]})
 {
-    let employeeResourceOrders = resourceOrders.filter((order:ResourceOrder) => ((order.resourceType === "Engineer") || (order.resourceType === "Technician")));
+    let employeeResourceOrders = resourceOrders.filter((order:ResourceOrder) => ((order.resourceType.toLowerCase() === "engineer") || (order.resourceType.toLowerCase() === "technician")));
     return <>{employeeResourceOrders.map((order) => 
         <EmployeeEntry 
         name={order.resourceName} 
-        initials={(order.resourceType === "Engineer") ? GetInitials(order.resourceName) : ""}
+        initials={(order.resourceType.toLowerCase() === "engineer") ? GetInitials(order.resourceName) : ""}
         resourceOrders={resourceOrders}
         activeEmployeesList={activeEmployeesList}
         key={order.resourceName}
+        existingHours={order.workHours}
         />
     )}</>
 }

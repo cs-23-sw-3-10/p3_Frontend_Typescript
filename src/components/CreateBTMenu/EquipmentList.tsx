@@ -18,7 +18,7 @@ function EquipmentList({ resourceOrders, classNameFor}: { resourceOrders: Resour
         <div className={"equipment_list " + classNameFor}>
             {resourceOrders.map((order) => (
                 <React.Fragment key={resourceOrders.indexOf(order)}> 
-                {( (order.resourceType !== "Engineer") && (order.resourceType !== "Technician")) ?
+                {((order.resourceType.toLowerCase() !== "engineer") && (order.resourceType.toLowerCase() !== "technician")) ?
                 <div className={'equipment_entry ' + classNameFor}>
                     <div className={'type ' + classNameFor}>
                         <h2 className={'title ' + classNameFor}>{order.resourceName}</h2>
