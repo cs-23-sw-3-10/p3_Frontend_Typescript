@@ -119,9 +119,13 @@
   text-align: center;
 }
 
+.add.material-symbols-outlined{
+    
+}
+
 .equipment_add {
   border: solid;
-  width: 75px;
+  width: 20px;
   margin: 5px;
   border-radius: 15px;
   box-shadow: 0 9px #999;

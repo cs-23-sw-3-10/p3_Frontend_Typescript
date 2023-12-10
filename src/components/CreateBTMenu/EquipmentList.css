@@ -39,32 +39,24 @@
 }
 
 .remove_equipment_button.bt{
-    position: absolute;
-    transform: translate(800%, -110%);
-    width: 25px;
-    height: 25px;
-    border-radius: 10px;
-    display: inline;
-    box-shadow: 0 3px #999;
+    margin-top: 2px;
 }
 
 .material-symbols-outlined.cancel{
     font-size: 20px;
-    background-color: red;
-    border-radius: 5px solid black;
+    color: red;
+    border-radius: 10px solid black;
     font-variation-settings:
-      'FILL' 0,
+      'FILL' 1,
       'wght' 400,
       'GRAD' 0,
       'opsz' 20
 }
 
-.remove_equipment_button.bt:hover{
-    background-color: rgb(191, 0, 0);
+.material-symbols-outlined.cancel:hover{
+    color: rgb(176, 1, 1);
 }
 
-.remove_equipment_button.bt:active{
-    background-color: red;
-    box-shadow: 0 1px #666;
-    transform: translate(800%, -110%);
+.material-symbols-outlined.cancel:active{
+    color: red;
 }

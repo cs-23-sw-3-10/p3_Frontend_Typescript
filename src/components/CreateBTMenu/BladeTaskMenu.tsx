@@ -296,7 +296,7 @@ function BladeTaskMenu(props: BladeTaskMenuProps) {
 
                     <div className="equipment_interaction">
                         <button className="equipment_add" onClick={(e) => setEquipmentActive(true)}>
-                            <span className="material-symbols-outlined">add_circle</span>
+                            <span className="material-symbols-outlined add">add_circle</span>
                         </button>
                     </div>
 

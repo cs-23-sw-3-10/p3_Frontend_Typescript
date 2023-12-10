@@ -27,8 +27,8 @@ function EquipmentList({ resourceOrders, classNameFor}: { resourceOrders: Resour
                         <fieldset className={'period_selector ' + classNameFor}>
                             <CheckBox key={resourceOrders.indexOf(order) + "a"} name="attachPeriod" resource={order} resourceIndex={resourceOrders.indexOf(order)} title="Attach"/>
                             <CheckBox key={resourceOrders.indexOf(order) + "b"} name="detachPeriod" resource={order} resourceIndex={resourceOrders.indexOf(order)} title="Detach"/>
+                            <button className={'remove_equipment_button ' + classNameFor} onClick={() => handleOrderRemoval(resourceOrders.indexOf(order))}><span className="material-symbols-outlined cancel">cancel</span></button>
                         </fieldset>
-                        <button className={'remove_equipment_button ' + classNameFor} onClick={() => handleOrderRemoval(resourceOrders.indexOf(order))}><span className="material-symbols-outlined cancel">cancel</span></button>
                     </div>
                 </div>
                 :
