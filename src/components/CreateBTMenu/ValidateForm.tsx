@@ -15,7 +15,8 @@ export function ValidateForm(currentOrder: BTOrder, inErrorChart: InErrorChart, 
     newInErrorChart.duration[1] = currentOrder.duration < 1; //Checks if durations is provided and not negative
     newInErrorChart.attachPeriod[1] = currentOrder.attachPeriod < 0; //Checks if attach period is provided and not negative
     newInErrorChart.detachPeriod[1] = currentOrder.detachPeriod < 0; //Checks if detach period is provided and not negative
-    newInErrorChart.attachPeriod[2] = new Date(new Date(currentOrder.startDate).getTime() - currentOrder.attachPeriod * 24 * 60 * 60 * 1000) < new Date();
+    newInErrorChart.attachPeriod[2] = (currentOrder.attachPeriod > 0 && 
+                                    new Date(new Date(currentOrder.startDate).getTime() - currentOrder.attachPeriod * 24 * 60 * 60 * 1000) < new Date()); //Checks if attach period is in the past
 
     setInErrorChart(newInErrorChart); //Update error chart
 
