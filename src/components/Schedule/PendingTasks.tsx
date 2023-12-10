@@ -1,10 +1,6 @@
 import "./PendingTasks.css";
 import { BladeTaskHolder } from "./BladeTaskHolder";
-import { useDroppable } from "@dnd-kit/core";
-import { rigFieldHeight } from "./RigFieldContainer";
-import { monthHeaderHeight } from "./MonthHeader";
-import { dateElementHeight } from "./OverviewDate";
-import { passwordPromptHeight } from "./ScheduleComponent";
+import { useDroppable } from "@dnd-kit/core"
 
 interface PendingTasksProps {
     bladeTaskHolder: BladeTaskHolder;
@@ -47,8 +43,6 @@ function PendingTasks(props: PendingTasksProps) {
     });
 
     //projectsWithPendingTasks.sort();
-
-    console.log(projectsWithPendingTasks);
 
     let rowString: string = "";
     for (let i = 0; i < projectsWithPendingTasks.length; i++) {

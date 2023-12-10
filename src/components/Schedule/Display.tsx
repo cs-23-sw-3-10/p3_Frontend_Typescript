@@ -138,8 +138,8 @@ function DisplayComponent(props: DisplayProps) {
         }
     }, [pendingSubscription.loading, pendingSubscription.data]);
 
-    console.log(dataBT);
-    console.log(dataPendingBT);
+    //console.log(dataBT);
+    //console.log(dataPendingBT);
 
     if (loadingRigs) {
         return <p>Loading...</p>;
