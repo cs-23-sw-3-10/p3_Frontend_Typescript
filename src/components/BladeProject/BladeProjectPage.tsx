@@ -13,8 +13,8 @@ import { useEditModeContext } from "../../EditModeContext";
 import { createRigs } from "../Schedule/Display";
 import PopupWindow from "../ui/PopupWindow";
 import BPMenu from "../CreateBPMenu/BPMenu";
-import './EquipmentSelectorBPEdit.css';
-import './EquipmentListBPEdit.css';
+import "./EquipmentSelectorBPEdit.css";
+import "./EquipmentListBPEdit.css";
 import { DELETE_BP } from "../../api/mutationList";
 import EditBPComponent from "./EditBPComponent";
 import ConfirmDelete from "../ui/ConfirmDelete";
@@ -55,35 +55,47 @@ function BladeProjectPage() {
     const [showDeleteConfirm, setShowDeleteConfirm] = useState<boolean>(false);
 
     //get data from the database
-    const { loading: loadingBP, error: errorBP, data: dataBP, refetch: refetchBP} = useQuery(GET_ALL_BP);
+    const { loading: loadingBP, error: errorBP, data: dataBP, refetch: refetchBP } = useQuery(GET_ALL_BP);
 
-    const { loading: loadingSchedule, error: errorSchedule, data: dataSchedule, refetch: refetchBPdif} = useQuery(GET_ALL_BP_IN_DIFF_SCHEDULE);
+    const { loading: loadingSchedule, error: errorSchedule, data: dataSchedule, refetch: refetchBPdif } = useQuery(GET_ALL_BP_IN_DIFF_SCHEDULE);
 
     const { loading: loadingRigs, error: errorRigs, data: dataRigs } = useQuery(GET_TEST_RIGS);
 
     //handle loading and error states for the used queries
 
-    if (loadingBP) return <p>Loading...</p>;
-    if (errorBP) return <p> Error {errorBP.message}</p>;
+    if (loadingBP) return <p>Loading Blade Projects...</p>;
+    if (errorBP)
+        return (
+            <>
+                <p>Error: {errorBP.message}.</p>
+                <p>Please reload the page or contact adminitrator</p>
+            </>
+        );
     const BPData = dataBP["AllBladeProjects"];
     if (!BPData) {
         return <p> No data for {"AllBladeProjects"} </p>;
     }
 
-    if (loadingSchedule) return <p>Loading...</p>;
-    if (errorSchedule) return <p> Error {errorSchedule.message}</p>;
+    if (loadingSchedule) return <p>Loading Schedule...</p>;
+    if (errorSchedule)
+        return (
+            <>
+                <p>Error: {errorSchedule.message}.</p>
+                <p>Please reload the page or contact adminitrator</p>
+            </>
+        );
     const ScheduleData = dataSchedule["AllSchedules"];
     if (!ScheduleData) {
         return <p> No data for {"AllSchedules"} </p>;
     }
 
-    if (loadingRigs) return <p>Loading...</p>;
+    if (loadingRigs) return <p>Loading Rigs...</p>;
     if (errorRigs) return <p> Error {errorRigs.message}</p>;
     const numberOfRigs = parseInt(dataRigs.DictionaryAllByCategory[0].label);
     if (rigs.length !== numberOfRigs) {
         setRigs(createRigs(numberOfRigs));
     }
-    if (deleteLoading) return <p>Loading...</p>;
+    if (deleteLoading) return <p>Loading ...</p>;
     if (deleteError) return <p> Error {deleteError.message}</p>;
 
     let dataForScreen;
@@ -128,13 +140,23 @@ function BladeProjectPage() {
      */
     return (
         <>
-        <div className="flex flex-row justify-between items-center">
-            <h1 className="text-left mb-4 text-xl">Blade Projects</h1>
-            <div className="">
-                <SwitchComponent setShowPasswordPrompt={setShowPasswordPrompt}/>
-                {localStorage.getItem('token') && <StyledButton onClick={()=>{localStorage.removeItem('token'); window.location.reload();}}> Logout </StyledButton>}
+            <div className="flex flex-row justify-between items-center">
+                <h1 className="text-left mb-4 text-xl">Blade Projects</h1>
+                <div className="">
+                    <SwitchComponent setShowPasswordPrompt={setShowPasswordPrompt} />
+                    {localStorage.getItem("token") && (
+                        <StyledButton
+                            onClick={() => {
+                                localStorage.removeItem("token");
+                                window.location.reload();
+                            }}
+                        >
+                            {" "}
+                            Logout{" "}
+                        </StyledButton>
+                    )}
+                </div>
             </div>
-        </div>
             <TableLogic
                 columns={getColumns(setShowPopup, setChoosenBP, editMode.isEditMode)}
                 data={dataForScreen}
@@ -146,7 +168,6 @@ function BladeProjectPage() {
                         new Date(bladeProjectIndex.startDate),
                         countMonthsIncludingStartAndEnd(new Date(bladeProjectIndex.startDate), new Date(bladeProjectIndex.endDate))
                     );
-
 
                     if (bladeProjectIndex && bladeProjectIndex.bladeTasks) {
                         bladeProjectIndex.bladeTasks.forEach((bladeTask: any) => {
@@ -178,11 +199,14 @@ function BladeProjectPage() {
                 }}
             />
             {/*showPopup && <PopupWindow component={<BPMenu creator={false} BPName={choosenBP} popUpClass="bp_edit"/>} onClose={togglePopup}/>*/}
-            
+
             {showPopup && (
-                <PopupWindow component={<EditBPComponent choosenBP={choosenBP} deleteBProject={deleteBladeProject} Id={choosenBP} popUpClass="bp_edit"/>} onClose={togglePopup} />
+                <PopupWindow
+                    component={<EditBPComponent choosenBP={choosenBP} deleteBProject={deleteBladeProject} Id={choosenBP} popUpClass="bp_edit" />}
+                    onClose={togglePopup}
+                />
             )}
-            {showDeleteConfirm && <ConfirmDelete delete={deleteBladeProject} close={() => setShowDeleteConfirm(false) } Id={choosenBP} />}
+            {showDeleteConfirm && <ConfirmDelete delete={deleteBladeProject} close={() => setShowDeleteConfirm(false)} Id={choosenBP} />}
         </>
     );
 }
