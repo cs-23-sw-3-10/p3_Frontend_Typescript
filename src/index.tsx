@@ -7,6 +7,7 @@ import "material-symbols";
 import { ApolloProvider } from "@apollo/client";
 import { client } from "./api/client";
 import { BrowserRouter } from "react-router-dom";
+import { EditModeProvider } from "./EditModeContext";
 
 const root = ReactDOM.createRoot(document.getElementById("root") as HTMLElement);
 
@@ -14,7 +15,9 @@ root.render(
     <React.StrictMode>
         <ApolloProvider client={client}>
             <BrowserRouter>
-                <App />
+              <EditModeProvider>
+                  <App />
+              </EditModeProvider>
             </BrowserRouter>
         </ApolloProvider>
     </React.StrictMode>
