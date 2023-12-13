@@ -33,6 +33,7 @@ export interface BladeTaskCardProps {
     inConflict?: boolean;
     enableDraggable?: boolean;
     setContextMenu?: (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => void;
+    enableContextMenu?: boolean;
     resourceOrders?: Array<ResourceOrder>;
     testType?: string;
 }
@@ -126,8 +127,10 @@ function BladeTaskCard(props: BladeTaskCardProps) {
 
     const handleRightClick = (event: React.MouseEvent<HTMLDivElement>) => {
         event.preventDefault();
-        setShowContextMenu(true);
-        setContextMenuPosition({ x: event.clientX, y: event.clientY });
+        if(props.enableContextMenu){
+            setShowContextMenu(true);
+            setContextMenuPosition({ x: event.clientX, y: event.clientY });
+        }
     };
 
     const handleDeleteClick = (id: number, deleteConfirmed: boolean) => {
@@ -162,7 +165,7 @@ function BladeTaskCard(props: BladeTaskCardProps) {
             id: props.id,
             taskName: props.taskName,
             enableDraggable: props.enableDraggable,
-            setContextMenu: handleRightClick,
+            setContextMenu: props.enableContextMenu ? handleRightClick : undefined,
             shown: props.shown,
             attachPeriod: props.attachPeriod ? props.attachPeriod : 0,
             detachPeriod: props.detachPeriod ? props.detachPeriod : 0,

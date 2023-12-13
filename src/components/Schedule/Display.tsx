@@ -220,6 +220,7 @@ function DisplayComponent(props: DisplayProps) {
                 shown={btShown}
                 enableDraggable={editMode.isEditMode}
                 inConflict={bt.inConflict}
+                enableContextMenu={true}
             />
         );
     });
@@ -246,6 +247,7 @@ function DisplayComponent(props: DisplayProps) {
                 enableDraggable={editMode.isEditMode}
                 inConflict={false}
                 rig={0}
+                enableContextMenu={false}
             />
         );
     });
