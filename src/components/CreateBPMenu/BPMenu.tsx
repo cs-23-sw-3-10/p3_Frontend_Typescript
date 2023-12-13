@@ -30,13 +30,10 @@ function BladeProjectMenu(props: BladeProjectMenuProps) {
     const creator = props.creator; //Determines Creating or Editing
     let currentBpResourceOrders: ResourceOrder[] = [];
     let currentBP: any;
-    console.log(props.BPId);
 
     //In case of editing a BP -> Fetch all BP's -> Exract current BP
     const { data: BPData } = useQuery(GET_ALL_BP); //Get All Blade Projects
-    console.log(BPData);
     currentBP = BPData?.AllBladeProjects?.find((element: any) => element.id === props.BPId);
-    console.log(currentBP);
 
     //Create -> Set states to "empty"
     //Edit -> Set states to corresponding values in current BP
