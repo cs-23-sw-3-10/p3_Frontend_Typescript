@@ -47,8 +47,6 @@ function countMonthsIncludingStartAndEnd(startDate: Date, endDate: Date) {
 function BladeProjectPage() {
     const editMode = useEditModeContext();
     const [showPasswordPrompt, setShowPasswordPrompt] = useState(false);
-    const [showContextMenu, setShowContextMenu] = useState(false);
-
     const [rigs, setRigs] = useState<{ rigName: string; rigNumber: number }[]>([{ rigName: "No Rigs", rigNumber: 0 }]);
     const [showPopup, setShowPopup] = useState(false); // Used to show the popup when the user clicks edit in a task card
     const [choosenBP, setChoosenBP] = useState<any>(null); // Used to store the choosen bladeproject when the user clicks edit in a task card
@@ -192,7 +190,7 @@ function BladeProjectPage() {
                                     detachPeriod={bladeTask.detachPeriod}
                                     shown={true}   
                                     enableContextMenu={false}
-                                    />
+                                />
                             );
                         });
                     }
