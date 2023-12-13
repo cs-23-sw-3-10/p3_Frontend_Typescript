@@ -190,6 +190,7 @@ function BladeProjectPage() {
                                     attachPeriod={bladeTask.attachPeriod}
                                     detachPeriod={bladeTask.detachPeriod}
                                     shown={true}
+                                    setContextMenu={()=> {}}
                                 />
                             );
                         });
