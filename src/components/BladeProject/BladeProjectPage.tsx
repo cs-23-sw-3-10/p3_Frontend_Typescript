@@ -183,6 +183,7 @@ function BladeProjectPage() {
                                     customer={bladeTask.bladeProject.customer}
                                     taskName={bladeTask.taskName}
                                     startDate={new Date(bladeTask.startDate)}
+                                    endDate={new Date(bladeTask.endDate)}
                                     rig={bladeTask.testRig}
                                     id={bladeTask.id}
                                     enableDraggable={false}
