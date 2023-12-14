@@ -97,9 +97,7 @@ function BladeTaskMenu(props: BladeTaskMenuProps) {
     const allBtEdit: any = [];
     for (let i = 0; i < bpEdit.length; i++) {
         let bpInEdit = bpEdit[i];
-        console.log("bpInEdit :", bpInEdit.id);
         for (let j = 0; j < allBT.length; j++) {
-            console.log(allBT[j].bladeProject.id === bpInEdit.id);
             if (allBT[j].bladeProject.id === bpInEdit.id) {
                 allBtEdit.push(allBT[j]);
             }

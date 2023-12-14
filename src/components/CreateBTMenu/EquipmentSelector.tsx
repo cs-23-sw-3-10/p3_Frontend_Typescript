@@ -36,7 +36,6 @@ function EquipmentListGenerator({ className }: { className: string }) {
 
 function EquipmentMenuItem({ resourceName, className }: { resourceName: string; className: string }) {
     const changeResourceOrder = useResourceOrderContext();
-    console.log(resourceName);
     return (
         <div className={"equipment_menu_item " + className}>
             <button

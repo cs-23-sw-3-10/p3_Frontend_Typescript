@@ -21,7 +21,6 @@ function StartDateSelector({
                 className={inErrorChart.startDate ? "error" : "startdate_select input"}
                 value={startDate}
                 onChange={(e) => {
-                    console.log("setting Date :", e.currentTarget.value);
                     setStartDate(e.currentTarget.value);
                 }}
                 onBlur={(e) => handleDateValidation(e, setStartDate, setInErrorChart, inErrorChart)}

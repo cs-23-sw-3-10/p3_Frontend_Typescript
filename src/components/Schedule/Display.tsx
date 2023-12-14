@@ -41,12 +41,7 @@ function DisplayComponent(props: DisplayProps) {
 
     const [activeCard, setActiveCard] = useState<any>(null);
 
-    const [isDragging, setDragging] = useState(false);
-
     const [updateBt, { error, data }] = useMutation(UPDATE_BT);
-
-    const [dataBT, setDataBT] = useState<{ AllBladeTasksInRangeSub: any[] } | null>(null);
-    const [dataPendingBT, setDataPendingBT] = useState<{ AllBladeTasksPendingSub: any[] } | null>(null);
 
     useEffect(() => {
         if (editMode.isEditMode) {
@@ -69,16 +64,6 @@ function DisplayComponent(props: DisplayProps) {
         setSelectedDate(dateInput);
         setNumberOfMonths(parseInt(numberInput));
         goTo(dateInput, parseInt(numberInput));
-    };
-
-    const handleModeChange = () => {
-        if (!editMode.isEditMode) {
-            // If switching to edit mode, show password prompt
-            props.setShowPasswordPrompt(true);
-        } else {
-            // If switching from edit mode, just toggle the edit mode
-            editMode.setEditMode(!editMode.isEditMode);
-        }
     };
 
     const goTo = (viewDate: string, number: number) => {
@@ -115,7 +100,7 @@ function DisplayComponent(props: DisplayProps) {
         variables: { isActive: true },
     });
 
-    const inRangeSubscription = useSubscription(GET_BT_IN_RANGE_SUB, {
+    const {data:inRangeSubscription, loading:inRangeSubscriptionLoading, error:inRangeSubscriptionError} = useSubscription(GET_BT_IN_RANGE_SUB, {
         variables: {
             startDate: queryDates.startDate,
             endDate: queryDates.endDate,
@@ -123,24 +108,34 @@ function DisplayComponent(props: DisplayProps) {
         },
     });
 
-    const pendingSubscription = useSubscription(GET_BT_PENDING_SUB, {
+    const {data:pendingSubscription, loading:pendingSubscriptionLoading, error:pendingSubscriptionError} = useSubscription(GET_BT_PENDING_SUB, {
         variables: {
             isActive: !editMode.isEditMode,
         },
     });
 
-    useEffect(() => {
-        if (!inRangeSubscription.loading) {
-            setDataBT(inRangeSubscription.data);
-        }
-    }, [inRangeSubscription.loading, inRangeSubscription.data]);
-
-    useEffect(() => {
-        if (!pendingSubscription.loading) {
-            setDataPendingBT(pendingSubscription.data);
-        }
-    }, [pendingSubscription.loading, pendingSubscription.data]);
-
+    if(inRangeSubscriptionLoading){
+        return <p>Loading Schedule. Please wait...</p>;
+    }
+    if(inRangeSubscriptionError){
+        return (
+            <>
+                <p>Error: {inRangeSubscriptionError.message}.</p>
+                <p>Please reload the page or contact adminitrator</p>
+            </>
+        );
+    }
+    if(pendingSubscriptionLoading){
+        return <p>Loading Schedule. Please wait...</p>;
+    }
+    if(pendingSubscriptionError){
+        return (
+            <>
+                <p>Error: {pendingSubscription.message}.</p>
+                <p>Please reload the page or contact adminitrator</p>
+            </>
+        );
+    }
     if (loadingRigs) {
         return <p>Loading Schedule. Please wait...</p>;
     }
@@ -155,7 +150,6 @@ function DisplayComponent(props: DisplayProps) {
             </>
         );
     }
-
     if (loadingBP) {
         return <p>Loading Blade Projects. Please wait...</p>;
     }
@@ -184,11 +178,7 @@ function DisplayComponent(props: DisplayProps) {
     //Making schedule BladeTaskCards
     let btCards: React.ReactNode[] = [];
 
-    if (dataBT === null || dataPendingBT === null) {
-        return <p>Loading...</p>;
-    }
-
-    dataBT["AllBladeTasksInRangeSub"].forEach((bt: any) => {
+    inRangeSubscription["AllBladeTasksInRangeSub"].forEach((bt: any) => {
         let btShown = false;
         if (bt.bladeProject.customer === props.filter || props.filter === "None" || editMode.isEditMode) {
             btShown = true;
@@ -225,12 +215,11 @@ function DisplayComponent(props: DisplayProps) {
         );
     });
 
-    dataPendingBT["AllBladeTasksPendingSub"].forEach((bt: any) => {
+    pendingSubscription["AllBladeTasksPendingSub"].forEach((bt: any) => {
         let btShown = false;
         if (bt.bladeProject.customer === props.filter || props.filter === "None" || editMode.isEditMode) {
             btShown = true;
         }
-
         btCards.push(
             <BladeTaskCard
                 key={bt.id}
@@ -253,7 +242,6 @@ function DisplayComponent(props: DisplayProps) {
     });
 
     let bladeTasksHolder = new BladeTaskHolder(btCards);
-
     return (
         <>
             <div className="flex flex-row justify-between items-center">
@@ -323,14 +311,12 @@ function DisplayComponent(props: DisplayProps) {
                 </div>
                 <DndContext // DndContext is used to enable drag and drop functionality
                     onDragStart={(event) => {
-                        handleDragStart(event, setDragging, setActiveCard);
+                        handleDragStart(event, setActiveCard);
                     }}
                     onDragEnd={(event) => {
                         handleDragEnd(
                             event,
                             bladeTasksHolder,
-                            //bladeTasksPendingHolder,
-                            setDragging,
                             updateBt
                         );
                     }}
@@ -347,7 +333,6 @@ function DisplayComponent(props: DisplayProps) {
                             showPasswordPrompt={props.showPasswordPrompt}
                         />
                     }
-
                     {
                         <DragOverlay>
                             {activeCard && (
@@ -459,20 +444,14 @@ function FilterCustomers(customer: string) {
 
 export function handleDragStart(
     event: any,
-    setDragging: React.Dispatch<React.SetStateAction<boolean>>,
     setActiveCard: React.Dispatch<React.SetStateAction<BladeTaskCardProps | null>>
 ) {
-    const { active } = event;
-    if (active !== null) {
-        setDragging(true);
-    }
-
     if (event.active.data.current.type === "BladeTaskCardProps") {
         setActiveCard(event.active.data.current.props);
     }
 }
 
-export function handleDragEnd(event: any, bladeTaskHolder: BladeTaskHolder, setDragging: React.Dispatch<React.SetStateAction<boolean>>, updateBT: Function) {
+export function handleDragEnd(event: any, bladeTaskHolder: BladeTaskHolder, updateBT: Function) {
     const { active, over } = event; // active is the element being dragged, over is the element being dragged over
     const updatedBladeTaskCards = bladeTaskHolder.getBladeTasks(); // Get the blade tasks from the BladeTaskHolder
 
@@ -570,7 +549,6 @@ export function handleDragEnd(event: any, bladeTaskHolder: BladeTaskHolder, setD
             } else {
                 console.log("Overlap detected. drag opreation cancelled");
             }
-            setDragging(false);
         }
     } else {
         console.log("over is null");
