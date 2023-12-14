@@ -67,7 +67,6 @@ function DisplayComponent(props: DisplayProps) {
     };
 
     const goTo = (viewDate: string, number: number) => {
-        console.log("goTo");
         // Function to change the date and number of months to display
         const newDate = new Date(viewDate);
         if (!isNaN(newDate.valueOf())) {
@@ -241,8 +240,6 @@ function DisplayComponent(props: DisplayProps) {
     });
 
     let bladeTasksHolder = new BladeTaskHolder(btCards);
-    console.log(inRangeSubscription);
-    console.log("dates, ", dates[0], dates[dates.length - 1]);
     return (
         <>
             <div className="flex flex-row justify-between items-center">
@@ -454,7 +451,6 @@ export function handleDragStart(
 
 export function handleDragEnd(event: any, bladeTaskHolder: BladeTaskHolder, updateBT: Function) {
     const { active, over } = event; // active is the element being dragged, over is the element being dragged over
-    console.log("drag end", over);
     const updatedBladeTaskCards = bladeTaskHolder.getBladeTasks(); // Get the blade tasks from the BladeTaskHolder
 
     const { indexBT } = findBTIndex(
