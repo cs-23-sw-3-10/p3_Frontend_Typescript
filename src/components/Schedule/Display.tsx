@@ -100,7 +100,11 @@ function DisplayComponent(props: DisplayProps) {
         variables: { isActive: true },
     });
 
-    const {data:inRangeSubscription, loading:inRangeSubscriptionLoading, error:inRangeSubscriptionError} = useSubscription(GET_BT_IN_RANGE_SUB, {
+    const {
+        data: inRangeSubscription,
+        loading: inRangeSubscriptionLoading,
+        error: inRangeSubscriptionError,
+    } = useSubscription(GET_BT_IN_RANGE_SUB, {
         variables: {
             startDate: queryDates.startDate,
             endDate: queryDates.endDate,
@@ -108,16 +112,20 @@ function DisplayComponent(props: DisplayProps) {
         },
     });
 
-    const {data:pendingSubscription, loading:pendingSubscriptionLoading, error:pendingSubscriptionError} = useSubscription(GET_BT_PENDING_SUB, {
+    const {
+        data: pendingSubscription,
+        loading: pendingSubscriptionLoading,
+        error: pendingSubscriptionError,
+    } = useSubscription(GET_BT_PENDING_SUB, {
         variables: {
             isActive: !editMode.isEditMode,
         },
     });
 
-    if(inRangeSubscriptionLoading){
+    if (inRangeSubscriptionLoading) {
         return <p>Loading Schedule. Please wait...</p>;
     }
-    if(inRangeSubscriptionError){
+    if (inRangeSubscriptionError) {
         return (
             <>
                 <p>Error: {inRangeSubscriptionError.message}.</p>
@@ -125,10 +133,10 @@ function DisplayComponent(props: DisplayProps) {
             </>
         );
     }
-    if(pendingSubscriptionLoading){
+    if (pendingSubscriptionLoading) {
         return <p>Loading Schedule. Please wait...</p>;
     }
-    if(pendingSubscriptionError){
+    if (pendingSubscriptionError) {
         return (
             <>
                 <p>Error: {pendingSubscription.message}.</p>
@@ -314,11 +322,7 @@ function DisplayComponent(props: DisplayProps) {
                         handleDragStart(event, setActiveCard);
                     }}
                     onDragEnd={(event) => {
-                        handleDragEnd(
-                            event,
-                            bladeTasksHolder,
-                            updateBt
-                        );
+                        handleDragEnd(event, bladeTasksHolder, updateBt);
                     }}
                 >
                     <div className="ScheduleDisplay">
@@ -442,10 +446,7 @@ function FilterCustomers(customer: string) {
     );
 }
 
-export function handleDragStart(
-    event: any,
-    setActiveCard: React.Dispatch<React.SetStateAction<BladeTaskCardProps | null>>
-) {
+export function handleDragStart(event: any, setActiveCard: React.Dispatch<React.SetStateAction<BladeTaskCardProps | null>>) {
     if (event.active.data.current.type === "BladeTaskCardProps") {
         setActiveCard(event.active.data.current.props);
     }
