@@ -43,7 +43,6 @@ function PendingTasks(props: PendingTasksProps) {
         }
     });
 
-    //projectsWithPendingTasks.sort();
 
     let rowString: string = "";
     for (let i = 0; i < projectsWithPendingTasks.length; i++) {

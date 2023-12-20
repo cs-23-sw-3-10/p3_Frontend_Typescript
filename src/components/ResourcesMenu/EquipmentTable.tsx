@@ -191,10 +191,3 @@ function EquipmentTable() {
 }
 
 export default EquipmentTable;
-/**
- *                     <TestTypeSelector
-                        testType={formData.type}
-                        setTestType={(value: string) => setFormData({ ...formData, type: value })}
-                        className='text-input'
-                    />
- */
