@@ -148,7 +148,7 @@ function DisplayComponent(props: DisplayProps) {
         return <p>Loading Schedule. Please wait...</p>;
     }
     if (errorRigs) {
-        //TDOO: Find better way to handle timesout token
+
         console.log(errorRigs);
         localStorage.removeItem("token");
         return (

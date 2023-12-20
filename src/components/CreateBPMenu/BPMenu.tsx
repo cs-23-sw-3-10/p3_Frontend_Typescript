@@ -84,7 +84,7 @@ function BladeProjectMenu(props: BladeProjectMenuProps) {
             //Extract the names of the engineers
             const engineerNamesArray: Array<string> = data.AllEngineers.map(({ name }: { name: string }) => name);
 
-            //You wanted capitalized names so here you go :)
+            //Capitalized names
             const capitalizedNames: Array<string> = engineerNamesArray.map((name) => capitalize(name));
             setLeaderOptions(capitalizedNames);
         }

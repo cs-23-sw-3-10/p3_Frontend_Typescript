@@ -1,4 +1,3 @@
-//Ville nok være en god ide bare at importere alt fra components
 import NavBar from "./components/NavBar/NavBar";
 import ResourceTable from "./components/ResourcesMenu/ResourceTable";
 import { Routes, Route, Navigate } from "react-router-dom";
