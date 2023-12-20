@@ -26,12 +26,6 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from ".
 
 import SwitchComponent from "./SwitchComponent";
 
-/**
- * Represents the props for the DataTable component.
- * columns:
- * data:
- * renderExpandedComponent:
- */
 interface DataTableProps<TData, TValue> {
     columns: ColumnDef<TData, TValue>[];
     data: TData[];
@@ -110,8 +104,6 @@ export function TableLogic<TData, TValue>({ columns, data, renderExpandedCompone
         }
     };
 
-    // <SwitchComponent setShowPasswordPrompt={setShowPasswordPrompt}/>
-    // {localStorage.getItem('token') && <StyledButton onClick={()=>{localStorage.removeItem('token'); window.location.reload();}}> Logout </StyledButton>}
 
     return (
         <div>
